@@ -1916,6 +1916,106 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
         endif
     endmenu
 
+    # ==============================================================================
+    # ⚠️ LƯU Ý KỸ THUẬT QUAN TRỌNG VỀ CÚ PHÁP (CHỐNG LỖI KCONFIG VỀ SAU):
+    # 1. "depends on" BẮT BUỘC PHẢI NẰM Ở DÒNG RIÊNG (THỤT LỀ) BÊN DƯỚI "comment".
+    #    TUYỆT ĐỐI KHÔNG viết cùng dòng: "comment '...' depends on ..." -> Gây lỗi:
+    #    "KconfigError: extra tokens at end of line".
+    # 2. Để tương thích hoàn toàn với bảng mã console Windows (cp1252/cp437) và tránh
+    #    lỗi UnicodeEncodeError trong curses, nội dung hiển thị của comment bảng TUI
+    #    nên dùng tiếng Việt không dấu chuẩn ANSI.
+    # ==============================================================================
+
+    comment " "
+    comment "=============================================================================="
+    comment "             BANG TONG HOP PHAN CUNG & CHAN GPIO DANG DUOC CHON               "
+    comment "------------------------------------------------------------------------------"
+    comment " PHAN CUNG                        | CHAN GPIO DANG DUNG                       "
+    comment "----------------------------------+-------------------------------------------"
+    comment " [Man hinh] ST7789 / TFT SPI       | MOSI: 47, CLK: 21, CS: 41, DC: 40, RST: 42 "
+        depends on ENABLE_CUSTOM_DISPLAY && (CUSTOM_DISPLAY_ST7789 || CUSTOM_DISPLAY_ST7796 || CUSTOM_DISPLAY_ST7701 || CUSTOM_DISPLAY_ILI9341 || CUSTOM_DISPLAY_GC9A01)
+    comment "            Den nen Backlight      | BLK: 38                                    "
+        depends on ENABLE_CUSTOM_DISPLAY && CUSTOM_DISPLAY_USE_BLK && (CUSTOM_DISPLAY_ST7789 || CUSTOM_DISPLAY_ST7796 || CUSTOM_DISPLAY_ST7701 || CUSTOM_DISPLAY_ILI9341 || CUSTOM_DISPLAY_GC9A01)
+    comment " [Man hinh] OLED I2C (SSD1306)     | SDA: 8, SCL: 9                             "
+        depends on ENABLE_CUSTOM_DISPLAY && (CUSTOM_DISPLAY_OLED_SSD1306 || CUSTOM_DISPLAY_OLED_SH1106)
+    comment " [Man hinh] AMOLED QSPI            | IO: 11..14, CLK: 15, CS: 10, RST: 16       "
+        depends on ENABLE_CUSTOM_DISPLAY && CUSTOM_DISPLAY_QSPI_AMOLED
+    comment " [Cam ung]  Touch Panel I2C        | SDA: 8, SCL: 9, INT: 3, RST: 2             "
+        depends on ENABLE_CUSTOM_TOUCH && (CUSTOM_TOUCH_CST816S || CUSTOM_TOUCH_GT911 || CUSTOM_TOUCH_FT5X06)
+    comment " [Loa DAC]  MAX98357A I2S Mono     | DOUT: 7, BCLK: 15, LRCK: 16                "
+        depends on ENABLE_CUSTOM_SPEAKER && CUSTOM_AUDIO_DAC_MAX98357A
+    comment " [Loa DAC]  PCM5102A I2S Stereo    | DOUT: 7, BCLK: 15, LRCK: 16                "
+        depends on ENABLE_CUSTOM_SPEAKER && CUSTOM_AUDIO_DAC_PCM5102A
+    comment " [Loa DAC]  ES83xx Audio Codec     | DOUT: 7, BCLK: 15, LRCK: 16, I2C: 8, 9     "
+        depends on ENABLE_CUSTOM_SPEAKER && (CUSTOM_AUDIO_SPK_CODEC_ES8311 || CUSTOM_AUDIO_SPK_CODEC_ES8388 || CUSTOM_AUDIO_SPK_CODEC_ES8374 || CUSTOM_AUDIO_SPK_CODEC_ES8389 || CUSTOM_AUDIO_SPK_CODEC_BOX)
+    comment " [Micro]    INMP441 / MSM261S I2S  | DIN: 6, SCK: 5, WS: 4                      "
+        depends on ENABLE_CUSTOM_MIC && CUSTOM_AUDIO_MIC_INMP441
+    comment " [Micro]    PDM Microphone         | CLK: 5, DATA: 6                            "
+        depends on ENABLE_CUSTOM_MIC && CUSTOM_AUDIO_MIC_PDM
+    comment " [Micro]    ES83xx Codec ADC       | DIN: 6, SCK: 5, WS: 4, I2C: 8, 9           "
+        depends on ENABLE_CUSTOM_MIC && (CUSTOM_AUDIO_MIC_CODEC_ES8311 || CUSTOM_AUDIO_MIC_CODEC_ES8388 || CUSTOM_AUDIO_MIC_CODEC_ES8374 || CUSTOM_AUDIO_MIC_CODEC_ES8389 || CUSTOM_AUDIO_MIC_CODEC_BOX)
+    comment " [Camera]   Camera DVP (OV2640...) | XCLK: 10, PCLK: 12, VSYNC: 13, HREF: 14   "
+        depends on ENABLE_CUSTOM_CAMERA && !CUSTOM_CAMERA_USB_UVC
+    comment "            Camera DVP Data Pins   | D0..D7: 11, 2, 46, 21, 47, 48, 45, 40     "
+        depends on ENABLE_CUSTOM_CAMERA && !CUSTOM_CAMERA_USB_UVC
+    comment " [Camera]   USB UVC Web Camera     | Cong USB Host (D-: GPIO 19, D+: GPIO 20)   "
+        depends on ENABLE_CUSTOM_CAMERA && CUSTOM_CAMERA_USB_UVC
+    comment " [UART]     Cong Serial mo rong    | TX: 17, RX: 18                             "
+        depends on ENABLE_CUSTOM_UART
+    comment " [Mang 4G]  Modem 4G (ML307/NT26)  | TX: 17, RX: 18, PWRKEY: 2                  "
+        depends on ENABLE_CUSTOM_SECONDARY_NETWORK && (CUSTOM_NETWORK_4G_ML307 || CUSTOM_NETWORK_4G_NT26)
+    comment " [Ethernet] Ethernet SPI W5500     | CS: 10, INT: 11, RST: 14                   "
+        depends on ENABLE_CUSTOM_SECONDARY_NETWORK && CUSTOM_NETWORK_ETH_W5500
+    comment " [Ethernet] Ethernet SPI DM9051    | CS: 10, INT: 11, RST: 14                   "
+        depends on ENABLE_CUSTOM_SECONDARY_NETWORK && CUSTOM_NETWORK_ETH_DM9051
+    comment " [Den LED]  RGB WS2812 / SK6812    | DATA: 48 (RMT)                             "
+        depends on ENABLE_CUSTOM_LEDS && CUSTOM_LED_WS2812
+    comment " [Den LED]  Den LED don PWM        | GPIO: 48                                   "
+        depends on ENABLE_CUSTOM_LEDS && CUSTOM_LED_SINGLE_PWM
+    comment " [Dong co]  Servo tuong tac PWM    | PWM GPIO: 48                               "
+        depends on ENABLE_CUSTOM_LEDS && CUSTOM_ENABLE_SERVO_DOG
+    comment " [Nut bam]  Phim Boot Onboard      | GPIO: 0                                    "
+        depends on CUSTOM_ENABLE_BUTTON_BOOT
+    comment " [Nut bam]  Phim Action / PTT      | GPIO: 1                                    "
+        depends on CUSTOM_ENABLE_BUTTON_TOUCH
+    comment " [Nut bam]  Phim Tang / Giam Am    | VOL+: GPIO 2, VOL-: GPIO 3                 "
+        depends on CUSTOM_ENABLE_BUTTON_VOLUME
+    comment " [Ro-le]    Relay dong cat doc lap | Chan dieu khien: GPIO 13                   "
+        depends on CUSTOM_PERIPH_RELAY_ENABLE
+    comment " [Thiet bi] Den thong minh AI MCP  | Chan dieu khien: GPIO 13                   "
+        depends on ENABLE_CUSTOM_MCP_SERVER && CUSTOM_MCP_TOOL_LAMP
+    comment " [Mo rong]  IC IO Expander / PMIC  | I2C SDA: 8, SCL: 9                         "
+        depends on ENABLE_CUSTOM_IO_EXPANDER_PMIC && (CUSTOM_IO_EXPANDER_TCA9554 || CUSTOM_IO_EXPANDER_CH32V003 || CUSTOM_PMIC_AXP2101 || CUSTOM_PMIC_SY6970)
+    comment " [Cam bien] IMU MPU-6050 6 truc    | I2C SDA: 8, SCL: 9                         "
+        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_IMU_MPU6050
+    comment " [Cam bien] IMU Bosch BMI270 6 truc| I2C SDA: 8, SCL: 9                         "
+        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_IMU_BMI270
+    comment " [Cam bien] Nhiet am DHT11 / DHT22 | DATA: GPIO 14                              "
+        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_SENSOR_DHT11_22
+    comment " [Cam bien] Nhiet am AHT10/20/21   | I2C SDA: 8, SCL: 9                         "
+        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_SENSOR_AHT20
+    comment " [Cam bien] Nhiet am SHT30/31/40   | I2C SDA: 8, SCL: 9                         "
+        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_SENSOR_SHT3X
+    comment " [Cam bien] Khi ap Bosch BMP280    | I2C SDA: 8, SCL: 9                         "
+        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_SENSOR_BMP280
+    comment " [Cam bien] Cuong do sang BH1750   | I2C SDA: 8, SCL: 9                         "
+        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_SENSOR_BH1750
+    comment " [Cam bien] Quang tro LDR (ADC)    | Kenh ADC1_CH1 (GPIO 2)                     "
+        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_SENSOR_LDR
+    comment " [Cam bien] Sieu am HC-SR04/US-100 | TRIG: GPIO 11, ECHO: GPIO 12               "
+        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_SENSOR_HCSR04
+    comment " [Cam bien] Chuyen dong nguoi PIR  | OUT: GPIO 10                               "
+        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_SENSOR_PIR
+    comment " [Cam bien] Touch Slider noi bo    | Kenh cam ung dien dung tich hop            "
+        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_TOUCH_SLIDER
+    comment " [Do Pin]   Do qua ADC phan ap     | Kenh ADC1_CH0 (GPIO 1)                     "
+        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_BATTERY_MONITOR_ADC
+    comment " [Do Pin]   IC do pin TI BQ27220   | I2C SDA: 8, SCL: 9                         "
+        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_BATTERY_MONITOR_BQ27220
+    comment " (Chua co phan cung nao duoc bat - Hay tich chon [X] cac muc tren)   "
+        depends on !ENABLE_CUSTOM_DISPLAY && !ENABLE_CUSTOM_TOUCH && !ENABLE_CUSTOM_SPEAKER && !ENABLE_CUSTOM_MIC && !ENABLE_CUSTOM_CAMERA && !ENABLE_CUSTOM_UART && !ENABLE_CUSTOM_SECONDARY_NETWORK && !ENABLE_CUSTOM_LEDS && !CUSTOM_ENABLE_BUTTON_BOOT && !CUSTOM_ENABLE_BUTTON_TOUCH && !CUSTOM_ENABLE_BUTTON_VOLUME && !CUSTOM_PERIPH_RELAY_ENABLE && !ENABLE_CUSTOM_IO_EXPANDER_PMIC && !ENABLE_CUSTOM_SENSORS
+    comment "=============================================================================="
+
 endmenu
 
 endmenu

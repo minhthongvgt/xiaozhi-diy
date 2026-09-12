@@ -407,7 +407,7 @@ private:
         config.pin_href = CAM_PIN_HREF;
         config.pin_sccb_sda = CAM_PIN_SIOD;
         config.pin_sccb_scl = CAM_PIN_SIOC;
-        config.sccb_i2c_port = 0;
+        config.sccb_i2c_port = 1;
         config.pin_pwdn = CAM_PIN_PWDN;
         config.pin_reset = CAM_PIN_RESET;
         config.xclk_freq_hz = 20000000;
@@ -497,26 +497,41 @@ public:
         ESP_LOGI(TAG, "Audio hardware is disabled in configuration (Mute / Headless)");
         return nullptr;
 #elif defined(CONFIG_CUSTOM_AUDIO_CODEC_ES8311) || defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8311) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8311)
+        if (i2c_bus_ == nullptr) {
+            InitializeI2c();
+        }
         static Es8311AudioCodec audio_codec(i2c_bus_, I2C_NUM_0, AUDIO_INPUT_SAMPLE_RATE, AUDIO_OUTPUT_SAMPLE_RATE,
                                             GPIO_NUM_NC, AUDIO_I2S_SPK_GPIO_BCLK, AUDIO_I2S_SPK_GPIO_LRCK,
                                             AUDIO_I2S_SPK_GPIO_DOUT, AUDIO_I2S_MIC_GPIO_DIN, GPIO_NUM_NC, 0x18, /*use_mclk=*/false);
         return &audio_codec;
 #elif defined(CONFIG_CUSTOM_AUDIO_CODEC_ES8388) || defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8388) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8388)
+        if (i2c_bus_ == nullptr) {
+            InitializeI2c();
+        }
         static Es8388AudioCodec audio_codec(i2c_bus_, I2C_NUM_0, AUDIO_INPUT_SAMPLE_RATE, AUDIO_OUTPUT_SAMPLE_RATE,
                                             GPIO_NUM_NC, AUDIO_I2S_SPK_GPIO_BCLK, AUDIO_I2S_SPK_GPIO_LRCK,
                                             AUDIO_I2S_SPK_GPIO_DOUT, AUDIO_I2S_MIC_GPIO_DIN, GPIO_NUM_NC, 0x10);
         return &audio_codec;
 #elif defined(CONFIG_CUSTOM_AUDIO_CODEC_ES8374) || defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8374) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8374)
+        if (i2c_bus_ == nullptr) {
+            InitializeI2c();
+        }
         static Es8374AudioCodec audio_codec(i2c_bus_, I2C_NUM_0, AUDIO_INPUT_SAMPLE_RATE, AUDIO_OUTPUT_SAMPLE_RATE,
                                             GPIO_NUM_NC, AUDIO_I2S_SPK_GPIO_BCLK, AUDIO_I2S_SPK_GPIO_LRCK,
                                             AUDIO_I2S_SPK_GPIO_DOUT, AUDIO_I2S_MIC_GPIO_DIN, GPIO_NUM_NC, 0x10);
         return &audio_codec;
 #elif defined(CONFIG_CUSTOM_AUDIO_CODEC_ES8389) || defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8389) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8389)
+        if (i2c_bus_ == nullptr) {
+            InitializeI2c();
+        }
         static Es8389AudioCodec audio_codec(i2c_bus_, I2C_NUM_0, AUDIO_INPUT_SAMPLE_RATE, AUDIO_OUTPUT_SAMPLE_RATE,
                                             GPIO_NUM_NC, AUDIO_I2S_SPK_GPIO_BCLK, AUDIO_I2S_SPK_GPIO_LRCK,
                                             AUDIO_I2S_SPK_GPIO_DOUT, AUDIO_I2S_MIC_GPIO_DIN, GPIO_NUM_NC, 0x10);
         return &audio_codec;
 #elif defined(CONFIG_CUSTOM_AUDIO_CODEC_BOX) || defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_BOX) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_BOX)
+        if (i2c_bus_ == nullptr) {
+            InitializeI2c();
+        }
         static BoxAudioCodec audio_codec(i2c_bus_, AUDIO_INPUT_SAMPLE_RATE, AUDIO_OUTPUT_SAMPLE_RATE,
                                          GPIO_NUM_NC, AUDIO_I2S_SPK_GPIO_BCLK, AUDIO_I2S_SPK_GPIO_LRCK,
                                          AUDIO_I2S_SPK_GPIO_DOUT, AUDIO_I2S_MIC_GPIO_DIN, GPIO_NUM_NC,

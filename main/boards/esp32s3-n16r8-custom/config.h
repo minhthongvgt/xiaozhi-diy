@@ -10,7 +10,10 @@
     defined(CONFIG_CUSTOM_AUDIO_CODEC_BOX) || defined(CONFIG_CUSTOM_AUDIO_I2S_DUPLEX) || \
     defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8311) || defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8388) || \
     defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8374) || defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8389) || \
-    defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_BOX)
+    defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_BOX) || \
+    defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8311) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8388) || \
+    defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8374) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8389) || \
+    defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_BOX)
 #define AUDIO_INPUT_SAMPLE_RATE  16000
 #define AUDIO_OUTPUT_SAMPLE_RATE 16000
 #else
@@ -454,5 +457,17 @@
 #else
 #define SENSOR_PIR_GPIO GPIO_NUM_NC
 #endif
+
+// ==============================================================================
+// ⚠️ BẢO VỆ PHẦN CỨNG ESP32-S3 N16R8 (Octal PSRAM & Quad Flash Interconnect):
+// Module ESP32-S3-WROOM-1-N16R8 sử dụng các chân sau kết nối bộ nhớ nội bộ:
+// - GPIO 26: SPICS1 (PSRAM Chip Select)
+// - GPIO 27, 28, 31, 32: SPI D4..D7 / D0..D1 (Flash & PSRAM Bus)
+// - GPIO 29: SPICS0 (Flash Chip Select)
+// - GPIO 30: SPICLK (PSRAM Clock)
+// - GPIO 33..37: Octal PSRAM IO4..IO7 & DQS Clock Data Strobe
+// TUYỆT ĐỐI KHÔNG GÁN BẤT KỲ CHÂN NÀO TỪ GPIO 26 ĐẾN GPIO 37 CHO NGOẠI VI!
+// ==============================================================================
+#define ESP32S3_N16R8_IS_RESERVED_PIN(p) ((p) >= 26 && (p) <= 37)
 
 #endif // _ESP32S3_N16R8_CUSTOM_CONFIG_H_
