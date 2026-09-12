@@ -1,0 +1,1921 @@
+menu "Xiaozhi Assistant"
+
+config OTA_URL
+    string "Default OTA URL"
+    default "https://api.tenclass.net/xiaozhi/ota/"
+    help
+        The application will access this URL to check for new firmwares and server address.
+
+choice
+    prompt "Flash Assets"
+    default FLASH_DEFAULT_ASSETS if !USE_EMOTE_MESSAGE_STYLE
+    default FLASH_EXPRESSION_ASSETS if USE_EMOTE_MESSAGE_STYLE
+    help
+        Select the assets to flash.
+
+    config FLASH_NONE_ASSETS
+        bool "Do not flash assets"
+    config FLASH_DEFAULT_ASSETS
+        bool "Flash Default Assets"
+        depends on !USE_EMOTE_MESSAGE_STYLE
+    config FLASH_CUSTOM_ASSETS
+        bool "Flash Custom Assets"
+    config FLASH_EXPRESSION_ASSETS
+        bool "Flash Emote Assets"
+        depends on USE_EMOTE_MESSAGE_STYLE
+endchoice
+
+config CUSTOM_ASSETS_FILE
+    depends on FLASH_CUSTOM_ASSETS
+    string "Custom Assets File"
+    default "assets.bin"
+    help
+        The custom assets file to flash.
+        It can be a local file relative to the project directory or a remote url.
+
+choice
+    prompt "Default Language"
+    default LANGUAGE_ZH_CN
+    help
+        Select device display language
+
+    config LANGUAGE_ZH_CN
+        bool "Chinese"
+    config LANGUAGE_ZH_TW
+        bool "Chinese Traditional"
+    config LANGUAGE_EN_US
+        bool "English"
+    config LANGUAGE_JA_JP
+        bool "Japanese"
+    config LANGUAGE_KO_KR
+        bool "Korean"
+    config LANGUAGE_VI_VN
+        bool "Vietnamese"
+    config LANGUAGE_TH_TH
+        bool "Thai"
+    config LANGUAGE_DE_DE
+        bool "German"
+    config LANGUAGE_FR_FR
+        bool "French"
+    config LANGUAGE_ES_ES
+        bool "Spanish"
+    config LANGUAGE_IT_IT
+        bool "Italian"
+    config LANGUAGE_RU_RU
+        bool "Russian"
+    config LANGUAGE_AR_SA
+        bool "Arabic"
+    config LANGUAGE_HI_IN
+        bool "Hindi"
+    config LANGUAGE_MR_IN
+        bool "Marathi"
+    config LANGUAGE_PT_PT
+        bool "Portuguese"
+    config LANGUAGE_PT_BR
+        bool "Portuguese (Brazil)"
+    config LANGUAGE_PL_PL
+        bool "Polish"
+    config LANGUAGE_CS_CZ
+        bool "Czech"
+    config LANGUAGE_FI_FI
+        bool "Finnish"
+    config LANGUAGE_TR_TR
+        bool "Turkish"
+    config LANGUAGE_ID_ID
+        bool "Indonesian"
+    config LANGUAGE_UK_UA
+        bool "Ukrainian"
+    config LANGUAGE_RO_RO
+        bool "Romanian"
+    config LANGUAGE_BG_BG
+        bool "Bulgarian"
+    config LANGUAGE_CA_ES
+        bool "Catalan"
+    config LANGUAGE_DA_DK
+        bool "Danish"
+    config LANGUAGE_EL_GR
+        bool "Greek"
+    config LANGUAGE_FA_IR
+        bool "Persian"
+    config LANGUAGE_FIL_PH
+        bool "Filipino"
+    config LANGUAGE_HE_IL
+        bool "Hebrew"
+    config LANGUAGE_HR_HR
+        bool "Croatian"
+    config LANGUAGE_HU_HU
+        bool "Hungarian"
+    config LANGUAGE_MS_MY
+        bool "Malay"
+    config LANGUAGE_NB_NO
+        bool "Norwegian"
+    config LANGUAGE_NL_NL
+        bool "Dutch"
+    config LANGUAGE_SK_SK
+        bool "Slovak"
+    config LANGUAGE_SL_SI
+        bool "Slovenian"
+    config LANGUAGE_SV_SE
+        bool "Swedish"
+    config LANGUAGE_SR_RS
+        bool "Serbian"
+endchoice
+
+choice BOARD_TYPE
+    prompt "Target Board"
+    default BOARD_TYPE_BREAD_COMPACT_ESP32 if IDF_TARGET_ESP32
+    default BOARD_TYPE_XMINI_C3_V3 if IDF_TARGET_ESP32C3
+    default BOARD_TYPE_ESP_SENSAIRSHUTTLE if IDF_TARGET_ESP32C5
+    default BOARD_TYPE_WAVESHARE_ESP32_C6_TOUCH_AMOLED_2_06 if IDF_TARGET_ESP32C6
+    default BOARD_TYPE_BREAD_COMPACT_WIFI if IDF_TARGET_ESP32S3
+    default BOARD_TYPE_ESP32_P4_FUNCTION_EV_BOARD if IDF_TARGET_ESP32P4
+    default BOARD_TYPE_ESP32_S31_FUNCTION_COREBOARD_1 if IDF_TARGET_ESP32S31
+    help
+        Select the physical board hardware implementation.
+        The OTA board type and firmware variant name are configured separately.
+
+    config BOARD_TYPE_ESP32_S3_N16R8_CUSTOM
+        bool "ESP32-S3 N16R8 Custom DIY Board (Bo mạch tùy biến toàn diện)"
+        depends on IDF_TARGET_ESP32S3
+
+    config BOARD_TYPE_ATK_DNESP32S3
+        bool "Alientek ATK-DNESP32S3 Development Board (正点原子)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ATK_DNESP32S3_BOX
+        bool "Alientek ATK-DNESP32S3-BOX (正点原子)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ATK_DNESP32S3_BOX0
+        bool "Alientek ATK-DNESP32S3-BOX0 (正点原子)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ATK_DNESP32S3_BOX2_4G
+        bool "Alientek ATK-DNESP32S3-BOX2 4G (正点原子)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ATK_DNESP32S3_BOX2_WIFI
+        bool "Alientek ATK-DNESP32S3-BOX2 Wi-Fi (正点原子)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ATK_DNESP32S3_BOX3
+        bool "Alientek ATK-DNESP32S3-BOX3 (正点原子)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ATK_DNESP32S3M_4G
+        bool "Alientek ATK-DNESP32S3M 4G (正点原子)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ATK_DNESP32S3M_WIFI
+        bool "Alientek ATK-DNESP32S3M Wi-Fi (正点原子)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_BREAD_COMPACT_ESP32
+        bool "Bread Compact ESP32 DevKit (面包板)"
+        depends on IDF_TARGET_ESP32
+    config BOARD_TYPE_BREAD_COMPACT_ESP32_LCD
+        bool "Bread Compact ESP32 DevKit + LCD (面包板)"
+        depends on IDF_TARGET_ESP32
+    config BOARD_TYPE_BREAD_COMPACT_ML307
+        bool "Bread Compact ML307/EC801E 4G (面包板)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_BREAD_COMPACT_NT26
+        bool "Bread Compact NT26 4G (面包板)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_BREAD_COMPACT_WIFI
+        bool "Bread Compact Wi-Fi (面包板)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_BREAD_COMPACT_WIFI_LCD
+        bool "Bread Compact Wi-Fi + LCD (面包板)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_BREAD_COMPACT_WIFI_CAM
+        bool "Bread Compact Wi-Fi + LCD + Camera (面包板)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_DF_S3_AI_CAM
+        bool "DFRobot ESP32-S3 AI Camera Module"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_DF_K10
+        bool "DFRobot UNIHIKER K10 (行空板 K10)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_DOIT_S3_AIBOX
+        bool "DOIT S3 AIBox (四博智联 AI 陪伴盒子)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_DU_CHATX
+        bool "Du ChatX Wi-Fi (嘟嘟开发板)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ELECTRON_BOT
+        bool "ElectronBot"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ESP32_P4_FUNCTION_EV_BOARD
+        bool "Espressif ESP32-P4/P4X-Function-EV-Board"
+        depends on IDF_TARGET_ESP32P4
+    config BOARD_TYPE_ESP32_S3_BOX
+        bool "Espressif ESP32-S3-BOX"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ESP32_S3_BOX_3
+        bool "Espressif ESP32-S3-BOX-3"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ESP32_S3_BOX_LITE
+        bool "Espressif ESP32-S3-BOX-Lite"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ESP32_S3_KORVO_2_V3
+        bool "Espressif ESP32-S3-Korvo-2 V3.0"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ESP32_S3_KORVO_2_V3_RNDIS
+        bool "Espressif ESP32-S3-Korvo-2 V3.0 RNDIS"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ESP32_S3_LCD_EV_BOARD
+        bool "Espressif ESP32-S3-LCD-EV-Board"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ESP32_S3_LCD_EV_BOARD_2
+        bool "Espressif ESP32-S3-LCD-EV-Board-2"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ESP32_S31_FUNCTION_COREBOARD_1
+        bool "Espressif ESP32-S31-Function-CoreBoard-1"
+        depends on IDF_TARGET_ESP32S31
+    config BOARD_TYPE_ESP32_S31_KORVO_1
+        bool "Espressif ESP32-S31-Korvo-1"
+        depends on IDF_TARGET_ESP32S31
+    config BOARD_TYPE_ESP_HI
+        bool "Espressif ESP-HI"
+        depends on IDF_TARGET_ESP32C3
+    config BOARD_TYPE_ESP_SENSAIRSHUTTLE
+        bool "Espressif ESP-SensairShuttle"
+        depends on IDF_TARGET_ESP32C5
+    config BOARD_TYPE_ESP_VOCAT
+        bool "Espressif ESP-VoCat"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ESP_SPARKBOT
+        bool "Espressif SparkBot"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ESP_SPOT_C5
+        bool "Espressif Spot-C5"
+        depends on IDF_TARGET_ESP32C5
+    config BOARD_TYPE_ESP_SPOT_S3
+        bool "Espressif Spot-S3"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_FOLOTOY_AI_PASSPORT
+        bool "FoloToy AI Passport (ESP32-C3)"
+        depends on IDF_TARGET_ESP32C3
+    config BOARD_TYPE_Freenove_ESP32S3_DISPLAY_2_8_LCD
+        bool "Freenove ESP32-S3 Display 2.8-inch LCD"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_GENJUTECH_S3_1_54TFT
+        bool "GenjuTech ESP32-S3 1.54-inch TFT (亘具科技)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_HU_087
+        bool "HU-087"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_JIUCHUAN
+        bool "Jiuchuan ESP32-S3 (九川智能)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_KEVIN_BOX_2
+        bool "Kevin Box 2"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_KEVIN_C3
+        bool "Kevin C3"
+        depends on IDF_TARGET_ESP32C3
+    config BOARD_TYPE_KEVIN_SP_V3_DEV
+        bool "Kevin SP V3"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_KEVIN_SP_V4_DEV
+        bool "Kevin SP V4"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_KEVIN_YUYING_313LCD
+        bool "Kevin Yuying 3.13-inch LCD (鱼鹰科技)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_LABPLUS_LEDONG_V2
+        bool "Labplus Ledong V2"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_LABPLUS_MPYTHON_V3
+        bool "Labplus mPython V3"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_LCDWIKI_ES3C35P
+        bool "LCDWiki ES3C35P 3.5-inch ESP32-S3"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_EDA_ROBOT_PRO
+        bool "LCEDA Course Example EDA-Robot-Pro (EDA 课程案例)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_EDA_SUPER_BEAR
+        bool "LCEDA Course Example EDA-Super-Bear (EDA 课程案例)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_EDA_TV_PRO
+        bool "LCEDA Course Example EDA-TV-Pro (EDA 课程案例)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_LICHUANG_DEV_C3
+        bool "LCKFB SZPI ESP32-C3 (立创·实战派)"
+        depends on IDF_TARGET_ESP32C3
+    config BOARD_TYPE_LICHUANG_DEV_S3
+        bool "LCKFB SZPI ESP32-S3 (立创·实战派)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_LILYGO_T_CAMERAPLUS_S3_V1_0_V1_1
+        bool "LILYGO T-CameraPlus-S3 V1.0/V1.1"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_LILYGO_T_CAMERAPLUS_S3_V1_2
+        bool "LILYGO T-CameraPlus-S3 V1.2"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_LILYGO_T_CIRCLE_S3
+        bool "LILYGO T-Circle-S3"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_LILYGO_T_DISPLAY_S3_PRO_MVSRLORA
+        bool "LILYGO T-Display-S3-Pro MVSR LoRa"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_LILYGO_T_DISPLAY_S3_PRO_MVSRLORA_NO_BATTERY
+        bool "LILYGO T-Display-S3-Pro MVSR LoRa (No Battery)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_M5STACK_ATOM_ECHOS3R
+        bool "M5Stack AtomEchoS3R"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_M5STACK_ATOM_MATRIX_ECHO_BASE
+        bool "M5Stack AtomMatrix + Echo Base"
+        depends on IDF_TARGET_ESP32
+    config BOARD_TYPE_M5STACK_ATOM_S3_ECHO_BASE
+        bool "M5Stack AtomS3 + Echo Base"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_M5STACK_ATOM_S3R_ECHO_BASE
+        bool "M5Stack AtomS3R + Echo Base"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_M5STACK_ATOM_S3R_ECHO_PYRAMID
+        bool "M5Stack AtomS3R + Echo Pyramid"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_M5STACK_ATOM_S3R_CAM_M12_ECHO_BASE
+        bool "M5Stack AtomS3R CAM/M12 + Echo Base"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_M5STACK_CARDPUTER_ADV
+        bool "M5Stack Cardputer Adv"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_M5STACK_CORE_P4
+        bool "M5Stack CoreP4"
+        depends on IDF_TARGET_ESP32P4
+    config BOARD_TYPE_M5STACK_CORE_S3
+        bool "M5Stack CoreS3"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_M5STACK_STICK_S3
+        bool "M5Stack StickS3"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_M5STACK_STOPWATCH
+        bool "M5Stack Stopwatch"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_M5STACK_CORE_TAB5
+        bool "M5Stack Tab5"
+        depends on IDF_TARGET_ESP32P4
+    config BOARD_TYPE_MAGICLICK_S3_2P4
+        bool "Magiclick 2.4 (神奇按钮)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_MAGICLICK_S3_2P5
+        bool "Magiclick 2.5 (神奇按钮)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_MAGICLICK_C3
+        bool "Magiclick C3 (神奇按钮)"
+        depends on IDF_TARGET_ESP32C3
+    config BOARD_TYPE_MAGICLICK_C3_V2
+        bool "Magiclick C3 V2 (神奇按钮)"
+        depends on IDF_TARGET_ESP32C3
+    config BOARD_TYPE_MAZA_AI_ESP32_S3
+        bool "Maza AI ESP32-S3"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_MAZA_AI_ESP32_S31
+        bool "Maza AI ESP32-S31"
+        depends on IDF_TARGET_ESP32S31
+    config BOARD_TYPE_MINSI_K08_DUAL
+        bool "Minsi K08 Dual Network (敏思科技)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_MIXGO_NOVA
+        bool "MixGo Nova (元控·青春)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_MOVECALL_CUICAN_ESP32S3
+        bool "Movecall CuiCan (璀璨 AI 吊坠)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_MOVECALL_MOJI_ESP32S3
+        bool "Movecall Moji"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_MOVECALL_MOJI2_ESP32C5
+        bool "Movecall Moji 2.0"
+        depends on IDF_TARGET_ESP32C5
+    config BOARD_TYPE_XINGZHI_ABS_2_0
+        bool "Nologo Xingzhi ABS 2.0 (无名科技星智)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_XINGZHI_CUBE_0_85TFT_ML307
+        bool "Nologo Xingzhi Cube 0.85-inch TFT ML307 (无名科技星智)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_XINGZHI_CUBE_0_85TFT_WIFI
+        bool "Nologo Xingzhi Cube 0.85-inch TFT Wi-Fi (无名科技星智)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_XINGZHI_CUBE_0_96OLED_ML307
+        bool "Nologo Xingzhi Cube 0.96-inch OLED ML307 (无名科技星智)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_XINGZHI_CUBE_0_96OLED_WIFI
+        bool "Nologo Xingzhi Cube 0.96-inch OLED Wi-Fi (无名科技星智)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_XINGZHI_CUBE_1_54TFT_ML307
+        bool "Nologo Xingzhi Cube 1.54-inch TFT ML307 (无名科技星智)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_XINGZHI_CUBE_1_54TFT_WIFI
+        bool "Nologo Xingzhi Cube 1.54-inch TFT Wi-Fi (无名科技星智)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_XINGZHI_METAL_1_54_WIFI
+        bool "Nologo Xingzhi Metal 1.54-inch Wi-Fi (无名科技星智)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_AI_VOX3
+        bool "NullLab AI Vox V3"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_OTTO_ROBOT
+        bool "Otto Robot"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_QUANDONG_S3_DEV
+        bool "Quandong ESP32-S3 Development Board (全动)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_RYMCU_BIGSMART
+        bool "RYMCU BigSmart"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_SEEED_STUDIO_SENSECAP_WATCHER
+        bool "Seeed Studio SenseCAP Watcher"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_SPOTPEAR_ESP32_S3_1_28_BOX
+        bool "Spotpear ESP32-S3 1.28 Box"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_SPOTPEAR_ESP32_S3_1_54_MUMA
+        bool "Spotpear ESP32-S3 1.54 MUMA"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_SURFER_C3_1_14TFT
+        bool "Surfer C3 1.14-inch TFT"
+        depends on IDF_TARGET_ESP32C3
+    config BOARD_TYPE_TAIJI_PI_S3
+        bool "Taiji Pi ESP32-S3 (太极小派)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_C5_TOUCH_LCD_1_69
+        bool "Waveshare ESP32-C5-Touch-LCD-1.69"
+        depends on IDF_TARGET_ESP32C5
+    config BOARD_TYPE_WAVESHARE_ESP32_C6_EPAPER_1_54
+        bool "Waveshare ESP32-C6-e-Paper-1.54"
+        depends on IDF_TARGET_ESP32C6
+    config BOARD_TYPE_WAVESHARE_ESP32_C6_LCD_0_85
+        bool "Waveshare ESP32-C6-LCD-0.85"
+        depends on IDF_TARGET_ESP32C6
+    config BOARD_TYPE_WAVESHARE_ESP32_C6_LCD_1_69
+        bool "Waveshare ESP32-C6-LCD-1.69"
+        depends on IDF_TARGET_ESP32C6
+    config BOARD_TYPE_WAVESHARE_ESP32_C6_TOUCH_AMOLED_1_32
+        bool "Waveshare ESP32-C6-Touch-AMOLED-1.32"
+        depends on IDF_TARGET_ESP32C6
+    config BOARD_TYPE_WAVESHARE_ESP32_C6_TOUCH_AMOLED_1_43
+        bool "Waveshare ESP32-C6-Touch-AMOLED-1.43"
+        depends on IDF_TARGET_ESP32C6
+    config BOARD_TYPE_WAVESHARE_ESP32_C6_TOUCH_AMOLED_1_8
+        bool "Waveshare ESP32-C6-Touch-AMOLED-1.8"
+        depends on IDF_TARGET_ESP32C6
+    config BOARD_TYPE_WAVESHARE_ESP32_C6_TOUCH_AMOLED_2_06
+        bool "Waveshare ESP32-C6-Touch-AMOLED-2.06"
+        depends on IDF_TARGET_ESP32C6
+    config BOARD_TYPE_WAVESHARE_ESP32_C6_TOUCH_AMOLED_2_16
+        bool "Waveshare ESP32-C6-Touch-AMOLED-2.16"
+        depends on IDF_TARGET_ESP32C6
+    config BOARD_TYPE_WAVESHARE_ESP32_C6_TOUCH_LCD_1_54
+        bool "Waveshare ESP32-C6-Touch-LCD-1.54"
+        depends on IDF_TARGET_ESP32C6
+    config BOARD_TYPE_WAVESHARE_ESP32_C6_TOUCH_LCD_1_83
+        bool "Waveshare ESP32-C6-Touch-LCD-1.83"
+        depends on IDF_TARGET_ESP32C6
+    config BOARD_TYPE_WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_3_4C
+        bool "Waveshare ESP32-P4 Wi-Fi 6 Touch LCD 3.4C"
+        depends on IDF_TARGET_ESP32P4
+    config BOARD_TYPE_WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_3_5
+        bool "Waveshare ESP32-P4 Wi-Fi 6 Touch LCD 3.5"
+        depends on IDF_TARGET_ESP32P4
+    config BOARD_TYPE_WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_4B
+        bool "Waveshare ESP32-P4 Wi-Fi 6 Touch LCD 4B"
+        depends on IDF_TARGET_ESP32P4
+    config BOARD_TYPE_WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_4C
+        bool "Waveshare ESP32-P4 Wi-Fi 6 Touch LCD 4C"
+        depends on IDF_TARGET_ESP32P4
+    config BOARD_TYPE_WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_4_3
+        bool "Waveshare ESP32-P4 Wi-Fi 6 Touch LCD 4.3"
+        depends on IDF_TARGET_ESP32P4
+    config BOARD_TYPE_WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_5
+        bool "Waveshare ESP32-P4 Wi-Fi 6 Touch LCD 5"
+        depends on IDF_TARGET_ESP32P4
+    config BOARD_TYPE_WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_7
+        bool "Waveshare ESP32-P4 Wi-Fi 6 Touch LCD 7"
+        depends on IDF_TARGET_ESP32P4
+    config BOARD_TYPE_WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_7B
+        bool "Waveshare ESP32-P4 Wi-Fi 6 Touch LCD 7B"
+        depends on IDF_TARGET_ESP32P4
+    config BOARD_TYPE_WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_8
+        bool "Waveshare ESP32-P4 Wi-Fi 6 Touch LCD 8"
+        depends on IDF_TARGET_ESP32P4
+    config BOARD_TYPE_WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_10_1
+        bool "Waveshare ESP32-P4 Wi-Fi 6 Touch LCD 10.1"
+        depends on IDF_TARGET_ESP32P4
+    config BOARD_TYPE_WAVESHARE_ESP32_P4_NANO
+        bool "Waveshare ESP32-P4-Nano"
+        depends on IDF_TARGET_ESP32P4
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_AUDIO_BOARD
+        bool "Waveshare ESP32-S3 Audio Board"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_CAM_XXXX
+        bool "Waveshare ESP32-S3-CAM"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_ePaper_1_54_v1
+        bool "Waveshare ESP32-S3-e-Paper-1.54 V1"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_ePaper_1_54_v2
+        bool "Waveshare ESP32-S3-e-Paper-1.54 V2"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_ePaper_3_97
+        bool "Waveshare ESP32-S3-e-Paper-3.97"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_LCD_0_85
+        bool "Waveshare ESP32-S3-LCD-0.85"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_RGB_MATRIX
+        bool "Waveshare ESP32-S3-RGB-Matrix"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_RLCD_4_2
+        bool "Waveshare ESP32-S3-RLCD-4.2"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_AMOLED_1_32
+        bool "Waveshare ESP32-S3-Touch-AMOLED-1.32"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_AMOLED_1_43C
+        bool "Waveshare ESP32-S3-Touch-AMOLED-1.43C"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_AMOLED_1_75
+        bool "Waveshare ESP32-S3-Touch-AMOLED-1.75"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_AMOLED_1_75C
+        bool "Waveshare ESP32-S3-Touch-AMOLED-1.75C"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_AMOLED_1_8
+        bool "Waveshare ESP32-S3-Touch-AMOLED-1.8"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_AMOLED_1_8_v2
+        bool "Waveshare ESP32-S3-Touch-AMOLED-1.8 V2"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_06
+        bool "Waveshare ESP32-S3-Touch-AMOLED-2.06"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_16
+        bool "Waveshare ESP32-S3-Touch-AMOLED-2.16"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_1_46
+        bool "Waveshare ESP32-S3-Touch-LCD-1.46"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_1_54
+        bool "Waveshare ESP32-S3-Touch-LCD-1.54"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_1_83
+        bool "Waveshare ESP32-S3-Touch-LCD-1.83"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_1_85
+        bool "Waveshare ESP32-S3-Touch-LCD-1.85"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_1_85B
+        bool "Waveshare ESP32-S3-Touch-LCD-1.85B"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_1_85C
+        bool "Waveshare ESP32-S3-Touch-LCD-1.85C"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_3_49
+        bool "Waveshare ESP32-S3-Touch-LCD-3.49"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_3_49_V2
+        bool "Waveshare ESP32-S3-Touch-LCD-3.49 V2"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_3_5
+        bool "Waveshare ESP32-S3-Touch-LCD-3.5"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_3_5B
+        bool "Waveshare ESP32-S3-Touch-LCD-3.5B"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_4B
+        bool "Waveshare ESP32-S3-Touch-LCD-4B"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_4_3C
+        bool "Waveshare ESP32-S3-Touch-LCD-4.3C"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_7C
+        bool "Waveshare ESP32-S3-Touch-LCD-7C"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_WAVESHARE_ESP32_TOUCH_LCD_3_5
+        bool "Waveshare ESP32-Touch-LCD-3.5"
+        depends on IDF_TARGET_ESP32
+    config BOARD_TYPE_WDMOMO_CGC
+        bool "WDMomo ESP32-CGC"
+        depends on IDF_TARGET_ESP32
+    config BOARD_TYPE_WDMOMO_CGC_144
+        bool "WDMomo ESP32-CGC-144"
+        depends on IDF_TARGET_ESP32
+    config BOARD_TYPE_WK_ESP32S3_DEV
+        bool "WK ESP32-S3 Dev Board (维控智能开发板)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_XMINI_C3
+        bool "Xmini C3"
+        depends on IDF_TARGET_ESP32C3
+    config BOARD_TYPE_XMINI_C3_4G
+        bool "Xmini C3 4G"
+        depends on IDF_TARGET_ESP32C3
+    config BOARD_TYPE_XMINI_C3_V3
+        bool "Xmini C3 V3"
+        depends on IDF_TARGET_ESP32C3
+    config BOARD_TYPE_XORIGIN_AIPI_LITE
+        bool "XOrigin AiPi-Lite"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_YUNLIAO_S3
+        bool "Yunliao S3 (小智云聊)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ZECTRIX_S3_EPAPER_4_2
+        bool "Zectrix S3 ePaper 4.2"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ZHENGCHEN_1_54TFT_ML307
+        bool "Zhengchen 1.54-inch TFT ML307 (征辰科技)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ZHENGCHEN_1_54TFT_WIFI
+        bool "Zhengchen 1.54-inch TFT Wi-Fi (征辰科技)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ZHENGCHEN_CAM_ML307
+        bool "Zhengchen AI Camera ML307 (征辰科技)"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ZHENGCHEN_CAM
+        bool "Zhengchen AI Camera Wi-Fi (征辰科技)"
+        depends on IDF_TARGET_ESP32S3
+endchoice
+
+choice XIAOZHI_NETWORK_TYPE
+    prompt "Network Type"
+    depends on BOARD_TYPE_WAVESHARE_ESP32_P4_NANO
+    default XIAOZHI_NETWORK_WIFI
+    help
+        Select the network connection used by this board.
+
+    config XIAOZHI_NETWORK_WIFI
+        bool "WiFi"
+
+    config XIAOZHI_NETWORK_ETHERNET
+        bool "Ethernet"
+        select ETH_ENABLED
+        select ETH_USE_ESP32_EMAC
+        help
+            Use the onboard Ethernet port for network access.
+endchoice
+
+menu "Ethernet Configuration"
+    depends on XIAOZHI_NETWORK_ETHERNET
+
+    choice XIAOZHI_ETH_PHY_MODEL
+        prompt "Ethernet PHY Device"
+        default XIAOZHI_ETH_PHY_IP101
+
+        config XIAOZHI_ETH_PHY_IP101
+            bool "IP101/IP101GR"
+            help
+                IP101/IP101GR 10/100M Ethernet PHY, used by Waveshare ESP32-P4-NANO.
+    endchoice
+
+    config XIAOZHI_ETH_MDC_GPIO
+        int "Ethernet SMI MDC GPIO"
+        range 0 54
+        default 31 if BOARD_TYPE_WAVESHARE_ESP32_P4_NANO
+        default 31
+        help
+            GPIO used by the Ethernet SMI MDC signal.
+
+    config XIAOZHI_ETH_MDIO_GPIO
+        int "Ethernet SMI MDIO GPIO"
+        range 0 54
+        default 52 if BOARD_TYPE_WAVESHARE_ESP32_P4_NANO
+        default 52
+        help
+            GPIO used by the Ethernet SMI MDIO signal.
+
+    config XIAOZHI_ETH_PHY_ADDR
+        int "Ethernet PHY Address"
+        range -1 31
+        default 1
+        help
+            Set the PHY address according to the board schematic.
+            Use -1 to let the driver search for the PHY address.
+
+    config XIAOZHI_ETH_PHY_RST_GPIO
+        int "Ethernet PHY Reset GPIO"
+        range -1 54
+        default 51 if BOARD_TYPE_WAVESHARE_ESP32_P4_NANO
+        default -1
+        help
+            GPIO used to reset the Ethernet PHY. Set to -1 if not connected.
+
+endmenu
+
+choice ESP32_S3_LCD_EV_BOARD_VERSION
+    depends on BOARD_TYPE_ESP32_S3_LCD_EV_BOARD
+    prompt "EV_BOARD Type"
+    default ESP32_S3_LCD_EV_BOARD_V1_4
+    config ESP32_S3_LCD_EV_BOARD_V1_4
+        bool "Espressif ESP32-S3-LCD-EV-Board-MB v1.4"
+    config ESP32_S3_LCD_EV_BOARD_V1_5
+        bool "Espressif ESP32-S3-LCD-EV-Board-MB v1.5"
+endchoice
+
+
+choice WK_ESP32S3_DEV_DISPLAY_TYPE
+    depends on BOARD_TYPE_WK_ESP32S3_DEV
+    prompt "WK ESP32S3 DEV Display Type"
+    default WK_ESP32S3_DEV_DISPLAY_OLED
+    help
+        Select display type for WK ESP32S3 DEV board.
+
+    config WK_ESP32S3_DEV_DISPLAY_OLED
+        bool "OLED"
+
+    config WK_ESP32S3_DEV_DISPLAY_LCD
+        bool "LCD"
+
+endchoice
+
+choice DISPLAY_OLED_TYPE
+    depends on BOARD_TYPE_BREAD_COMPACT_WIFI || BOARD_TYPE_BREAD_COMPACT_ML307 || BOARD_TYPE_BREAD_COMPACT_NT26 || BOARD_TYPE_BREAD_COMPACT_ESP32 || BOARD_TYPE_HU_087 || (BOARD_TYPE_WK_ESP32S3_DEV && WK_ESP32S3_DEV_DISPLAY_OLED)
+    prompt "OLED Type"
+    default OLED_SSD1306_128X32
+    help
+        OLED Monochrome Display Type
+    config OLED_SSD1306_128X32
+        bool "SSD1306 128*32"
+    config OLED_SSD1306_128X64
+        bool "SSD1306 128*64"
+    config OLED_SH1106_128X64
+        bool "SH1106 128*64"
+endchoice
+
+
+choice DISPLAY_LCD_TYPE
+    depends on BOARD_TYPE_BREAD_COMPACT_WIFI_LCD || BOARD_TYPE_BREAD_COMPACT_ESP32_LCD || BOARD_TYPE_WDMOMO_CGC || BOARD_TYPE_BREAD_COMPACT_WIFI_CAM || (BOARD_TYPE_WK_ESP32S3_DEV && WK_ESP32S3_DEV_DISPLAY_LCD)
+    prompt "LCD Type"
+    default LCD_ST7789_240X320
+    help
+        LCD Display Type
+    config LCD_ST7789_240X320
+        bool "ST7789 240*320, IPS"
+    config LCD_ST7789_240X320_NO_IPS
+        bool "ST7789 240*320, Non-IPS"
+    config LCD_ST7789_170X320
+        bool "ST7789 170*320"
+    config LCD_ST7789_172X320
+        bool "ST7789 172*320"
+    config LCD_ST7789_240X280
+        bool "ST7789 240*280"
+    config LCD_ST7789_240X240
+        bool "ST7789 240*240"
+    config LCD_ST7789_240X240_7PIN
+        bool "ST7789 240*240, 7PIN"
+    config LCD_ST7789_240X135
+        bool "ST7789 240*135"
+    config LCD_ST7735_128X160
+        bool "ST7735 128*160"
+    config LCD_ST7735_128X128
+        bool "ST7735 128*128"
+    config LCD_ST7796_320X480
+        bool "ST7796 320*480 IPS"
+    config LCD_ST7796_320X480_NO_IPS
+        bool "ST7796 320*480, Non-IPS"
+    config LCD_ILI9341_240X320
+        bool "ILI9341 240*320"
+    config LCD_ILI9341_240X320_NO_IPS
+        bool "ILI9341 240*320, Non-IPS"
+    config LCD_GC9A01_240X240
+        bool "GC9A01 240*240 Circle"
+    config LCD_NV3030B_240X320
+        bool "NV3030B, 分辨率240*320, IPS"
+    config LCD_CUSTOM
+        bool "Custom LCD (自定义屏幕参数)"
+endchoice
+
+choice WK_BOARD_TYPE
+    depends on BOARD_TYPE_WK_ESP32S3_DEV
+    prompt "BOARD_TYPE_WK_ESP32S3_DEV"
+    default BOARD_NO_MOTOR_CONTROL
+    help
+        Board Type
+    config BOARD_HAVE_MOTOR_CONTROL
+        bool "带电机驱动"
+    config BOARD_NO_MOTOR_CONTROL
+        bool "不带电机驱动"    
+endchoice
+
+
+choice DISPLAY_ESP32S3_KORVO2_V3
+    depends on BOARD_TYPE_ESP32_S3_KORVO_2_V3 || BOARD_TYPE_ESP32_S3_KORVO_2_V3_RNDIS
+    prompt "ESP32S3_KORVO2_V3 LCD Type"
+    default ESP32S3_KORVO2_V3_LCD_ST7789
+    help
+        LCD Display Type
+    config ESP32S3_KORVO2_V3_LCD_ST7789
+        bool "ST7789 240*280"
+    config ESP32S3_KORVO2_V3_LCD_ILI9341
+        bool "ILI9341 240*320"
+endchoice
+
+choice DISPLAY_ESP32S3_CAM_XXXX
+    depends on BOARD_TYPE_WAVESHARE_ESP32_S3_CAM_XXXX
+    prompt "ESP32S3_CAM LCD Type"
+    default BSP_LCD_SIZE_2INCH
+    help
+        LCD Display Type
+    config BSP_LCD_SIZE_2INCH
+        bool "2inch Touch LCD Module"
+
+    config BSP_LCD_SIZE_2_8INCH
+        bool "2.8inch Touch LCD Module"
+
+    config BSP_LCD_SIZE_3_5INCH
+        bool "3.5inch Touch LCD Module"
+
+    config BSP_LCD_SIZE_1_83INCH
+        bool "1.83inch Touch LCD Module"
+endchoice
+
+choice DISPLAY_ESP32S3_AUDIO_BOARD
+    depends on BOARD_TYPE_WAVESHARE_ESP32_S3_AUDIO_BOARD
+    prompt "ESP32S3_AUDIO_BOARD LCD Type"
+    default AUDIO_BOARD_LCD_JD9853
+    help
+        LCD Display Type
+    config AUDIO_BOARD_LCD_JD9853
+        bool "JD9853 320*172"
+    config AUDIO_BOARD_LCD_ST7789
+        bool "ST7789 240*320"
+endchoice
+
+choice DISPLAY_ESP32S3_TOUCH_LCD_1_85C
+    depends on BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_1_85C
+    prompt "ESP32S3_TOUCH_LCD_1_85C version"
+    default VERSION_2_0
+    help
+        hardware version
+    config VERSION_1_0
+        bool "version 1.0"
+    config VERSION_2_0
+        bool "version 2.0"
+endchoice
+
+
+choice DISPLAY_STYLE
+    prompt "Select display style"
+    default USE_DEFAULT_MESSAGE_STYLE
+    help
+        Select display style for Xiaozhi device
+
+    config USE_DEFAULT_MESSAGE_STYLE
+        bool "Enable default message style"
+
+    config USE_WECHAT_MESSAGE_STYLE
+        bool "Enable WeChat Message Style"
+
+    config USE_EMOTE_MESSAGE_STYLE
+        bool "Emote animation style"
+        depends on BOARD_TYPE_ESP32_S3_BOX || BOARD_TYPE_ESP32_S3_BOX_3 \
+            || BOARD_TYPE_ESP_VOCAT || BOARD_TYPE_LICHUANG_DEV_S3 || BOARD_TYPE_RYMCU_BIGSMART \
+            || BOARD_TYPE_ESP_SENSAIRSHUTTLE
+endchoice
+
+config USE_MULTILINE_CHAT_MESSAGE
+    bool "Use multiline chat message display (default mode only)"
+    depends on USE_DEFAULT_MESSAGE_STYLE
+    default n
+    help
+        When enabled, the chat message area in the default display mode shows
+        multiple wrapped lines that grow upward from the bottom of the screen,
+        with auto-adaptive height.
+        When disabled (default), a single-line horizontally scrolling label
+        is shown at the bottom of the screen.
+
+choice WAKE_WORD_TYPE
+    prompt "Wake Word Implementation Type"
+    default USE_AFE_WAKE_WORD if (IDF_TARGET_ESP32S3 || IDF_TARGET_ESP32P4 || IDF_TARGET_ESP32S31) && SPIRAM
+    default WAKE_WORD_DISABLED
+    help
+        Choose the type of wake word implementation to use
+
+    config WAKE_WORD_DISABLED
+        bool "Disabled"
+        help
+            Disable wake word detection
+
+    config USE_ESP_WAKE_WORD
+        bool "Wakenet model without AFE"
+        depends on IDF_TARGET_ESP32C3 || IDF_TARGET_ESP32C5 || IDF_TARGET_ESP32C6 || (IDF_TARGET_ESP32 && SPIRAM)
+        help
+            Support ESP32 C3、ESP32 C5 与 ESP32 C6, and (ESP32 with PSRAM)
+
+    config USE_AFE_WAKE_WORD
+        bool "Wakenet model with AFE"
+        depends on (IDF_TARGET_ESP32S3 || IDF_TARGET_ESP32P4 || IDF_TARGET_ESP32S31) && SPIRAM
+        help
+            Support AEC if available, requires ESP32-S3, ESP32-P4, or ESP32-S31 and PSRAM
+
+    config USE_CUSTOM_WAKE_WORD
+        bool "Multinet model (Custom Wake Word)"
+        depends on (IDF_TARGET_ESP32S3 || IDF_TARGET_ESP32P4 || IDF_TARGET_ESP32S31) && SPIRAM
+        help
+            Requires ESP32-S3, ESP32-P4, or ESP32-S31 and PSRAM
+
+endchoice
+
+config CUSTOM_WAKE_WORD
+    string "Custom Wake Word"
+    default "xiao tu dou"
+    depends on USE_CUSTOM_WAKE_WORD
+    help
+        Custom Wake Word, use pinyin for Chinese, separated by spaces
+
+config CUSTOM_WAKE_WORD_DISPLAY
+    string "Custom Wake Word Display"
+    default "小土豆"
+    depends on USE_CUSTOM_WAKE_WORD
+    help
+        Greeting sent to the server after wake word detection
+
+config CUSTOM_WAKE_WORD_THRESHOLD
+    int "Custom Wake Word Threshold (%)"
+    default 20
+    range 1 99
+    depends on USE_CUSTOM_WAKE_WORD
+    help
+        Custom Wake Word Threshold, range 1-99, the smaller the more sensitive, default 20
+
+config SEND_WAKE_WORD_DATA
+    bool "Send Wake Word Data"
+    default y
+    depends on USE_AFE_WAKE_WORD || USE_CUSTOM_WAKE_WORD
+    help
+        Send wake word data to the server as the first message of the conversation and wait for response
+
+config WAKE_WORD_DETECTION_IN_LISTENING
+    bool "Enable Wake Word Detection in Listening Mode"
+    default n
+    depends on USE_AFE_WAKE_WORD || USE_CUSTOM_WAKE_WORD
+    help
+        Enable wake word detection while in listening mode.
+        When enabled, the device can detect wake word during listening,
+        which allows interrupting the current conversation.
+        When disabled (default), wake word detection is turned off during listening.
+
+config USE_AUDIO_PROCESSOR
+    bool "Enable AFE Audio Processing"
+    default y
+    depends on (IDF_TARGET_ESP32S3 || IDF_TARGET_ESP32P4 || IDF_TARGET_ESP32S31) && SPIRAM
+    help
+        Enable the shared AFE uplink path with AEC and VAD. Noise suppression
+        is not enabled because this project does not provide an NSNet model.
+        Requires ESP32-S3, ESP32-P4, or ESP32-S31 with PSRAM.
+
+config USE_DEVICE_AEC
+    bool "Enable Device-Side AEC"
+    default n
+        depends on USE_AUDIO_PROCESSOR && (BOARD_TYPE_ESP32_S3_BOX_3 || BOARD_TYPE_ESP32_S3_BOX || BOARD_TYPE_ESP32_S3_BOX_LITE \
+        || BOARD_TYPE_LICHUANG_DEV_S3 || BOARD_TYPE_RYMCU_BIGSMART || BOARD_TYPE_ESP32_S3_KORVO_2_V3 || BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_AMOLED_1_75|| BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_AMOLED_1_75C || BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_1_83\
+        || BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_06 || BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_4B || BOARD_TYPE_WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_4B || BOARD_TYPE_WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_4_3 || BOARD_TYPE_WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_5 \
+        || BOARD_TYPE_WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_7B \
+        || BOARD_TYPE_WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_3_4C || BOARD_TYPE_WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_4C || BOARD_TYPE_ESP32_S3_LCD_EV_BOARD_2 || BOARD_TYPE_YUNLIAO_S3 \
+        || BOARD_TYPE_WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_7 || BOARD_TYPE_WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_8 || BOARD_TYPE_WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_10_1 \
+        || BOARD_TYPE_ESP_VOCAT || BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_3_49 || BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_3_49_V2 || BOARD_TYPE_WAVESHARE_ESP32_S3_RLCD_4_2 || BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_1_85B || BOARD_TYPE_ZHENGCHEN_CAM || BOARD_TYPE_ZHENGCHEN_CAM_ML307 \
+        || BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_4_3C || BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_1_54 || BOARD_TYPE_WAVESHARE_ESP32_S3_LCD_0_85 || BOARD_TYPE_AI_VOX3 || BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_AMOLED_1_43C || BOARD_TYPE_ATK_DNESP32S3_BOX3)
+    help
+        To work properly, device-side AEC requires a clean output reference path from the speaker signal and physical acoustic isolation between the microphone and speaker.
+
+config USE_SERVER_AEC
+    bool "Enable Server-Side AEC (Unstable)"
+    default n
+    depends on USE_AUDIO_PROCESSOR
+    help
+        To work perperly, server-side AEC requires server support
+
+config USE_AUDIO_DEBUGGER
+    bool "Enable Audio Debugger"
+    default n
+    help
+        Enable audio debugger, send audio data through UDP to the host machine
+
+menu "WiFi Configuration Method"
+    help
+        WiFi Configuration Method Selection
+    config USE_HOTSPOT_WIFI_PROVISIONING
+        bool "Hotspot"
+        default y
+        help
+            Use WiFi Hotspot to transmit WiFi configuration data
+    config USE_ESP_BLUFI_WIFI_PROVISIONING
+        bool "ESP-BluFi"
+        select BT_ENABLED
+        select BT_BLE_42_FEATURES_SUPPORTED
+        select BT_BLE_BLUFI_ENABLE
+        help
+            Use the PSA Crypto based BluFi security protocol adopted by ESP-IDF 6.
+            The provisioning client must support ffdhe3072, SHA-256, and AES-CTR.
+endmenu
+
+config AUDIO_DEBUG_UDP_SERVER
+    string "Audio Debug UDP Server Address"
+    default "192.168.2.100:8000"
+    depends on USE_AUDIO_DEBUGGER
+    help
+        UDP server address, format: IP:PORT, used to receive audio debugging data
+
+config RECEIVE_CUSTOM_MESSAGE
+    bool "Enable Custom Message Reception"
+    default n
+    help
+        Enable custom message reception, allow the device to receive custom messages from the server (preferably through the MQTT protocol)
+
+menu "Camera Configuration"
+    depends on !IDF_TARGET_ESP32
+
+    comment "Warning: Please read the help text before modifying these settings."
+
+    config XIAOZHI_CAMERA_MIRROR_CONFIGURED
+        bool "Override camera mirror settings"
+        default n
+        help
+            When enabled, the common camera implementations apply the
+            horizontal and vertical mirror settings below after the sensor has
+            been initialized. Parameterized builds enable this automatically
+            when either mirror setting is configured.
+
+    config XIAOZHI_CAMERA_HMIRROR
+        bool "Mirror Camera Horizontally"
+        default n
+        depends on XIAOZHI_CAMERA_MIRROR_CONFIGURED
+        help
+            Flip the captured camera image across the vertical axis.
+
+    config XIAOZHI_CAMERA_VFLIP
+        bool "Mirror Camera Vertically"
+        default n
+        depends on XIAOZHI_CAMERA_MIRROR_CONFIGURED
+        help
+            Flip the captured camera image across the horizontal axis.
+
+    config XIAOZHI_CAMERA_ALLOW_JPEG_INPUT
+        bool "Allow JPEG Input"
+        default n
+        help
+            Allow JPEG Input format for the camera.
+
+            This option may need to be enabled when using a USB camera.
+
+            Not currently supported when used simultaneously with XIAOZHI_ENABLE_ROTATE_CAMERA_IMAGE.
+
+    config XIAOZHI_ENABLE_HARDWARE_JPEG_ENCODER
+        bool "Enable Hardware JPEG Encoder"
+        default y
+        depends on SOC_JPEG_ENCODE_SUPPORTED
+        help
+            Use hardware JPEG encoder on ESP32-P4 to encode image to JPEG.
+            See https://docs.espressif.com/projects/esp-idf/en/stable/esp32p4/api-reference/peripherals/jpeg.html for more details.
+
+    config XIAOZHI_ENABLE_HARDWARE_JPEG_DECODER
+        bool "Enable Hardware JPEG Decoder"
+        default n
+        depends on SOC_JPEG_DECODE_SUPPORTED && XIAOZHI_CAMERA_ALLOW_JPEG_INPUT
+        help
+            Use hardware JPEG decoder on ESP32-P4 to decode JPEG to image.
+            See https://docs.espressif.com/projects/esp-idf/en/stable/esp32p4/api-reference/peripherals/jpeg.html for more details.
+
+    config XIAOZHI_ENABLE_CAMERA_DEBUG_MODE
+        bool "Enable Camera Debug Mode"
+        default n
+        help
+            Enable camera debug mode, print camera debug information to the console.
+            Only works on boards that support camera.
+
+    config XIAOZHI_ENABLE_CAMERA_ENDIANNESS_SWAP
+        bool "Enable software camera buffer endianness swapping"
+        default n
+        depends on !CAMERA_SENSOR_SWAP_PIXEL_BYTE_ORDER
+        help
+            This option treats the camera buffer as a uint16_t[] array and performs byte-swapping (endianness conversion) on each element.
+
+            Should only be modified by development board integration engineers.
+
+            **Incorrect usage may result in incorrect image colors!**
+
+            ATTENTION: If the option CAMERA_SENSOR_SWAP_PIXEL_BYTE_ORDER is available for your sensor, please use that instead.
+
+    menuconfig XIAOZHI_ENABLE_ROTATE_CAMERA_IMAGE
+        bool "Enable Camera Image Rotation"
+        default n
+        depends on !XIAOZHI_CAMERA_ALLOW_JPEG_INPUT
+        help
+            Enable camera image rotation, rotate the camera image to the correct orientation.
+            - On ESP32-P4, rotation is handled by PPA hardware.
+            - On other chips, rotation is done in software with performance cost.
+            - For 180° rotation, use HFlip + VFlip instead of this option.
+
+            Not currently supported when used simultaneously with XIAOZHI_CAMERA_ALLOW_JPEG_INPUT.
+
+    if XIAOZHI_ENABLE_ROTATE_CAMERA_IMAGE
+        choice XIAOZHI_CAMERA_IMAGE_ROTATION_ANGLE
+            prompt "Camera Image Rotation Angle (clockwise)"
+            default XIAOZHI_CAMERA_IMAGE_ROTATION_ANGLE_90
+            help
+                Camera image rotation angle.
+            config XIAOZHI_CAMERA_IMAGE_ROTATION_ANGLE_90
+                bool "90°"
+            config XIAOZHI_CAMERA_IMAGE_ROTATION_ANGLE_270
+                bool "270°"
+            comment "For 180° rotation, use HFlip + VFlip instead of this option"
+        endchoice
+    endif
+endmenu
+
+menu "TAIJIPAI_S3_CONFIG"
+    depends on BOARD_TYPE_TAIJI_PI_S3
+    choice I2S_TYPE_TAIJIPI_S3
+        prompt "taiji-pi-S3 I2S Type"
+        default TAIJIPAI_I2S_TYPE_STD
+        help
+            I2S 类型选择
+        config TAIJIPAI_I2S_TYPE_STD
+            bool "I2S Type STD"
+        config TAIJIPAI_I2S_TYPE_PDM
+            bool "I2S Type PDM"
+    endchoice
+
+    config I2S_USE_2SLOT
+    bool "Enable I2S 2 Slot"
+    default y
+    help
+        启动双声道
+endmenu
+
+
+menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
+    depends on BOARD_TYPE_ESP32_S3_N16R8_CUSTOM
+    help
+        Cấu hình toàn diện phần cứng bo mạch ESP32-S3 N16R8 (16MB Flash, 8MB Octal PSRAM).
+
+    menu "1. Màn hình (Display & Touch Screen)"
+        menuconfig ENABLE_CUSTOM_DISPLAY
+            bool "Màn hình hiển thị (Display Panel)"
+            default n
+            help
+                Bật/tắt trình điều khiển màn hình (SPI LCD, OLED I2C, QSPI AMOLED).
+
+        if ENABLE_CUSTOM_DISPLAY
+            choice CUSTOM_DISPLAY_TYPE
+                prompt "Loại Bộ Điều Khiển Màn Hình (Display Controller)"
+                default CUSTOM_DISPLAY_ST7789
+
+                config CUSTOM_DISPLAY_ST7789
+                    bool "Sitronix ST7789 (240x320, 240x240, 170x320 SPI)"
+                config CUSTOM_DISPLAY_ST7796
+                    bool "Sitronix ST7796 (320x480 SPI)"
+                config CUSTOM_DISPLAY_ST7701
+                    bool "Sitronix ST7701 (RGB Interface)"
+                config CUSTOM_DISPLAY_ILI9341
+                    bool "Ilitek ILI9341 (240x320 SPI)"
+                config CUSTOM_DISPLAY_GC9A01
+                    bool "GalaxyCore GC9A01 (240x240 Màn hình tròn SPI)"
+                config CUSTOM_DISPLAY_OLED_SSD1306
+                    bool "Solomon OLED SSD1306 (128x64 / 128x32 I2C)"
+                config CUSTOM_DISPLAY_OLED_SH1106
+                    bool "Sino Wealth OLED SH1106 (128x64 I2C)"
+                config CUSTOM_DISPLAY_QSPI_AMOLED
+                    bool "AMOLED QSPI (SH8601 / CO5300 / SPD2010)"
+                config CUSTOM_DISPLAY_NONE
+                    bool "Không sử dụng màn hình (Audio Only / Headless)"
+            endchoice
+
+            config CUSTOM_DISPLAY_WIDTH
+                int "Độ phân giải ngang (Width Pixels)"
+                default 240
+
+            config CUSTOM_DISPLAY_HEIGHT
+                int "Độ phân giải dọc (Height Pixels)"
+                default 320
+
+            config CUSTOM_DISPLAY_PIN_MOSI
+                int "Chân dữ liệu SPI MOSI (SDA)"
+                default 47
+
+            config CUSTOM_DISPLAY_PIN_CLK
+                int "Chân xung nhịp SPI CLK (SCL)"
+                default 21
+
+            config CUSTOM_DISPLAY_PIN_CS
+                int "Chân chọn chip SPI CS (-1 nếu không dùng)"
+                default 41
+
+            config CUSTOM_DISPLAY_PIN_DC
+                int "Chân lệnh/dữ liệu SPI DC"
+                default 40
+
+            config CUSTOM_DISPLAY_USE_RST
+                bool "Sử dụng chân Reset màn hình (RST)"
+                default y
+                help
+                    Bật nếu màn hình có chân RST điều khiển phần cứng.
+
+            config CUSTOM_DISPLAY_PIN_RST
+                int "Chân GPIO Reset màn hình"
+                depends on CUSTOM_DISPLAY_USE_RST
+                default 42
+
+            config CUSTOM_DISPLAY_USE_BLK
+                bool "Điều khiển đèn nền màn hình (Backlight PWM)"
+                default y
+                help
+                    Bật nếu màn hình có chân BLK/BL điều khiển độ sáng đèn nền.
+
+            config CUSTOM_DISPLAY_PIN_BLK
+                int "Chân GPIO đèn nền (Backlight)"
+                depends on CUSTOM_DISPLAY_USE_BLK
+                default 38
+
+            config CUSTOM_DISPLAY_PIN_I2C_SDA
+                int "Chân I2C SDA (Dành cho OLED)"
+                default 8
+
+            config CUSTOM_DISPLAY_PIN_I2C_SCL
+                int "Chân I2C SCL (Dành cho OLED)"
+                default 9
+
+            config CUSTOM_DISPLAY_OFFSET_X
+                int "Độ lệch tọa độ X (Pixel Offset X)"
+                default 0
+
+            config CUSTOM_DISPLAY_OFFSET_Y
+                int "Độ lệch tọa độ Y (Pixel Offset Y)"
+                default 0
+
+            config CUSTOM_DISPLAY_SWAP_XY
+                bool "Đảo trục tọa độ X/Y (Swap X/Y)"
+                default n
+
+            config CUSTOM_DISPLAY_MIRROR_X
+                bool "Lật ảnh theo trục X (Mirror X)"
+                default n
+
+            config CUSTOM_DISPLAY_MIRROR_Y
+                bool "Lật ảnh theo trục Y (Mirror Y)"
+                default n
+
+            config CUSTOM_DISPLAY_INVERT_COLOR
+                bool "Đảo ngược màu sắc (Invert Colors)"
+                default y
+        endif
+
+        menuconfig ENABLE_CUSTOM_TOUCH
+            bool "Màn hình cảm ứng (Touch Screen Panel)"
+            default n
+            help
+                Bật/tắt lớp cảm ứng điện dung trên màn hình (I2C Touch).
+
+        if ENABLE_CUSTOM_TOUCH
+            choice CUSTOM_TOUCH_TYPE
+                prompt "Loại IC Điều Khiển Cảm Ứng (Touch Controller)"
+                default CUSTOM_TOUCH_CST816S
+
+                config CUSTOM_TOUCH_CST816S
+                    bool "Hynitron CST816S / CST9217 (I2C)"
+                config CUSTOM_TOUCH_GT911
+                    bool "Goodix GT911 / GT1151 (I2C)"
+                config CUSTOM_TOUCH_FT5X06
+                    bool "FocalTech FT5x06 / FT6336 (I2C)"
+                config CUSTOM_TOUCH_NONE
+                    bool "Không sử dụng cảm ứng"
+            endchoice
+
+            config CUSTOM_TOUCH_PIN_SDA
+                int "Chân dữ liệu cảm ứng I2C SDA"
+                default 8
+
+            config CUSTOM_TOUCH_PIN_SCL
+                int "Chân xung nhịp cảm ứng I2C SCL"
+                default 9
+
+            config CUSTOM_TOUCH_USE_INT
+                bool "Sử dụng chân ngắt báo chạm cảm ứng (INT)"
+                default y
+                help
+                    Bật nếu chip cảm ứng dùng chân ngắt INT đánh thức/báo tọa độ.
+
+            config CUSTOM_TOUCH_PIN_INT
+                int "Chân ngắt cảm ứng INT GPIO"
+                depends on CUSTOM_TOUCH_USE_INT
+                default 3
+
+            config CUSTOM_TOUCH_USE_RST
+                bool "Sử dụng chân Reset cảm ứng (RST)"
+                default y
+                help
+                    Bật nếu chip cảm ứng dùng chân RST điều khiển khởi động lại.
+
+            config CUSTOM_TOUCH_PIN_RST
+                int "Chân Reset cảm ứng RST GPIO"
+                depends on CUSTOM_TOUCH_USE_RST
+                default 2
+        endif
+    endmenu
+
+    menu "2. Âm thanh (Audio: Loa & Micro)"
+        menuconfig ENABLE_CUSTOM_SPEAKER
+            bool "Loa phát thanh & Mạch DAC (Speaker & Audio Out)"
+            default n
+            help
+                Cấu hình xuất âm thanh qua Loa và mạch giải mã I2S DAC.
+
+        if ENABLE_CUSTOM_SPEAKER
+            choice CUSTOM_AUDIO_SPEAKER_TYPE
+                prompt "Loại Mạch DAC / Loa (Audio DAC / Amplifier)"
+                default CUSTOM_AUDIO_DAC_MAX98357A
+
+                config CUSTOM_AUDIO_DAC_MAX98357A
+                    bool "MAX98357A (Mạch công suất I2S Class-D Mono 3W)"
+                config CUSTOM_AUDIO_DAC_PCM5102A
+                    bool "PCM5102A (Mạch giải mã Hi-Fi I2S Stereo DAC 32-bit/384kHz)"
+                config CUSTOM_AUDIO_SPK_CODEC_ES8311
+                    bool "Everest Semi ES8311 Codec (I2C)"
+                config CUSTOM_AUDIO_SPK_CODEC_ES8388
+                    bool "Everest Semi ES8388 Stereo Codec (I2C)"
+                config CUSTOM_AUDIO_SPK_CODEC_ES8374
+                    bool "Everest Semi ES8374 Codec"
+                config CUSTOM_AUDIO_SPK_CODEC_ES8389
+                    bool "Everest Semi ES8389 Codec"
+                config CUSTOM_AUDIO_SPK_CODEC_BOX
+                    bool "Box Audio Codec"
+            endchoice
+
+            config CUSTOM_AUDIO_SPK_GPIO_DOUT
+                int "Chân dữ liệu Loa I2S DOUT (DIN trên module)"
+                default 7
+
+            config CUSTOM_AUDIO_SPK_GPIO_BCLK
+                int "Chân xung nhịp Loa I2S BCLK (BCK)"
+                default 15
+
+            config CUSTOM_AUDIO_SPK_GPIO_LRCK
+                int "Chân xung nhịp Loa I2S LRCK / WS (LCK)"
+                default 16
+        endif
+
+        menuconfig ENABLE_CUSTOM_MIC
+            bool "Microphone thu âm (Microphone & Audio In)"
+            default n
+            help
+                Cấu hình thu âm giọng nói qua Microphone I2S MEMS hoặc PDM.
+
+        if ENABLE_CUSTOM_MIC
+            choice CUSTOM_AUDIO_MIC_TYPE
+                prompt "Loại Microphone (Microphone Type)"
+                default CUSTOM_AUDIO_MIC_INMP441
+
+                config CUSTOM_AUDIO_MIC_INMP441
+                    bool "INMP441 / MSM261S (Micro I2S MEMS số)"
+                config CUSTOM_AUDIO_MIC_PDM
+                    bool "PDM Microphone (Micro số PDM)"
+                config CUSTOM_AUDIO_MIC_CODEC_ES8311
+                    bool "Everest Semi ES8311 Codec ADC (I2C)"
+                config CUSTOM_AUDIO_MIC_CODEC_ES8388
+                    bool "Everest Semi ES8388 Stereo Codec ADC (I2C)"
+                config CUSTOM_AUDIO_MIC_CODEC_ES8374
+                    bool "Everest Semi ES8374 Codec"
+                config CUSTOM_AUDIO_MIC_CODEC_ES8389
+                    bool "Everest Semi ES8389 Codec"
+                config CUSTOM_AUDIO_MIC_CODEC_BOX
+                    bool "Box Audio Codec"
+            endchoice
+
+            config CUSTOM_AUDIO_MIC_GPIO_WS
+                int "Micro I2S Word Select (WS / LRCK)"
+                default 4
+
+            config CUSTOM_AUDIO_MIC_GPIO_SCK
+                int "Micro I2S Bit Clock (SCK / BCLK)"
+                default 5
+
+            config CUSTOM_AUDIO_MIC_GPIO_DIN
+                int "Micro I2S Data Input (DIN / SD)"
+                default 6
+        endif
+
+        if ENABLE_CUSTOM_SPEAKER || ENABLE_CUSTOM_MIC
+            choice CUSTOM_AUDIO_I2S_MODE
+                prompt "Chế độ đường xung I2S giữa Loa và Mic"
+                default CUSTOM_AUDIO_I2S_SIMPLEX
+                help
+                    Simplex: Tách riêng xung Clock cho Loa và Mic. Duplex: Dùng chung xung BCLK và WS.
+
+                config CUSTOM_AUDIO_I2S_SIMPLEX
+                    bool "Simplex (Tách riêng Clock cho Mic và Loa)"
+                config CUSTOM_AUDIO_I2S_DUPLEX
+                    bool "Duplex (Dùng chung xung BCLK và WS)"
+            endchoice
+
+            config CUSTOM_AUDIO_CODEC_I2C_SDA
+                int "Chân Codec I2C SDA (Khi dùng ES8311/ES8388)"
+                default 8
+
+            config CUSTOM_AUDIO_CODEC_I2C_SCL
+                int "Chân Codec I2C SCL (Khi dùng ES8311/ES8388)"
+                default 9
+        endif
+    endmenu
+
+    menuconfig ENABLE_CUSTOM_CAMERA
+        bool "3. Camera & Thị giác AI (Camera DVP / USB UVC)"
+        default n
+        help
+            Bật/tắt hỗ trợ camera chụp ảnh và gửi dữ liệu thị giác cho AI Xiaozhi.
+
+    if ENABLE_CUSTOM_CAMERA
+        choice CUSTOM_CAMERA_SENSOR_TYPE
+            prompt "Cảm Biến Camera (Camera Sensor Model)"
+            default CUSTOM_CAMERA_OV2640
+
+            config CUSTOM_CAMERA_OV2640
+                bool "OmniVision OV2640 (2 Megapixel)"
+            config CUSTOM_CAMERA_OV3660
+                bool "OmniVision OV3660 (3 Megapixel)"
+            config CUSTOM_CAMERA_OV5640
+                bool "OmniVision OV5640 (5 Megapixel)"
+            config CUSTOM_CAMERA_SC030IOT
+                bool "SmartSens SC030IOT"
+            config CUSTOM_CAMERA_USB_UVC
+                bool "USB UVC Web Camera (ESP32-S3 USB Host Port)"
+        endchoice
+
+        config CUSTOM_CAM_PIN_XCLK
+            int "Camera XCLK (Master Clock)"
+            default 10
+
+        config CUSTOM_CAM_PIN_PCLK
+            int "Camera PCLK (Pixel Clock)"
+            default 12
+
+        config CUSTOM_CAM_PIN_VSYNC
+            int "Camera VSYNC (Vertical Sync)"
+            default 13
+
+        config CUSTOM_CAM_PIN_HREF
+            int "Camera HREF (Horizontal Reference)"
+            default 14
+
+        config CUSTOM_CAM_PIN_SIOD
+            int "Camera SIOD (SCCB I2C Data)"
+            default 8
+
+        config CUSTOM_CAM_PIN_SIOC
+            int "Camera SIOC (SCCB I2C Clock)"
+            default 9
+
+        config CUSTOM_CAM_USE_RESET
+            bool "Sử dụng chân Reset Camera (RST)"
+            default n
+            help
+                Bật nếu module Camera DVP có chân RST phần cứng.
+
+        config CUSTOM_CAM_PIN_RESET
+            int "Chân Camera Reset GPIO"
+            depends on CUSTOM_CAM_USE_RESET
+            default 15
+
+        config CUSTOM_CAM_USE_PWDN
+            bool "Sử dụng chân Power-Down Camera (PWDN)"
+            default n
+            help
+                Bật nếu module Camera DVP có chân PWDN ngắt nguồn.
+
+        config CUSTOM_CAM_PIN_PWDN
+            int "Chân Camera PWDN GPIO"
+            depends on CUSTOM_CAM_USE_PWDN
+            default 16
+
+        config CUSTOM_CAM_PIN_D0
+            int "Camera Data D0 Pin"
+            default 11
+
+        config CUSTOM_CAM_PIN_D1
+            int "Camera Data D1 Pin"
+            default 2
+
+        config CUSTOM_CAM_PIN_D2
+            int "Camera Data D2 Pin"
+            default 46
+
+        config CUSTOM_CAM_PIN_D3
+            int "Camera Data D3 Pin"
+            default 21
+
+        config CUSTOM_CAM_PIN_D4
+            int "Camera Data D4 Pin"
+            default 47
+
+        config CUSTOM_CAM_PIN_D5
+            int "Camera Data D5 Pin"
+            default 48
+
+        config CUSTOM_CAM_PIN_D6
+            int "Camera Data D6 Pin"
+            default 45
+
+        config CUSTOM_CAM_PIN_D7
+            int "Camera Data D7 Pin"
+            default 40
+
+        config CUSTOM_CAM_HMIRROR
+            bool "Lật ảnh theo chiều ngang (Horizontal Mirror)"
+            default n
+
+        config CUSTOM_CAM_VFLIP
+            bool "Lật ảnh theo chiều dọc (Vertical Flip)"
+            default n
+    endif
+
+    menu "4. Giao thức truyền thông (Communication & IoT Protocols)"
+        menuconfig ENABLE_CUSTOM_UART
+            bool "Cổng UART mở rộng (Serial Communication Port)"
+            default n
+            help
+                Giao tiếp nối tiếp UART cho modem 4G, AI thị giác, Robot hoặc servo.
+
+        if ENABLE_CUSTOM_UART
+            choice CUSTOM_UART_PORT_NUM
+                prompt "Cổng UART Phần Cứng (Hardware UART Port)"
+                default CUSTOM_UART_PORT_1
+
+                config CUSTOM_UART_PORT_1
+                    bool "UART1 (Cổng serial phần cứng 1)"
+                config CUSTOM_UART_PORT_2
+                    bool "UART2 (Cổng serial phần cứng 2)"
+            endchoice
+
+            choice CUSTOM_UART_APPLICATION
+                prompt "Ứng dụng kết nối qua UART"
+                default CUSTOM_UART_APP_CUSTOM
+
+                config CUSTOM_UART_APP_CUSTOM
+                    bool "Giao tiếp Dữ liệu Tùy biến (Custom Serial Device)"
+                config CUSTOM_UART_APP_MODEM_4G
+                    bool "Modem Di Động 4G LTE (AT Command / PPP)"
+                config CUSTOM_UART_APP_SENSECAP_WATCHER
+                    bool "Module AI Thị Giác Seeed SenseCAP Watcher (SSCMA Client)"
+                config CUSTOM_UART_APP_BUS_SERVO
+                    bool "Giao tiếp Động cơ Bus Servo / Vi điều khiển Robot"
+                config CUSTOM_UART_APP_ETHERNET_MODEM
+                    bool "Modem Mạng Ethernet qua UART (uart-eth-modem)"
+            endchoice
+
+            config CUSTOM_UART_PIN_TX
+                int "Chân truyền dữ liệu UART TX GPIO"
+                default 17
+
+            config CUSTOM_UART_PIN_RX
+                int "Chân nhận dữ liệu UART RX GPIO"
+                default 18
+
+            config CUSTOM_UART_USE_FLOW_CONTROL
+                bool "Kích hoạt điều khiển luồng phần cứng (RTS / CTS Flow Control)"
+                default n
+                help
+                    Bật nếu cổng UART kết nối thiết bị yêu cầu bắt tay phần cứng CTS/RTS.
+
+            config CUSTOM_UART_PIN_RTS
+                int "Chân điều khiển luồng RTS GPIO"
+                depends on CUSTOM_UART_USE_FLOW_CONTROL
+                default 19
+
+            config CUSTOM_UART_PIN_CTS
+                int "Chân điều khiển luồng CTS GPIO"
+                depends on CUSTOM_UART_USE_FLOW_CONTROL
+                default 20
+
+            config CUSTOM_UART_BAUD_RATE
+                int "Tốc độ truyền dữ liệu (Baudrate bps)"
+                default 115200
+        endif
+
+        menuconfig ENABLE_CUSTOM_SECONDARY_NETWORK
+            bool "Mạng mở rộng (4G LTE / Ethernet SPI / USB RNDIS)"
+            default n
+            help
+                Cấu hình các module mạng mở rộng ngoài Wi-Fi mặc định của ESP32-S3.
+
+        if ENABLE_CUSTOM_SECONDARY_NETWORK
+            choice CUSTOM_NETWORK_TYPE
+                prompt "Module Kết Nối Mạng Mở Rộng"
+                default CUSTOM_NETWORK_NONE
+
+                config CUSTOM_NETWORK_NONE
+                    bool "Chỉ sử dụng Wi-Fi nội bộ của ESP32-S3"
+                config CUSTOM_NETWORK_4G_ML307
+                    bool "Modem 4G LTE Quectel ML307 / EC801E (UART AT Command)"
+                config CUSTOM_NETWORK_4G_NT26
+                    bool "Modem 4G LTE Neoway NT26 (UART AT Command)"
+                config CUSTOM_NETWORK_ETH_W5500
+                    bool "Ethernet có dây SPI W5500 (RJ45)"
+                config CUSTOM_NETWORK_ETH_DM9051
+                    bool "Ethernet có dây SPI DM9051 (RJ45)"
+                config CUSTOM_NETWORK_USB_RNDIS
+                    bool "USB RNDIS Dongle 4G (USB Host CDC-Ethernet)"
+            endchoice
+
+            config CUSTOM_MODEM_TX_GPIO
+                int "Modem 4G UART TX GPIO"
+                default 17
+
+            config CUSTOM_MODEM_RX_GPIO
+                int "Modem 4G UART RX GPIO"
+                default 18
+
+            config CUSTOM_MODEM_USE_PWRKEY
+                bool "Sử dụng chân kích nguồn Modem 4G (PWRKEY)"
+                default y
+                help
+                    Bật nếu module 4G yêu cầu kích xung chân PWRKEY để khởi động.
+
+            config CUSTOM_MODEM_PWRKEY_GPIO
+                int "Chân Modem 4G PowerKey GPIO"
+                depends on CUSTOM_MODEM_USE_PWRKEY
+                default 2
+
+            config CUSTOM_ETH_SPI_CS_GPIO
+                int "Ethernet SPI Chip Select (CS) GPIO"
+                default 10
+
+            config CUSTOM_ETH_SPI_INT_GPIO
+                int "Ethernet SPI Interrupt (INT) GPIO"
+                default 11
+
+            config CUSTOM_ETH_SPI_RST_GPIO
+                int "Ethernet SPI Reset (RST) GPIO"
+                default 14
+        endif
+
+        menuconfig ENABLE_CUSTOM_MCP_SERVER
+            bool "Giao thức IoT & Tính năng MCP (Model Context Protocol)"
+            default n
+            help
+                Cung cấp bộ công cụ Tool MCP cho AI Xiaozhi điều khiển phần cứng thông minh.
+
+        if ENABLE_CUSTOM_MCP_SERVER
+            config CUSTOM_MCP_TOOL_SYSTEM_INFO
+                bool "Cho phép LLM đọc thông số hệ thống (Pin, RAM, Wi-Fi RSSI)"
+                default y
+
+            config CUSTOM_MCP_TOOL_REBOOT
+                bool "Cho phép LLM ra lệnh khởi động lại bo mạch"
+                default y
+
+            config CUSTOM_MCP_TOOL_OTA
+                bool "Cho phép LLM kiểm tra và cập nhật Firmware OTA"
+                default y
+
+            config CUSTOM_MCP_TOOL_CAMERA
+                bool "Cho phép LLM chụp ảnh từ Camera để phân tích thị giác"
+                default n
+
+            config CUSTOM_MCP_TOOL_THEME
+                bool "Cho phép LLM thay đổi theme giao diện LVGL"
+                default n
+
+            config CUSTOM_MCP_TOOL_LAMP
+                bool "Cho phép LLM bật/tắt thiết bị ngoại vi qua GPIO (Đèn/Relay)"
+                default y
+
+            config CUSTOM_MCP_LAMP_GPIO
+                int "Chân GPIO kết nối thiết bị/đèn điều khiển thông minh"
+                default 13
+        endif
+    endmenu
+
+    menu "5. Mở rộng linh kiện ngoại vi & Cảm biến (Peripherals & Sensors)"
+        menuconfig ENABLE_CUSTOM_LEDS
+            bool "Đèn LED & Động cơ Servo"
+            default n
+            help
+                Cấu hình đèn LED RGB trạng thái và động cơ servo PWM.
+
+        if ENABLE_CUSTOM_LEDS
+            choice CUSTOM_LED_TYPE
+                prompt "Loại Đèn LED Báo Hiệu Trạng Thái"
+                default CUSTOM_LED_WS2812
+
+                config CUSTOM_LED_WS2812
+                    bool "Đèn LED RGB kỹ thuật số WS2812 / SK6812 (Giao thức RMT)"
+                config CUSTOM_LED_SINGLE_PWM
+                    bool "Đèn LED đơn điều chỉnh độ sáng (LEDC PWM)"
+                config CUSTOM_LED_CIRCULAR_STRIP
+                    bool "Vòng tròn LED xoay trạng thái (Circular LED Strip)"
+                config CUSTOM_LED_NONE
+                    bool "Không sử dụng đèn LED"
+            endchoice
+
+            config CUSTOM_LED_GPIO
+                int "Chân GPIO kết nối Đèn LED (Mặc định chân LED onboard)"
+                default 48
+
+            config CUSTOM_LED_COUNT
+                int "Số lượng mắt LED trên dây"
+                default 1
+
+            config CUSTOM_ENABLE_SERVO_DOG
+                bool "Kích hoạt điều khiển Động cơ Servo tương tác qua PWM"
+                default n
+        endif
+
+        menu "Nút bấm vật lý (Buttons & Keys)"
+            config CUSTOM_ENABLE_BUTTON_BOOT
+                bool "Nút Boot Onboard (BOOT Button - GPIO 0)"
+                default y
+                help
+                    Nút nhấn chuyển đổi trạng thái nói và vào chế độ cấu hình Wi-Fi.
+
+            config CUSTOM_BUTTON_BOOT_GPIO
+                int "Chân GPIO nút Boot"
+                depends on CUSTOM_ENABLE_BUTTON_BOOT
+                default 0
+
+            config CUSTOM_ENABLE_BUTTON_TOUCH
+                bool "Nút bấm chức năng PTT / Action (Push-to-Talk)"
+                default n
+                help
+                    Nút nhấn giữ để nói (Push-to-Talk) hoặc nút cảm ứng chạm.
+
+            config CUSTOM_BUTTON_TOUCH_GPIO
+                int "Chân GPIO nút Action"
+                depends on CUSTOM_ENABLE_BUTTON_TOUCH
+                default 1
+
+            config CUSTOM_ENABLE_BUTTON_VOLUME
+                bool "Phím vật lý tăng / giảm âm lượng (Volume Buttons)"
+                default n
+                help
+                    Cặp phím bấm điều chỉnh âm lượng loa ngoài.
+
+            config CUSTOM_BUTTON_VOL_UP_GPIO
+                int "Chân GPIO nút tăng âm lượng (Vol Up)"
+                depends on CUSTOM_ENABLE_BUTTON_VOLUME
+                default 2
+
+            config CUSTOM_BUTTON_VOL_DOWN_GPIO
+                int "Chân GPIO nút giảm âm lượng (Vol Down)"
+                depends on CUSTOM_ENABLE_BUTTON_VOLUME
+                default 3
+        endmenu
+
+        menu "Rơ-le điều khiển thiết bị (Relay Switches)"
+            config CUSTOM_PERIPH_RELAY_ENABLE
+                bool "Kích hoạt Relay đóng cắt thiết bị độc lập"
+                default n
+                help
+                    Điều khiển đóng cắt relay hoặc công tắc thiết bị điện ngoài.
+
+            config CUSTOM_PERIPH_RELAY_GPIO
+                int "Chân GPIO kích hoạt Relay đóng cắt"
+                depends on CUSTOM_PERIPH_RELAY_ENABLE
+                default 13
+        endmenu
+
+        menuconfig ENABLE_CUSTOM_IO_EXPANDER_PMIC
+            bool "Mở rộng chân IO & Quản lý nguồn PMIC"
+            default n
+            help
+                Mở rộng số lượng chân GPIO qua I2C và quản lý sạc nguồn pin PMIC.
+
+        if ENABLE_CUSTOM_IO_EXPANDER_PMIC
+            choice CUSTOM_IO_EXPANDER_TYPE
+                prompt "IC Mở Rộng Chân GPIO (IO Expander)"
+                default CUSTOM_IO_EXPANDER_NONE
+
+                config CUSTOM_IO_EXPANDER_NONE
+                    bool "Không sử dụng IC mở rộng chân"
+                config CUSTOM_IO_EXPANDER_TCA9554
+                    bool "TI TCA9554 / TCA9539 (8-bit / 16-bit I2C IO Expander)"
+                config CUSTOM_IO_EXPANDER_CH32V003
+                    bool "WCH CH32V003 MCU (I2C IO Expander Firmware)"
+            endchoice
+
+            choice CUSTOM_PMIC_TYPE
+                prompt "IC Quản Lý Nguồn (PMIC & Charger)"
+                default CUSTOM_PMIC_NONE
+
+                config CUSTOM_PMIC_NONE
+                    bool "Không sử dụng IC quản lý nguồn"
+                config CUSTOM_PMIC_AXP2101
+                    bool "X-Powers AXP2101 / AXP192 (I2C PMIC)"
+                config CUSTOM_PMIC_SY6970
+                    bool "Silergy SY6970 (I2C Battery Fast Charger)"
+            endchoice
+
+            config CUSTOM_EXPANDER_I2C_SDA
+                int "Chân I2C SDA dùng cho IC Mở Rộng / PMIC"
+                default 8
+
+            config CUSTOM_EXPANDER_I2C_SCL
+                int "Chân I2C SCL dùng cho IC Mở Rộng / PMIC"
+                default 9
+        endif
+
+        menuconfig ENABLE_CUSTOM_SENSORS
+            bool "Cảm biến môi trường, chuyển động & Pin"
+            default n
+            help
+                Bật/tắt các cảm biến phổ biến (nhiệt ẩm, khí áp, ánh sáng, khoảng cách, IMU) và đo pin.
+
+        if ENABLE_CUSTOM_SENSORS
+            # Cảm biến chuyển động & IMU
+            config CUSTOM_ENABLE_IMU_MPU6050
+                bool "Cảm biến gia tốc & con quay 6 trục MPU-6050 (I2C: SDA 8, SCL 9)"
+                default n
+
+            config CUSTOM_ENABLE_IMU_BMI270
+                bool "Cảm biến gia tốc & con quay 6 trục Bosch BMI270 (I2C: SDA 8, SCL 9)"
+                default n
+
+            # Cảm biến nhiệt độ & độ ẩm
+            config CUSTOM_ENABLE_SENSOR_DHT11_22
+                bool "Cảm biến nhiệt độ & độ ẩm DHT11 / DHT22 (1-Wire GPIO)"
+                default n
+
+            config CUSTOM_SENSOR_DHT_GPIO
+                int "Chân dữ liệu cảm biến DHT11/22 GPIO"
+                depends on CUSTOM_ENABLE_SENSOR_DHT11_22
+                default 14
+
+            config CUSTOM_ENABLE_SENSOR_AHT20
+                bool "Cảm biến nhiệt độ & độ ẩm AHT10 / AHT20 / AHT21 (I2C)"
+                default n
+
+            config CUSTOM_ENABLE_SENSOR_SHT3X
+                bool "Cảm biến nhiệt độ & độ ẩm Sensirion SHT30 / SHT31 / SHT40 (I2C)"
+                default n
+
+            # Cảm biến khí áp & độ cao
+            config CUSTOM_ENABLE_SENSOR_BMP280
+                bool "Cảm biến áp suất khí quyển & độ cao Bosch BMP280 / BME280 (I2C)"
+                default n
+
+            # Cảm biến ánh sáng
+            config CUSTOM_ENABLE_SENSOR_BH1750
+                bool "Cảm biến cường độ ánh sáng kỹ thuật số BH1750 (I2C)"
+                default n
+
+            config CUSTOM_ENABLE_SENSOR_LDR
+                bool "Cảm biến ánh sáng quang trở (LDR qua cầu phân áp ADC)"
+                default n
+
+            config CUSTOM_SENSOR_LDR_ADC_CHANNEL
+                int "Kênh ADC1 đo quang trở LDR (Kênh 1 ứng với GPIO 2)"
+                depends on CUSTOM_ENABLE_SENSOR_LDR
+                default 1
+
+            # Cảm biến khoảng cách & chuyển động người
+            config CUSTOM_ENABLE_SENSOR_HCSR04
+                bool "Cảm biến khoảng cách siêu âm HC-SR04 / US-100"
+                default n
+
+            config CUSTOM_SENSOR_HCSR04_TRIG_GPIO
+                int "Chân phát xung siêu âm Trig GPIO"
+                depends on CUSTOM_ENABLE_SENSOR_HCSR04
+                default 11
+
+            config CUSTOM_SENSOR_HCSR04_ECHO_GPIO
+                int "Chân nhận tín hiệu siêu âm Echo GPIO"
+                depends on CUSTOM_ENABLE_SENSOR_HCSR04
+                default 12
+
+            config CUSTOM_ENABLE_SENSOR_PIR
+                bool "Cảm biến phát hiện người chuyển động PIR HC-SR501 / RCWL-0516"
+                default n
+
+            config CUSTOM_SENSOR_PIR_GPIO
+                int "Chân tín hiệu cảm biến PIR GPIO"
+                depends on CUSTOM_ENABLE_SENSOR_PIR
+                default 10
+
+            # Cảm ứng điện dung nội bộ
+            config CUSTOM_ENABLE_TOUCH_SLIDER
+                bool "Thanh trượt cảm ứng điện dung nội bộ ESP32-S3 (Touch Slider)"
+                default n
+
+            # Phương thức đo mức pin
+            choice CUSTOM_BATTERY_MONITOR_TYPE
+                prompt "Phương thức Đo Dung Lượng Pin (Battery Measurement)"
+                default CUSTOM_BATTERY_MONITOR_NONE
+
+                config CUSTOM_BATTERY_MONITOR_NONE
+                    bool "Không sử dụng (Nguồn điện cắm cố định)"
+                config CUSTOM_BATTERY_MONITOR_ADC
+                    bool "Đo qua ADC nội bộ (Bộ chia điện trở Voltage Divider)"
+                config CUSTOM_BATTERY_MONITOR_BQ27220
+                    bool "Đo qua IC đo pin chuyên dụng TI BQ27220 (I2C)"
+            endchoice
+
+            config CUSTOM_BATTERY_ADC_CHANNEL
+                int "Kênh ADC1 đo pin (Kênh 0 ứng với chân GPIO 1)"
+                default 0
+
+            config CUSTOM_BATTERY_DIVIDER_R1
+                int "Điện trở nhánh trên R1 cầu phân áp (kOhm)"
+                default 100
+
+            config CUSTOM_BATTERY_DIVIDER_R2
+                int "Điện trở nhánh dưới R2 cầu phân áp (kOhm)"
+                default 100
+        endif
+    endmenu
+
+endmenu
+
+endmenu

@@ -1,0 +1,19 @@
+{
+    "manufacturer": "Custom",
+    "type": "esp32s3-n16r8-custom",
+    "target": "esp32s3",
+    "builds": [
+        {
+            "name": "esp32s3-n16r8-custom",
+            "sdkconfig_append": [
+                "CONFIG_SPIRAM_MODE_OCT=y",
+                "CONFIG_SPIRAM_TYPE_ESP32S3_OCT=y",
+                "CONFIG_ESP32S3_DATA_CACHE_32KB=y",
+                "CONFIG_SPIRAM_SPEED_80M=y",
+                "CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y",
+                "CONFIG_PARTITION_TABLE_CUSTOM=y",
+                "CONFIG_PARTITION_TABLE_CUSTOM_FILENAME=\"partitions/v2/16m.csv\""
+            ]
+        }
+    ]
+}
