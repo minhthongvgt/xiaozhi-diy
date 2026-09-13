@@ -176,6 +176,8 @@ def extract_pin_assignments(config: Dict[str, str]) -> List[PinAssignment]:
                 "CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8374",
                 "CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8389",
                 "CONFIG_CUSTOM_AUDIO_SPK_CODEC_BOX",
+                "CONFIG_CUSTOM_AUDIO_DAC_TAS5805M",
+                "CONFIG_CUSTOM_AUDIO_DAC_AW88298",
             ]
         )
         if is_codec_spk:
@@ -211,6 +213,8 @@ def extract_pin_assignments(config: Dict[str, str]) -> List[PinAssignment]:
                 "CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8374",
                 "CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8389",
                 "CONFIG_CUSTOM_AUDIO_MIC_CODEC_BOX",
+                "CONFIG_CUSTOM_AUDIO_MIC_ADC_ES7210",
+                "CONFIG_CUSTOM_AUDIO_MIC_ADC_ES7243E",
             ]
         )
         if is_codec_mic:
@@ -295,20 +299,20 @@ def extract_pin_assignments(config: Dict[str, str]) -> List[PinAssignment]:
             if pwdn_pin >= 0:
                 assignments.append(PinAssignment("Camera DVP (PWDN)", pwdn_pin))
 
-    # LEDs & Servo
+    # LEDs
     if _is_yes(config, "CONFIG_ENABLE_CUSTOM_LEDS"):
+        led_pin = _get_int(config, "CONFIG_CUSTOM_LED_GPIO", 48)
         if _is_yes(config, "CONFIG_CUSTOM_LED_WS2812"):
-            assignments.append(
-                PinAssignment("Đèn LED RGB WS2812", _get_int(config, "CONFIG_CUSTOM_LED_WS2812_GPIO", 48))
-            )
-        if _is_yes(config, "CONFIG_CUSTOM_LED_SINGLE_PWM"):
-            assignments.append(
-                PinAssignment("Đèn LED đơn PWM", _get_int(config, "CONFIG_CUSTOM_LED_SINGLE_PWM_GPIO", 48))
-            )
-        if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SERVO_DOG"):
-            assignments.append(
-                PinAssignment("Động cơ Servo PWM", _get_int(config, "CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO", 48))
-            )
+            assignments.append(PinAssignment("Đèn LED RGB WS2812", led_pin))
+        elif _is_yes(config, "CONFIG_CUSTOM_LED_SINGLE_PWM"):
+            assignments.append(PinAssignment("Đèn LED đơn PWM", led_pin))
+        elif _is_yes(config, "CONFIG_CUSTOM_LED_CIRCULAR_STRIP"):
+            assignments.append(PinAssignment("Vòng tròn LED xoay", led_pin))
+
+    # Servo Dog Controller (Hỗ trợ cả độc lập và legacy lồng)
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SERVO_DOG"):
+        servo_pin = _get_int(config, "CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO", 48)
+        assignments.append(PinAssignment("Động cơ Servo PWM", servo_pin))
 
     # Buttons
     if _is_yes(config, "CONFIG_CUSTOM_ENABLE_BUTTON_BOOT"):
@@ -333,18 +337,38 @@ def extract_pin_assignments(config: Dict[str, str]) -> List[PinAssignment]:
             PinAssignment("Rơ-le điều khiển thiết bị", _get_int(config, "CONFIG_CUSTOM_PERIPH_RELAY_GPIO", 13))
         )
 
-    # IO Expander / PMIC
-    if _is_yes(config, "CONFIG_ENABLE_CUSTOM_IO_EXPANDER_PMIC"):
+    # IO Expander (Độc lập hoặc Legacy)
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_IO_EXPANDER") or (
+        _is_yes(config, "CONFIG_ENABLE_CUSTOM_IO_EXPANDER_PMIC") and not _is_yes(config, "CONFIG_CUSTOM_IO_EXPANDER_NONE")
+    ):
         sda = _get_int(config, "CONFIG_CUSTOM_EXPANDER_I2C_SDA", 8)
         scl = _get_int(config, "CONFIG_CUSTOM_EXPANDER_I2C_SCL", 9)
-        assignments.append(PinAssignment("IC Mở rộng IO / PMIC (SDA)", sda, "I2C_SDA"))
-        assignments.append(PinAssignment("IC Mở rộng IO / PMIC (SCL)", scl, "I2C_SCL"))
+        assignments.append(PinAssignment("IC Mở rộng IO I2C (SDA)", sda, "I2C_SDA"))
+        assignments.append(PinAssignment("IC Mở rộng IO I2C (SCL)", scl, "I2C_SCL"))
+        int_pin = _get_int(config, "CONFIG_CUSTOM_EXPANDER_INT_PIN", -1)
+        if int_pin >= 0:
+            assignments.append(PinAssignment("IC Mở rộng IO (INT)", int_pin))
+        rst_pin = _get_int(config, "CONFIG_CUSTOM_EXPANDER_RST_PIN", -1)
+        if rst_pin >= 0:
+            assignments.append(PinAssignment("IC Mở rộng IO (RST)", rst_pin))
 
-    # Sensors (Kiểm tra cả cờ nhóm và cờ trực tiếp để đảm bảo tính tương thích)
+    # PMIC (Độc lập hoặc Legacy)
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_PMIC") or (
+        _is_yes(config, "CONFIG_ENABLE_CUSTOM_IO_EXPANDER_PMIC") and not _is_yes(config, "CONFIG_CUSTOM_PMIC_NONE")
+    ):
+        sda = _get_int(config, "CONFIG_CUSTOM_PMIC_I2C_SDA", _get_int(config, "CONFIG_CUSTOM_EXPANDER_I2C_SDA", 8))
+        scl = _get_int(config, "CONFIG_CUSTOM_PMIC_I2C_SCL", _get_int(config, "CONFIG_CUSTOM_EXPANDER_I2C_SCL", 9))
+        assignments.append(PinAssignment("IC Quản lý nguồn PMIC (SDA)", sda, "I2C_SDA"))
+        assignments.append(PinAssignment("IC Quản lý nguồn PMIC (SCL)", scl, "I2C_SCL"))
+        int_pin = _get_int(config, "CONFIG_CUSTOM_PMIC_INT_PIN", -1)
+        if int_pin >= 0:
+            assignments.append(PinAssignment("IC Quản lý nguồn PMIC (INT)", int_pin))
+
+    # Sensors
     sensors_active = _is_yes(config, "CONFIG_ENABLE_CUSTOM_SENSORS")
 
     # IMU
-    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_IMU_MPU6050") or _is_yes(config, "CONFIG_CUSTOM_ENABLE_IMU_BMI270"):
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_IMU_SENSORS") or _is_yes(config, "CONFIG_CUSTOM_ENABLE_IMU_MPU6050") or _is_yes(config, "CONFIG_CUSTOM_ENABLE_IMU_BMI270"):
         sda = _get_int(config, "CONFIG_CUSTOM_IMU_I2C_SDA", 8)
         scl = _get_int(config, "CONFIG_CUSTOM_IMU_I2C_SCL", 9)
         assignments.append(PinAssignment("Cảm biến IMU 6 trục (SDA)", sda, "I2C_SDA"))
@@ -355,21 +379,26 @@ def extract_pin_assignments(config: Dict[str, str]) -> List[PinAssignment]:
         dht = _get_int(config, "CONFIG_CUSTOM_SENSOR_DHT_GPIO", 14)
         assignments.append(PinAssignment("Cảm biến Nhiệt ẩm DHT11/22", dht))
 
-    # I2C Sensors: AHT20, SHT3x, BMP280, BH1750
-    has_i2c_sensor = any(
-        _is_yes(config, k)
-        for k in [
-            "CONFIG_CUSTOM_ENABLE_SENSOR_AHT20",
-            "CONFIG_CUSTOM_ENABLE_SENSOR_SHT3X",
-            "CONFIG_CUSTOM_ENABLE_SENSOR_BMP280",
-            "CONFIG_CUSTOM_ENABLE_SENSOR_BH1750",
-        ]
-    )
-    if has_i2c_sensor:
+    # I2C Temp/Humid (AHT20, SHT3x)
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SENSOR_I2C_TEMP_HUMID") or _is_yes(config, "CONFIG_CUSTOM_ENABLE_SENSOR_AHT20") or _is_yes(config, "CONFIG_CUSTOM_ENABLE_SENSOR_SHT3X"):
         sda = _get_int(config, "CONFIG_CUSTOM_SENSOR_I2C_SDA", 8)
         scl = _get_int(config, "CONFIG_CUSTOM_SENSOR_I2C_SCL", 9)
-        assignments.append(PinAssignment("Cảm biến môi trường I2C (SDA)", sda, "I2C_SDA"))
-        assignments.append(PinAssignment("Cảm biến môi trường I2C (SCL)", scl, "I2C_SCL"))
+        assignments.append(PinAssignment("Cảm biến nhiệt ẩm I2C (SDA)", sda, "I2C_SDA"))
+        assignments.append(PinAssignment("Cảm biến nhiệt ẩm I2C (SCL)", scl, "I2C_SCL"))
+
+    # BMP280 / BME280
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SENSOR_BMP280"):
+        sda = _get_int(config, "CONFIG_CUSTOM_SENSOR_BMP280_I2C_SDA", _get_int(config, "CONFIG_CUSTOM_SENSOR_I2C_SDA", 8))
+        scl = _get_int(config, "CONFIG_CUSTOM_SENSOR_BMP280_I2C_SCL", _get_int(config, "CONFIG_CUSTOM_SENSOR_I2C_SCL", 9))
+        assignments.append(PinAssignment("Cảm biến khí áp BMP280 (SDA)", sda, "I2C_SDA"))
+        assignments.append(PinAssignment("Cảm biến khí áp BMP280 (SCL)", scl, "I2C_SCL"))
+
+    # BH1750
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SENSOR_BH1750"):
+        sda = _get_int(config, "CONFIG_CUSTOM_SENSOR_BH1750_I2C_SDA", _get_int(config, "CONFIG_CUSTOM_SENSOR_I2C_SDA", 8))
+        scl = _get_int(config, "CONFIG_CUSTOM_SENSOR_BH1750_I2C_SCL", _get_int(config, "CONFIG_CUSTOM_SENSOR_I2C_SCL", 9))
+        assignments.append(PinAssignment("Cảm biến ánh sáng BH1750 (SDA)", sda, "I2C_SDA"))
+        assignments.append(PinAssignment("Cảm biến ánh sáng BH1750 (SCL)", scl, "I2C_SCL"))
 
     # HC-SR04
     if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SENSOR_HCSR04"):
@@ -383,12 +412,208 @@ def extract_pin_assignments(config: Dict[str, str]) -> List[PinAssignment]:
         pir = _get_int(config, "CONFIG_CUSTOM_SENSOR_PIR_GPIO", 10)
         assignments.append(PinAssignment("Cảm biến chuyển động PIR", pir))
 
+    # Touch Slider
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_TOUCH_SLIDER"):
+        pad1 = _get_int(config, "CONFIG_CUSTOM_TOUCH_SLIDER_PAD1_GPIO", 1)
+        pad2 = _get_int(config, "CONFIG_CUSTOM_TOUCH_SLIDER_PAD2_GPIO", 2)
+        pad3 = _get_int(config, "CONFIG_CUSTOM_TOUCH_SLIDER_PAD3_GPIO", 3)
+        assignments.append(PinAssignment("Thanh trượt cảm ứng (Pad 1)", pad1))
+        assignments.append(PinAssignment("Thanh trượt cảm ứng (Pad 2)", pad2))
+        assignments.append(PinAssignment("Thanh trượt cảm ứng (Pad 3)", pad3))
+
     # Battery IC BQ27220
     if _is_yes(config, "CONFIG_CUSTOM_BATTERY_MONITOR_BQ27220"):
-        sda = _get_int(config, "CONFIG_CUSTOM_SENSOR_I2C_SDA", 8)
-        scl = _get_int(config, "CONFIG_CUSTOM_SENSOR_I2C_SCL", 9)
+        sda = _get_int(config, "CONFIG_CUSTOM_BATTERY_BQ27220_I2C_SDA", _get_int(config, "CONFIG_CUSTOM_SENSOR_I2C_SDA", 8))
+        scl = _get_int(config, "CONFIG_CUSTOM_BATTERY_BQ27220_I2C_SCL", _get_int(config, "CONFIG_CUSTOM_SENSOR_I2C_SCL", 9))
         assignments.append(PinAssignment("IC đo pin BQ27220 (SDA)", sda, "I2C_SDA"))
         assignments.append(PinAssignment("IC đo pin BQ27220 (SCL)", scl, "I2C_SCL"))
+
+    # Cảm biến Khí / CO2 (SCD40/41 hoặc SGP30/40)
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SENSOR_GAS_CO2"):
+        sda = _get_int(config, "CONFIG_CUSTOM_SENSOR_GAS_I2C_SDA", 8)
+        scl = _get_int(config, "CONFIG_CUSTOM_SENSOR_GAS_I2C_SCL", 9)
+        assignments.append(PinAssignment("Cảm biến Khí/CO2 (SDA)", sda, "I2C_SDA"))
+        assignments.append(PinAssignment("Cảm biến Khí/CO2 (SCL)", scl, "I2C_SCL"))
+
+    # Cảm biến cử chỉ APDS-9960
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SENSOR_APDS9960"):
+        sda = _get_int(config, "CONFIG_CUSTOM_SENSOR_APDS9960_I2C_SDA", 8)
+        scl = _get_int(config, "CONFIG_CUSTOM_SENSOR_APDS9960_I2C_SCL", 9)
+        assignments.append(PinAssignment("Cảm biến cử chỉ APDS-9960 (SDA)", sda, "I2C_SDA"))
+        assignments.append(PinAssignment("Cảm biến cử chỉ APDS-9960 (SCL)", scl, "I2C_SCL"))
+        int_pin = _get_int(config, "CONFIG_CUSTOM_SENSOR_APDS9960_INT_PIN", -1)
+        if int_pin >= 0:
+            assignments.append(PinAssignment("Cảm biến cử chỉ APDS-9960 (INT)", int_pin))
+
+    # Cảm biến khoảng cách Laser ToF VL53L0X / VL53L1X
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SENSOR_VL53LX"):
+        sda = _get_int(config, "CONFIG_CUSTOM_SENSOR_VL53LX_I2C_SDA", 8)
+        scl = _get_int(config, "CONFIG_CUSTOM_SENSOR_VL53LX_I2C_SCL", 9)
+        assignments.append(PinAssignment("Cảm biến Laser ToF (SDA)", sda, "I2C_SDA"))
+        assignments.append(PinAssignment("Cảm biến Laser ToF (SCL)", scl, "I2C_SCL"))
+        xshut = _get_int(config, "CONFIG_CUSTOM_SENSOR_VL53LX_XSHUT_PIN", -1)
+        if xshut >= 0:
+            assignments.append(PinAssignment("Cảm biến Laser ToF (XSHUT)", xshut))
+
+    # Module thẻ thông minh NFC PN532
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_PERIPH_NFC_PN532"):
+        sda = _get_int(config, "CONFIG_CUSTOM_PERIPH_NFC_I2C_SDA", 8)
+        scl = _get_int(config, "CONFIG_CUSTOM_PERIPH_NFC_I2C_SCL", 9)
+        assignments.append(PinAssignment("Module NFC PN532 (SDA)", sda, "I2C_SDA"))
+        assignments.append(PinAssignment("Module NFC PN532 (SCL)", scl, "I2C_SCL"))
+        irq = _get_int(config, "CONFIG_CUSTOM_PERIPH_NFC_IRQ_PIN", -1)
+        if irq >= 0:
+            assignments.append(PinAssignment("Module NFC PN532 (IRQ)", irq))
+        rst = _get_int(config, "CONFIG_CUSTOM_PERIPH_NFC_RST_PIN", -1)
+        if rst >= 0:
+            assignments.append(PinAssignment("Module NFC PN532 (RST)", rst))
+
+    # Đồng hồ thời gian thực RTC ngoại tuyến
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_PERIPH_RTC"):
+        sda = _get_int(config, "CONFIG_CUSTOM_PERIPH_RTC_I2C_SDA", 8)
+        scl = _get_int(config, "CONFIG_CUSTOM_PERIPH_RTC_I2C_SCL", 9)
+        assignments.append(PinAssignment("Đồng hồ RTC ngoại tuyến (SDA)", sda, "I2C_SDA"))
+        assignments.append(PinAssignment("Đồng hồ RTC ngoại tuyến (SCL)", scl, "I2C_SCL"))
+        int_pin = _get_int(config, "CONFIG_CUSTOM_PERIPH_RTC_INT_PIN", -1)
+        if int_pin >= 0:
+            assignments.append(PinAssignment("Đồng hồ RTC ngoại tuyến (INT)", int_pin))
+
+    # Rotary Encoder EC11
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_PERIPH_ROTARY_ENCODER"):
+        pha_a = _get_int(config, "CONFIG_CUSTOM_PERIPH_ENCODER_PHASE_A", 17)
+        pha_b = _get_int(config, "CONFIG_CUSTOM_PERIPH_ENCODER_PHASE_B", 18)
+        assignments.append(PinAssignment("Rotary Encoder EC11 (Pha A)", pha_a))
+        assignments.append(PinAssignment("Rotary Encoder EC11 (Pha B)", pha_b))
+        key = _get_int(config, "CONFIG_CUSTOM_PERIPH_ENCODER_KEY_PIN", -1)
+        if key >= 0:
+            assignments.append(PinAssignment("Rotary Encoder EC11 (Phím SW)", key))
+
+    # Hồng ngoại IR Remote Transceiver
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_PERIPH_IR_REMOTE"):
+        tx = _get_int(config, "CONFIG_CUSTOM_PERIPH_IR_TX_PIN", 17)
+        assignments.append(PinAssignment("Hồng ngoại IR Remote (TX)", tx))
+        rx = _get_int(config, "CONFIG_CUSTOM_PERIPH_IR_RX_PIN", -1)
+        if rx >= 0:
+            assignments.append(PinAssignment("Hồng ngoại IR Remote (RX)", rx))
+
+    # Module đo năng lượng INA219 / INA226
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SENSOR_INA2XX"):
+        sda = _get_int(config, "CONFIG_CUSTOM_SENSOR_INA2XX_I2C_SDA", 8)
+        scl = _get_int(config, "CONFIG_CUSTOM_SENSOR_INA2XX_I2C_SCL", 9)
+        assignments.append(PinAssignment("Module đo năng lượng INA (SDA)", sda, "I2C_SDA"))
+        assignments.append(PinAssignment("Module đo năng lượng INA (SCL)", scl, "I2C_SCL"))
+
+    # Thẻ nhớ MicroSD SPI
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_PERIPH_SDCARD_SPI"):
+        sck = _get_int(config, "CONFIG_CUSTOM_PERIPH_SDCARD_SPI_SCK", 12)
+        mosi = _get_int(config, "CONFIG_CUSTOM_PERIPH_SDCARD_SPI_MOSI", 11)
+        miso = _get_int(config, "CONFIG_CUSTOM_PERIPH_SDCARD_SPI_MISO", 13)
+        cs = _get_int(config, "CONFIG_CUSTOM_PERIPH_SDCARD_SPI_CS", 10)
+        assignments.append(PinAssignment("Thẻ nhớ MicroSD (SPI SCK)", sck, "SPI_SCK"))
+        assignments.append(PinAssignment("Thẻ nhớ MicroSD (SPI MOSI)", mosi, "SPI_MOSI"))
+        assignments.append(PinAssignment("Thẻ nhớ MicroSD (SPI MISO)", miso, "SPI_MISO"))
+        assignments.append(PinAssignment("Thẻ nhớ MicroSD (SPI CS)", cs))
+
+    # IC điều khiển LED AW9523B / IS31FL3731
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC"):
+        sda = _get_int(config, "CONFIG_CUSTOM_PERIPH_LED_IC_I2C_SDA", 8)
+        scl = _get_int(config, "CONFIG_CUSTOM_PERIPH_LED_IC_I2C_SCL", 9)
+        assignments.append(PinAssignment("IC điều khiển LED (SDA)", sda, "I2C_SDA"))
+        assignments.append(PinAssignment("IC điều khiển LED (SCL)", scl, "I2C_SCL"))
+
+    # 30. Màn hình cảm ứng rời I2C (CST816D/S, GT911, FT6236)
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_PERIPH_TOUCH_SCREEN"):
+        sda = _get_int(config, "CONFIG_CUSTOM_PERIPH_TOUCH_I2C_SDA", 8)
+        scl = _get_int(config, "CONFIG_CUSTOM_PERIPH_TOUCH_I2C_SCL", 9)
+        assignments.append(PinAssignment("Màn hình cảm ứng I2C (SDA)", sda, "I2C_SDA"))
+        assignments.append(PinAssignment("Màn hình cảm ứng I2C (SCL)", scl, "I2C_SCL"))
+        int_pin = _get_int(config, "CONFIG_CUSTOM_PERIPH_TOUCH_INT_PIN", -1)
+        if int_pin >= 0:
+            assignments.append(PinAssignment("Màn hình cảm ứng I2C (INT)", int_pin))
+        rst = _get_int(config, "CONFIG_CUSTOM_PERIPH_TOUCH_RST_PIN", -1)
+        if rst >= 0:
+            assignments.append(PinAssignment("Màn hình cảm ứng I2C (RST)", rst))
+
+    # 31. Mạch mở rộng 16 kênh PWM cho Robot PCA9685
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_PERIPH_PCA9685"):
+        sda = _get_int(config, "CONFIG_CUSTOM_PERIPH_PCA9685_I2C_SDA", 8)
+        scl = _get_int(config, "CONFIG_CUSTOM_PERIPH_PCA9685_I2C_SCL", 9)
+        assignments.append(PinAssignment("Mạch PWM PCA9685 (SDA)", sda, "I2C_SDA"))
+        assignments.append(PinAssignment("Mạch PWM PCA9685 (SCL)", scl, "I2C_SCL"))
+        oe = _get_int(config, "CONFIG_CUSTOM_PERIPH_PCA9685_OE_PIN", -1)
+        if oe >= 0:
+            assignments.append(PinAssignment("Mạch PWM PCA9685 (OE)", oe))
+
+    # 32. Mạch cầu H Động cơ DC 2 chiều TB6612FNG / L9110S / DRV8833
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE"):
+        pwma = _get_int(config, "CONFIG_CUSTOM_PERIPH_MOTOR_PWMA_PIN", 1)
+        dira = _get_int(config, "CONFIG_CUSTOM_PERIPH_MOTOR_DIRA_PIN", 2)
+        pwmb = _get_int(config, "CONFIG_CUSTOM_PERIPH_MOTOR_PWMB_PIN", 41)
+        dirb = _get_int(config, "CONFIG_CUSTOM_PERIPH_MOTOR_DIRB_PIN", 42)
+        assignments.append(PinAssignment("Động cơ DC Cầu H (PWMA)", pwma))
+        assignments.append(PinAssignment("Động cơ DC Cầu H (DIRA)", dira))
+        assignments.append(PinAssignment("Động cơ DC Cầu H (PWMB)", pwmb))
+        assignments.append(PinAssignment("Động cơ DC Cầu H (DIRB)", dirb))
+
+    # 33. Cảm biến nhiệt độ công nghiệp 1-Wire DS18B20
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SENSOR_DS18B20"):
+        dq = _get_int(config, "CONFIG_CUSTOM_SENSOR_DS18B20_PIN", 4)
+        assignments.append(PinAssignment("Cảm biến nhiệt độ DS18B20", dq))
+
+    # 34. Cảm biến lưu lượng chất lỏng đếm xung PCNT
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SENSOR_FLOW_PCNT"):
+        pulse = _get_int(config, "CONFIG_CUSTOM_SENSOR_FLOW_PULSE_PIN", 5)
+        assignments.append(PinAssignment("Cảm biến lưu lượng PCNT", pulse))
+
+    # 35. Cảm biến khói & khí gas dễ cháy MQ-2 / MQ-135
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SENSOR_GAS_ANALOG_MQ"):
+        aout = _get_int(config, "CONFIG_CUSTOM_SENSOR_MQ_ANALOG_PIN", 1)
+        assignments.append(PinAssignment("Cảm biến khí gas MQ (ADC)", aout))
+
+    # 36. Cảm biến cảnh báo chấn động / Rung SW-420
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SENSOR_VIBRATION_SW420"):
+        dout = _get_int(config, "CONFIG_CUSTOM_SENSOR_VIBRATION_PIN", 6)
+        assignments.append(PinAssignment("Cảm biến rung SW-420", dout))
+
+    # 37. Cảm biến cảnh báo hỏa hoạn / Lửa Flame Sensor
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SENSOR_FLAME"):
+        dout = _get_int(config, "CONFIG_CUSTOM_SENSOR_FLAME_PIN", 7)
+        assignments.append(PinAssignment("Cảm biến ngọn lửa Flame", dout))
+
+    # 38. Đầu đọc thẻ từ RFID 13.56MHz RC522 (SPI)
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_PERIPH_RFID_RC522"):
+        sck = _get_int(config, "CONFIG_CUSTOM_PERIPH_RC522_SPI_SCK", 12)
+        mosi = _get_int(config, "CONFIG_CUSTOM_PERIPH_RC522_SPI_MOSI", 11)
+        miso = _get_int(config, "CONFIG_CUSTOM_PERIPH_RC522_SPI_MISO", 13)
+        cs = _get_int(config, "CONFIG_CUSTOM_PERIPH_RC522_SPI_CS", 21)
+        assignments.append(PinAssignment("Đầu đọc thẻ RFID RC522 (SPI SCK)", sck, "SPI_SCK"))
+        assignments.append(PinAssignment("Đầu đọc thẻ RFID RC522 (SPI MOSI)", mosi, "SPI_MOSI"))
+        assignments.append(PinAssignment("Đầu đọc thẻ RFID RC522 (SPI MISO)", miso, "SPI_MISO"))
+        assignments.append(PinAssignment("Đầu đọc thẻ RFID RC522 (SPI CS)", cs))
+        rst = _get_int(config, "CONFIG_CUSTOM_PERIPH_RC522_RST_PIN", -1)
+        if rst >= 0:
+            assignments.append(PinAssignment("Đầu đọc thẻ RFID RC522 (RST)", rst))
+
+    # 39. Giám sát trạng thái sạc pin TP4056
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_PERIPH_BATTERY_CHARGING_DETECT"):
+        chrg = _get_int(config, "CONFIG_CUSTOM_PERIPH_BATTERY_CHRG_PIN", 3)
+        assignments.append(PinAssignment("Giám sát sạc pin TP4056 (CHRG)", chrg))
+
+    # 40. Giao tiếp mạng công nghiệp CAN Bus / TWAI Controller
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_PERIPH_CAN_TWAI"):
+        tx = _get_int(config, "CONFIG_CUSTOM_PERIPH_TWAI_TX_PIN", 15)
+        rx = _get_int(config, "CONFIG_CUSTOM_PERIPH_TWAI_RX_PIN", 16)
+        assignments.append(PinAssignment("Mạng CAN/TWAI Controller (TX)", tx))
+        assignments.append(PinAssignment("Mạng CAN/TWAI Controller (RX)", rx))
+
+    # 41. Module mạng di động không dây ngoài trời 4G LTE Cat.1
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE"):
+        tx = _get_int(config, "CONFIG_CUSTOM_PERIPH_4G_UART_TX_PIN", 43)
+        rx = _get_int(config, "CONFIG_CUSTOM_PERIPH_4G_UART_RX_PIN", 44)
+        pwr = _get_int(config, "CONFIG_CUSTOM_PERIPH_4G_PWRKEY_PIN", 2)
+        assignments.append(PinAssignment("Modem di động 4G LTE (TX)", tx))
+        assignments.append(PinAssignment("Modem di động 4G LTE (RX)", rx))
+        assignments.append(PinAssignment("Modem di động 4G LTE (PWRKEY)", pwr))
 
     return assignments
 
@@ -433,6 +658,9 @@ def validate_pin_assignments(
             continue
         if types == {"I2S_BCLK"} or types == {"I2S_WS"}:
             # Hợp lệ: Dùng chung xung I2S Duplex
+            continue
+        if types == {"SPI_SCK"} or types == {"SPI_MOSI"} or types == {"SPI_MISO"}:
+            # Hợp lệ: Dùng chung bus SPI (MicroSD, RFID RC522...)
             continue
 
         # Nếu không thuộc ngoại lệ bus hợp lệ -> XUNG ĐỘT

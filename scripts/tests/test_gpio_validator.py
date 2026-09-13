@@ -148,6 +148,133 @@ class GpioValidatorTests(unittest.TestCase):
             f"Simplex trùng clock nhưng không bị bắt lỗi: {errors}",
         )
 
+    def test_new_peripherals_i2c_sharing_and_conflict_detection(self):
+        """Kiểm tra toàn diện các ngoại vi mới (SCD40, APDS9960, VL53L0X, PN532, RTC, Encoder, IR, INA, SD, LED IC)."""
+        cfg = {
+            "CONFIG_BOARD_TYPE_ESP32_S3_N16R8_CUSTOM": "y",
+            # I2C Peripherals sharing SDA=8, SCL=9
+            "CONFIG_CUSTOM_ENABLE_SENSOR_GAS_CO2": "y",
+            "CONFIG_CUSTOM_SENSOR_GAS_I2C_SDA": "8",
+            "CONFIG_CUSTOM_SENSOR_GAS_I2C_SCL": "9",
+            "CONFIG_CUSTOM_ENABLE_SENSOR_APDS9960": "y",
+            "CONFIG_CUSTOM_SENSOR_APDS9960_I2C_SDA": "8",
+            "CONFIG_CUSTOM_SENSOR_APDS9960_I2C_SCL": "9",
+            "CONFIG_CUSTOM_SENSOR_APDS9960_INT_PIN": "21",
+            "CONFIG_CUSTOM_ENABLE_SENSOR_VL53LX": "y",
+            "CONFIG_CUSTOM_SENSOR_VL53LX_I2C_SDA": "8",
+            "CONFIG_CUSTOM_SENSOR_VL53LX_I2C_SCL": "9",
+            "CONFIG_CUSTOM_SENSOR_VL53LX_XSHUT_PIN": "18",
+            "CONFIG_CUSTOM_ENABLE_PERIPH_NFC_PN532": "y",
+            "CONFIG_CUSTOM_PERIPH_NFC_I2C_SDA": "8",
+            "CONFIG_CUSTOM_PERIPH_NFC_I2C_SCL": "9",
+            "CONFIG_CUSTOM_PERIPH_NFC_IRQ_PIN": "17",
+            "CONFIG_CUSTOM_PERIPH_NFC_RST_PIN": "16",
+            "CONFIG_CUSTOM_ENABLE_PERIPH_RTC": "y",
+            "CONFIG_CUSTOM_PERIPH_RTC_I2C_SDA": "8",
+            "CONFIG_CUSTOM_PERIPH_RTC_I2C_SCL": "9",
+            "CONFIG_CUSTOM_ENABLE_SENSOR_INA2XX": "y",
+            "CONFIG_CUSTOM_SENSOR_INA2XX_I2C_SDA": "8",
+            "CONFIG_CUSTOM_SENSOR_INA2XX_I2C_SCL": "9",
+            "CONFIG_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC": "y",
+            "CONFIG_CUSTOM_PERIPH_LED_IC_I2C_SDA": "8",
+            "CONFIG_CUSTOM_PERIPH_LED_IC_I2C_SCL": "9",
+            # Discrete GPIO Peripherals
+            "CONFIG_CUSTOM_ENABLE_PERIPH_ROTARY_ENCODER": "y",
+            "CONFIG_CUSTOM_PERIPH_ENCODER_PHASE_A": "1",
+            "CONFIG_CUSTOM_PERIPH_ENCODER_PHASE_B": "2",
+            "CONFIG_CUSTOM_PERIPH_ENCODER_KEY_PIN": "3",
+            "CONFIG_CUSTOM_ENABLE_PERIPH_IR_REMOTE": "y",
+            "CONFIG_CUSTOM_PERIPH_IR_TX_PIN": "14",
+            "CONFIG_CUSTOM_PERIPH_IR_RX_PIN": "15",
+            "CONFIG_CUSTOM_ENABLE_PERIPH_SDCARD_SPI": "y",
+            "CONFIG_CUSTOM_PERIPH_SDCARD_SPI_SCK": "12",
+            "CONFIG_CUSTOM_PERIPH_SDCARD_SPI_MOSI": "11",
+            "CONFIG_CUSTOM_PERIPH_SDCARD_SPI_MISO": "13",
+            "CONFIG_CUSTOM_PERIPH_SDCARD_SPI_CS": "10",
+        }
+        errors, warnings = validate_sdkconfig(cfg, is_n16r8=True)
+        self.assertEqual(errors, [], f"Cấu hình ngoại vi mới hợp lệ nhưng bị lỗi: {errors}")
+
+        # Thử nghiệm dải chân cấm trên ngoại vi mới: gán Encoder Pha A = 28
+        bad_cfg = dict(cfg)
+        bad_cfg["CONFIG_CUSTOM_PERIPH_ENCODER_PHASE_A"] = "28"
+        bad_errors, _ = validate_sdkconfig(bad_cfg, is_n16r8=True)
+        self.assertTrue(
+            any("GPIO 28 bị CẤM" in err for err in bad_errors),
+            f"Không chặn chân cấm 28 của Encoder: {bad_errors}",
+        )
+
+    def test_peripherals_30_to_41_validation_and_safety(self):
+        """Kiểm tra toàn diện ngoại vi 30-41 (Touch I2C, PCA9685, TB6612, DS18B20, Flow PCNT, SW420, Flame, RC522 SPI, TP4056, TWAI, 4G)."""
+        cfg = {
+            "CONFIG_BOARD_TYPE_ESP32_S3_N16R8_CUSTOM": "y",
+            # 30. Touch screen I2C
+            "CONFIG_CUSTOM_ENABLE_PERIPH_TOUCH_SCREEN": "y",
+            "CONFIG_CUSTOM_PERIPH_TOUCH_I2C_SDA": "8",
+            "CONFIG_CUSTOM_PERIPH_TOUCH_I2C_SCL": "9",
+            "CONFIG_CUSTOM_PERIPH_TOUCH_INT_PIN": "3",
+            "CONFIG_CUSTOM_PERIPH_TOUCH_RST_PIN": "-1",
+            # 31. PCA9685 PWM
+            "CONFIG_CUSTOM_ENABLE_PERIPH_PCA9685": "y",
+            "CONFIG_CUSTOM_PERIPH_PCA9685_I2C_SDA": "8",
+            "CONFIG_CUSTOM_PERIPH_PCA9685_I2C_SCL": "9",
+            "CONFIG_CUSTOM_PERIPH_PCA9685_OE_PIN": "-1",
+            # 32. Motor DC TB6612
+            "CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE": "y",
+            "CONFIG_CUSTOM_PERIPH_MOTOR_PWMA_PIN": "1",
+            "CONFIG_CUSTOM_PERIPH_MOTOR_DIRA_PIN": "2",
+            "CONFIG_CUSTOM_PERIPH_MOTOR_PWMB_PIN": "41",
+            "CONFIG_CUSTOM_PERIPH_MOTOR_DIRB_PIN": "42",
+            # 33. DS18B20 1-Wire
+            "CONFIG_CUSTOM_ENABLE_SENSOR_DS18B20": "y",
+            "CONFIG_CUSTOM_SENSOR_DS18B20_PIN": "4",
+            # 34. Flow PCNT
+            "CONFIG_CUSTOM_ENABLE_SENSOR_FLOW_PCNT": "y",
+            "CONFIG_CUSTOM_SENSOR_FLOW_PULSE_PIN": "5",
+            # 36. SW-420 Vibration
+            "CONFIG_CUSTOM_ENABLE_SENSOR_VIBRATION_SW420": "y",
+            "CONFIG_CUSTOM_SENSOR_VIBRATION_PIN": "6",
+            # 37. Flame Sensor
+            "CONFIG_CUSTOM_ENABLE_SENSOR_FLAME": "y",
+            "CONFIG_CUSTOM_SENSOR_FLAME_PIN": "7",
+            # 28. MicroSD SPI
+            "CONFIG_CUSTOM_ENABLE_PERIPH_SDCARD_SPI": "y",
+            "CONFIG_CUSTOM_PERIPH_SDCARD_SPI_SCK": "12",
+            "CONFIG_CUSTOM_PERIPH_SDCARD_SPI_MOSI": "11",
+            "CONFIG_CUSTOM_PERIPH_SDCARD_SPI_MISO": "13",
+            "CONFIG_CUSTOM_PERIPH_SDCARD_SPI_CS": "10",
+            # 38. RFID RC522 SPI (dùng chung SCK 12, MOSI 11, MISO 13 với MicroSD, CS 21 riêng)
+            "CONFIG_CUSTOM_ENABLE_PERIPH_RFID_RC522": "y",
+            "CONFIG_CUSTOM_PERIPH_RC522_SPI_SCK": "12",
+            "CONFIG_CUSTOM_PERIPH_RC522_SPI_MOSI": "11",
+            "CONFIG_CUSTOM_PERIPH_RC522_SPI_MISO": "13",
+            "CONFIG_CUSTOM_PERIPH_RC522_SPI_CS": "21",
+            "CONFIG_CUSTOM_PERIPH_RC522_RST_PIN": "-1",
+            # 39. Battery TP4056 CHRG
+            "CONFIG_CUSTOM_ENABLE_PERIPH_BATTERY_CHARGING_DETECT": "y",
+            "CONFIG_CUSTOM_PERIPH_BATTERY_CHRG_PIN": "38",
+            # 40. CAN/TWAI Controller
+            "CONFIG_CUSTOM_ENABLE_PERIPH_CAN_TWAI": "y",
+            "CONFIG_CUSTOM_PERIPH_TWAI_TX_PIN": "15",
+            "CONFIG_CUSTOM_PERIPH_TWAI_RX_PIN": "16",
+            # 41. 4G LTE Cat.1
+            "CONFIG_CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE": "y",
+            "CONFIG_CUSTOM_PERIPH_4G_UART_TX_PIN": "43",
+            "CONFIG_CUSTOM_PERIPH_4G_UART_RX_PIN": "44",
+            "CONFIG_CUSTOM_PERIPH_4G_PWRKEY_PIN": "40",
+        }
+        errors, warnings = validate_sdkconfig(cfg, is_n16r8=True)
+        self.assertEqual(errors, [], f"Lỗi không mong muốn trên ngoại vi 30-41: {errors}")
+
+        # Kiểm tra phát hiện vi phạm chân cấm trên ngoại vi mới (VD: gán DS18B20 vào GPIO 30)
+        bad_cfg = dict(cfg)
+        bad_cfg["CONFIG_CUSTOM_SENSOR_DS18B20_PIN"] = "30"
+        bad_errors, _ = validate_sdkconfig(bad_cfg, is_n16r8=True)
+        self.assertTrue(
+            any("GPIO 30 bị CẤM" in err for err in bad_errors),
+            f"Không chặn chân cấm 30 trên DS18B20: {bad_errors}",
+        )
+
     def test_negative_gpios_are_ignored(self):
         """Chân âm (-1 / NC) không gây xung đột."""
         cfg = {
