@@ -1432,6 +1432,34 @@ def _validate_configured_options(options: list[str], option_name: str) -> None:
         )
 
 
+def _validate_gpio_configuration(preview: bool = False) -> None:
+    """Validate hardware GPIO assignments for conflicts and forbidden pins."""
+    if preview:
+        return
+    sdkconfig = Path("sdkconfig")
+    if not sdkconfig.exists():
+        return
+
+    try:
+        from scripts.gpio_validator import (
+            format_validation_report,
+            safe_print,
+            validate_sdkconfig,
+        )
+    except ImportError:
+        return
+
+    errors, warnings = validate_sdkconfig(sdkconfig)
+    report = format_validation_report(errors, warnings)
+    if report:
+        safe_print(report)
+
+    if errors:
+        raise ValueError(
+            f"Hardware validation failed: detected {len(errors)} GPIO pin conflict(s) or forbidden pin(s) in sdkconfig."
+        )
+
+
 def build_board(
     board_type: str,
     config_filename: str = "config.json",
@@ -1595,6 +1623,7 @@ def build_board(
         for symbols, option_name in validation_symbols:
             _validate_configured_symbols(symbols, option_name)
         _validate_configured_options(build_option_sdkconfig, "--build-options-json")
+        _validate_gpio_configuration(preview=preview)
 
         # build.name is the compatibility-sensitive OTA-reported board identity.
         _emit_build_stage("compiling")

@@ -134,10 +134,6 @@ choice BOARD_TYPE
         Select the physical board hardware implementation.
         The OTA board type and firmware variant name are configured separately.
 
-    config BOARD_TYPE_ESP32_S3_N16R8_CUSTOM
-        bool "ESP32-S3 N16R8 Custom DIY Board (Bo mạch tùy biến toàn diện)"
-        depends on IDF_TARGET_ESP32S3
-
     config BOARD_TYPE_ATK_DNESP32S3
         bool "Alientek ATK-DNESP32S3 Development Board (正点原子)"
         depends on IDF_TARGET_ESP32S3
@@ -197,6 +193,9 @@ choice BOARD_TYPE
         depends on IDF_TARGET_ESP32S3
     config BOARD_TYPE_ELECTRON_BOT
         bool "ElectronBot"
+        depends on IDF_TARGET_ESP32S3
+    config BOARD_TYPE_ESP32_S3_N16R8_CUSTOM
+        bool "ESP32-S3 N16R8 Custom DIY Board (Bo mạch tùy biến toàn diện)"
         depends on IDF_TARGET_ESP32S3
     config BOARD_TYPE_ESP32_P4_FUNCTION_EV_BOARD
         bool "Espressif ESP32-P4/P4X-Function-EV-Board"
@@ -1144,7 +1143,26 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
     help
         Cấu hình toàn diện phần cứng bo mạch ESP32-S3 N16R8 (16MB Flash, 8MB Octal PSRAM).
 
-    menu "1. Màn hình (Display & Touch Screen)"
+    menu "0. Thiết lập nhanh (Quick Setup & Hardware Presets)"
+        config CUSTOM_PRESET_N16R8_DIY_ENABLED
+            bool "Sử dụng Preset Chuẩn N16R8 DIY (Màn hình ST7796, Loa MAX98357A, Micro INMP441, LED WS2812, Boot Button GPIO 0)"
+            default n
+            imply ENABLE_CUSTOM_DISPLAY
+            imply ENABLE_CUSTOM_SPEAKER
+            imply ENABLE_CUSTOM_MIC
+            imply ENABLE_CUSTOM_LEDS
+            imply CUSTOM_ENABLE_BUTTON_BOOT
+            help
+                Kích hoạt cấu hình phần cứng chuẩn và phổ biến nhất cho bo mạch ESP32-S3 N16R8:
+                - Màn hình SPI ST7796 (320x480, MOSI: 47, CLK: 21, CS: 41, DC: 40, RST: 42, BLK: 38)
+                - Mạch công suất Loa I2S DAC MAX98357A Mono 3W (DOUT: 7, BCLK: 15, LRCK: 16)
+                - Micro thu âm MEMS I2S INMP441 (WS: 4, SCK: 5, DIN: 6)
+                - Đèn LED trạng thái RGB WS2812 (GPIO 48)
+                - Nút bấm BOOT Onboard (GPIO 0)
+                Sau khi bật, bạn vẫn có thể vào các Menu 1-4 để tinh chỉnh sâu nếu cần.
+    endmenu
+
+    menu "1. Màn hình & Cảm ứng (Display & Touch Screen)"
         menuconfig ENABLE_CUSTOM_DISPLAY
             bool "Màn hình hiển thị (Display Panel)"
             default n
@@ -1154,7 +1172,8 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
         if ENABLE_CUSTOM_DISPLAY
             choice CUSTOM_DISPLAY_TYPE
                 prompt "Loại Bộ Điều Khiển Màn Hình (Display Controller)"
-                default CUSTOM_DISPLAY_ST7789
+                default CUSTOM_DISPLAY_ST7789 if !CUSTOM_PRESET_N16R8_DIY_ENABLED
+                default CUSTOM_DISPLAY_ST7796 if CUSTOM_PRESET_N16R8_DIY_ENABLED
 
                 config CUSTOM_DISPLAY_ST7789
                     bool "Sitronix ST7789 (240x320, 240x240, 170x320 SPI)"
@@ -1203,55 +1222,88 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             config CUSTOM_DISPLAY_USE_RST
                 bool "Sử dụng chân Reset màn hình (RST)"
                 default y
-                help
-                    Bật nếu màn hình có chân RST điều khiển phần cứng.
 
             config CUSTOM_DISPLAY_PIN_RST
-                int "Chân GPIO Reset màn hình"
+                int "Chân Reset màn hình RST GPIO"
                 depends on CUSTOM_DISPLAY_USE_RST
                 default 42
 
             config CUSTOM_DISPLAY_USE_BLK
-                bool "Điều khiển đèn nền màn hình (Backlight PWM)"
+                bool "Điều khiển đèn nền màn hình (Backlight BLK)"
                 default y
-                help
-                    Bật nếu màn hình có chân BLK/BL điều khiển độ sáng đèn nền.
 
             config CUSTOM_DISPLAY_PIN_BLK
-                int "Chân GPIO đèn nền (Backlight)"
+                int "Chân đèn nền BLK GPIO"
                 depends on CUSTOM_DISPLAY_USE_BLK
                 default 38
 
             config CUSTOM_DISPLAY_PIN_I2C_SDA
-                int "Chân I2C SDA (Dành cho OLED)"
+                int "Chân OLED I2C SDA"
+                depends on CUSTOM_DISPLAY_OLED_SSD1306 || CUSTOM_DISPLAY_OLED_SH1106
                 default 8
 
             config CUSTOM_DISPLAY_PIN_I2C_SCL
-                int "Chân I2C SCL (Dành cho OLED)"
+                int "Chân OLED I2C SCL"
+                depends on CUSTOM_DISPLAY_OLED_SSD1306 || CUSTOM_DISPLAY_OLED_SH1106
                 default 9
 
+            config CUSTOM_DISPLAY_QSPI_CS
+                int "Chân AMOLED QSPI CS"
+                depends on CUSTOM_DISPLAY_QSPI_AMOLED
+                default 10
+
+            config CUSTOM_DISPLAY_QSPI_CLK
+                int "Chân AMOLED QSPI CLK"
+                depends on CUSTOM_DISPLAY_QSPI_AMOLED
+                default 15
+
+            config CUSTOM_DISPLAY_QSPI_D0
+                int "Chân AMOLED QSPI D0"
+                depends on CUSTOM_DISPLAY_QSPI_AMOLED
+                default 11
+
+            config CUSTOM_DISPLAY_QSPI_D1
+                int "Chân AMOLED QSPI D1"
+                depends on CUSTOM_DISPLAY_QSPI_AMOLED
+                default 12
+
+            config CUSTOM_DISPLAY_QSPI_D2
+                int "Chân AMOLED QSPI D2"
+                depends on CUSTOM_DISPLAY_QSPI_AMOLED
+                default 13
+
+            config CUSTOM_DISPLAY_QSPI_D3
+                int "Chân AMOLED QSPI D3"
+                depends on CUSTOM_DISPLAY_QSPI_AMOLED
+                default 14
+
+            config CUSTOM_DISPLAY_QSPI_RST
+                int "Chân AMOLED QSPI Reset"
+                depends on CUSTOM_DISPLAY_QSPI_AMOLED
+                default 16
+
             config CUSTOM_DISPLAY_OFFSET_X
-                int "Độ lệch tọa độ X (Pixel Offset X)"
+                int "Dịch tọa độ X (Offset X Pixels)"
                 default 0
 
             config CUSTOM_DISPLAY_OFFSET_Y
-                int "Độ lệch tọa độ Y (Pixel Offset Y)"
+                int "Dịch tọa độ Y (Offset Y Pixels)"
                 default 0
 
-            config CUSTOM_DISPLAY_SWAP_XY
-                bool "Đảo trục tọa độ X/Y (Swap X/Y)"
-                default n
-
             config CUSTOM_DISPLAY_MIRROR_X
-                bool "Lật ảnh theo trục X (Mirror X)"
+                bool "Đảo chiều gương trục X (Mirror X)"
                 default n
 
             config CUSTOM_DISPLAY_MIRROR_Y
-                bool "Lật ảnh theo trục Y (Mirror Y)"
+                bool "Đảo chiều gương trục Y (Mirror Y)"
+                default n
+
+            config CUSTOM_DISPLAY_SWAP_XY
+                bool "Hoán đổi tọa độ X-Y (X/Y Axes Swapped)"
                 default n
 
             config CUSTOM_DISPLAY_INVERT_COLOR
-                bool "Đảo ngược màu sắc (Invert Colors)"
+                bool "Đảo ngược màu sắc hiển thị (Invert Color)"
                 default y
         endif
 
@@ -1259,11 +1311,11 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             bool "Màn hình cảm ứng (Touch Screen Panel)"
             default n
             help
-                Bật/tắt lớp cảm ứng điện dung trên màn hình (I2C Touch).
+                Bật/tắt IC cảm ứng điện dung qua giao tiếp I2C.
 
         if ENABLE_CUSTOM_TOUCH
             choice CUSTOM_TOUCH_TYPE
-                prompt "Loại IC Điều Khiển Cảm Ứng (Touch Controller)"
+                prompt "Loại IC Cảm Ứng (Touch Controller)"
                 default CUSTOM_TOUCH_CST816S
 
                 config CUSTOM_TOUCH_CST816S
@@ -1277,38 +1329,36 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             endchoice
 
             config CUSTOM_TOUCH_PIN_SDA
-                int "Chân dữ liệu cảm ứng I2C SDA"
+                int "Chân cảm ứng I2C SDA"
                 default 8
 
             config CUSTOM_TOUCH_PIN_SCL
-                int "Chân xung nhịp cảm ứng I2C SCL"
+                int "Chân cảm ứng I2C SCL"
                 default 9
-
-            config CUSTOM_TOUCH_USE_INT
-                bool "Sử dụng chân ngắt báo chạm cảm ứng (INT)"
-                default y
-                help
-                    Bật nếu chip cảm ứng dùng chân ngắt INT đánh thức/báo tọa độ.
 
             config CUSTOM_TOUCH_PIN_INT
                 int "Chân ngắt cảm ứng INT GPIO"
-                depends on CUSTOM_TOUCH_USE_INT
                 default 3
 
-            config CUSTOM_TOUCH_USE_RST
-                bool "Sử dụng chân Reset cảm ứng (RST)"
-                default y
-                help
-                    Bật nếu chip cảm ứng dùng chân RST điều khiển khởi động lại.
-
             config CUSTOM_TOUCH_PIN_RST
-                int "Chân Reset cảm ứng RST GPIO"
-                depends on CUSTOM_TOUCH_USE_RST
+                int "Chân reset cảm ứng RST GPIO (-1 nếu không nối)"
                 default 2
+
+            config CUSTOM_TOUCH_SWAP_XY
+                bool "Hoán đổi tọa độ cảm ứng X-Y"
+                default n
+
+            config CUSTOM_TOUCH_MIRROR_X
+                bool "Đảo chiều cảm ứng trục X"
+                default n
+
+            config CUSTOM_TOUCH_MIRROR_Y
+                bool "Đảo chiều cảm ứng trục Y"
+                default n
         endif
     endmenu
 
-    menu "2. Âm thanh (Audio: Loa & Micro)"
+    menu "2. Âm thanh: Loa & Micro (Audio: Speaker & Microphone)"
         menuconfig ENABLE_CUSTOM_SPEAKER
             bool "Loa phát thanh & Mạch DAC (Speaker & Audio Out)"
             default n
@@ -1347,6 +1397,16 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             config CUSTOM_AUDIO_SPK_GPIO_LRCK
                 int "Chân xung nhịp Loa I2S LRCK / WS (LCK)"
                 default 16
+
+            config CUSTOM_AUDIO_SPK_CODEC_I2C_SDA
+                int "Chân Codec DAC I2C SDA"
+                depends on CUSTOM_AUDIO_SPK_CODEC_ES8311 || CUSTOM_AUDIO_SPK_CODEC_ES8388 || CUSTOM_AUDIO_SPK_CODEC_ES8374 || CUSTOM_AUDIO_SPK_CODEC_ES8389 || CUSTOM_AUDIO_SPK_CODEC_BOX
+                default 8
+
+            config CUSTOM_AUDIO_SPK_CODEC_I2C_SCL
+                int "Chân Codec DAC I2C SCL"
+                depends on CUSTOM_AUDIO_SPK_CODEC_ES8311 || CUSTOM_AUDIO_SPK_CODEC_ES8388 || CUSTOM_AUDIO_SPK_CODEC_ES8374 || CUSTOM_AUDIO_SPK_CODEC_ES8389 || CUSTOM_AUDIO_SPK_CODEC_BOX
+                default 9
         endif
 
         menuconfig ENABLE_CUSTOM_MIC
@@ -1361,168 +1421,59 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 default CUSTOM_AUDIO_MIC_INMP441
 
                 config CUSTOM_AUDIO_MIC_INMP441
-                    bool "INMP441 / MSM261S (Micro I2S MEMS số)"
+                    bool "INMP441 / MSM261S (Microphone số I2S MEMS Omnidirectional)"
                 config CUSTOM_AUDIO_MIC_PDM
-                    bool "PDM Microphone (Micro số PDM)"
+                    bool "PDM Microphone (Micro số giao thức PDM)"
                 config CUSTOM_AUDIO_MIC_CODEC_ES8311
-                    bool "Everest Semi ES8311 Codec ADC (I2C)"
+                    bool "Everest Semi ES8311 ADC (I2C)"
                 config CUSTOM_AUDIO_MIC_CODEC_ES8388
-                    bool "Everest Semi ES8388 Stereo Codec ADC (I2C)"
+                    bool "Everest Semi ES8388 ADC (I2C)"
                 config CUSTOM_AUDIO_MIC_CODEC_ES8374
-                    bool "Everest Semi ES8374 Codec"
+                    bool "Everest Semi ES8374 ADC"
                 config CUSTOM_AUDIO_MIC_CODEC_ES8389
-                    bool "Everest Semi ES8389 Codec"
+                    bool "Everest Semi ES8389 ADC"
                 config CUSTOM_AUDIO_MIC_CODEC_BOX
-                    bool "Box Audio Codec"
+                    bool "Box Audio Codec ADC"
             endchoice
-
-            config CUSTOM_AUDIO_MIC_GPIO_WS
-                int "Micro I2S Word Select (WS / LRCK)"
-                default 4
-
-            config CUSTOM_AUDIO_MIC_GPIO_SCK
-                int "Micro I2S Bit Clock (SCK / BCLK)"
-                default 5
 
             config CUSTOM_AUDIO_MIC_GPIO_DIN
-                int "Micro I2S Data Input (DIN / SD)"
+                int "Chân dữ liệu Micro I2S DIN (SD trên INMP441/MSM261S)"
                 default 6
-        endif
 
-        if ENABLE_CUSTOM_SPEAKER || ENABLE_CUSTOM_MIC
-            choice CUSTOM_AUDIO_I2S_MODE
-                prompt "Chế độ đường xung I2S giữa Loa và Mic"
-                default CUSTOM_AUDIO_I2S_SIMPLEX
-                help
-                    Simplex: Tách riêng xung Clock cho Loa và Mic. Duplex: Dùng chung xung BCLK và WS.
+            config CUSTOM_AUDIO_MIC_GPIO_SCK
+                int "Chân xung nhịp Micro I2S SCK (SCK/BCLK)"
+                default 5
 
-                config CUSTOM_AUDIO_I2S_SIMPLEX
-                    bool "Simplex (Tách riêng Clock cho Mic và Loa)"
-                config CUSTOM_AUDIO_I2S_DUPLEX
-                    bool "Duplex (Dùng chung xung BCLK và WS)"
-            endchoice
+            config CUSTOM_AUDIO_MIC_GPIO_WS
+                int "Chân chọn kênh Micro I2S WS (WS/LRCK)"
+                default 4
 
-            config CUSTOM_AUDIO_CODEC_I2C_SDA
-                int "Chân Codec I2C SDA (Khi dùng ES8311/ES8388)"
+            config CUSTOM_AUDIO_MIC_CODEC_I2C_SDA
+                int "Chân Codec ADC I2C SDA"
+                depends on CUSTOM_AUDIO_MIC_CODEC_ES8311 || CUSTOM_AUDIO_MIC_CODEC_ES8388 || CUSTOM_AUDIO_MIC_CODEC_ES8374 || CUSTOM_AUDIO_MIC_CODEC_ES8389 || CUSTOM_AUDIO_MIC_CODEC_BOX
                 default 8
 
-            config CUSTOM_AUDIO_CODEC_I2C_SCL
-                int "Chân Codec I2C SCL (Khi dùng ES8311/ES8388)"
+            config CUSTOM_AUDIO_MIC_CODEC_I2C_SCL
+                int "Chân Codec ADC I2C SCL"
+                depends on CUSTOM_AUDIO_MIC_CODEC_ES8311 || CUSTOM_AUDIO_MIC_CODEC_ES8388 || CUSTOM_AUDIO_MIC_CODEC_ES8374 || CUSTOM_AUDIO_MIC_CODEC_ES8389 || CUSTOM_AUDIO_MIC_CODEC_BOX
                 default 9
         endif
+
+        choice CUSTOM_AUDIO_I2S_MODE
+            prompt "Chế Độ Xung Nhịp I2S (I2S Clock Mode)"
+            default CUSTOM_AUDIO_I2S_SIMPLEX
+            help
+                Chọn Simplex nếu Loa và Micro chạy trên các kênh xung riêng biệt.
+                Chọn Duplex nếu Loa và Micro dùng chung chân BCLK và WS.
+
+            config CUSTOM_AUDIO_I2S_SIMPLEX
+                bool "Simplex (Độc lập: Loa và Micro có chân Clock BCLK/WS riêng)"
+            config CUSTOM_AUDIO_I2S_DUPLEX
+                bool "Duplex (Dùng chung: Loa và Micro chia sẻ chung chân BCLK và WS)"
+        endchoice
     endmenu
 
-    menuconfig ENABLE_CUSTOM_CAMERA
-        bool "3. Camera & Thị giác AI (Camera DVP / USB UVC)"
-        default n
-        help
-            Bật/tắt hỗ trợ camera chụp ảnh và gửi dữ liệu thị giác cho AI Xiaozhi.
-
-    if ENABLE_CUSTOM_CAMERA
-        choice CUSTOM_CAMERA_SENSOR_TYPE
-            prompt "Cảm Biến Camera (Camera Sensor Model)"
-            default CUSTOM_CAMERA_OV2640
-
-            config CUSTOM_CAMERA_OV2640
-                bool "OmniVision OV2640 (2 Megapixel)"
-            config CUSTOM_CAMERA_OV3660
-                bool "OmniVision OV3660 (3 Megapixel)"
-            config CUSTOM_CAMERA_OV5640
-                bool "OmniVision OV5640 (5 Megapixel)"
-            config CUSTOM_CAMERA_SC030IOT
-                bool "SmartSens SC030IOT"
-            config CUSTOM_CAMERA_USB_UVC
-                bool "USB UVC Web Camera (ESP32-S3 USB Host Port)"
-        endchoice
-
-        config CUSTOM_CAM_PIN_XCLK
-            int "Camera XCLK (Master Clock)"
-            default 10
-
-        config CUSTOM_CAM_PIN_PCLK
-            int "Camera PCLK (Pixel Clock)"
-            default 12
-
-        config CUSTOM_CAM_PIN_VSYNC
-            int "Camera VSYNC (Vertical Sync)"
-            default 13
-
-        config CUSTOM_CAM_PIN_HREF
-            int "Camera HREF (Horizontal Reference)"
-            default 14
-
-        config CUSTOM_CAM_PIN_SIOD
-            int "Camera SIOD (SCCB I2C Data)"
-            default 8
-
-        config CUSTOM_CAM_PIN_SIOC
-            int "Camera SIOC (SCCB I2C Clock)"
-            default 9
-
-        config CUSTOM_CAM_USE_RESET
-            bool "Sử dụng chân Reset Camera (RST)"
-            default n
-            help
-                Bật nếu module Camera DVP có chân RST phần cứng.
-
-        config CUSTOM_CAM_PIN_RESET
-            int "Chân Camera Reset GPIO"
-            depends on CUSTOM_CAM_USE_RESET
-            default 15
-
-        config CUSTOM_CAM_USE_PWDN
-            bool "Sử dụng chân Power-Down Camera (PWDN)"
-            default n
-            help
-                Bật nếu module Camera DVP có chân PWDN ngắt nguồn.
-
-        config CUSTOM_CAM_PIN_PWDN
-            int "Chân Camera PWDN GPIO"
-            depends on CUSTOM_CAM_USE_PWDN
-            default 16
-
-        config CUSTOM_CAM_PIN_D0
-            int "Camera Data D0 Pin"
-            default 11
-
-        config CUSTOM_CAM_PIN_D1
-            int "Camera Data D1 Pin"
-            default 2
-
-        config CUSTOM_CAM_PIN_D2
-            int "Camera Data D2 Pin"
-            default 46
-
-        config CUSTOM_CAM_PIN_D3
-            int "Camera Data D3 Pin"
-            default 21
-
-        config CUSTOM_CAM_PIN_D4
-            int "Camera Data D4 Pin"
-            default 47
-
-        config CUSTOM_CAM_PIN_D5
-            int "Camera Data D5 Pin"
-            default 48
-
-        config CUSTOM_CAM_PIN_D6
-            int "Camera Data D6 Pin"
-            default 45
-
-        config CUSTOM_CAM_PIN_D7
-            int "Camera Data D7 Pin"
-            default 40
-
-        config CUSTOM_CAM_HMIRROR
-            bool "Lật ảnh theo chiều ngang (Horizontal Mirror)"
-            default n
-
-        config CUSTOM_CAM_VFLIP
-            bool "Lật ảnh theo chiều dọc (Vertical Flip)"
-            default n
-    endif
-
-    menu "4. Giao thức truyền thông (Communication & IoT Protocols)"
+    menu "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)"
         menuconfig ENABLE_CUSTOM_UART
             bool "Cổng UART mở rộng (Serial Communication Port)"
             default n
@@ -1540,151 +1491,275 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     bool "UART2 (Cổng serial phần cứng 2)"
             endchoice
 
-            choice CUSTOM_UART_APPLICATION
-                prompt "Ứng dụng kết nối qua UART"
-                default CUSTOM_UART_APP_CUSTOM
+            choice CUSTOM_UART_USAGE
+                prompt "Mục Đích Sử Dụng Cổng UART (UART Usage)"
+                default CUSTOM_UART_USAGE_CUSTOM
 
-                config CUSTOM_UART_APP_CUSTOM
-                    bool "Giao tiếp Dữ liệu Tùy biến (Custom Serial Device)"
-                config CUSTOM_UART_APP_MODEM_4G
-                    bool "Modem Di Động 4G LTE (AT Command / PPP)"
-                config CUSTOM_UART_APP_SENSECAP_WATCHER
-                    bool "Module AI Thị Giác Seeed SenseCAP Watcher (SSCMA Client)"
-                config CUSTOM_UART_APP_BUS_SERVO
-                    bool "Giao tiếp Động cơ Bus Servo / Vi điều khiển Robot"
-                config CUSTOM_UART_APP_ETHERNET_MODEM
-                    bool "Modem Mạng Ethernet qua UART (uart-eth-modem)"
+                config CUSTOM_UART_USAGE_CUSTOM
+                    bool "Tùy biến mục đích chung (General Custom UART)"
+                config CUSTOM_UART_USAGE_ML307
+                    bool "Modem 4G Cat.1 Quectel ML307R"
+                config CUSTOM_UART_USAGE_WATCHER
+                    bool "SenseCAP Watcher AI Coprocessor (SSCMA)"
+                config CUSTOM_UART_USAGE_BUS_SERVO
+                    bool "Động cơ thông minh Bus Servo (Fashion Star / Feetech)"
+                config CUSTOM_UART_USAGE_ETH_MODEM
+                    bool "Modem Ethernet UART"
             endchoice
 
             config CUSTOM_UART_PIN_TX
-                int "Chân truyền dữ liệu UART TX GPIO"
+                int "Chân phát UART TX GPIO"
                 default 17
 
             config CUSTOM_UART_PIN_RX
-                int "Chân nhận dữ liệu UART RX GPIO"
+                int "Chân nhận UART RX GPIO"
                 default 18
 
+            config CUSTOM_UART_BAUDRATE
+                int "Tốc độ baud truyền thông (Baudrate)"
+                default 115200
+
             config CUSTOM_UART_USE_FLOW_CONTROL
-                bool "Kích hoạt điều khiển luồng phần cứng (RTS / CTS Flow Control)"
+                bool "Kích hoạt điều khiển luồng phần cứng (RTS/CTS Hardware Flow Control)"
                 default n
-                help
-                    Bật nếu cổng UART kết nối thiết bị yêu cầu bắt tay phần cứng CTS/RTS.
 
             config CUSTOM_UART_PIN_RTS
-                int "Chân điều khiển luồng RTS GPIO"
+                int "Chân RTS GPIO (Request to Send)"
                 depends on CUSTOM_UART_USE_FLOW_CONTROL
                 default 19
 
             config CUSTOM_UART_PIN_CTS
-                int "Chân điều khiển luồng CTS GPIO"
+                int "Chân CTS GPIO (Clear to Send)"
                 depends on CUSTOM_UART_USE_FLOW_CONTROL
                 default 20
-
-            config CUSTOM_UART_BAUD_RATE
-                int "Tốc độ truyền dữ liệu (Baudrate bps)"
-                default 115200
         endif
 
         menuconfig ENABLE_CUSTOM_SECONDARY_NETWORK
             bool "Mạng mở rộng (4G LTE / Ethernet SPI / USB RNDIS)"
             default n
             help
-                Cấu hình các module mạng mở rộng ngoài Wi-Fi mặc định của ESP32-S3.
+                Kích hoạt kết nối Internet dự phòng hoặc chính qua 4G, cáp mạng Ethernet hoặc USB.
 
         if ENABLE_CUSTOM_SECONDARY_NETWORK
-            choice CUSTOM_NETWORK_TYPE
-                prompt "Module Kết Nối Mạng Mở Rộng"
-                default CUSTOM_NETWORK_NONE
+            choice CUSTOM_SECONDARY_NETWORK_TYPE
+                prompt "Loại Giao Thức Mạng Mở Rộng"
+                default CUSTOM_NETWORK_4G_ML307
 
-                config CUSTOM_NETWORK_NONE
-                    bool "Chỉ sử dụng Wi-Fi nội bộ của ESP32-S3"
                 config CUSTOM_NETWORK_4G_ML307
-                    bool "Modem 4G LTE Quectel ML307 / EC801E (UART AT Command)"
+                    bool "Modem 4G Quectel ML307R (UART AT Commands)"
                 config CUSTOM_NETWORK_4G_NT26
-                    bool "Modem 4G LTE Neoway NT26 (UART AT Command)"
+                    bool "Modem 4G Neoway NT26 (UART AT Commands)"
+                config CUSTOM_NETWORK_4G_EC801E
+                    bool "Modem 4G Quectel EC801E (UART AT Commands)"
                 config CUSTOM_NETWORK_ETH_W5500
-                    bool "Ethernet có dây SPI W5500 (RJ45)"
+                    bool "Ethernet SPI WIZnet W5500"
                 config CUSTOM_NETWORK_ETH_DM9051
-                    bool "Ethernet có dây SPI DM9051 (RJ45)"
+                    bool "Ethernet SPI Davicom DM9051"
                 config CUSTOM_NETWORK_USB_RNDIS
-                    bool "USB RNDIS Dongle 4G (USB Host CDC-Ethernet)"
+                    bool "USB RNDIS / CDC-ECM Ethernet over USB"
             endchoice
 
-            config CUSTOM_MODEM_TX_GPIO
-                int "Modem 4G UART TX GPIO"
+            config CUSTOM_MODEM_UART_TX_PIN
+                int "Chân UART TX kết nối Modem 4G"
+                depends on CUSTOM_NETWORK_4G_ML307 || CUSTOM_NETWORK_4G_NT26 || CUSTOM_NETWORK_4G_EC801E
                 default 17
 
-            config CUSTOM_MODEM_RX_GPIO
-                int "Modem 4G UART RX GPIO"
+            config CUSTOM_MODEM_UART_RX_PIN
+                int "Chân UART RX kết nối Modem 4G"
+                depends on CUSTOM_NETWORK_4G_ML307 || CUSTOM_NETWORK_4G_NT26 || CUSTOM_NETWORK_4G_EC801E
                 default 18
 
-            config CUSTOM_MODEM_USE_PWRKEY
-                bool "Sử dụng chân kích nguồn Modem 4G (PWRKEY)"
-                default y
-                help
-                    Bật nếu module 4G yêu cầu kích xung chân PWRKEY để khởi động.
-
-            config CUSTOM_MODEM_PWRKEY_GPIO
-                int "Chân Modem 4G PowerKey GPIO"
-                depends on CUSTOM_MODEM_USE_PWRKEY
+            config CUSTOM_MODEM_PWRKEY_PIN
+                int "Chân điều khiển nguồn Modem 4G PWRKEY"
+                depends on CUSTOM_NETWORK_4G_ML307 || CUSTOM_NETWORK_4G_NT26 || CUSTOM_NETWORK_4G_EC801E
                 default 2
 
-            config CUSTOM_ETH_SPI_CS_GPIO
-                int "Ethernet SPI Chip Select (CS) GPIO"
+            config CUSTOM_ETH_SPI_CS_PIN
+                int "Chân SPI CS của IC Ethernet"
+                depends on CUSTOM_NETWORK_ETH_W5500 || CUSTOM_NETWORK_ETH_DM9051
                 default 10
 
-            config CUSTOM_ETH_SPI_INT_GPIO
-                int "Ethernet SPI Interrupt (INT) GPIO"
+            config CUSTOM_ETH_SPI_INT_PIN
+                int "Chân ngắt INT của IC Ethernet"
+                depends on CUSTOM_NETWORK_ETH_W5500 || CUSTOM_NETWORK_ETH_DM9051
                 default 11
 
-            config CUSTOM_ETH_SPI_RST_GPIO
-                int "Ethernet SPI Reset (RST) GPIO"
+            config CUSTOM_ETH_SPI_RST_PIN
+                int "Chân Reset của IC Ethernet (-1 nếu không nối)"
+                depends on CUSTOM_NETWORK_ETH_W5500 || CUSTOM_NETWORK_ETH_DM9051
                 default 14
         endif
 
         menuconfig ENABLE_CUSTOM_MCP_SERVER
-            bool "Giao thức IoT & Tính năng MCP (Model Context Protocol)"
+            bool "Giao thức IoT & Tính năng MCP Server (Model Context Protocol)"
             default n
             help
-                Cung cấp bộ công cụ Tool MCP cho AI Xiaozhi điều khiển phần cứng thông minh.
+                Cho phép AI Xiaozhi điều khiển các thiết bị ngoại vi và cảm biến qua giao thức MCP Server.
 
         if ENABLE_CUSTOM_MCP_SERVER
             config CUSTOM_MCP_TOOL_SYSTEM_INFO
-                bool "Cho phép LLM đọc thông số hệ thống (Pin, RAM, Wi-Fi RSSI)"
+                bool "Công cụ MCP: Báo cáo trạng thái hệ thống (Bộ nhớ RAM, Flash, CPU)"
                 default y
 
             config CUSTOM_MCP_TOOL_REBOOT
-                bool "Cho phép LLM ra lệnh khởi động lại bo mạch"
+                bool "Công cụ MCP: Khởi động lại thiết bị từ xa qua AI"
                 default y
 
             config CUSTOM_MCP_TOOL_OTA
-                bool "Cho phép LLM kiểm tra và cập nhật Firmware OTA"
+                bool "Công cụ MCP: Kiểm tra và kích hoạt nâng cấp Firmware OTA"
                 default y
-
-            config CUSTOM_MCP_TOOL_CAMERA
-                bool "Cho phép LLM chụp ảnh từ Camera để phân tích thị giác"
-                default n
-
-            config CUSTOM_MCP_TOOL_THEME
-                bool "Cho phép LLM thay đổi theme giao diện LVGL"
-                default n
 
             config CUSTOM_MCP_TOOL_LAMP
-                bool "Cho phép LLM bật/tắt thiết bị ngoại vi qua GPIO (Đèn/Relay)"
+                bool "Công cụ MCP: Điều khiển Đèn thông minh / Relay bật tắt qua AI"
                 default y
 
-            config CUSTOM_MCP_LAMP_GPIO
-                int "Chân GPIO kết nối thiết bị/đèn điều khiển thông minh"
+            config CUSTOM_MCP_TOOL_LAMP_GPIO
+                int "Chân GPIO điều khiển Đèn / Relay thông minh"
+                depends on CUSTOM_MCP_TOOL_LAMP
                 default 13
+
+            config CUSTOM_MCP_TOOL_CAMERA
+                bool "Công cụ MCP: Chụp ảnh gửi cho AI phân tích thị giác"
+                default y
+
+            config CUSTOM_MCP_TOOL_THEME
+                bool "Công cụ MCP: Đổi biểu cảm và chủ đề giao diện màn hình"
+                default y
         endif
     endmenu
 
-    menu "5. Mở rộng linh kiện ngoại vi & Cảm biến (Peripherals & Sensors)"
-        menuconfig ENABLE_CUSTOM_LEDS
-            bool "Đèn LED & Động cơ Servo"
+    menu "4. Thiết bị ngoại vi (Peripherals)"
+        # 1. Camera
+        menuconfig ENABLE_CUSTOM_CAMERA
+            bool "Camera & Thị giác AI (Camera DVP / USB UVC)"
             default n
             help
-                Cấu hình đèn LED RGB trạng thái và động cơ servo PWM.
+                Bật/tắt hỗ trợ camera chụp ảnh và gửi dữ liệu thị giác cho AI Xiaozhi.
+
+        if ENABLE_CUSTOM_CAMERA
+            choice CUSTOM_CAMERA_SENSOR_TYPE
+                prompt "Cảm Biến Camera (Camera Sensor Model)"
+                default CUSTOM_CAMERA_OV2640
+
+                config CUSTOM_CAMERA_OV2640
+                    bool "OmniVision OV2640 (2 Megapixel)"
+                config CUSTOM_CAMERA_OV3660
+                    bool "OmniVision OV3660 (3 Megapixel)"
+                config CUSTOM_CAMERA_OV5640
+                    bool "OmniVision OV5640 (5 Megapixel)"
+                config CUSTOM_CAMERA_SC030IOT
+                    bool "SmartSens SC030IOT"
+                config CUSTOM_CAMERA_USB_UVC
+                    bool "USB UVC Web Camera (ESP32-S3 USB Host Port)"
+            endchoice
+
+            config CUSTOM_CAM_PIN_XCLK
+                int "Camera XCLK (Master Clock)"
+                depends on !CUSTOM_CAMERA_USB_UVC
+                default 10
+
+            config CUSTOM_CAM_PIN_PCLK
+                int "Camera PCLK (Pixel Clock)"
+                depends on !CUSTOM_CAMERA_USB_UVC
+                default 12
+
+            config CUSTOM_CAM_PIN_VSYNC
+                int "Camera VSYNC (Vertical Sync)"
+                depends on !CUSTOM_CAMERA_USB_UVC
+                default 13
+
+            config CUSTOM_CAM_PIN_HREF
+                int "Camera HREF (Horizontal Reference)"
+                depends on !CUSTOM_CAMERA_USB_UVC
+                default 14
+
+            config CUSTOM_CAM_PIN_SIOD
+                int "Camera SIOD (SCCB I2C Data)"
+                depends on !CUSTOM_CAMERA_USB_UVC
+                default 8
+
+            config CUSTOM_CAM_PIN_SIOC
+                int "Camera SIOC (SCCB I2C Clock)"
+                depends on !CUSTOM_CAMERA_USB_UVC
+                default 9
+
+            config CUSTOM_CAM_USE_RESET
+                bool "Sử dụng chân Reset Camera (RST)"
+                depends on !CUSTOM_CAMERA_USB_UVC
+                default n
+
+            config CUSTOM_CAM_PIN_RESET
+                int "Chân Camera Reset GPIO"
+                depends on !CUSTOM_CAMERA_USB_UVC && CUSTOM_CAM_USE_RESET
+                default 15
+
+            config CUSTOM_CAM_USE_PWDN
+                bool "Sử dụng chân Power-Down Camera (PWDN)"
+                depends on !CUSTOM_CAMERA_USB_UVC
+                default n
+
+            config CUSTOM_CAM_PIN_PWDN
+                int "Chân Camera PWDN GPIO"
+                depends on !CUSTOM_CAMERA_USB_UVC && CUSTOM_CAM_USE_PWDN
+                default 16
+
+            config CUSTOM_CAM_PIN_D0
+                int "Camera Data D0 Pin"
+                depends on !CUSTOM_CAMERA_USB_UVC
+                default 11
+
+            config CUSTOM_CAM_PIN_D1
+                int "Camera Data D1 Pin"
+                depends on !CUSTOM_CAMERA_USB_UVC
+                default 2
+
+            config CUSTOM_CAM_PIN_D2
+                int "Camera Data D2 Pin"
+                depends on !CUSTOM_CAMERA_USB_UVC
+                default 46
+
+            config CUSTOM_CAM_PIN_D3
+                int "Camera Data D3 Pin"
+                depends on !CUSTOM_CAMERA_USB_UVC
+                default 21
+
+            config CUSTOM_CAM_PIN_D4
+                int "Camera Data D4 Pin"
+                depends on !CUSTOM_CAMERA_USB_UVC
+                default 47
+
+            config CUSTOM_CAM_PIN_D5
+                int "Camera Data D5 Pin"
+                depends on !CUSTOM_CAMERA_USB_UVC
+                default 48
+
+            config CUSTOM_CAM_PIN_D6
+                int "Camera Data D6 Pin"
+                depends on !CUSTOM_CAMERA_USB_UVC
+                default 45
+
+            config CUSTOM_CAM_PIN_D7
+                int "Camera Data D7 Pin"
+                depends on !CUSTOM_CAMERA_USB_UVC
+                default 40
+
+            config CUSTOM_CAM_HMIRROR
+                bool "Lật ảnh theo chiều ngang (Horizontal Mirror)"
+                depends on !CUSTOM_CAMERA_USB_UVC
+                default n
+
+            config CUSTOM_CAM_VFLIP
+                bool "Lật ảnh theo chiều dọc (Vertical Flip)"
+                depends on !CUSTOM_CAMERA_USB_UVC
+                default n
+        endif
+
+        # 2. Đèn LED & Động cơ
+        menuconfig ENABLE_CUSTOM_LEDS
+            bool "Đèn LED trạng thái & Động cơ Servo"
+            default n
+            help
+                Cấu hình đèn LED trạng thái (WS2812, Single LED) và động cơ servo PWM.
 
         if ENABLE_CUSTOM_LEDS
             choice CUSTOM_LED_TYPE
@@ -1712,63 +1787,69 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             config CUSTOM_ENABLE_SERVO_DOG
                 bool "Kích hoạt điều khiển Động cơ Servo tương tác qua PWM"
                 default n
+
+            config CUSTOM_SERVO_DOG_PWM_GPIO
+                int "Chân GPIO cấp xung PWM cho Động cơ Servo"
+                depends on CUSTOM_ENABLE_SERVO_DOG
+                default 48
         endif
 
-        menu "Nút bấm vật lý (Buttons & Keys)"
-            config CUSTOM_ENABLE_BUTTON_BOOT
-                bool "Nút Boot Onboard (BOOT Button - GPIO 0)"
-                default y
-                help
-                    Nút nhấn chuyển đổi trạng thái nói và vào chế độ cấu hình Wi-Fi.
+        # 3. Nút bấm BOOT Onboard
+        config CUSTOM_ENABLE_BUTTON_BOOT
+            bool "Nút bấm BOOT Onboard (BOOT Button)"
+            default y
+            help
+                Nút nhấn chuyển đổi trạng thái nói và vào chế độ cấu hình Wi-Fi.
 
-            config CUSTOM_BUTTON_BOOT_GPIO
-                int "Chân GPIO nút Boot"
-                depends on CUSTOM_ENABLE_BUTTON_BOOT
-                default 0
+        config CUSTOM_BUTTON_BOOT_GPIO
+            int "Chân GPIO nút Boot"
+            depends on CUSTOM_ENABLE_BUTTON_BOOT
+            default 0
 
-            config CUSTOM_ENABLE_BUTTON_TOUCH
-                bool "Nút bấm chức năng PTT / Action (Push-to-Talk)"
-                default n
-                help
-                    Nút nhấn giữ để nói (Push-to-Talk) hoặc nút cảm ứng chạm.
+        # 4. Nút bấm Action / Chạm (PTT)
+        config CUSTOM_ENABLE_BUTTON_TOUCH
+            bool "Nút bấm chức năng Action / Chạm (PTT / Touch Key)"
+            default n
+            help
+                Nút nhấn giữ để nói (Push-to-Talk) hoặc nút cảm ứng chạm.
 
-            config CUSTOM_BUTTON_TOUCH_GPIO
-                int "Chân GPIO nút Action"
-                depends on CUSTOM_ENABLE_BUTTON_TOUCH
-                default 1
+        config CUSTOM_BUTTON_TOUCH_GPIO
+            int "Chân GPIO nút Action"
+            depends on CUSTOM_ENABLE_BUTTON_TOUCH
+            default 1
 
-            config CUSTOM_ENABLE_BUTTON_VOLUME
-                bool "Phím vật lý tăng / giảm âm lượng (Volume Buttons)"
-                default n
-                help
-                    Cặp phím bấm điều chỉnh âm lượng loa ngoài.
+        # 5. Cụm phím Tăng / Giảm âm lượng
+        config CUSTOM_ENABLE_BUTTON_VOLUME
+            bool "Cụm phím vật lý Tăng / Giảm âm lượng (Volume Buttons)"
+            default n
+            help
+                Cặp phím bấm điều chỉnh âm lượng loa ngoài.
 
-            config CUSTOM_BUTTON_VOL_UP_GPIO
-                int "Chân GPIO nút tăng âm lượng (Vol Up)"
-                depends on CUSTOM_ENABLE_BUTTON_VOLUME
-                default 2
+        config CUSTOM_BUTTON_VOL_UP_GPIO
+            int "Chân GPIO nút tăng âm lượng (Vol Up)"
+            depends on CUSTOM_ENABLE_BUTTON_VOLUME
+            default 2
 
-            config CUSTOM_BUTTON_VOL_DOWN_GPIO
-                int "Chân GPIO nút giảm âm lượng (Vol Down)"
-                depends on CUSTOM_ENABLE_BUTTON_VOLUME
-                default 3
-        endmenu
+        config CUSTOM_BUTTON_VOL_DOWN_GPIO
+            int "Chân GPIO nút giảm âm lượng (Vol Down)"
+            depends on CUSTOM_ENABLE_BUTTON_VOLUME
+            default 3
 
-        menu "Rơ-le điều khiển thiết bị (Relay Switches)"
-            config CUSTOM_PERIPH_RELAY_ENABLE
-                bool "Kích hoạt Relay đóng cắt thiết bị độc lập"
-                default n
-                help
-                    Điều khiển đóng cắt relay hoặc công tắc thiết bị điện ngoài.
+        # 6. Rơ-le điều khiển thiết bị
+        config CUSTOM_PERIPH_RELAY_ENABLE
+            bool "Rơ-le đóng cắt thiết bị độc lập (Relay Switch)"
+            default n
+            help
+                Điều khiển đóng cắt relay hoặc công tắc thiết bị điện ngoài.
 
-            config CUSTOM_PERIPH_RELAY_GPIO
-                int "Chân GPIO kích hoạt Relay đóng cắt"
-                depends on CUSTOM_PERIPH_RELAY_ENABLE
-                default 13
-        endmenu
+        config CUSTOM_PERIPH_RELAY_GPIO
+            int "Chân GPIO kích hoạt Relay đóng cắt"
+            depends on CUSTOM_PERIPH_RELAY_ENABLE
+            default 13
 
+        # 7. IC Mở rộng chân IO & Quản lý nguồn PMIC
         menuconfig ENABLE_CUSTOM_IO_EXPANDER_PMIC
-            bool "Mở rộng chân IO & Quản lý nguồn PMIC"
+            bool "IC Mở rộng chân IO & Quản lý nguồn PMIC"
             default n
             help
                 Mở rộng số lượng chân GPIO qua I2C và quản lý sạc nguồn pin PMIC.
@@ -1807,113 +1888,148 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 default 9
         endif
 
-        menuconfig ENABLE_CUSTOM_SENSORS
-            bool "Cảm biến môi trường, chuyển động & Pin"
+        # Cờ nhóm cảm biến tương thích ngược
+        config ENABLE_CUSTOM_SENSORS
+            bool "Kích hoạt hệ thống cảm biến môi trường & Pin (Sensors Subsystem)"
+            default y
+
+        # 8. Cảm biến gia tốc & con quay IMU 6 trục
+        config CUSTOM_ENABLE_IMU_SENSORS
+            bool "Cảm biến gia tốc & con quay IMU 6 trục (MPU-6050 / BMI270)"
             default n
-            help
-                Bật/tắt các cảm biến phổ biến (nhiệt ẩm, khí áp, ánh sáng, khoảng cách, IMU) và đo pin.
 
-        if ENABLE_CUSTOM_SENSORS
-            # Cảm biến chuyển động & IMU
-            config CUSTOM_ENABLE_IMU_MPU6050
-                bool "Cảm biến gia tốc & con quay 6 trục MPU-6050 (I2C: SDA 8, SCL 9)"
-                default n
+        if CUSTOM_ENABLE_IMU_SENSORS
+            choice CUSTOM_IMU_TYPE
+                prompt "Loại Cảm Biến Chuyển Động IMU (Motion Sensor)"
+                default CUSTOM_ENABLE_IMU_MPU6050
 
-            config CUSTOM_ENABLE_IMU_BMI270
-                bool "Cảm biến gia tốc & con quay 6 trục Bosch BMI270 (I2C: SDA 8, SCL 9)"
-                default n
-
-            # Cảm biến nhiệt độ & độ ẩm
-            config CUSTOM_ENABLE_SENSOR_DHT11_22
-                bool "Cảm biến nhiệt độ & độ ẩm DHT11 / DHT22 (1-Wire GPIO)"
-                default n
-
-            config CUSTOM_SENSOR_DHT_GPIO
-                int "Chân dữ liệu cảm biến DHT11/22 GPIO"
-                depends on CUSTOM_ENABLE_SENSOR_DHT11_22
-                default 14
-
-            config CUSTOM_ENABLE_SENSOR_AHT20
-                bool "Cảm biến nhiệt độ & độ ẩm AHT10 / AHT20 / AHT21 (I2C)"
-                default n
-
-            config CUSTOM_ENABLE_SENSOR_SHT3X
-                bool "Cảm biến nhiệt độ & độ ẩm Sensirion SHT30 / SHT31 / SHT40 (I2C)"
-                default n
-
-            # Cảm biến khí áp & độ cao
-            config CUSTOM_ENABLE_SENSOR_BMP280
-                bool "Cảm biến áp suất khí quyển & độ cao Bosch BMP280 / BME280 (I2C)"
-                default n
-
-            # Cảm biến ánh sáng
-            config CUSTOM_ENABLE_SENSOR_BH1750
-                bool "Cảm biến cường độ ánh sáng kỹ thuật số BH1750 (I2C)"
-                default n
-
-            config CUSTOM_ENABLE_SENSOR_LDR
-                bool "Cảm biến ánh sáng quang trở (LDR qua cầu phân áp ADC)"
-                default n
-
-            config CUSTOM_SENSOR_LDR_ADC_CHANNEL
-                int "Kênh ADC1 đo quang trở LDR (Kênh 1 ứng với GPIO 2)"
-                depends on CUSTOM_ENABLE_SENSOR_LDR
-                default 1
-
-            # Cảm biến khoảng cách & chuyển động người
-            config CUSTOM_ENABLE_SENSOR_HCSR04
-                bool "Cảm biến khoảng cách siêu âm HC-SR04 / US-100"
-                default n
-
-            config CUSTOM_SENSOR_HCSR04_TRIG_GPIO
-                int "Chân phát xung siêu âm Trig GPIO"
-                depends on CUSTOM_ENABLE_SENSOR_HCSR04
-                default 11
-
-            config CUSTOM_SENSOR_HCSR04_ECHO_GPIO
-                int "Chân nhận tín hiệu siêu âm Echo GPIO"
-                depends on CUSTOM_ENABLE_SENSOR_HCSR04
-                default 12
-
-            config CUSTOM_ENABLE_SENSOR_PIR
-                bool "Cảm biến phát hiện người chuyển động PIR HC-SR501 / RCWL-0516"
-                default n
-
-            config CUSTOM_SENSOR_PIR_GPIO
-                int "Chân tín hiệu cảm biến PIR GPIO"
-                depends on CUSTOM_ENABLE_SENSOR_PIR
-                default 10
-
-            # Cảm ứng điện dung nội bộ
-            config CUSTOM_ENABLE_TOUCH_SLIDER
-                bool "Thanh trượt cảm ứng điện dung nội bộ ESP32-S3 (Touch Slider)"
-                default n
-
-            # Phương thức đo mức pin
-            choice CUSTOM_BATTERY_MONITOR_TYPE
-                prompt "Phương thức Đo Dung Lượng Pin (Battery Measurement)"
-                default CUSTOM_BATTERY_MONITOR_NONE
-
-                config CUSTOM_BATTERY_MONITOR_NONE
-                    bool "Không sử dụng (Nguồn điện cắm cố định)"
-                config CUSTOM_BATTERY_MONITOR_ADC
-                    bool "Đo qua ADC nội bộ (Bộ chia điện trở Voltage Divider)"
-                config CUSTOM_BATTERY_MONITOR_BQ27220
-                    bool "Đo qua IC đo pin chuyên dụng TI BQ27220 (I2C)"
+                config CUSTOM_ENABLE_IMU_MPU6050
+                    bool "TDK InvenSense MPU-6050 (I2C 6 trục Accel + Gyro)"
+                config CUSTOM_ENABLE_IMU_BMI270
+                    bool "Bosch Sensortec BMI270 (I2C 6 trục Ultra-low Power)"
             endchoice
 
-            config CUSTOM_BATTERY_ADC_CHANNEL
-                int "Kênh ADC1 đo pin (Kênh 0 ứng với chân GPIO 1)"
-                default 0
+            config CUSTOM_IMU_I2C_SDA
+                int "Chân I2C SDA cảm biến IMU"
+                default 8
 
-            config CUSTOM_BATTERY_DIVIDER_R1
-                int "Điện trở nhánh trên R1 cầu phân áp (kOhm)"
-                default 100
-
-            config CUSTOM_BATTERY_DIVIDER_R2
-                int "Điện trở nhánh dưới R2 cầu phân áp (kOhm)"
-                default 100
+            config CUSTOM_IMU_I2C_SCL
+                int "Chân I2C SCL cảm biến IMU"
+                default 9
         endif
+
+        # 9. Cảm biến Nhiệt độ & Độ ẩm 1 dây DHT11 / DHT22
+        config CUSTOM_ENABLE_SENSOR_DHT11_22
+            bool "Cảm biến Nhiệt độ & Độ ẩm 1 dây (DHT11 / DHT22)"
+            default n
+
+        config CUSTOM_SENSOR_DHT_GPIO
+            int "Chân dữ liệu 1-Wire cảm biến DHT GPIO"
+            depends on CUSTOM_ENABLE_SENSOR_DHT11_22
+            default 14
+
+        # 10. Cảm biến Nhiệt độ & Độ ẩm kỹ thuật số I2C AHT20 / SHT3x
+        config CUSTOM_ENABLE_SENSOR_I2C_TEMP_HUMID
+            bool "Cảm biến Nhiệt độ & Độ ẩm kỹ thuật số I2C (AHT20 / SHT3x)"
+            default n
+
+        if CUSTOM_ENABLE_SENSOR_I2C_TEMP_HUMID
+            choice CUSTOM_I2C_TEMP_HUMID_TYPE
+                prompt "Loại Cảm Biến Nhiệt Ẩm I2C"
+                default CUSTOM_ENABLE_SENSOR_AHT20
+
+                config CUSTOM_ENABLE_SENSOR_AHT20
+                    bool "Aosong AHT10 / AHT20 / AHT21 (I2C)"
+                config CUSTOM_ENABLE_SENSOR_SHT3X
+                    bool "Sensirion SHT30 / SHT31 / SHT40 (I2C)"
+            endchoice
+
+            config CUSTOM_SENSOR_I2C_SDA
+                int "Chân I2C SDA cảm biến môi trường"
+                default 8
+
+            config CUSTOM_SENSOR_I2C_SCL
+                int "Chân I2C SCL cảm biến môi trường"
+                default 9
+        endif
+
+        # 11. Cảm biến Khí áp BMP280 / BME280
+        config CUSTOM_ENABLE_SENSOR_BMP280
+            bool "Cảm biến Áp suất khí quyển & Độ cao (Bosch BMP280 / BME280 I2C)"
+            default n
+
+        # 12. Cảm biến Ánh sáng BH1750
+        config CUSTOM_ENABLE_SENSOR_BH1750
+            bool "Cảm biến cường độ ánh sáng kỹ thuật số BH1750 (I2C)"
+            default n
+
+        # 13. Cảm biến Ánh sáng quang trở LDR (ADC)
+        config CUSTOM_ENABLE_SENSOR_LDR
+            bool "Cảm biến ánh sáng quang trở (LDR qua cầu phân áp ADC)"
+            default n
+
+        config CUSTOM_SENSOR_LDR_ADC_CHANNEL
+            int "Kênh ADC1 đo quang trở LDR (Kênh 1 ứng với GPIO 2)"
+            depends on CUSTOM_ENABLE_SENSOR_LDR
+            default 1
+
+        # 14. Cảm biến Siêu âm HC-SR04
+        config CUSTOM_ENABLE_SENSOR_HCSR04
+            bool "Cảm biến khoảng cách siêu âm HC-SR04 / US-100"
+            default n
+
+        config CUSTOM_SENSOR_HCSR04_TRIG_GPIO
+            int "Chân phát xung siêu âm Trig GPIO"
+            depends on CUSTOM_ENABLE_SENSOR_HCSR04
+            default 11
+
+        config CUSTOM_SENSOR_HCSR04_ECHO_GPIO
+            int "Chân nhận tín hiệu siêu âm Echo GPIO"
+            depends on CUSTOM_ENABLE_SENSOR_HCSR04
+            default 12
+
+        # 15. Cảm biến Chuyển động người PIR
+        config CUSTOM_ENABLE_SENSOR_PIR
+            bool "Cảm biến phát hiện người chuyển động PIR HC-SR501 / RCWL-0516"
+            default n
+
+        config CUSTOM_SENSOR_PIR_GPIO
+            int "Chân tín hiệu cảm biến PIR GPIO"
+            depends on CUSTOM_ENABLE_SENSOR_PIR
+            default 10
+
+        # 16. Thanh trượt cảm ứng nội bộ
+        config CUSTOM_ENABLE_TOUCH_SLIDER
+            bool "Thanh trượt cảm ứng điện dung nội bộ ESP32-S3 (Touch Slider)"
+            default n
+
+        # 17. Phương thức đo mức pin
+        choice CUSTOM_BATTERY_MONITOR_TYPE
+            prompt "Phương thức Đo Dung Lượng Pin (Battery Measurement)"
+            default CUSTOM_BATTERY_MONITOR_NONE
+
+            config CUSTOM_BATTERY_MONITOR_NONE
+                bool "Không sử dụng mạch đo pin (Nguồn điện cắm cố định)"
+            config CUSTOM_BATTERY_MONITOR_ADC
+                bool "Đo qua ADC nội bộ (Bộ chia điện trở Voltage Divider)"
+            config CUSTOM_BATTERY_MONITOR_BQ27220
+                bool "Đo qua IC đo pin chuyên dụng TI BQ27220 (I2C)"
+        endchoice
+
+        config CUSTOM_BATTERY_ADC_CHANNEL
+            int "Kênh ADC1 đo pin (Kênh 0 ứng với chân GPIO 1)"
+            depends on CUSTOM_BATTERY_MONITOR_ADC
+            default 0
+
+        config CUSTOM_BATTERY_DIVIDER_R1
+            int "Điện trở nhánh trên R1 cầu phân áp (kOhm)"
+            depends on CUSTOM_BATTERY_MONITOR_ADC
+            default 100
+
+        config CUSTOM_BATTERY_DIVIDER_R2
+            int "Điện trở nhánh dưới R2 cầu phân áp (kOhm)"
+            depends on CUSTOM_BATTERY_MONITOR_ADC
+            default 100
     endmenu
 
     # ==============================================================================
@@ -1930,8 +2046,14 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
     comment "=============================================================================="
     comment "             BANG TONG HOP PHAN CUNG & CHAN GPIO DANG DUOC CHON               "
     comment "------------------------------------------------------------------------------"
+    comment " [!] CANH BAO: Xung dot giua Camera DVP va Man hinh SPI (trung chan 21, 40, 47)!"
+        depends on ENABLE_CUSTOM_CAMERA && !CUSTOM_CAMERA_USB_UVC && ENABLE_CUSTOM_DISPLAY && (CUSTOM_DISPLAY_ST7789 || CUSTOM_DISPLAY_ST7796 || CUSTOM_DISPLAY_ST7701 || CUSTOM_DISPLAY_ILI9341 || CUSTOM_DISPLAY_GC9A01)
+    comment " [!] CANH BAO: UART Flow Control xung dot voi USB Camera (trung chan 19, 20)!"
+        depends on ENABLE_CUSTOM_UART && CUSTOM_UART_USE_FLOW_CONTROL && ENABLE_CUSTOM_CAMERA && CUSTOM_CAMERA_USB_UVC
     comment " PHAN CUNG                        | CHAN GPIO DANG DUNG                       "
     comment "----------------------------------+-------------------------------------------"
+    comment " [Preset]   Preset N16R8 DIY       | ST7796 + MAX98357A + INMP441 + WS2812 + BT0"
+        depends on CUSTOM_PRESET_N16R8_DIY_ENABLED
     comment " [Man hinh] ST7789 / TFT SPI       | MOSI: 47, CLK: 21, CS: 41, DC: 40, RST: 42 "
         depends on ENABLE_CUSTOM_DISPLAY && (CUSTOM_DISPLAY_ST7789 || CUSTOM_DISPLAY_ST7796 || CUSTOM_DISPLAY_ST7701 || CUSTOM_DISPLAY_ILI9341 || CUSTOM_DISPLAY_GC9A01)
     comment "            Den nen Backlight      | BLK: 38                                    "
@@ -1987,31 +2109,31 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
     comment " [Mo rong]  IC IO Expander / PMIC  | I2C SDA: 8, SCL: 9                         "
         depends on ENABLE_CUSTOM_IO_EXPANDER_PMIC && (CUSTOM_IO_EXPANDER_TCA9554 || CUSTOM_IO_EXPANDER_CH32V003 || CUSTOM_PMIC_AXP2101 || CUSTOM_PMIC_SY6970)
     comment " [Cam bien] IMU MPU-6050 6 truc    | I2C SDA: 8, SCL: 9                         "
-        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_IMU_MPU6050
+        depends on CUSTOM_ENABLE_IMU_MPU6050
     comment " [Cam bien] IMU Bosch BMI270 6 truc| I2C SDA: 8, SCL: 9                         "
-        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_IMU_BMI270
+        depends on CUSTOM_ENABLE_IMU_BMI270
     comment " [Cam bien] Nhiet am DHT11 / DHT22 | DATA: GPIO 14                              "
-        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_SENSOR_DHT11_22
+        depends on CUSTOM_ENABLE_SENSOR_DHT11_22
     comment " [Cam bien] Nhiet am AHT10/20/21   | I2C SDA: 8, SCL: 9                         "
-        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_SENSOR_AHT20
+        depends on CUSTOM_ENABLE_SENSOR_AHT20
     comment " [Cam bien] Nhiet am SHT30/31/40   | I2C SDA: 8, SCL: 9                         "
-        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_SENSOR_SHT3X
+        depends on CUSTOM_ENABLE_SENSOR_SHT3X
     comment " [Cam bien] Khi ap Bosch BMP280    | I2C SDA: 8, SCL: 9                         "
-        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_SENSOR_BMP280
+        depends on CUSTOM_ENABLE_SENSOR_BMP280
     comment " [Cam bien] Cuong do sang BH1750   | I2C SDA: 8, SCL: 9                         "
-        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_SENSOR_BH1750
+        depends on CUSTOM_ENABLE_SENSOR_BH1750
     comment " [Cam bien] Quang tro LDR (ADC)    | Kenh ADC1_CH1 (GPIO 2)                     "
-        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_SENSOR_LDR
+        depends on CUSTOM_ENABLE_SENSOR_LDR
     comment " [Cam bien] Sieu am HC-SR04/US-100 | TRIG: GPIO 11, ECHO: GPIO 12               "
-        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_SENSOR_HCSR04
+        depends on CUSTOM_ENABLE_SENSOR_HCSR04
     comment " [Cam bien] Chuyen dong nguoi PIR  | OUT: GPIO 10                               "
-        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_SENSOR_PIR
+        depends on CUSTOM_ENABLE_SENSOR_PIR
     comment " [Cam bien] Touch Slider noi bo    | Kenh cam ung dien dung tich hop            "
-        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_ENABLE_TOUCH_SLIDER
+        depends on CUSTOM_ENABLE_TOUCH_SLIDER
     comment " [Do Pin]   Do qua ADC phan ap     | Kenh ADC1_CH0 (GPIO 1)                     "
-        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_BATTERY_MONITOR_ADC
+        depends on CUSTOM_BATTERY_MONITOR_ADC
     comment " [Do Pin]   IC do pin TI BQ27220   | I2C SDA: 8, SCL: 9                         "
-        depends on ENABLE_CUSTOM_SENSORS && CUSTOM_BATTERY_MONITOR_BQ27220
+        depends on CUSTOM_BATTERY_MONITOR_BQ27220
     comment " (Chua co phan cung nao duoc bat - Hay tich chon [X] cac muc tren)   "
         depends on !ENABLE_CUSTOM_DISPLAY && !ENABLE_CUSTOM_TOUCH && !ENABLE_CUSTOM_SPEAKER && !ENABLE_CUSTOM_MIC && !ENABLE_CUSTOM_CAMERA && !ENABLE_CUSTOM_UART && !ENABLE_CUSTOM_SECONDARY_NETWORK && !ENABLE_CUSTOM_LEDS && !CUSTOM_ENABLE_BUTTON_BOOT && !CUSTOM_ENABLE_BUTTON_TOUCH && !CUSTOM_ENABLE_BUTTON_VOLUME && !CUSTOM_PERIPH_RELAY_ENABLE && !ENABLE_CUSTOM_IO_EXPANDER_PMIC && !ENABLE_CUSTOM_SENSORS
     comment "=============================================================================="

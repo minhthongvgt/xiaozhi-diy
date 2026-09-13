@@ -126,7 +126,12 @@ private:
                 .enable_internal_pullup = 1,
             },
         };
-        ESP_ERROR_CHECK(i2c_new_master_bus(&bus_config, &i2c_bus_));
+        esp_err_t ret = i2c_new_master_bus(&bus_config, &i2c_bus_);
+        if (ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to initialize I2C master bus (SDA: %d, SCL: %d): %s", sda_pin, scl_pin, esp_err_to_name(ret));
+            i2c_bus_ = nullptr;
+            return;
+        }
         ESP_LOGI(TAG, "I2C master bus initialized (SDA: %d, SCL: %d)", sda_pin, scl_pin);
     }
 
@@ -137,6 +142,11 @@ private:
         return;
 #elif defined(CONFIG_CUSTOM_DISPLAY_OLED_SSD1306) || defined(CONFIG_CUSTOM_DISPLAY_OLED_SH1106)
         InitializeI2c();
+        if (i2c_bus_ == nullptr) {
+            ESP_LOGE(TAG, "I2C bus unavailable, falling back to NoDisplay");
+            display_ = new NoDisplay();
+            return;
+        }
 
         esp_lcd_panel_io_handle_t panel_io = nullptr;
         esp_lcd_panel_handle_t panel = nullptr;
@@ -155,7 +165,12 @@ private:
                 .disable_control_phase = 0,
             },
         };
-        ESP_ERROR_CHECK(esp_lcd_new_panel_io_i2c(i2c_bus_, &io_config, &panel_io));
+        esp_err_t ret = esp_lcd_new_panel_io_i2c(i2c_bus_, &io_config, &panel_io);
+        if (ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to create OLED panel IO: %s. Falling back to NoDisplay", esp_err_to_name(ret));
+            display_ = new NoDisplay();
+            return;
+        }
 
         esp_lcd_panel_dev_config_t panel_config = {};
         panel_config.reset_gpio_num = DISPLAY_RST_PIN;
@@ -167,17 +182,32 @@ private:
         panel_config.vendor_config = &ssd1306_config;
 
 #if defined(CONFIG_CUSTOM_DISPLAY_OLED_SH1106)
-        ESP_ERROR_CHECK(esp_lcd_new_panel_sh1106(panel_io, &panel_config, &panel));
+        ret = esp_lcd_new_panel_sh1106(panel_io, &panel_config, &panel);
+        if (ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to create SH1106 panel: %s. Falling back to NoDisplay", esp_err_to_name(ret));
+            display_ = new NoDisplay();
+            return;
+        }
         ESP_LOGI(TAG, "SH1106 OLED panel created");
 #else
-        ESP_ERROR_CHECK(esp_lcd_new_panel_ssd1306(panel_io, &panel_config, &panel));
+        ret = esp_lcd_new_panel_ssd1306(panel_io, &panel_config, &panel);
+        if (ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to create SSD1306 panel: %s. Falling back to NoDisplay", esp_err_to_name(ret));
+            display_ = new NoDisplay();
+            return;
+        }
         ESP_LOGI(TAG, "SSD1306 OLED panel created");
 #endif
 
-        ESP_ERROR_CHECK(esp_lcd_panel_reset(panel));
-        ESP_ERROR_CHECK(esp_lcd_panel_init(panel));
-        ESP_ERROR_CHECK(esp_lcd_panel_invert_color(panel, DISPLAY_INVERT_COLOR));
-        ESP_ERROR_CHECK(esp_lcd_panel_disp_on_off(panel, true));
+        esp_lcd_panel_reset(panel);
+        ret = esp_lcd_panel_init(panel);
+        if (ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to initialize OLED panel: %s. Falling back to NoDisplay", esp_err_to_name(ret));
+            display_ = new NoDisplay();
+            return;
+        }
+        esp_lcd_panel_invert_color(panel, DISPLAY_INVERT_COLOR);
+        esp_lcd_panel_disp_on_off(panel, true);
 
         display_ = new OledDisplay(panel_io, panel, DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_MIRROR_X, DISPLAY_MIRROR_Y);
 #else
@@ -189,7 +219,12 @@ private:
         buscfg.quadwp_io_num = GPIO_NUM_NC;
         buscfg.quadhd_io_num = GPIO_NUM_NC;
         buscfg.max_transfer_sz = DISPLAY_WIDTH * DISPLAY_HEIGHT * sizeof(uint16_t);
-        ESP_ERROR_CHECK(spi_bus_initialize(SPI3_HOST, &buscfg, SPI_DMA_CH_AUTO));
+        esp_err_t ret = spi_bus_initialize(SPI3_HOST, &buscfg, SPI_DMA_CH_AUTO);
+        if (ret != ESP_OK && ret != ESP_ERR_INVALID_STATE) {
+            ESP_LOGE(TAG, "Failed to initialize SPI3 bus: %s. Falling back to NoDisplay", esp_err_to_name(ret));
+            display_ = new NoDisplay();
+            return;
+        }
 
         esp_lcd_panel_io_handle_t panel_io = nullptr;
         esp_lcd_panel_handle_t panel = nullptr;
@@ -202,7 +237,12 @@ private:
         io_config.trans_queue_depth = 10;
         io_config.lcd_cmd_bits = 8;
         io_config.lcd_param_bits = 8;
-        ESP_ERROR_CHECK(esp_lcd_new_panel_io_spi(SPI3_HOST, &io_config, &panel_io));
+        ret = esp_lcd_new_panel_io_spi(SPI3_HOST, &io_config, &panel_io);
+        if (ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to create SPI panel IO: %s. Falling back to NoDisplay", esp_err_to_name(ret));
+            display_ = new NoDisplay();
+            return;
+        }
 
         esp_lcd_panel_dev_config_t panel_config = {};
         panel_config.reset_gpio_num = DISPLAY_RST_PIN;
@@ -210,25 +250,50 @@ private:
         panel_config.bits_per_pixel = 16;
 
 #if defined(CONFIG_CUSTOM_DISPLAY_ILI9341)
-        ESP_ERROR_CHECK(esp_lcd_new_panel_ili9341(panel_io, &panel_config, &panel));
+        ret = esp_lcd_new_panel_ili9341(panel_io, &panel_config, &panel);
+        if (ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to create ILI9341 panel: %s. Falling back to NoDisplay", esp_err_to_name(ret));
+            display_ = new NoDisplay();
+            return;
+        }
         ESP_LOGI(TAG, "ILI9341 SPI LCD panel created");
 #elif defined(CONFIG_CUSTOM_DISPLAY_GC9A01)
-        ESP_ERROR_CHECK(esp_lcd_new_panel_gc9a01(panel_io, &panel_config, &panel));
+        ret = esp_lcd_new_panel_gc9a01(panel_io, &panel_config, &panel);
+        if (ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to create GC9A01 panel: %s. Falling back to NoDisplay", esp_err_to_name(ret));
+            display_ = new NoDisplay();
+            return;
+        }
         ESP_LOGI(TAG, "GC9A01 Round LCD panel created");
 #elif defined(CONFIG_CUSTOM_DISPLAY_ST7796)
-        ESP_ERROR_CHECK(esp_lcd_new_panel_st7796(panel_io, &panel_config, &panel));
+        ret = esp_lcd_new_panel_st7796(panel_io, &panel_config, &panel);
+        if (ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to create ST7796 panel: %s. Falling back to NoDisplay", esp_err_to_name(ret));
+            display_ = new NoDisplay();
+            return;
+        }
         ESP_LOGI(TAG, "ST7796 SPI LCD panel created");
 #else
-        ESP_ERROR_CHECK(esp_lcd_new_panel_st7789(panel_io, &panel_config, &panel));
+        ret = esp_lcd_new_panel_st7789(panel_io, &panel_config, &panel);
+        if (ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to create ST7789 panel: %s. Falling back to NoDisplay", esp_err_to_name(ret));
+            display_ = new NoDisplay();
+            return;
+        }
         ESP_LOGI(TAG, "ST7789 SPI LCD panel created");
 #endif
 
-        ESP_ERROR_CHECK(esp_lcd_panel_reset(panel));
-        ESP_ERROR_CHECK(esp_lcd_panel_init(panel));
-        ESP_ERROR_CHECK(esp_lcd_panel_invert_color(panel, DISPLAY_INVERT_COLOR));
-        ESP_ERROR_CHECK(esp_lcd_panel_swap_xy(panel, DISPLAY_SWAP_XY));
-        ESP_ERROR_CHECK(esp_lcd_panel_mirror(panel, DISPLAY_MIRROR_X, DISPLAY_MIRROR_Y));
-        ESP_ERROR_CHECK(esp_lcd_panel_disp_on_off(panel, true));
+        esp_lcd_panel_reset(panel);
+        ret = esp_lcd_panel_init(panel);
+        if (ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to initialize SPI LCD panel: %s. Falling back to NoDisplay", esp_err_to_name(ret));
+            display_ = new NoDisplay();
+            return;
+        }
+        esp_lcd_panel_invert_color(panel, DISPLAY_INVERT_COLOR);
+        esp_lcd_panel_swap_xy(panel, DISPLAY_SWAP_XY);
+        esp_lcd_panel_mirror(panel, DISPLAY_MIRROR_X, DISPLAY_MIRROR_Y);
+        esp_lcd_panel_disp_on_off(panel, true);
 
         display_ = new SpiLcdDisplay(panel_io, panel,
                                     DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_OFFSET_X, DISPLAY_OFFSET_Y,
