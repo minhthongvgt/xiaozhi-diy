@@ -25,9 +25,19 @@ esp_err_t actuator_manager_init(void);
 void actuator_set_relay(bool state);
 
 /**
+ * @brief Get Relay state
+ */
+bool actuator_get_relay(void);
+
+/**
  * @brief Set Servo position (0 to 180 degrees)
  */
 void actuator_set_servo_angle(uint8_t angle_deg);
+
+/**
+ * @brief Get current Servo position
+ */
+uint8_t actuator_get_servo_angle(void);
 
 /**
  * @brief Set DC Motor speed and direction (-100 to +100)

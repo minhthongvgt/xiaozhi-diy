@@ -20,6 +20,8 @@
 #include "config.h"
 #include "mcp_server.h"
 #include "lamp_controller.h"
+#include "sensor_controller.h"
+#include "actuator_controller.h"
 #include "led/single_led.h"
 #include "led/circular_strip.h"
 #include "backlight.h"
@@ -505,11 +507,21 @@ private:
     }
 
     void InitializeMcpTools() {
-#if defined(CONFIG_ENABLE_CUSTOM_MCP_SERVER) && defined(CONFIG_CUSTOM_MCP_TOOL_LAMP)
+#if defined(CONFIG_ENABLE_CUSTOM_MCP_SERVER)
+#if defined(CONFIG_CUSTOM_MCP_TOOL_LAMP)
         if (LAMP_GPIO != GPIO_NUM_NC) {
             static LampController lamp(LAMP_GPIO);
             ESP_LOGI(TAG, "MCP Lamp Controller registered on GPIO %d", LAMP_GPIO);
         }
+#endif
+#if defined(CONFIG_CUSTOM_MCP_TOOL_SENSOR)
+        static SensorController sensor_ctrl;
+        ESP_LOGI(TAG, "MCP Sensor Tools registered successfully");
+#endif
+#if defined(CONFIG_CUSTOM_MCP_TOOL_ACTUATOR)
+        static ActuatorController actuator_ctrl;
+        ESP_LOGI(TAG, "MCP Actuator Tools registered successfully");
+#endif
 #endif
     }
 

@@ -1704,6 +1704,14 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             config CUSTOM_MCP_TOOL_THEME
                 bool "Công cụ MCP: Đổi biểu cảm và chủ đề giao diện màn hình"
                 default y
+
+            config CUSTOM_MCP_TOOL_SENSOR
+                bool "Công cụ MCP: Đọc dữ liệu Cảm biến môi trường, khoảng cách, an ninh qua AI"
+                default y
+
+            config CUSTOM_MCP_TOOL_ACTUATOR
+                bool "Công cụ MCP: Điều khiển Động cơ Servo, Động cơ DC, Còi Buzzer qua AI"
+                default y
         endif
     endmenu
 
