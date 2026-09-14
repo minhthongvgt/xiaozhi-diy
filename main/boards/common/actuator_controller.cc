@@ -8,12 +8,11 @@ ActuatorController::ActuatorController() {
     auto& mcp_server = McpServer::GetInstance();
 
     // 1. Tool điều khiển góc Servo
-    PropertyList servo_props = {
-        Property("angle", kPropertyTypeInteger, 90, 0, 180)
-    };
     mcp_server.AddTool("self.actuator.set_servo",
                        "Set interactive servo angle between 0 and 180 degrees",
-                       servo_props,
+                       PropertyList({
+                           Property("angle", kPropertyTypeInteger, 90, 0, 180)
+                       }),
                        [](const PropertyList& properties) -> ReturnValue {
         int angle = properties["angle"].value<int>();
         actuator_set_servo_angle((uint8_t)angle);
@@ -21,13 +20,12 @@ ActuatorController::ActuatorController() {
     });
 
     // 2. Tool điều khiển động cơ DC (TB6612FNG)
-    PropertyList motor_props = {
-        Property("motor_id", kPropertyTypeInteger, 1, 1, 2),
-        Property("speed", kPropertyTypeInteger, 0, -100, 100)
-    };
     mcp_server.AddTool("self.actuator.set_motor",
                        "Set DC motor speed (-100 to 100 percent) for motor 1 or 2",
-                       motor_props,
+                       PropertyList({
+                           Property("motor_id", kPropertyTypeInteger, 1, 1, 2),
+                           Property("speed", kPropertyTypeInteger, 0, -100, 100)
+                       }),
                        [](const PropertyList& properties) -> ReturnValue {
         int motor_id = properties["motor_id"].value<int>();
         int speed = properties["speed"].value<int>();
@@ -36,13 +34,12 @@ ActuatorController::ActuatorController() {
     });
 
     // 3. Tool phát âm thanh còi Buzzer
-    PropertyList beep_props = {
-        Property("duration_ms", kPropertyTypeInteger, 100, 10, 5000),
-        Property("frequency_hz", kPropertyTypeInteger, 2000, 100, 10000)
-    };
     mcp_server.AddTool("self.actuator.beep",
                        "Play a buzzer alarm or beep sound with specified frequency and duration",
-                       beep_props,
+                       PropertyList({
+                           Property("duration_ms", kPropertyTypeInteger, 100, 10, 5000),
+                           Property("frequency_hz", kPropertyTypeInteger, 2000, 100, 10000)
+                       }),
                        [](const PropertyList& properties) -> ReturnValue {
         int duration = properties["duration_ms"].value<int>();
         int freq = properties["frequency_hz"].value<int>();
@@ -51,12 +48,11 @@ ActuatorController::ActuatorController() {
     });
 
     // 4. Tool rung xúc giác (Haptic vibration)
-    PropertyList vib_props = {
-        Property("duration_ms", kPropertyTypeInteger, 200, 10, 3000)
-    };
     mcp_server.AddTool("self.actuator.vibrate",
                        "Trigger haptic vibration motor feedback",
-                       vib_props,
+                       PropertyList({
+                           Property("duration_ms", kPropertyTypeInteger, 200, 10, 3000)
+                       }),
                        [](const PropertyList& properties) -> ReturnValue {
         int duration = properties["duration_ms"].value<int>();
         actuator_vibrate((uint32_t)duration);
@@ -64,12 +60,11 @@ ActuatorController::ActuatorController() {
     });
 
     // 5. Tool bật/tắt rơ-le 220V
-    PropertyList relay_props = {
-        Property("state", kPropertyTypeBoolean, true)
-    };
     mcp_server.AddTool("self.actuator.set_relay",
                        "Turn external 220V power relay ON or OFF",
-                       relay_props,
+                       PropertyList({
+                           Property("state", kPropertyTypeBoolean, true)
+                       }),
                        [](const PropertyList& properties) -> ReturnValue {
         bool state = properties["state"].value<bool>();
         actuator_set_relay(state);

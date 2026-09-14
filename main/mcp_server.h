@@ -9,6 +9,7 @@
 #include <type_traits>
 #include <variant>
 #include <vector>
+#include <initializer_list>
 
 #include <esp_system.h>
 #include <cJSON.h>
@@ -213,6 +214,7 @@ private:
 
 public:
     PropertyList() = default;
+    PropertyList(std::initializer_list<Property> properties) : properties_(properties) {}
     PropertyList(const std::vector<Property>& properties) : properties_(properties) {}
     void AddProperty(const Property& property) { properties_.push_back(property); }
 
