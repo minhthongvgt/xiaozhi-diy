@@ -74,13 +74,18 @@ list(APPEND SOURCES
     "app_main.c"
     "gpio_validator.c"
     "boards/common/bus_manager.c"
+    "boards/board_init.c"
     "boards/esp32s3_wroom/board_init.c"
     "drivers/input/input_manager.c"
+    "drivers/input/input_init.c"
     "drivers/display/display_init.c"
     "drivers/audio/audio_init.c"
     "drivers/sensor/sensor_manager.c"
+    "drivers/sensor/sensor_init.c"
     "drivers/actuator/actuator_manager.c"
+    "drivers/actuator/actuator_init.c"
     "drivers/storage/storage_manager.c"
+    "drivers/storage/storage_init.c"
     "protocols/mcp_device.c"
 )
 list(APPEND INCLUDE_DIRS
@@ -91,6 +96,7 @@ list(APPEND INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/drivers/sensor
     ${CMAKE_CURRENT_SOURCE_DIR}/drivers/actuator
     ${CMAKE_CURRENT_SOURCE_DIR}/drivers/storage
+    ${CMAKE_CURRENT_SOURCE_DIR}/boards
     ${CMAKE_CURRENT_SOURCE_DIR}/boards/common
     ${CMAKE_CURRENT_SOURCE_DIR}/boards/esp32s3_wroom
 )

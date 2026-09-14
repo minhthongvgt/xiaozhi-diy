@@ -33,6 +33,16 @@ extern "C" {
 esp_err_t gpio_safety_validate(void);
 
 /**
+ * @brief Alias for gpio_safety_validate() as specified in review report
+ */
+esp_err_t gpio_validator_run(void);
+
+/**
+ * @brief Get human-readable error log if validation fails
+ */
+const char* gpio_validator_get_error_log(void);
+
+/**
  * @brief Checks if a single pin is valid and safe for peripheral use.
  *
  * @param pin The GPIO pin number.

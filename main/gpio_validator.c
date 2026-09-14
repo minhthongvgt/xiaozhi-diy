@@ -208,3 +208,13 @@ esp_err_t gpio_safety_validate(void)
     ESP_LOGI(TAG, "Hardware Safety Validation PASSED: All assigned GPIOs are safe and collision-free.");
     return ESP_OK;
 }
+
+esp_err_t gpio_validator_run(void)
+{
+    return gpio_safety_validate();
+}
+
+const char* gpio_validator_get_error_log(void)
+{
+    return "Check your menuconfig or board pinout. Pins in range 26..37 or duplicate pin assignments detected.";
+}

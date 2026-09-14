@@ -18,6 +18,11 @@ extern "C" {
 esp_err_t display_subsystem_init(void);
 
 /**
+ * @brief Alias for display_subsystem_init()
+ */
+esp_err_t display_init(void);
+
+/**
  * @brief Turn display backlight on/off
  */
 void display_set_backlight(uint8_t brightness_pct);

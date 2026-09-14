@@ -82,3 +82,8 @@ esp_err_t display_subsystem_init(void)
     return ESP_OK;
 #endif
 }
+
+esp_err_t display_init(void)
+{
+    return display_subsystem_init();
+}

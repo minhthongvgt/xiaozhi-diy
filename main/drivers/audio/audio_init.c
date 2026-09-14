@@ -181,3 +181,8 @@ esp_err_t audio_subsystem_init(void)
 
     return ESP_OK;
 }
+
+esp_err_t audio_init(void)
+{
+    return audio_subsystem_init();
+}

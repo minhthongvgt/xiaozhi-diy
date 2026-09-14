@@ -42,6 +42,11 @@ esp_err_t audio_driver_init_mic(void);
  */
 esp_err_t audio_subsystem_init(void);
 
+/**
+ * @brief Alias for audio_subsystem_init()
+ */
+esp_err_t audio_init(void);
+
 #ifdef __cplusplus
 }
 #endif
