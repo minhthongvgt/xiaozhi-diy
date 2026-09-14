@@ -69,6 +69,32 @@ if(CONFIG_XIAOZHI_NETWORK_ETHERNET)
 endif()
 list(APPEND INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/boards/common)
 
+# Standardized modular drivers and hardware management
+list(APPEND SOURCES
+    "app_main.c"
+    "gpio_validator.c"
+    "boards/common/bus_manager.c"
+    "boards/esp32s3_wroom/board_init.c"
+    "drivers/input/input_manager.c"
+    "drivers/display/display_init.c"
+    "drivers/audio/audio_init.c"
+    "drivers/sensor/sensor_manager.c"
+    "drivers/actuator/actuator_manager.c"
+    "drivers/storage/storage_manager.c"
+    "protocols/mcp_device.c"
+)
+list(APPEND INCLUDE_DIRS
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/drivers/input
+    ${CMAKE_CURRENT_SOURCE_DIR}/drivers/display
+    ${CMAKE_CURRENT_SOURCE_DIR}/drivers/audio
+    ${CMAKE_CURRENT_SOURCE_DIR}/drivers/sensor
+    ${CMAKE_CURRENT_SOURCE_DIR}/drivers/actuator
+    ${CMAKE_CURRENT_SOURCE_DIR}/drivers/storage
+    ${CMAKE_CURRENT_SOURCE_DIR}/boards/common
+    ${CMAKE_CURRENT_SOURCE_DIR}/boards/esp32s3_wroom
+)
+
 
 idf_build_get_property(build_components BUILD_COMPONENTS)
 # Function to find component dynamically by pattern

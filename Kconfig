@@ -1,2 +1,7 @@
-# This is a new config file
-CONFIG_ENABLED=true
+# Xiaozhi Custom Hardware Project Kconfig
+# Sources main component project build configuration
+
+mainmenu "Xiaozhi Firmware Configuration"
+
+# Load the main project menu configuration
+source "main/Kconfig.projbuild"
