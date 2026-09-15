@@ -49,11 +49,19 @@ esp_err_t input_manager_init(void)
 
     // 1. Physical Buttons
 #if defined(CONFIG_CUSTOM_ENABLE_BUTTON_BOOT) || defined(CONFIG_ENABLE_BUTTON_BOOT)
+#if defined(CONFIG_CUSTOM_BUTTON_BOOT_GPIO)
+    init_button((gpio_num_t)CONFIG_CUSTOM_BUTTON_BOOT_GPIO, "BOOT Button");
+#else
     init_button(GPIO_NUM_0, "BOOT Button");
+#endif
 #endif
 
 #if defined(CONFIG_CUSTOM_ENABLE_BUTTON_TOUCH)
+#if defined(CONFIG_CUSTOM_BUTTON_TOUCH_GPIO)
+    init_button((gpio_num_t)CONFIG_CUSTOM_BUTTON_TOUCH_GPIO, "TOUCH Button");
+#else
     init_button(GPIO_NUM_1, "TOUCH Button");
+#endif
 #endif
 
 #if defined(CONFIG_ENABLE_BUTTON_WAKE)

@@ -34,6 +34,7 @@
 #if defined(CONFIG_CUSTOM_BATTERY_MONITOR_ADC)
 #include "boards/common/adc_battery_monitor.h"
 #endif
+#include "boards/common/bus_manager.h"
 
 #include <esp_log.h>
 #include <driver/i2c_master.h>
@@ -96,6 +97,13 @@ private:
             return;
         }
 
+        i2c_master_bus_handle_t existing = bus_manager_get_i2c_bus();
+        if (existing != nullptr) {
+            i2c_bus_ = existing;
+            ESP_LOGI(TAG, "Reusing shared I2C master bus from bus_manager");
+            return;
+        }
+
         gpio_num_t sda_pin = GPIO_NUM_8;
         gpio_num_t scl_pin = GPIO_NUM_9;
 
@@ -116,25 +124,15 @@ private:
         scl_pin = AUDIO_CODEC_I2C_SCL_PIN;
 #endif
 
-        i2c_master_bus_config_t bus_config = {
-            .i2c_port = (i2c_port_t)0,
-            .sda_io_num = sda_pin,
-            .scl_io_num = scl_pin,
-            .clk_source = I2C_CLK_SRC_DEFAULT,
-            .glitch_ignore_cnt = 7,
-            .intr_priority = 0,
-            .trans_queue_depth = 0,
-            .flags = {
-                .enable_internal_pullup = 1,
-            },
-        };
-        esp_err_t ret = i2c_new_master_bus(&bus_config, &i2c_bus_);
-        if (ret != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to initialize I2C master bus (SDA: %d, SCL: %d): %s", sda_pin, scl_pin, esp_err_to_name(ret));
+        esp_err_t ret = bus_manager_init_i2c(sda_pin, scl_pin, 400000);
+        if (ret == ESP_OK) {
+            i2c_bus_ = bus_manager_get_i2c_bus();
+            ESP_LOGI(TAG, "I2C master bus initialized via bus_manager (SDA: %d, SCL: %d)", sda_pin, scl_pin);
+        } else {
+            ESP_LOGE(TAG, "Failed to initialize I2C master bus via bus_manager (SDA: %d, SCL: %d): %s",
+                     sda_pin, scl_pin, esp_err_to_name(ret));
             i2c_bus_ = nullptr;
-            return;
         }
-        ESP_LOGI(TAG, "I2C master bus initialized (SDA: %d, SCL: %d)", sda_pin, scl_pin);
     }
 
     void InitializeDisplay() {

@@ -35,6 +35,13 @@ esp_err_t bus_manager_init_i2c(gpio_num_t sda_pin, gpio_num_t scl_pin, uint32_t 
 i2c_master_bus_handle_t bus_manager_get_i2c_bus(void);
 
 /**
+ * @brief Set the centralized I2C master bus handle (if initialized externally)
+ *
+ * @param bus Handle to active I2C master bus
+ */
+void bus_manager_set_i2c_bus(i2c_master_bus_handle_t bus);
+
+/**
  * @brief Thread-safe registration of an I2C device on the centralized master bus
  *
  * @param dev_cfg Pointer to device configuration

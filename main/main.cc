@@ -22,14 +22,11 @@ extern "C" void app_main(void)
         return;
     }
 
-    // 2. Initialize NVS flash for WiFi configuration
+    // 2. Ensure NVS flash is ready
     esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        ESP_LOGW(TAG, "Erasing NVS flash to fix corruption");
-        ESP_ERROR_CHECK(nvs_flash_erase());
-        ret = nvs_flash_init();
+    if (ret != ESP_OK) {
+        ESP_LOGW(TAG, "NVS flash status: %s", esp_err_to_name(ret));
     }
-    ESP_ERROR_CHECK(ret);
 
     // 3. Initialize and run the application
     auto& app = Application::GetInstance();

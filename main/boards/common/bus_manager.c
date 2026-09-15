@@ -59,6 +59,12 @@ i2c_master_bus_handle_t bus_manager_get_i2c_bus(void)
     return s_i2c_bus;
 }
 
+void bus_manager_set_i2c_bus(i2c_master_bus_handle_t bus)
+{
+    s_i2c_bus = bus;
+    ESP_LOGI(TAG, "I2C Master Bus handle updated externally");
+}
+
 esp_err_t bus_manager_add_i2c_device(const i2c_device_config_t *dev_cfg, i2c_master_dev_handle_t *dev_handle)
 {
     if (s_i2c_bus == NULL) {
@@ -160,13 +166,17 @@ esp_err_t bus_manager_init(void)
 {
     ESP_LOGI(TAG, "Initializing System Bus Manager & Resource Arbiters...");
 
+    if (s_i2c_mutex == NULL) {
+        s_i2c_mutex = xSemaphoreCreateMutex();
+    }
+    if (s_spi2_mutex == NULL) {
+        s_spi2_mutex = xSemaphoreCreateMutex();
+    }
+
 #if defined(CONFIG_CUSTOM_I2C_SDA_PIN) && defined(CONFIG_CUSTOM_I2C_SCL_PIN)
     bus_manager_init_i2c((gpio_num_t)CONFIG_CUSTOM_I2C_SDA_PIN,
                          (gpio_num_t)CONFIG_CUSTOM_I2C_SCL_PIN,
                          400000);
-#else
-    // Default fallback I2C pins for ESP32-S3 Custom Board
-    bus_manager_init_i2c(GPIO_NUM_8, GPIO_NUM_9, 400000);
 #endif
 
     return ESP_OK;

@@ -22,17 +22,12 @@ esp_err_t storage_manager_init(void)
 {
     ESP_LOGI(TAG, "Initializing Storage Subsystem (NVS & MicroSD)...");
 
-    // 1. NVS Flash initialization
+    // 1. NVS Flash verification
     esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        ESP_LOGW(TAG, "Erasing corrupted NVS partition...");
-        nvs_flash_erase();
-        ret = nvs_flash_init();
-    }
     if (ret == ESP_OK) {
-        ESP_LOGI(TAG, "NVS Flash initialized successfully.");
+        ESP_LOGI(TAG, "NVS Flash active and verified.");
     } else {
-        ESP_LOGE(TAG, "Failed to init NVS Flash: %s", esp_err_to_name(ret));
+        ESP_LOGW(TAG, "NVS Flash check returned: %s", esp_err_to_name(ret));
     }
 
     // 2. MicroSD Card (SPI Mode)
