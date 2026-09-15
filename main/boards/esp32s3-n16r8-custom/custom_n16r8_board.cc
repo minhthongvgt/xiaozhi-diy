@@ -505,18 +505,21 @@ private:
     }
 
     void InitializeMcpTools() {
-#if defined(CONFIG_ENABLE_CUSTOM_MCP_SERVER)
-#if defined(CONFIG_CUSTOM_MCP_TOOL_LAMP)
+#if defined(CONFIG_ENABLE_CUSTOM_MCP_SERVER) || defined(CONFIG_ENABLE_CUSTOM_SENSORS) || \
+    defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE) || defined(CONFIG_CUSTOM_PERIPH_SERVO_ENABLE) || \
+    defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE)
+#if defined(CONFIG_CUSTOM_MCP_TOOL_LAMP) || defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE)
         if (LAMP_GPIO != GPIO_NUM_NC) {
             static LampController lamp(LAMP_GPIO);
             ESP_LOGI(TAG, "MCP Lamp Controller registered on GPIO %d", LAMP_GPIO);
         }
 #endif
-#if defined(CONFIG_CUSTOM_MCP_TOOL_SENSOR)
+#if defined(CONFIG_CUSTOM_MCP_TOOL_SENSOR) || defined(CONFIG_ENABLE_CUSTOM_SENSORS)
         static SensorController sensor_ctrl;
         ESP_LOGI(TAG, "MCP Sensor Tools registered successfully");
 #endif
-#if defined(CONFIG_CUSTOM_MCP_TOOL_ACTUATOR)
+#if defined(CONFIG_CUSTOM_MCP_TOOL_ACTUATOR) || defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE) || \
+    defined(CONFIG_CUSTOM_PERIPH_SERVO_ENABLE) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE)
         static ActuatorController actuator_ctrl;
         ESP_LOGI(TAG, "MCP Actuator Tools registered successfully");
 #endif
