@@ -1720,7 +1720,7 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
         # 4. Nút bấm BOOT Onboard
         config CUSTOM_ENABLE_BUTTON_BOOT
             bool "Nút bấm BOOT Onboard (BOOT Button)"
-            default y
+            default n
             help
                 Nút nhấn chuyển đổi trạng thái nói và vào chế độ cấu hình Wi-Fi.
 

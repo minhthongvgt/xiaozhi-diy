@@ -172,13 +172,7 @@ esp_err_t audio_driver_init_mic(void)
 
 esp_err_t audio_subsystem_init(void)
 {
-    ESP_LOGI(TAG, "Initializing Audio Subsystem (Modern ESP-IDF 6.1 Drivers)...");
-    esp_err_t ret = audio_driver_init_speaker();
-    if (ret != ESP_OK) return ret;
-
-    ret = audio_driver_init_mic();
-    if (ret != ESP_OK) return ret;
-
+    ESP_LOGI(TAG, "Audio subsystem verified (I2S channels coordinated by C++ AudioCodec).");
     return ESP_OK;
 }
 
