@@ -1,0 +1,52 @@
+{
+    "type": "esp32s3-n16r8-custom",
+    "target": "esp32s3",
+    "builds": [
+        {
+            "name": "esp32s3-n16r8-custom",
+            "sdkconfig_append": [
+                "CONFIG_BOARD_TYPE_ESP32_S3_N16R8_CUSTOM=y",
+                "CONFIG_ENABLE_CUSTOM_DISPLAY=y",
+                "CONFIG_CUSTOM_DISPLAY_ST7796=y",
+                "CONFIG_CUSTOM_DISPLAY_WIDTH=320",
+                "CONFIG_CUSTOM_DISPLAY_HEIGHT=480",
+                "CONFIG_CUSTOM_DISPLAY_PIN_MOSI=47",
+                "CONFIG_CUSTOM_DISPLAY_PIN_CLK=21",
+                "CONFIG_CUSTOM_DISPLAY_PIN_CS=41",
+                "CONFIG_CUSTOM_DISPLAY_PIN_DC=40",
+                "CONFIG_CUSTOM_DISPLAY_USE_RST=y",
+                "CONFIG_CUSTOM_DISPLAY_PIN_RST=42",
+                "CONFIG_CUSTOM_DISPLAY_USE_BLK=y",
+                "CONFIG_CUSTOM_DISPLAY_PIN_BLK=38",
+                "CONFIG_CUSTOM_DISPLAY_INVERT_COLOR=y",
+                "CONFIG_ENABLE_CUSTOM_SPEAKER=y",
+                "CONFIG_CUSTOM_AUDIO_DAC_PCM5102A=y",
+                "CONFIG_CUSTOM_AUDIO_SPK_GPIO_DOUT=7",
+                "CONFIG_CUSTOM_AUDIO_SPK_GPIO_BCLK=15",
+                "CONFIG_CUSTOM_AUDIO_SPK_GPIO_LRCK=16",
+                "CONFIG_ENABLE_CUSTOM_MIC=y",
+                "CONFIG_CUSTOM_AUDIO_MIC_INMP441=y",
+                "CONFIG_CUSTOM_AUDIO_MIC_GPIO_WS=4",
+                "CONFIG_CUSTOM_AUDIO_MIC_GPIO_SCK=5",
+                "CONFIG_CUSTOM_AUDIO_MIC_GPIO_DIN=6",
+                "CONFIG_CUSTOM_AUDIO_I2S_SIMPLEX=y",
+                "CONFIG_CUSTOM_ENABLE_BUTTON_BOOT=y",
+                "CONFIG_CUSTOM_BUTTON_BOOT_GPIO=0",
+                "CONFIG_ENABLE_CUSTOM_SENSORS=y",
+                "CONFIG_CUSTOM_ENABLE_SENSOR_DHT11_22=y",
+                "CONFIG_CUSTOM_SENSOR_DHT_GPIO=14",
+                "CONFIG_CUSTOM_BATTERY_MONITOR_NONE=y",
+                "CONFIG_ESPTOOLPY_FLASHMODE_QIO=y",
+                "CONFIG_ESPTOOLPY_FLASHFREQ_80M=y",
+                "CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240=y",
+                "CONFIG_SPIRAM=y",
+                "CONFIG_SPIRAM_MODE_OCT=y",
+                "CONFIG_SPIRAM_TYPE_ESP32S3_OCT=y",
+                "CONFIG_SPIRAM_SPEED_80M=y",
+                "CONFIG_ESP32S3_INSTRUCTION_CACHE_32KB=y",
+                "CONFIG_ESP32S3_DATA_CACHE_32KB=y",
+                "CONFIG_ESP32S3_DATA_CACHE_LINE_64B=y"
+            ]
+        }
+    ]
+}
