@@ -37,6 +37,8 @@ public:
     void Rainbow(StripColor low, StripColor high, int interval_ms);
     void FadeOut(int interval_ms);
     void TurnOff();
+    StripColor GetColor(uint8_t index = 0) const;
+    uint8_t GetBrightness() const { return default_brightness_; }
 
 private:
     std::mutex mutex_;

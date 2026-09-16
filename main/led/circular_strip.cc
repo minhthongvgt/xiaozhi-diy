@@ -144,6 +144,13 @@ void CircularStrip::TurnOff() {
     }
 }
 
+StripColor CircularStrip::GetColor(uint8_t index) const {
+    if (index < colors_.size()) {
+        return colors_[index];
+    }
+    return {0, 0, 0};
+}
+
 void CircularStrip::Blink(StripColor color, int interval_ms) {
     for (int i = 0; i < max_leds_; i++) {
         colors_[i] = color;
@@ -265,6 +272,7 @@ void CircularStrip::StartStripTask(int interval_ms, std::function<void()> cb) {
     if (led_strip_ == nullptr || strip_timer_ == nullptr) {
         return;
     }
+    if (interval_ms < 5) interval_ms = 5;
 
     std::lock_guard<std::mutex> lock(mutex_);
     esp_timer_stop(strip_timer_);
@@ -280,6 +288,16 @@ void CircularStrip::SetBrightness(uint8_t default_brightness, uint8_t low_bright
 }
 
 void CircularStrip::OnStateChanged() {
+    if (custom_mode_) {
+        // Preserve user-specified custom lighting effect/color set via MCP
+        auto& app = Application::GetInstance();
+        if (app.GetDeviceState() == kDeviceStateFatalError) {
+            StripColor color = { default_brightness_, 0, 0 };
+            Blink(color, 100);
+        }
+        return;
+    }
+
     auto& app = Application::GetInstance();
     auto device_state = app.GetDeviceState();
     switch (device_state) {

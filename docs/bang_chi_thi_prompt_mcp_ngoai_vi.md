@@ -223,20 +223,28 @@ Dưới đây là chi tiết kỹ thuật từng công cụ MCP có sẵn trên 
 * **Tham số:**
   * `duration_ms` *(integer, 10 đến 3000, mặc định: 200)*: Thời gian rung (mili-giây).
 
-### 4.12. Nhóm Hiệu Ứng Ánh Sáng LED RGB: `self.led.set_effect` & `self.led.set_color`
-* **Mục đích:** Điều khiển dải LED WS2812B / SK6812 đổi màu sắc theo cảm xúc hoặc đổi hiệu ứng ánh sáng động.
+### 4.12. Nhóm Hiệu Ứng Ánh Sáng LED RGB: `self.led.set_effect`, `self.led.set_color`, `self.led.set_brightness`, `self.led.get_state`
+* **Mục đích:** Điều khiển dải LED WS2812B / SK6812 đổi màu sắc theo cảm xúc, đổi hiệu ứng ánh sáng động, điều chỉnh độ sáng và đọc trạng thái hiện tại.
+* **Cơ chế Custom Mode:** Khi người dùng ra lệnh bật đèn hoặc đặt hiệu ứng qua MCP, hệ thống tự động giữ nguyên đèn hoạt động liên tục (không bị tắt khi bot chuyển về trạng thái nghỉ Idle).
 * **Tham số `set_effect`:**
   * `effect` *(string, bắt buộc)*:
     * `"rainbow"`: Cầu vồng 7 màu chuyển sắc liên tục mượt mà.
     * `"chase"`: Cầu vồng rượt đuổi xoay vòng tròn cực nhanh.
-    * `"breathe"`: Hiệu ứng thở êm dịu (sáng dần rồi mờ dần).
+    * `"breathe"`: Hiệu ứng thở êm dịu (sáng dần rồi mờ dần theo màu hiện tại).
     * `"blink"`: Nhấp nháy cảnh báo.
     * `"off"`: Tắt toàn bộ đèn LED.
+    * `"auto"`: Trả đèn về chế độ chỉ báo trạng thái tự động của hệ thống (Listening, Speaking, Error).
   * `speed_ms` *(integer, 10 đến 1000, mặc định: 25)*: Tốc độ chuyển động (mili-giây/bước). Càng nhỏ chạy càng nhanh.
 * **Tham số `set_color`:**
   * `red` *(integer, 0 đến 255)*
   * `green` *(integer, 0 đến 255)*
   * `blue` *(integer, 0 đến 255)*
+* **Tham số `set_brightness`:**
+  * `brightness` *(integer, 0 đến 100)*: Mức độ sáng theo phần trăm.
+* **Tham số `get_state`:** Rỗng `{}` -> Trả về JSON:
+  ```json
+  {"configured": true, "type": "CircularStrip", "custom_mode": true, "brightness": 32, "color": {"r": 255, "g": 0, "b": 0}}
+  ```
 
 ### 4.13. Nhóm Hồng Ngoại Điều Khiển Nhà Thông Minh: `self.ir.send_remote`
 * **Mục đích:** Bắn tín hiệu hồng ngoại 38kHz điều khiển máy lạnh, tivi, quạt trong phòng khách/phòng ngủ.

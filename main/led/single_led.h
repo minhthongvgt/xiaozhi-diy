@@ -20,17 +20,21 @@ public:
     void TurnOn();
     void TurnOff();
     void SetColor(uint8_t r, uint8_t g, uint8_t b);
+    void SetBrightness(uint8_t brightness);
     void BlinkOnce();
     void Blink(int times, int interval_ms);
     void StartContinuousBlink(int interval_ms);
     void StartRainbow(int interval_ms = 25, uint8_t brightness = 16);
+    void StartChase(int interval_ms = 15);
+    void StartBreathe(int interval_ms = 30, uint8_t max_brightness = 32);
     void StopEffect();
 
 private:
     enum class EffectMode {
         kNone,
         kBlink,
-        kRainbow
+        kRainbow,
+        kBreathe
     };
 
     std::mutex mutex_;
@@ -43,6 +47,9 @@ private:
     EffectMode mode_ = EffectMode::kNone;
     uint8_t rainbow_pos_ = 0;
     uint8_t rainbow_brightness_ = 16;
+    uint8_t breathe_step_ = 0;
+    bool breathe_up_ = true;
+    uint8_t breathe_brightness_ = 32;
 
     void StartBlinkTask(int times, int interval_ms);
     void OnTimer();
