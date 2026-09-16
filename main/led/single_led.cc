@@ -158,6 +158,10 @@ void SingleLed::StartBlinkTask(int times, int interval_ms) {
     esp_timer_start_periodic(timer_, interval_ms * 1000);
 }
 
+void SingleLed::StartRainbow(int interval_ms) {
+    StartRainbow(interval_ms, rainbow_brightness_);
+}
+
 void SingleLed::StartRainbow(int interval_ms, uint8_t brightness) {
     if (led_strip_ == nullptr || timer_ == nullptr) {
         return;
@@ -176,6 +180,10 @@ void SingleLed::StartRainbow(int interval_ms, uint8_t brightness) {
 void SingleLed::StartChase(int interval_ms) {
     // For single LED, chase behaves as smooth fast rainbow cycle
     StartRainbow(interval_ms < 5 ? 15 : interval_ms, DEFAULT_BRIGHTNESS);
+}
+
+void SingleLed::StartBreathe(int interval_ms) {
+    StartBreathe(interval_ms, breathe_brightness_);
 }
 
 void SingleLed::StartBreathe(int interval_ms, uint8_t max_brightness) {

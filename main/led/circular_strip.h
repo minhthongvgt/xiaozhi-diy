@@ -36,9 +36,40 @@ public:
     void RainbowChase(int interval_ms = 30);
     void Rainbow(StripColor low, StripColor high, int interval_ms);
     void FadeOut(int interval_ms);
-    void TurnOff();
+    void TurnOff() override;
     StripColor GetColor(uint8_t index = 0) const;
-    uint8_t GetBrightness() const { return default_brightness_; }
+
+    void TurnOn() override {
+        StripColor c = GetColor();
+        if (c.red == 0 && c.green == 0 && c.blue == 0) {
+            c = { default_brightness_, default_brightness_, default_brightness_ };
+        }
+        SetAllColor(c);
+    }
+    void SetColor(uint8_t r, uint8_t g, uint8_t b) override { SetAllColor({r, g, b}); }
+    void SetBrightness(uint8_t brightness) override { SetBrightness(brightness, brightness > 4 ? 4 : brightness / 2); }
+    void StartRainbow(int interval_ms = 25) override { Rainbow(interval_ms); }
+    void StartChase(int interval_ms = 15) override { RainbowChase(interval_ms); }
+    void StartBreathe(int interval_ms = 30) override {
+        StripColor c = GetColor();
+        if (c.red == 0 && c.green == 0 && c.blue == 0) {
+            c = { default_brightness_, default_brightness_, default_brightness_ };
+        }
+        Breathe({0, 0, 0}, c, interval_ms);
+    }
+    void StartBlink(int interval_ms = 200) override {
+        StripColor c = GetColor();
+        if (c.red == 0 && c.green == 0 && c.blue == 0) {
+            c = { default_brightness_, default_brightness_, default_brightness_ };
+        }
+        Blink(c, interval_ms);
+    }
+    std::string GetType() const override { return "CircularStrip"; }
+    void GetColor(uint8_t& r, uint8_t& g, uint8_t& b) const override {
+        StripColor c = GetColor();
+        r = c.red; g = c.green; b = c.blue;
+    }
+    uint8_t GetBrightness() const override { return default_brightness_; }
 
 private:
     std::mutex mutex_;
