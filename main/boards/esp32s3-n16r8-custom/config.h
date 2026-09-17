@@ -151,6 +151,19 @@
 #define DISPLAY_UART_PORT UART_NUM_1
 #endif
 
+// 1.1 Giao diện Người dùng & Bố cục Màn hình (UI Style & Screen Layouts)
+#if !defined(CONFIG_CUSTOM_UI_STYLE_SMART_DASHBOARD) && \
+    !defined(CONFIG_CUSTOM_UI_STYLE_CYBER_TERMINAL) && \
+    !defined(CONFIG_CUSTOM_UI_STYLE_CHAT_BUBBLE) && \
+    !defined(CONFIG_CUSTOM_UI_STYLE_CLASSIC_AVATAR) && \
+    !defined(CONFIG_CUSTOM_UI_STYLE_MINIMAL_ZEN)
+#define CONFIG_CUSTOM_UI_STYLE_SMART_DASHBOARD 1
+#endif
+
+#ifndef CONFIG_CUSTOM_UI_WEATHER_CITY
+#define CONFIG_CUSTOM_UI_WEATHER_CITY "TP. Hồ Chí Minh"
+#endif
+
 // 2. Màn hình Cảm ứng (Touch Screen)
 #ifdef CONFIG_CUSTOM_TOUCH_PIN_SDA
 #define TOUCH_I2C_SDA_PIN ((gpio_num_t)CONFIG_CUSTOM_TOUCH_PIN_SDA)

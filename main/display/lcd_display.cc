@@ -1,4 +1,5 @@
 #include "lcd_display.h"
+#include "adaptive_ui.h"
 #include "assets/lang_config.h"
 #include "gif/lvgl_gif.h"
 #include "lvgl_theme.h"
@@ -390,7 +391,79 @@ LcdDisplay::~LcdDisplay() {
 
 bool LcdDisplay::Lock(int timeout_ms) { return lvgl_port_lock(timeout_ms); }
 
-void LcdDisplay::Unlock() { lvgl_port_unlock(); }
+static bool TrySetupAdaptiveUi(LcdDisplay* display, lv_obj_t* screen, int width, int height,
+                               lv_obj_t*& status_label, lv_obj_t*& battery_label,
+                               lv_obj_t*& network_label, lv_obj_t*& notification_label,
+                               lv_obj_t*& chat_message_label) {
+#if defined(CONFIG_CUSTOM_UI_STYLE_SMART_DASHBOARD) || \
+    defined(CONFIG_CUSTOM_UI_STYLE_CYBER_TERMINAL) || \
+    defined(CONFIG_CUSTOM_UI_STYLE_CHAT_BUBBLE) || \
+    defined(CONFIG_CUSTOM_UI_STYLE_CLASSIC_AVATAR) || \
+    defined(CONFIG_CUSTOM_UI_STYLE_MINIMAL_ZEN)
+
+    AdaptiveUiConfig ui_config;
+#if defined(CONFIG_CUSTOM_UI_STYLE_CYBER_TERMINAL)
+    ui_config.style = UiStyle::CyberTerminal;
+#elif defined(CONFIG_CUSTOM_UI_STYLE_CHAT_BUBBLE)
+    ui_config.style = UiStyle::ChatBubble;
+#elif defined(CONFIG_CUSTOM_UI_STYLE_CLASSIC_AVATAR)
+    ui_config.style = UiStyle::ClassicAvatar;
+#elif defined(CONFIG_CUSTOM_UI_STYLE_MINIMAL_ZEN)
+    ui_config.style = UiStyle::MinimalZen;
+#else
+    ui_config.style = UiStyle::SmartDashboard;
+#endif
+
+#if defined(CONFIG_CUSTOM_UI_ACCENT_EMERALD)
+    ui_config.accent = ColorAccent::EmeraldGreen;
+#elif defined(CONFIG_CUSTOM_UI_ACCENT_PURPLE)
+    ui_config.accent = ColorAccent::ElectricPurple;
+#elif defined(CONFIG_CUSTOM_UI_ACCENT_AMBER)
+    ui_config.accent = ColorAccent::SunsetAmber;
+#elif defined(CONFIG_CUSTOM_UI_ACCENT_MONO)
+    ui_config.accent = ColorAccent::Monochrome;
+#else
+    ui_config.accent = ColorAccent::CyberBlue;
+#endif
+
+#if defined(CONFIG_CUSTOM_UI_WEATHER_ENABLE)
+    ui_config.weather_enabled = true;
+#if defined(CONFIG_CUSTOM_UI_WEATHER_CITY)
+    ui_config.weather_city = CONFIG_CUSTOM_UI_WEATHER_CITY;
+#endif
+#else
+    ui_config.weather_enabled = false;
+#endif
+
+#if defined(CONFIG_CUSTOM_UI_VOICE_WAVE_ENABLE)
+    ui_config.voice_wave_enabled = true;
+#else
+    ui_config.voice_wave_enabled = false;
+#endif
+
+#if defined(CONFIG_CUSTOM_UI_ROUND_SCREEN_SAFE_AREA)
+    ui_config.round_screen_safe_area = true;
+#else
+    ui_config.round_screen_safe_area = false;
+#endif
+
+#if defined(CONFIG_CUSTOM_UI_AUTO_SCALE)
+    ui_config.auto_scale = true;
+#else
+    ui_config.auto_scale = false;
+#endif
+
+    AdaptiveUiEngine::GetInstance().Initialize(screen, width, height, ui_config);
+    status_label = AdaptiveUiEngine::GetInstance().GetStatusLabel();
+    battery_label = AdaptiveUiEngine::GetInstance().GetBatteryLabel();
+    network_label = AdaptiveUiEngine::GetInstance().GetNetworkLabel();
+    notification_label = AdaptiveUiEngine::GetInstance().GetNotificationLabel();
+    chat_message_label = AdaptiveUiEngine::GetInstance().GetChatMessageLabel();
+    return true;
+#else
+    return false;
+#endif
+}
 
 #if CONFIG_USE_WECHAT_MESSAGE_STYLE
 void LcdDisplay::SetupUI() {
@@ -420,6 +493,11 @@ void LcdDisplay::SetupUI() {
     lv_obj_set_style_text_font(screen, text_font, 0);
     lv_obj_set_style_text_color(screen, lvgl_theme->text_color(), 0);
     lv_obj_set_style_bg_color(screen, lvgl_theme->background_color(), 0);
+
+    if (TrySetupAdaptiveUi(this, screen, width_, height_, status_label_, battery_label_,
+                           network_label_, notification_label_, chat_message_label_)) {
+        return;
+    }
 
     /* Container */
     container_ = lv_obj_create(screen);
@@ -556,6 +634,11 @@ void LcdDisplay::SetupUI() {
 #define MAX_MESSAGES 20
 #endif
 void LcdDisplay::SetChatMessage(const char* role, const char* content) {
+    if (AdaptiveUiEngine::GetInstance().IsInitialized()) {
+        DisplayLockGuard lock(this);
+        AdaptiveUiEngine::GetInstance().SetChatMessage(role, content);
+        return;
+    }
     if (!setup_ui_called_) {
         ESP_LOGW(TAG, "SetChatMessage('%s', '%s') called before SetupUI() - message will be lost!",
                  role, content);
@@ -848,6 +931,11 @@ void LcdDisplay::SetPreviewImage(std::unique_ptr<LvglImage> image) {
 }
 
 void LcdDisplay::ClearChatMessages() {
+    if (AdaptiveUiEngine::GetInstance().IsInitialized()) {
+        DisplayLockGuard lock(this);
+        AdaptiveUiEngine::GetInstance().ClearChatMessages();
+        return;
+    }
     DisplayLockGuard lock(this);
     if (content_ == nullptr) {
         return;
@@ -894,6 +982,11 @@ void LcdDisplay::SetupUI() {
     lv_obj_set_style_text_font(screen, text_font, 0);
     lv_obj_set_style_text_color(screen, lvgl_theme->text_color(), 0);
     lv_obj_set_style_bg_color(screen, lvgl_theme->background_color(), 0);
+
+    if (TrySetupAdaptiveUi(this, screen, width_, height_, status_label_, battery_label_,
+                           network_label_, notification_label_, chat_message_label_)) {
+        return;
+    }
 
     /* Container - used as background */
     container_ = lv_obj_create(screen);
@@ -1109,6 +1202,11 @@ void LcdDisplay::SetPreviewImage(std::unique_ptr<LvglImage> image) {
 }
 
 void LcdDisplay::SetChatMessage(const char* role, const char* content) {
+    if (AdaptiveUiEngine::GetInstance().IsInitialized()) {
+        DisplayLockGuard lock(this);
+        AdaptiveUiEngine::GetInstance().SetChatMessage(role, content);
+        return;
+    }
     if (!setup_ui_called_) {
         ESP_LOGW(TAG, "SetChatMessage('%s', '%s') called before SetupUI() - message will be lost!",
                  role, content);
@@ -1143,6 +1241,11 @@ void LcdDisplay::SetChatMessage(const char* role, const char* content) {
 }
 
 void LcdDisplay::ClearChatMessages() {
+    if (AdaptiveUiEngine::GetInstance().IsInitialized()) {
+        DisplayLockGuard lock(this);
+        AdaptiveUiEngine::GetInstance().ClearChatMessages();
+        return;
+    }
     DisplayLockGuard lock(this);
     // In non-wechat mode, just clear the chat message label and hide the bar
     if (chat_message_label_ != nullptr) {
@@ -1155,6 +1258,11 @@ void LcdDisplay::ClearChatMessages() {
 #endif
 
 void LcdDisplay::SetEmotion(const char* emotion) {
+    if (AdaptiveUiEngine::GetInstance().IsInitialized()) {
+        DisplayLockGuard lock(this);
+        AdaptiveUiEngine::GetInstance().SetEmotion(emotion);
+        return;
+    }
     if (!setup_ui_called_) {
         ESP_LOGW(TAG, "SetEmotion('%s') called before SetupUI() - emotion will not be displayed!",
                  emotion);

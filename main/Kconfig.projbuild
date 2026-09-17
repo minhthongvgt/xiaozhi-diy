@@ -1425,6 +1425,86 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             config CUSTOM_DISPLAY_INVERT_COLOR
                 bool "Đảo ngược màu sắc hiển thị (Invert Color)"
                 default y
+
+            menu "🎨 Giao diện Người Dùng & Bố Cục Màn Hình (UI Style & Screen Layouts)"
+                depends on !CUSTOM_DISPLAY_NONE
+
+                choice CUSTOM_UI_STYLE
+                    prompt "Kiểu Giao Diện (UI Layout Style)"
+                    default CUSTOM_UI_STYLE_SMART_DASHBOARD
+                    help
+                        Chọn phong cách bố cục và giao diện đồ họa hiển thị trên màn hình:
+                        1. Modern Smart Dashboard: Hiển thị Thẻ Thời Tiết (TP.HCM), Đồng hồ, Thẻ Trạng thái AI, Phụ đề thoại & Voice Wave.
+                        2. Cyberpunk Sci-Fi HUD: Giao diện Jarvis tương lai, neon cyan, radar/reactor, terminal command stream.
+                        3. Chat Bubble Messenger: Hội thoại 2 chiều dạng bong bóng tin nhắn WeChat/Telegram.
+                        4. Classic Cute Robot Avatar: Biểu cảm khuôn mặt cảm xúc AI siêu lớn, tối ưu màn hình tròn (GC9A01)/vuông.
+                        5. Minimalist Zen / E-Paper: Đơn sắc tối giản, tương phản cao, siêu tiết kiệm pin.
+
+                    config CUSTOM_UI_STYLE_SMART_DASHBOARD
+                        bool "1. Modern Smart Dashboard (Thời tiết TP.HCM, Thẻ Trạng thái, Voice Wave & Avatar)"
+                    config CUSTOM_UI_STYLE_CYBER_TERMINAL
+                        bool "2. Cyberpunk Sci-Fi HUD (Giao diện Jarvis tương lai, Neon Cyan, Terminal Log)"
+                    config CUSTOM_UI_STYLE_CHAT_BUBBLE
+                        bool "3. Chat Bubble Messenger (Hội thoại bong bóng kiểu WeChat/Telegram)"
+                    config CUSTOM_UI_STYLE_CLASSIC_AVATAR
+                        bool "4. Classic Cute Robot Avatar (Khuôn mặt biểu cảm AI lớn, tối ưu màn hình tròn/vuông)"
+                    config CUSTOM_UI_STYLE_MINIMAL_ZEN
+                        bool "5. Minimalist Zen / E-Paper (Đơn sắc tối giản, tương phản cao, siêu tiết kiệm pin)"
+                endchoice
+
+                menu "Tùy chọn bổ trợ giao diện"
+                    config CUSTOM_UI_WEATHER_ENABLE
+                        bool "Hiển thị Thẻ Thời Tiết (Weather Widget Card)"
+                        default y
+                        depends on CUSTOM_UI_STYLE_SMART_DASHBOARD || CUSTOM_UI_STYLE_CYBER_TERMINAL
+                        help
+                            Hiển thị thông tin thời tiết thành phố, nhiệt độ và độ ẩm trên giao diện chính.
+
+                    config CUSTOM_UI_WEATHER_CITY
+                        string "Thành phố hiển thị thời tiết"
+                        default "TP. Hồ Chí Minh"
+                        depends on CUSTOM_UI_WEATHER_ENABLE
+                        help
+                            Tên thành phố mặc định hiển thị trên thẻ thời tiết (ví dụ: TP. Hồ Chí Minh, Hà Nội, Đà Nẵng).
+
+                    config CUSTOM_UI_VOICE_WAVE_ENABLE
+                        bool "Hiển thị Thanh Sóng Âm Thanh Thoại (Voice Wave Visualizer)"
+                        default y
+                        help
+                            Hiển thị thanh chuyển động sóng âm thanh phản hồi theo âm lượng giọng nói khi Xiaozhi đang nghe hoặc nói.
+
+                    choice CUSTOM_UI_COLOR_ACCENT
+                        prompt "Tông Màu Chủ Đạo (Color Accent)"
+                        default CUSTOM_UI_ACCENT_CYBER_BLUE
+                        help
+                            Chọn tông màu điểm nhấn cho các icon, viền, thanh trạng thái và avatar.
+
+                        config CUSTOM_UI_ACCENT_CYBER_BLUE
+                            bool "Cyber Cyan / Ice Blue (#89DCEB)"
+                        config CUSTOM_UI_ACCENT_EMERALD
+                            bool "Emerald Neon Green (#A6E3A1)"
+                        config CUSTOM_UI_ACCENT_PURPLE
+                            bool "Electric Purple / Lavender (#CBA6F7)"
+                        config CUSTOM_UI_ACCENT_AMBER
+                            bool "Sunset Amber Gold (#F9E2AF)"
+                        config CUSTOM_UI_ACCENT_MONO
+                            bool "Monochrome Trắng / Đen (#FFFFFF)"
+                    endchoice
+
+                    config CUSTOM_UI_ROUND_SCREEN_SAFE_AREA
+                        bool "Chế độ vùng an toàn cho màn hình tròn (GC9A01 / GC9107 / AMOLED tròn)"
+                        default y if CUSTOM_DISPLAY_GC9A01 || CUSTOM_DISPLAY_GC9107
+                        default n
+                        help
+                            Tự động thêm lề an toàn (Safe-area Inset) ở 4 góc để tránh chữ và icon bị lẹm khi dùng màn hình tròn.
+
+                    config CUSTOM_UI_AUTO_SCALE
+                        bool "Tự động co giãn theo độ phân giải màn hình"
+                        default y
+                        help
+                            Tự động điều chỉnh kích thước padding, bán kính bo góc và tỉ lệ các thẻ theo kích thước màn hình thực tế.
+                endmenu
+            endmenu
         endif
 
         menuconfig ENABLE_CUSTOM_TOUCH
