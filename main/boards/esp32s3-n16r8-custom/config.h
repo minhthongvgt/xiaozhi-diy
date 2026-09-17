@@ -161,7 +161,7 @@
 #endif
 
 #ifndef CONFIG_CUSTOM_UI_WEATHER_CITY
-#define CONFIG_CUSTOM_UI_WEATHER_CITY "TP. Hồ Chí Minh"
+#define CONFIG_CUSTOM_UI_WEATHER_CITY "TP. Ho Chi Minh"
 #endif
 
 // 2. Màn hình Cảm ứng (Touch Screen)

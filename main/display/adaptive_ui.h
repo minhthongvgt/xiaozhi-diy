@@ -5,6 +5,8 @@
 #include <memory>
 #include <cstdint>
 
+class LvglTheme;
+
 /**
  * @brief 5 phong cách giao diện đặc sắc cho Xiaozhi
  */
@@ -81,6 +83,7 @@ public:
     void SetAudioLevel(int level_0_to_100);
     void SetOtaProgress(int percent, const char* speed_str = nullptr);
     void ShowNotification(const char* notification, int duration_ms = 3000);
+    void ApplyTheme(LvglTheme* theme);
 
     // Getters
     UiStyle GetCurrentStyle() const { return config_.style; }
