@@ -391,6 +391,8 @@ LcdDisplay::~LcdDisplay() {
 
 bool LcdDisplay::Lock(int timeout_ms) { return lvgl_port_lock(timeout_ms); }
 
+void LcdDisplay::Unlock() { lvgl_port_unlock(); }
+
 static bool TrySetupAdaptiveUi(LcdDisplay* display, lv_obj_t* screen, int width, int height,
                                lv_obj_t*& status_label, lv_obj_t*& battery_label,
                                lv_obj_t*& network_label, lv_obj_t*& notification_label,
