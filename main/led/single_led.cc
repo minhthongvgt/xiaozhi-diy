@@ -87,19 +87,6 @@ void SingleLed::SetColor(uint8_t r, uint8_t g, uint8_t b) {
     b_ = b;
 }
 
-void SingleLed::SetBrightness(uint8_t brightness) {
-    std::lock_guard<std::mutex> lock(mutex_);
-    rainbow_brightness_ = brightness > 0 ? brightness : 1;
-    breathe_brightness_ = brightness > 0 ? brightness : 1;
-    if (mode_ == EffectMode::kNone && led_strip_ != nullptr && (r_ != 0 || g_ != 0 || b_ != 0)) {
-        uint8_t cur_r = (uint16_t)r_ * brightness / 255;
-        uint8_t cur_g = (uint16_t)g_ * brightness / 255;
-        uint8_t cur_b = (uint16_t)b_ * brightness / 255;
-        led_strip_set_pixel(led_strip_, 0, cur_r, cur_g, cur_b);
-        led_strip_refresh(led_strip_);
-    }
-}
-
 void SingleLed::TurnOn() {
     if (led_strip_ == nullptr) {
         return;
@@ -147,7 +134,6 @@ void SingleLed::StartBlinkTask(int times, int interval_ms) {
     if (led_strip_ == nullptr || timer_ == nullptr) {
         return;
     }
-    if (interval_ms < 5) interval_ms = 5;
 
     std::lock_guard<std::mutex> lock(mutex_);
     esp_timer_stop(timer_);
@@ -158,15 +144,10 @@ void SingleLed::StartBlinkTask(int times, int interval_ms) {
     esp_timer_start_periodic(timer_, interval_ms * 1000);
 }
 
-void SingleLed::StartRainbow(int interval_ms) {
-    StartRainbow(interval_ms, rainbow_brightness_);
-}
-
 void SingleLed::StartRainbow(int interval_ms, uint8_t brightness) {
     if (led_strip_ == nullptr || timer_ == nullptr) {
         return;
     }
-    if (interval_ms < 5) interval_ms = 5;
 
     std::lock_guard<std::mutex> lock(mutex_);
     esp_timer_stop(timer_);
@@ -174,37 +155,6 @@ void SingleLed::StartRainbow(int interval_ms, uint8_t brightness) {
     mode_ = EffectMode::kRainbow;
     rainbow_pos_ = 0;
     rainbow_brightness_ = brightness;
-    esp_timer_start_periodic(timer_, interval_ms * 1000);
-}
-
-void SingleLed::StartChase(int interval_ms) {
-    // For single LED, chase behaves as smooth fast rainbow cycle
-    StartRainbow(interval_ms < 5 ? 15 : interval_ms, DEFAULT_BRIGHTNESS);
-}
-
-void SingleLed::StartBreathe(int interval_ms) {
-    StartBreathe(interval_ms, breathe_brightness_);
-}
-
-void SingleLed::StartBreathe(int interval_ms, uint8_t max_brightness) {
-    if (led_strip_ == nullptr || timer_ == nullptr) {
-        return;
-    }
-    if (interval_ms < 5) interval_ms = 30;
-
-    std::lock_guard<std::mutex> lock(mutex_);
-    esp_timer_stop(timer_);
-
-    mode_ = EffectMode::kBreathe;
-    breathe_step_ = 0;
-    breathe_up_ = true;
-    breathe_brightness_ = max_brightness > 0 ? max_brightness : DEFAULT_BRIGHTNESS;
-    // If no color has been set yet, default to soft cyan/white
-    if (r_ == 0 && g_ == 0 && b_ == 0) {
-        r_ = breathe_brightness_;
-        g_ = breathe_brightness_;
-        b_ = breathe_brightness_;
-    }
     esp_timer_start_periodic(timer_, interval_ms * 1000);
 }
 
@@ -232,40 +182,10 @@ void SingleLed::OnTimer() {
         GetRainbowColor(rainbow_pos_, rainbow_brightness_, r, g, b);
         led_strip_set_pixel(led_strip_, 0, r, g, b);
         led_strip_refresh(led_strip_);
-    } else if (mode_ == EffectMode::kBreathe) {
-        if (breathe_up_) {
-            if (breathe_step_ < 64) {
-                breathe_step_++;
-            } else {
-                breathe_up_ = false;
-            }
-        } else {
-            if (breathe_step_ > 0) {
-                breathe_step_--;
-            } else {
-                breathe_up_ = true;
-            }
-        }
-        uint16_t scale = (uint16_t)breathe_step_ * breathe_brightness_ / 64;
-        uint8_t cur_r = (uint16_t)r_ * scale / 255;
-        uint8_t cur_g = (uint16_t)g_ * scale / 255;
-        uint8_t cur_b = (uint16_t)b_ * scale / 255;
-        led_strip_set_pixel(led_strip_, 0, cur_r, cur_g, cur_b);
-        led_strip_refresh(led_strip_);
     }
 }
 
 void SingleLed::OnStateChanged() {
-    if (custom_mode_) {
-        // Preserve user-specified custom lighting effect/color set via MCP
-        auto& app = Application::GetInstance();
-        if (app.GetDeviceState() == kDeviceStateFatalError) {
-            SetColor(HIGH_BRIGHTNESS, 0, 0);
-            StartContinuousBlink(100);
-        }
-        return;
-    }
-
     auto& app = Application::GetInstance();
     auto device_state = app.GetDeviceState();
     switch (device_state) {

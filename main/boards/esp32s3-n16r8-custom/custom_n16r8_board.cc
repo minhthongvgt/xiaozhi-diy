@@ -10,6 +10,7 @@
 #endif
 #include "display/lcd_display.h"
 #include "display/oled_display.h"
+#include "display/uart_display.h"
 #include "display/display.h"
 #if defined(CONFIG_CUSTOM_AUDIO_CODEC_BOX)
 #include "audio/codecs/box_audio_codec.h"
@@ -22,10 +23,6 @@
 #include "lamp_controller.h"
 #include "sensor_controller.h"
 #include "actuator_controller.h"
-#include "led_mcp_controller.h"
-#include "robot_mcp_controller.h"
-#include "ir_mcp_controller.h"
-#include "cellular_mcp_controller.h"
 #include "led/single_led.h"
 #include "led/circular_strip.h"
 #include "led/gpio_led.h"
@@ -191,6 +188,32 @@ private:
     void InitializeDisplay() {
 #if !defined(CONFIG_ENABLE_CUSTOM_DISPLAY) || defined(CONFIG_CUSTOM_DISPLAY_NONE)
         ESP_LOGI(TAG, "Display disabled in configuration (Audio Only / Headless)");
+        display_ = new NoDisplay();
+        return;
+#elif defined(CONFIG_CUSTOM_DISPLAY_UART)
+        ESP_LOGI(TAG, "Initializing External UART Display (TX: %d, RX: %d, Baud: %d)",
+                 DISPLAY_UART_TX_PIN, DISPLAY_UART_RX_PIN, DISPLAY_UART_BAUDRATE);
+        UartDisplayProtocol proto = UartDisplayProtocol::NextionTjc;
+#if defined(CONFIG_CUSTOM_DISPLAY_UART_PROTO_JSON)
+        proto = UartDisplayProtocol::JsonStream;
+#elif defined(CONFIG_CUSTOM_DISPLAY_UART_PROTO_RAW_TEXT)
+        proto = UartDisplayProtocol::RawText;
+#elif defined(CONFIG_CUSTOM_DISPLAY_UART_PROTO_DWIN)
+        proto = UartDisplayProtocol::DwinDgus;
+#endif
+        display_ = new UartDisplay(DISPLAY_UART_PORT, DISPLAY_UART_TX_PIN, DISPLAY_UART_RX_PIN,
+                                   DISPLAY_UART_BAUDRATE, proto);
+        return;
+#elif defined(CONFIG_CUSTOM_DISPLAY_EPAPER_SSD1680)
+        ESP_LOGW(TAG, "E-Paper SSD1680 display driver is not yet implemented. Falling back to NoDisplay.");
+        display_ = new NoDisplay();
+        return;
+#elif defined(CONFIG_CUSTOM_DISPLAY_ST7701)
+        ESP_LOGW(TAG, "ST7701 RGB Interface display requires dedicated parallel RGB driver. Not yet implemented. Falling back to NoDisplay.");
+        display_ = new NoDisplay();
+        return;
+#elif defined(CONFIG_CUSTOM_DISPLAY_QSPI_AMOLED)
+        ESP_LOGW(TAG, "QSPI AMOLED display requires dedicated QSPI driver (SH8601/CO5300/SPD2010). Not yet implemented. Falling back to NoDisplay.");
         display_ = new NoDisplay();
         return;
 #elif defined(CONFIG_CUSTOM_DISPLAY_OLED_SSD1306) || defined(CONFIG_CUSTOM_DISPLAY_OLED_SH1106)
@@ -621,7 +644,7 @@ private:
 
     void InitializeMcpTools() {
 #if defined(CONFIG_ENABLE_CUSTOM_MCP_SERVER) || defined(CONFIG_ENABLE_CUSTOM_SENSORS) || \
-    defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE) || defined(CONFIG_CUSTOM_PERIPH_SERVO_ENABLE) || \
+    defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE) || defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG) || \
     defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE)
 #if defined(CONFIG_CUSTOM_MCP_TOOL_LAMP) || defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE)
         if (LAMP_GPIO != GPIO_NUM_NC) {
@@ -634,25 +657,9 @@ private:
         ESP_LOGI(TAG, "MCP Sensor Tools registered successfully");
 #endif
 #if defined(CONFIG_CUSTOM_MCP_TOOL_ACTUATOR) || defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE) || \
-    defined(CONFIG_CUSTOM_PERIPH_SERVO_ENABLE) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE)
+    defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE)
         static ActuatorController actuator_ctrl;
         ESP_LOGI(TAG, "MCP Actuator Tools registered successfully");
-#endif
-#if defined(CONFIG_CUSTOM_MCP_TOOL_LED) || defined(CONFIG_ENABLE_CUSTOM_LEDS)
-        static LedMcpController led_mcp_ctrl;
-        ESP_LOGI(TAG, "MCP LED Tools registered successfully");
-#endif
-#if defined(CONFIG_CUSTOM_MCP_TOOL_ROBOT) || defined(CONFIG_CUSTOM_PERIPH_SERVO_ENABLE) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE)
-        static RobotMcpController robot_mcp_ctrl;
-        ESP_LOGI(TAG, "MCP Robot Tools registered successfully");
-#endif
-#if defined(CONFIG_CUSTOM_MCP_TOOL_IR) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_IR_TRANSCEIVER)
-        static IrMcpController ir_mcp_ctrl;
-        ESP_LOGI(TAG, "MCP IR Remote Tools registered successfully");
-#endif
-#if defined(CONFIG_CUSTOM_MCP_TOOL_CELLULAR) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_4G_MODULE)
-        static CellularMcpController cellular_mcp_ctrl;
-        ESP_LOGI(TAG, "MCP Cellular Tools registered successfully");
 #endif
 #endif
     }

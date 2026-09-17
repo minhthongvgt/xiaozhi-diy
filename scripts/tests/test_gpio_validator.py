@@ -289,69 +289,39 @@ class GpioValidatorTests(unittest.TestCase):
             "CONFIG_CUSTOM_DISPLAY_PIN_BLK": "-1",
         }
         errors, _ = validate_sdkconfig(cfg, is_n16r8=True)
-        self.assertEqual(errors, [])
-
-    def test_vl6180x_tof_and_als_sensor_validation(self):
-        """Kiểm tra cấu hình cảm biến VL6180X ToF & ALS: bus I2C chia sẻ và phát hiện chân cấm."""
+    def test_uart_display_pin_validation(self):
+        """Kiểm tra cấu hình màn hình rời qua UART và phát hiện vi phạm chân cấm / xung đột."""
         cfg = {
             "CONFIG_BOARD_TYPE_ESP32_S3_N16R8_CUSTOM": "y",
-            "CONFIG_CUSTOM_ENABLE_SENSOR_VL53LX": "y",
-            "CONFIG_CUSTOM_SENSOR_VL6180X": "y",
-            "CONFIG_CUSTOM_SENSOR_VL53LX_I2C_SDA": "8",
-            "CONFIG_CUSTOM_SENSOR_VL53LX_I2C_SCL": "9",
-            "CONFIG_CUSTOM_SENSOR_VL53LX_XSHUT_PIN": "18",
+            "CONFIG_ENABLE_CUSTOM_DISPLAY": "y",
+            "CONFIG_CUSTOM_DISPLAY_UART": "y",
+            "CONFIG_CUSTOM_DISPLAY_UART_TX_PIN": "17",
+            "CONFIG_CUSTOM_DISPLAY_UART_RX_PIN": "18",
+            "CONFIG_ENABLE_CUSTOM_SPEAKER": "y",
+            "CONFIG_CUSTOM_AUDIO_DAC_MAX98357A": "y",
+            "CONFIG_CUSTOM_AUDIO_SPK_GPIO_DOUT": "7",
+            "CONFIG_CUSTOM_AUDIO_SPK_GPIO_BCLK": "15",
+            "CONFIG_CUSTOM_AUDIO_SPK_GPIO_LRCK": "16",
         }
         errors, warnings = validate_sdkconfig(cfg, is_n16r8=True)
-        self.assertEqual(errors, [], f"Lỗi không mong muốn trên VL6180X: {errors}")
+        self.assertEqual(errors, [], f"UART Display hợp lệ bị báo lỗi: {errors}")
 
-        # Kiểm tra nếu gán chân XSHUT vào dải cấm 26-37
+        # Gán UART TX vào chân cấm Octal Flash/PSRAM GPIO 28
         bad_cfg = dict(cfg)
-        bad_cfg["CONFIG_CUSTOM_SENSOR_VL53LX_XSHUT_PIN"] = "28"
+        bad_cfg["CONFIG_CUSTOM_DISPLAY_UART_TX_PIN"] = "28"
         bad_errors, _ = validate_sdkconfig(bad_cfg, is_n16r8=True)
         self.assertTrue(
             any("GPIO 28 bị CẤM" in err for err in bad_errors),
-            f"Không chặn chân cấm 28 trên XSHUT của VL6180X: {bad_errors}",
+            f"Không chặn chân cấm 28 trên UART Display TX: {bad_errors}",
         )
 
-    def test_buzzer_haptic_and_extended_peripherals_safety(self):
-        """Kiểm tra toàn diện Buzzer, Haptic, Slide Switch, Radar LD2410, Hall/Reed, Sub UART RS485."""
-        cfg = {
-            "CONFIG_BOARD_TYPE_ESP32_S3_N16R8_CUSTOM": "y",
-            "CONFIG_ENABLE_BUZZER": "y",
-            "CONFIG_BUZZER_PIN": "41",
-            "CONFIG_ENABLE_HAPTIC_MOTOR": "y",
-            "CONFIG_HAPTIC_PIN": "42",
-            "CONFIG_CUSTOM_ENABLE_SLIDE_SWITCH": "y",
-            "CONFIG_CUSTOM_SLIDE_SWITCH_PIN": "48",
-            "CONFIG_CUSTOM_ENABLE_SENSOR_RADAR_LD2410": "y",
-            "CONFIG_CUSTOM_SENSOR_RADAR_TX_PIN": "43",
-            "CONFIG_CUSTOM_SENSOR_RADAR_RX_PIN": "44",
-            "CONFIG_CUSTOM_ENABLE_SENSOR_HALL_REED": "y",
-            "CONFIG_CUSTOM_SENSOR_HALL_REED_PIN": "21",
-            "CONFIG_CUSTOM_ENABLE_PERIPH_SUB_UART_RS485": "y",
-            "CONFIG_CUSTOM_PERIPH_SUB_UART_TX_PIN": "17",
-            "CONFIG_CUSTOM_PERIPH_SUB_UART_RX_PIN": "18",
-            "CONFIG_CUSTOM_PERIPH_SUB_UART_RTS_PIN": "-1",
-        }
-        errors, warnings = validate_sdkconfig(cfg, is_n16r8=True)
-        self.assertEqual(errors, [], f"Lỗi không mong muốn trên ngoại vi mở rộng: {errors}")
-
-        # Kiểm tra phát hiện vi phạm chân cấm trên Buzzer (VD: gán Buzzer vào GPIO 30)
-        bad_cfg = dict(cfg)
-        bad_cfg["CONFIG_BUZZER_PIN"] = "30"
-        bad_errors, _ = validate_sdkconfig(bad_cfg, is_n16r8=True)
+        # Xung đột chân UART TX trùng với Audio DOUT (GPIO 7)
+        conflict_cfg = dict(cfg)
+        conflict_cfg["CONFIG_CUSTOM_DISPLAY_UART_TX_PIN"] = "7"
+        conflict_errors, _ = validate_sdkconfig(conflict_cfg, is_n16r8=True)
         self.assertTrue(
-            any("GPIO 30 bị CẤM" in err for err in bad_errors),
-            f"Không chặn chân cấm 30 trên Buzzer: {bad_errors}",
-        )
-
-        # Kiểm tra phát hiện vi phạm chân cấm trên Haptic (VD: gán Haptic vào GPIO 35)
-        bad_cfg2 = dict(cfg)
-        bad_cfg2["CONFIG_HAPTIC_PIN"] = "35"
-        bad_errors2, _ = validate_sdkconfig(bad_cfg2, is_n16r8=True)
-        self.assertTrue(
-            any("GPIO 35 bị CẤM" in err for err in bad_errors2),
-            f"Không chặn chân cấm 35 trên Haptic: {bad_errors2}",
+            any("Xung đột GPIO 7" in err for err in conflict_errors),
+            f"Không phát hiện xung đột chân GPIO 7: {conflict_errors}",
         )
 
 

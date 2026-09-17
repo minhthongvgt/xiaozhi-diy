@@ -1203,9 +1203,88 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     bool "AMOLED QSPI (SH8601 / CO5300 / SPD2010)"
                 config CUSTOM_DISPLAY_EPAPER_SSD1680
                     bool "Solomon SSD1680 / UC8151D (Mực điện tử E-Paper SPI)"
+                config CUSTOM_DISPLAY_UART
+                    bool "Màn hình rời qua UART (Nextion / TJC / DWIN / Serial HMI)"
                 config CUSTOM_DISPLAY_NONE
                     bool "Không sử dụng màn hình (Audio Only / Headless)"
             endchoice
+
+            menu "Cấu hình Màn hình rời UART (Nextion / TJC / DWIN)"
+                depends on CUSTOM_DISPLAY_UART
+
+                config CUSTOM_DISPLAY_UART_PORT
+                    int "Cổng UART phần cứng (1: UART1, 2: UART2)"
+                    range 1 2
+                    default 1
+                    help
+                        Chọn cổng UART để giao tiếp với màn hình rời. Tránh UART0 vì dùng cho nạp và xem Log.
+
+                config CUSTOM_DISPLAY_UART_TX_PIN
+                    int "Chân TX kết nối chân RX của Màn hình"
+                    range -1 48
+                    default 17
+                    help
+                        Chân truyền dữ liệu từ ESP32-S3 sang màn hình rời. Tránh dải cấm 26-37.
+
+                config CUSTOM_DISPLAY_UART_RX_PIN
+                    int "Chân RX kết nối chân TX của Màn hình"
+                    range -1 48
+                    default 18
+                    help
+                        Chân nhận dữ liệu từ màn hình rời (ví dụ nhận sự kiện cảm ứng/chạm nút). Tránh dải cấm 26-37.
+
+                choice CUSTOM_DISPLAY_UART_BAUDRATE_CHOICE
+                    prompt "Tốc độ truyền dữ liệu (Baudrate)"
+                    default CUSTOM_DISPLAY_UART_BAUDRATE_115200
+                    help
+                        Chọn tốc độ truyền thông số khớp với cài đặt của màn hình HMI.
+
+                    config CUSTOM_DISPLAY_UART_BAUDRATE_9600
+                        bool "9600 bps (Nextion mặc định khi xuất xưởng)"
+                    config CUSTOM_DISPLAY_UART_BAUDRATE_19200
+                        bool "19200 bps"
+                    config CUSTOM_DISPLAY_UART_BAUDRATE_38400
+                        bool "38400 bps"
+                    config CUSTOM_DISPLAY_UART_BAUDRATE_57600
+                        bool "57600 bps"
+                    config CUSTOM_DISPLAY_UART_BAUDRATE_115200
+                        bool "115200 bps (Khuyên dùng)"
+                    config CUSTOM_DISPLAY_UART_BAUDRATE_230400
+                        bool "230400 bps"
+                    config CUSTOM_DISPLAY_UART_BAUDRATE_460800
+                        bool "460800 bps"
+                    config CUSTOM_DISPLAY_UART_BAUDRATE_921600
+                        bool "921600 bps (Tốc độ cao)"
+                endchoice
+
+                config CUSTOM_DISPLAY_UART_BAUDRATE
+                    int
+                    default 9600 if CUSTOM_DISPLAY_UART_BAUDRATE_9600
+                    default 19200 if CUSTOM_DISPLAY_UART_BAUDRATE_19200
+                    default 38400 if CUSTOM_DISPLAY_UART_BAUDRATE_38400
+                    default 57600 if CUSTOM_DISPLAY_UART_BAUDRATE_57600
+                    default 115200 if CUSTOM_DISPLAY_UART_BAUDRATE_115200
+                    default 230400 if CUSTOM_DISPLAY_UART_BAUDRATE_230400
+                    default 460800 if CUSTOM_DISPLAY_UART_BAUDRATE_460800
+                    default 921600 if CUSTOM_DISPLAY_UART_BAUDRATE_921600
+                    default 115200
+
+                choice CUSTOM_DISPLAY_UART_PROTOCOL
+                    prompt "Giao thức truyền thông màn hình (Protocol)"
+                    default CUSTOM_DISPLAY_UART_PROTO_NEXTION
+                    help
+                        Định dạng gói tin gửi qua UART sang màn hình rời.
+
+                    config CUSTOM_DISPLAY_UART_PROTO_NEXTION
+                        bool "Nextion / TJC HMI (Lệnh kết thúc 0xFF 0xFF 0xFF)"
+                    config CUSTOM_DISPLAY_UART_PROTO_JSON
+                        bool "JSON Streaming (Chuỗi JSON kèm ký tự xuống dòng \n)"
+                    config CUSTOM_DISPLAY_UART_PROTO_RAW_TEXT
+                        bool "Raw Text / ASCII (STATUS:..., EMOTION:..., CHAT:...)"
+                    config CUSTOM_DISPLAY_UART_PROTO_DWIN
+                        bool "DWIN DGUS (Khung truyền nhị phân 0x5A 0xA5)"
+                endchoice
+            endmenu
 
             config CUSTOM_DISPLAY_WIDTH
                 int "Độ phân giải ngang (Width Pixels)"
@@ -1227,11 +1306,13 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
 
             config CUSTOM_DISPLAY_PIN_MOSI
                 int "Chân dữ liệu SPI MOSI (SDA)"
+                depends on !CUSTOM_DISPLAY_OLED_SSD1306 && !CUSTOM_DISPLAY_OLED_SH1106 && !CUSTOM_DISPLAY_QSPI_AMOLED && !CUSTOM_DISPLAY_UART && !CUSTOM_DISPLAY_NONE
                 range 0 48
             default 47
 
             config CUSTOM_DISPLAY_PIN_CLK
                 int "Chân xung nhịp SPI CLK (SCL)"
+                depends on !CUSTOM_DISPLAY_OLED_SSD1306 && !CUSTOM_DISPLAY_OLED_SH1106 && !CUSTOM_DISPLAY_QSPI_AMOLED && !CUSTOM_DISPLAY_UART && !CUSTOM_DISPLAY_NONE
                 range 0 48
             default 21
 
@@ -1720,22 +1801,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             config CUSTOM_MCP_TOOL_ACTUATOR
                 bool "Công cụ MCP: Điều khiển Động cơ Servo, Động cơ DC, Còi Buzzer qua AI"
                 default y
-
-            config CUSTOM_MCP_TOOL_LED
-                bool "Công cụ MCP: Điều khiển Hiệu ứng Đèn LED RGB qua AI (self.led.*)"
-                default y
-
-            config CUSTOM_MCP_TOOL_ROBOT
-                bool "Công cụ MCP: Điều khiển Cử chỉ Robot & Xe tự hành qua AI (self.robot.*)"
-                default y
-
-            config CUSTOM_MCP_TOOL_IR
-                bool "Công cụ MCP: Điều khiển Máy lạnh / TV bằng Hồng ngoại qua AI (self.ir.*)"
-                default y
-
-            config CUSTOM_MCP_TOOL_CELLULAR
-                bool "Công cụ MCP: Gửi Tin nhắn SMS / Báo động 4G LTE qua AI (self.cellular.*)"
-                default y
         endif
     endmenu
 
@@ -1786,20 +1851,7 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             range 0 48
             default 3
 
-        # 3. Công tắc gạt 2 trạng thái (Slide Switch)
-        config CUSTOM_ENABLE_SLIDE_SWITCH
-            bool "Công tắc gạt 2 trạng thái chuyển chế độ (Slide Switch)"
-            default n
-            help
-                Công tắc gạt chuyển đổi trạng thái hoặc chế độ hoạt động của bot.
-
-        config CUSTOM_SLIDE_SWITCH_PIN
-            int "Chân GPIO công tắc gạt"
-            depends on CUSTOM_ENABLE_SLIDE_SWITCH
-            range 0 48
-            default 48
-
-        # 2. Thanh trượt cảm ứng nội bộ (Touch Slider)
+        # 18. Thanh trượt cảm ứng nội bộ (Touch Slider - Bổ sung chân Touch Pad)
         config CUSTOM_ENABLE_TOUCH_SLIDER
             bool "Thanh trượt cảm ứng điện dung nội bộ ESP32-S3 (Touch Slider)"
             default n
@@ -2129,9 +2181,22 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
         endmenu
 
         menu "4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics)"
-        # 12. Còi báo Buzzer (Active / Passive PWM)
+        # 3. Động cơ Servo tương tác qua PWM (Tách độc lập)
+        config CUSTOM_ENABLE_SERVO_DOG
+            bool "Động cơ Servo tương tác qua PWM (Servo Dog Controller)"
+            default n
+            help
+                Kích hoạt điều khiển Động cơ Servo nhiều khớp tương tác qua xung PWM.
+
+        config CUSTOM_SERVO_DOG_PWM_GPIO
+            int "Chân GPIO cấp xung PWM cho Động cơ Servo"
+            depends on CUSTOM_ENABLE_SERVO_DOG
+            range 0 48
+            default 48
+
+        # Âm thanh cảnh báo Buzzer & Phản hồi xúc giác
         config ENABLE_BUZZER
-            bool "Còi báo động Buzzer (Active / Passive PWM)"
+            bool "Còi báo động Buzzer (GPIO 41)"
             default n
             help
                 Kích hoạt âm báo Buzzer trên chân GPIO 41.
@@ -2143,7 +2208,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 default 41
         endif
 
-        # 11. Động cơ rung phản hồi xúc giác (Haptic Vibration Motor)
         config ENABLE_HAPTIC_MOTOR
             bool "Động cơ rung phản hồi xúc giác (GPIO 42)"
             default n
@@ -2392,26 +2456,7 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             range 0 48
             default 10
 
-        # 20. Radar vi sóng phát hiện hiện diện 24GHz (HLK-LD2410 / LD2420)
-        config CUSTOM_ENABLE_SENSOR_RADAR_LD2410
-            bool "Radar vi sóng phát hiện hiện diện 24GHz (HLK-LD2410 / LD2420 UART)"
-            default n
-            help
-                Phát hiện hơi thở, sự hiện diện tĩnh ngay cả khi người ngồi yên qua UART.
-
-        if CUSTOM_ENABLE_SENSOR_RADAR_LD2410
-            config CUSTOM_SENSOR_RADAR_TX_PIN
-                int "Chân UART TX kết nối Radar LD2410"
-                range 0 48
-                default 43
-
-            config CUSTOM_SENSOR_RADAR_RX_PIN
-                int "Chân UART RX kết nối Radar LD2410"
-                range 0 48
-                default 44
-        endif
-
-        # 22. Cảm biến khoảng cách Laser ToF chính xác cao VL6180X / VL53L0X / VL53L1X
+        # 22. Cảm biến khoảng cách Laser ToF chính xác cao VL53L0X / VL53L1X
         config CUSTOM_ENABLE_SENSOR_VL53LX
             bool "Cảm biến khoảng cách Laser ToF chính xác cao (VL53L0X / VL53L1X I2C)"
             default n
@@ -2423,8 +2468,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 prompt "Loại Chip Cảm Biến Laser ToF"
                 default CUSTOM_SENSOR_VL53L0X
 
-                config CUSTOM_SENSOR_VL6180X
-                    bool "STMicroelectronics VL6180 / VL6180X (Tầm gần 0-100mm/400mm + Đo ánh sáng ALS)"
                 config CUSTOM_SENSOR_VL53L0X
                     bool "STMicroelectronics VL53L0X (Tầm đo tối đa 2 mét)"
                 config CUSTOM_SENSOR_VL53L1X
@@ -2473,20 +2516,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 int "Chân tín hiệu Digital báo lửa"
                 range 0 48
                 default 7
-        endif
-
-        # 24. Cảm biến phát hiện đóng/mở từ tính (Hall Sensor / Reed Switch)
-        config CUSTOM_ENABLE_SENSOR_HALL_REED
-            bool "Cảm biến phát hiện đóng/mở từ tính (Hall Sensor / Reed Switch)"
-            default n
-            help
-                Phát hiện đóng mở nắp hộp, vỏ bot hoặc tiếp điểm từ trường (GPIO ngắt).
-
-        if CUSTOM_ENABLE_SENSOR_HALL_REED
-            config CUSTOM_SENSOR_HALL_REED_PIN
-                int "Chân GPIO cảm biến từ tính Hall/Reed"
-                range 0 48
-                default 21
         endif
 
         endmenu
@@ -2605,20 +2634,7 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             range 0 48
             default 13
 
-        # 31. Động cơ Servo điều hướng góc đơn (SG90 / MG90S / Servo Dog)
-        config CUSTOM_ENABLE_SERVO_DOG
-            bool "Động cơ Servo điều hướng góc đơn qua PWM (SG90 / MG90S / Servo Dog)"
-            default n
-            help
-                Kích hoạt điều khiển Động cơ Servo quay góc gật/lắc cảm xúc qua xung PWM 50Hz.
-
-        config CUSTOM_SERVO_DOG_PWM_GPIO
-            int "Chân GPIO cấp xung PWM cho Động cơ Servo"
-            depends on CUSTOM_ENABLE_SERVO_DOG
-            range 0 48
-            default 13
-
-        # 32. Mắt phát / thu hồng ngoại điều khiển từ xa IR Transceiver
+        # 26. Mắt phát / thu hồng ngoại điều khiển từ xa IR Transceiver
         config CUSTOM_ENABLE_PERIPH_IR_REMOTE
             bool "Mắt phát / thu hồng ngoại điều khiển từ xa (IR Transceiver qua RMT 38kHz)"
             default n
@@ -2883,30 +2899,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 int "Chân chọn chip SPI CS thẻ nhớ"
                 range 0 48
                 default 10
-        endif
-
-        # 38. Cổng giao tiếp ngoại vi phụ (Sub UART / RS485)
-        config CUSTOM_ENABLE_PERIPH_SUB_UART_RS485
-            bool "Cổng giao tiếp ngoại vi phụ (Sub UART / RS485 Industrial Transceiver)"
-            default n
-            help
-                Cổng truyền thông UART mở rộng kết nối PLC, biến tần hoặc thiết bị RS485 dây dài.
-
-        if CUSTOM_ENABLE_PERIPH_SUB_UART_RS485
-            config CUSTOM_PERIPH_SUB_UART_TX_PIN
-                int "Chân UART TX ngoại vi phụ"
-                range 0 48
-                default 17
-
-            config CUSTOM_PERIPH_SUB_UART_RX_PIN
-                int "Chân UART RX ngoại vi phụ"
-                range 0 48
-                default 18
-
-            config CUSTOM_PERIPH_SUB_UART_RTS_PIN
-                int "Chân điều khiển hướng thu/phát RTS RS485 (-1 nếu không dùng)"
-                range -1 48
-                default 21
         endif
 
         # 39. Giám sát trạng thái sạc pin TP4056

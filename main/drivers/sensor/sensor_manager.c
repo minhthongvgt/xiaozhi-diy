@@ -4,7 +4,6 @@
  */
 
 #include "sensor_manager.h"
-#include "vl6180x.h"
 #include "boards/common/bus_manager.h"
 #include <esp_log.h>
 #include <sdkconfig.h>
@@ -15,12 +14,10 @@
 #define TAG "SensorManager"
 
 static adc_oneshot_unit_handle_t s_adc1_handle = NULL;
-static vl6180x_handle_t s_vl6180x_handle = NULL;
 static gpio_num_t s_pir_pin = GPIO_NUM_NC;
 static gpio_num_t s_vib_pin = GPIO_NUM_NC;
 static gpio_num_t s_flame_pin = GPIO_NUM_NC;
 static gpio_num_t s_chrg_pin = GPIO_NUM_NC;
-static gpio_num_t s_hall_pin = GPIO_NUM_NC;
 
 esp_err_t sensor_manager_init(void)
 {
@@ -45,9 +42,9 @@ esp_err_t sensor_manager_init(void)
         ESP_LOGW(TAG, "ADC1 Oneshot Unit init returned: %s", esp_err_to_name(ret));
     }
 
-    // 2. Configure Digital Sensors (PIR, Vibration, Flame, TP4056, Hall)
+    // 2. Configure Digital Sensors (PIR, Vibration, Flame, TP4056)
 #if defined(CONFIG_CUSTOM_ENABLE_SENSOR_PIR) || defined(CONFIG_ENABLE_PIR_SENSOR)
-    s_pir_pin = GPIO_NUM_10;
+    s_pir_pin = GPIO_NUM_14;
 #if defined(CONFIG_CUSTOM_SENSOR_PIR_GPIO)
     s_pir_pin = (gpio_num_t)CONFIG_CUSTOM_SENSOR_PIR_GPIO;
 #elif defined(CONFIG_PIR_PIN)
@@ -68,9 +65,6 @@ esp_err_t sensor_manager_init(void)
 
 #if defined(CONFIG_CUSTOM_ENABLE_SENSOR_VIBRATION_SW420) || defined(CONFIG_ENABLE_VIBRATION_SENSOR)
     s_vib_pin = GPIO_NUM_6;
-#if defined(CONFIG_CUSTOM_SENSOR_VIBRATION_PIN)
-    s_vib_pin = (gpio_num_t)CONFIG_CUSTOM_SENSOR_VIBRATION_PIN;
-#endif
     if (s_vib_pin >= 0) {
         gpio_config_t vib_conf = {
             .pin_bit_mask = (1ULL << s_vib_pin),
@@ -86,9 +80,6 @@ esp_err_t sensor_manager_init(void)
 
 #if defined(CONFIG_CUSTOM_ENABLE_SENSOR_FLAME) || defined(CONFIG_ENABLE_FLAME_SENSOR)
     s_flame_pin = GPIO_NUM_7;
-#if defined(CONFIG_CUSTOM_SENSOR_FLAME_PIN)
-    s_flame_pin = (gpio_num_t)CONFIG_CUSTOM_SENSOR_FLAME_PIN;
-#endif
     if (s_flame_pin >= 0) {
         gpio_config_t flame_conf = {
             .pin_bit_mask = (1ULL << s_flame_pin),
@@ -102,11 +93,8 @@ esp_err_t sensor_manager_init(void)
     }
 #endif
 
-#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_BATTERY_CHARGING_DETECT) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_TP4056) || defined(CONFIG_ENABLE_BATTERY_CHARGER_TP4056)
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_TP4056) || defined(CONFIG_ENABLE_BATTERY_CHARGER_TP4056)
     s_chrg_pin = GPIO_NUM_3;
-#if defined(CONFIG_CUSTOM_PERIPH_BATTERY_CHRG_PIN)
-    s_chrg_pin = (gpio_num_t)CONFIG_CUSTOM_PERIPH_BATTERY_CHRG_PIN;
-#endif
     if (s_chrg_pin >= 0) {
         gpio_config_t chrg_conf = {
             .pin_bit_mask = (1ULL << s_chrg_pin),
@@ -118,64 +106,6 @@ esp_err_t sensor_manager_init(void)
         gpio_config(&chrg_conf);
         ESP_LOGI(TAG, "TP4056 Charger Monitor configured on GPIO %d", s_chrg_pin);
     }
-#endif
-
-#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_HALL_REED)
-    s_hall_pin = GPIO_NUM_21;
-#if defined(CONFIG_CUSTOM_SENSOR_HALL_REED_PIN)
-    s_hall_pin = (gpio_num_t)CONFIG_CUSTOM_SENSOR_HALL_REED_PIN;
-#endif
-    if (s_hall_pin >= 0) {
-        gpio_config_t hall_conf = {
-            .pin_bit_mask = (1ULL << s_hall_pin),
-            .mode = GPIO_MODE_INPUT,
-            .pull_up_en = GPIO_PULLUP_ENABLE,
-            .pull_down_en = GPIO_PULLDOWN_DISABLE,
-            .intr_type = GPIO_INTR_DISABLE,
-        };
-        gpio_config(&hall_conf);
-        ESP_LOGI(TAG, "Hall / Reed Magnetic Sensor configured on GPIO %d", s_hall_pin);
-    }
-#endif
-
-    // 3. Configure VL6180X Time-of-Flight & ALS Sensor (if enabled)
-#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_VL53LX) || defined(CONFIG_CUSTOM_ENABLE_SENSOR_VL6180X)
-#if defined(CONFIG_CUSTOM_SENSOR_VL6180X)
-    gpio_num_t sda_pin = GPIO_NUM_8;
-    gpio_num_t scl_pin = GPIO_NUM_9;
-    gpio_num_t xshut_pin = GPIO_NUM_NC;
-#if defined(CONFIG_CUSTOM_SENSOR_VL53LX_I2C_SDA)
-    sda_pin = (gpio_num_t)CONFIG_CUSTOM_SENSOR_VL53LX_I2C_SDA;
-#endif
-#if defined(CONFIG_CUSTOM_SENSOR_VL53LX_I2C_SCL)
-    scl_pin = (gpio_num_t)CONFIG_CUSTOM_SENSOR_VL53LX_I2C_SCL;
-#endif
-#if defined(CONFIG_CUSTOM_SENSOR_VL53LX_XSHUT_PIN) && (CONFIG_CUSTOM_SENSOR_VL53LX_XSHUT_PIN >= 0)
-    xshut_pin = (gpio_num_t)CONFIG_CUSTOM_SENSOR_VL53LX_XSHUT_PIN;
-#endif
-
-    i2c_master_bus_handle_t bus = bus_manager_get_i2c_bus();
-    if (!bus) {
-        bus_manager_init_i2c(sda_pin, scl_pin, 400000);
-        bus = bus_manager_get_i2c_bus();
-    }
-
-    if (bus) {
-        vl6180x_config_t tof_cfg = {
-            .i2c_bus = bus,
-            .i2c_addr = VL6180X_DEFAULT_I2C_ADDR,
-            .xshut_pin = xshut_pin,
-            .gpio1_pin = GPIO_NUM_NC,
-            .scaling = 1,
-        };
-        esp_err_t err = vl6180x_init(&tof_cfg, &s_vl6180x_handle);
-        if (err == ESP_OK) {
-            ESP_LOGI(TAG, "VL6180X Time-of-Flight & ALS sensor initialized successfully.");
-        } else {
-            ESP_LOGW(TAG, "VL6180X sensor init returned: %s", esp_err_to_name(err));
-        }
-    }
-#endif
 #endif
 
     ESP_LOGI(TAG, "Sensors Subsystem initialized successfully.");
@@ -205,14 +135,6 @@ esp_err_t sensor_read_environment(sensor_environment_t *out_env)
         }
     }
 
-    // Read high precision ALS from VL6180X if active
-    if (s_vl6180x_handle) {
-        float lux = 0.0f;
-        if (vl6180x_read_ambient_lux(s_vl6180x_handle, &lux) == ESP_OK) {
-            out_env->light_lux = lux;
-        }
-    }
-
     return ESP_OK;
 }
 
@@ -225,14 +147,6 @@ esp_err_t sensor_read_distance(sensor_distance_t *out_dist)
     out_dist->distance_laser_mm = 350.0f;     // 35cm baseline
     out_dist->distance_ultrasonic_cm = 35.0f;
     out_dist->valid = true;
-
-    // Read high precision ToF distance from VL6180X if active
-    if (s_vl6180x_handle) {
-        float mm = 0.0f;
-        if (vl6180x_read_distance_mm(s_vl6180x_handle, &mm) == ESP_OK) {
-            out_dist->distance_laser_mm = mm;
-        }
-    }
 
     return ESP_OK;
 }

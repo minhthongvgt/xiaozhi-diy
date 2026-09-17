@@ -126,6 +126,31 @@
 #define DISPLAY_INVERT_COLOR false
 #endif
 
+// Cấu hình Màn hình rời qua UART (Nextion, TJC, DWIN, JSON Stream)
+#ifdef CONFIG_CUSTOM_DISPLAY_UART_TX_PIN
+#define DISPLAY_UART_TX_PIN ((gpio_num_t)CONFIG_CUSTOM_DISPLAY_UART_TX_PIN)
+#else
+#define DISPLAY_UART_TX_PIN GPIO_NUM_17
+#endif
+
+#ifdef CONFIG_CUSTOM_DISPLAY_UART_RX_PIN
+#define DISPLAY_UART_RX_PIN ((gpio_num_t)CONFIG_CUSTOM_DISPLAY_UART_RX_PIN)
+#else
+#define DISPLAY_UART_RX_PIN GPIO_NUM_18
+#endif
+
+#ifdef CONFIG_CUSTOM_DISPLAY_UART_BAUDRATE
+#define DISPLAY_UART_BAUDRATE CONFIG_CUSTOM_DISPLAY_UART_BAUDRATE
+#else
+#define DISPLAY_UART_BAUDRATE 115200
+#endif
+
+#if defined(CONFIG_CUSTOM_DISPLAY_UART_PORT) && (CONFIG_CUSTOM_DISPLAY_UART_PORT == 2)
+#define DISPLAY_UART_PORT UART_NUM_2
+#else
+#define DISPLAY_UART_PORT UART_NUM_1
+#endif
+
 // 2. Màn hình Cảm ứng (Touch Screen)
 #ifdef CONFIG_CUSTOM_TOUCH_PIN_SDA
 #define TOUCH_I2C_SDA_PIN ((gpio_num_t)CONFIG_CUSTOM_TOUCH_PIN_SDA)
@@ -505,15 +530,6 @@
 #define SENSOR_GAS_I2C_SCL GPIO_NUM_9
 #endif
 
-// Cảm biến gia tốc & con quay IMU 6 trục (MPU6050 / BMI270 / QMI8658)
-#ifdef CONFIG_CUSTOM_IMU_I2C_SDA
-#define SENSOR_IMU_I2C_SDA ((gpio_num_t)CONFIG_CUSTOM_IMU_I2C_SDA)
-#define SENSOR_IMU_I2C_SCL ((gpio_num_t)CONFIG_CUSTOM_IMU_I2C_SCL)
-#else
-#define SENSOR_IMU_I2C_SDA GPIO_NUM_8
-#define SENSOR_IMU_I2C_SCL GPIO_NUM_9
-#endif
-
 // Cảm biến cử chỉ không chạm 3D & Màu sắc APDS-9960
 #ifdef CONFIG_CUSTOM_SENSOR_APDS9960_I2C_SDA
 #define SENSOR_APDS9960_I2C_SDA ((gpio_num_t)CONFIG_CUSTOM_SENSOR_APDS9960_I2C_SDA)
@@ -756,81 +772,6 @@
 #define PERIPH_4G_UART_TX_PIN GPIO_NUM_43
 #define PERIPH_4G_UART_RX_PIN GPIO_NUM_44
 #define PERIPH_4G_PWRKEY_PIN  GPIO_NUM_2
-#endif
-
-// Còi báo Buzzer & Động cơ rung Haptic
-#ifdef CONFIG_BUZZER_PIN
-#define BUZZER_GPIO_PIN ((gpio_num_t)CONFIG_BUZZER_PIN)
-#else
-#define BUZZER_GPIO_PIN GPIO_NUM_41
-#endif
-
-#ifdef CONFIG_HAPTIC_PIN
-#define HAPTIC_GPIO_PIN ((gpio_num_t)CONFIG_HAPTIC_PIN)
-#else
-#define HAPTIC_GPIO_PIN GPIO_NUM_42
-#endif
-
-// Động cơ Servo điều hướng góc đơn (Servo Dog)
-#ifdef CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO
-#define SERVO_DOG_PWM_PIN ((gpio_num_t)CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO)
-#else
-#define SERVO_DOG_PWM_PIN GPIO_NUM_13
-#endif
-
-// Công tắc gạt 2 trạng thái Slide Switch
-#ifdef CONFIG_CUSTOM_SLIDE_SWITCH_PIN
-#define SLIDE_SWITCH_PIN ((gpio_num_t)CONFIG_CUSTOM_SLIDE_SWITCH_PIN)
-#else
-#define SLIDE_SWITCH_PIN GPIO_NUM_48
-#endif
-
-// Radar vi sóng phát hiện hiện diện 24GHz HLK-LD2410
-#ifdef CONFIG_CUSTOM_SENSOR_RADAR_TX_PIN
-#define RADAR_LD2410_TX_PIN ((gpio_num_t)CONFIG_CUSTOM_SENSOR_RADAR_TX_PIN)
-#define RADAR_LD2410_RX_PIN ((gpio_num_t)CONFIG_CUSTOM_SENSOR_RADAR_RX_PIN)
-#else
-#define RADAR_LD2410_TX_PIN GPIO_NUM_43
-#define RADAR_LD2410_RX_PIN GPIO_NUM_44
-#endif
-
-// Cảm biến từ tính Hall / Reed Switch
-#ifdef CONFIG_CUSTOM_SENSOR_HALL_REED_PIN
-#define SENSOR_HALL_REED_PIN ((gpio_num_t)CONFIG_CUSTOM_SENSOR_HALL_REED_PIN)
-#else
-#define SENSOR_HALL_REED_PIN GPIO_NUM_21
-#endif
-
-// Cổng giao tiếp ngoại vi phụ Sub UART / RS485
-#ifdef CONFIG_CUSTOM_PERIPH_SUB_UART_TX_PIN
-#define SUB_UART_TX_PIN ((gpio_num_t)CONFIG_CUSTOM_PERIPH_SUB_UART_TX_PIN)
-#define SUB_UART_RX_PIN ((gpio_num_t)CONFIG_CUSTOM_PERIPH_SUB_UART_RX_PIN)
-#else
-#define SUB_UART_TX_PIN GPIO_NUM_17
-#define SUB_UART_RX_PIN GPIO_NUM_18
-#endif
-#if defined(CONFIG_CUSTOM_PERIPH_SUB_UART_RTS_PIN) && (CONFIG_CUSTOM_PERIPH_SUB_UART_RTS_PIN >= 0)
-#define SUB_UART_RTS_PIN ((gpio_num_t)CONFIG_CUSTOM_PERIPH_SUB_UART_RTS_PIN)
-#else
-#define SUB_UART_RTS_PIN GPIO_NUM_NC
-#endif
-
-// IC Mở rộng IO I2C
-#ifdef CONFIG_CUSTOM_EXPANDER_I2C_SDA
-#define IO_EXPANDER_I2C_SDA ((gpio_num_t)CONFIG_CUSTOM_EXPANDER_I2C_SDA)
-#define IO_EXPANDER_I2C_SCL ((gpio_num_t)CONFIG_CUSTOM_EXPANDER_I2C_SCL)
-#else
-#define IO_EXPANDER_I2C_SDA GPIO_NUM_8
-#define IO_EXPANDER_I2C_SCL GPIO_NUM_9
-#endif
-
-// IC Quản lý Nguồn PMIC
-#ifdef CONFIG_CUSTOM_PMIC_I2C_SDA
-#define PMIC_I2C_SDA ((gpio_num_t)CONFIG_CUSTOM_PMIC_I2C_SDA)
-#define PMIC_I2C_SCL ((gpio_num_t)CONFIG_CUSTOM_PMIC_I2C_SCL)
-#else
-#define PMIC_I2C_SDA GPIO_NUM_8
-#define PMIC_I2C_SCL GPIO_NUM_9
 #endif
 
 // ==============================================================================

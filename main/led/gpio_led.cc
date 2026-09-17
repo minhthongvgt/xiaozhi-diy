@@ -211,15 +211,6 @@ bool IRAM_ATTR GpioLed::FadeCallback(const ledc_cb_param_t *param, void *user_ar
 }
 
 void GpioLed::OnStateChanged() {
-    if (custom_mode_) {
-        auto& app = Application::GetInstance();
-        if (app.GetDeviceState() == kDeviceStateFatalError) {
-            SetBrightness(HIGH_BRIGHTNESS);
-            StartContinuousBlink(100);
-        }
-        return;
-    }
-
     auto& app = Application::GetInstance();
     auto device_state = app.GetDeviceState();
     switch (device_state) {

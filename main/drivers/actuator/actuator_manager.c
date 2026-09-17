@@ -145,13 +145,8 @@ esp_err_t actuator_manager_init(void)
     init_output_pin(s_haptic_pin, "Haptic Vibration Motor");
 #endif
 
-#if defined(CONFIG_ENABLE_SERVO) || defined(CONFIG_CUSTOM_PERIPH_SERVO_ENABLE) || defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG)
-    s_servo_pin = GPIO_NUM_13;
-#if defined(CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO)
-    s_servo_pin = (gpio_num_t)CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO;
-#elif defined(CONFIG_SERVO_PIN)
-    s_servo_pin = (gpio_num_t)CONFIG_SERVO_PIN;
-#endif
+#if defined(CONFIG_ENABLE_SERVO) || defined(CONFIG_CUSTOM_PERIPH_SERVO_ENABLE)
+    s_servo_pin = GPIO_NUM_48;
     // Configure LEDC Timer for Servo PWM (50Hz)
     ledc_timer_config_t ledc_timer = {
         .speed_mode       = LEDC_LOW_SPEED_MODE,
@@ -181,25 +176,11 @@ esp_err_t actuator_manager_init(void)
     s_motor_pwmb = GPIO_NUM_41;
     s_motor_dirb = GPIO_NUM_42;
 
-#if defined(CONFIG_CUSTOM_PERIPH_MOTOR_PWMA_PIN)
-    s_motor_pwma = (gpio_num_t)CONFIG_CUSTOM_PERIPH_MOTOR_PWMA_PIN;
-#endif
-#if defined(CONFIG_CUSTOM_PERIPH_MOTOR_DIRA_PIN)
-    s_motor_dira = (gpio_num_t)CONFIG_CUSTOM_PERIPH_MOTOR_DIRA_PIN;
-#endif
-#if defined(CONFIG_CUSTOM_PERIPH_MOTOR_PWMB_PIN)
-    s_motor_pwmb = (gpio_num_t)CONFIG_CUSTOM_PERIPH_MOTOR_PWMB_PIN;
-#endif
-#if defined(CONFIG_CUSTOM_PERIPH_MOTOR_DIRB_PIN)
-    s_motor_dirb = (gpio_num_t)CONFIG_CUSTOM_PERIPH_MOTOR_DIRB_PIN;
-#endif
-
     init_output_pin(s_motor_pwma, "Motor DC PWMA");
     init_output_pin(s_motor_dira, "Motor DC DIRA");
     init_output_pin(s_motor_pwmb, "Motor DC PWMB");
     init_output_pin(s_motor_dirb, "Motor DC DIRB");
-    ESP_LOGI(TAG, "DC Motor H-Bridge Driver configured (PWMA: %d, DIRA: %d, PWMB: %d, DIRB: %d)",
-             s_motor_pwma, s_motor_dira, s_motor_pwmb, s_motor_dirb);
+    ESP_LOGI(TAG, "DC Motor H-Bridge Driver TB6612 configured (PWMA: 1, DIRA: 2, PWMB: 41, DIRB: 42)");
 #endif
 
     ESP_LOGI(TAG, "Actuators Subsystem initialized successfully.");

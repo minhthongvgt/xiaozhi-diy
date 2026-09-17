@@ -5,11 +5,11 @@
   <img src="https://img.shields.io/badge/Framework-ESP--IDF%20v6.1-blue?style=for-the-badge&logo=espressif" alt="ESP-IDF v6.1">
   <img src="https://img.shields.io/badge/Hardware%20Shield-GPIO%2026--37%20Protected-brightgreen?style=for-the-badge&logo=shield" alt="Hardware Shield">
   <img src="https://img.shields.io/badge/Peripherals-41%20Modules%20Ready-orange?style=for-the-badge" alt="41 Modules Ready">
-  <img src="https://img.shields.io/badge/Tests-95%2F95%20PASS%20(100%25)-success?style=for-the-badge&logo=checkmarx" alt="Tests 100% Pass">
+  <img src="https://img.shields.io/badge/Tests-93%2F93%20PASS%20(100%25)-success?style=for-the-badge&logo=checkmarx" alt="Tests 100% Pass">
   <img src="https://img.shields.io/badge/License-MIT-purple?style=for-the-badge" alt="License MIT">
 </p>
 
-> 🚀 **Bộ công cụ hiện thực hóa Chatbot AI Xiaozhi cho mọi Maker — Dễ như ghép Lego, tùy biến linh kiện bằng một cú click, cắm là chạy mà không cần viết code!**
+> 🚀 **Bộ công cụ hiện thực hóa Chatbot AI Xiaozhi cho mọi Maker — Dễ như ghép Lego, tùy biến linh kiện bằng một cú click, cắm là chạy mà không cần biết viết code!**
 
 ---
 
@@ -19,10 +19,9 @@
 3. [Danh Sách 41 Ngoại Vi Theo 8 Nhóm](#-danh-sách-41-ngoại-vi-chuẩn-hóa-theo-8-nhóm-chức-năng)
 4. [Hệ Sinh Thái Màn Hình & Âm Thanh](#-hỗ-trợ-đa-dạng-màn-hình--âm-thanh-hi-fi)
 5. [Hướng Dẫn Bắt Đầu Nhanh (Quick Start)](#-hướng-dẫn-nhanh-cho-người-dùng-mới-quick-start)
-6. [Hướng Dẫn Cấu Hình System Prompt Cho AI](#-hướng-dẫn-cấu-hình-system-prompt-cho-ai-gọi-đúng-công-cụ-mcp)
-7. [Quy Trình Làm Việc & Bảo Vệ Mã Nguồn](#-quy-trình-làm-việc--an-toàn-mã-nguồn-safety-workflow)
-8. [Tài Liệu Kỹ Thuật Chi Tiết](#-tài-liệu-kỹ-thuật-chi-tiết)
-9. [Đóng Góp & Giấy Phép](#-đóng-góp--giấy-phép)
+6. [Quy Trình Làm Việc & Bảo Vệ Mã Nguồn](#-quy-trình-làm-việc--an-toàn-mã-nguồn-safety-workflow)
+7. [Tài Liệu Kỹ Thuật Liên Quan](#-tài-liệu-kỹ-thuật-chi-tiết)
+8. [Đóng Góp & Giấy Phép](#-đóng-góp--giấy-phép)
 
 ---
 
@@ -174,7 +173,7 @@ idf.py menuconfig
    - Dùng phím mũi tên di chuyển đến thiết bị bạn có.
    - Nhấn phím `Space` để bật dấu kiểm `[*]`.
    - Ngay lập tức, danh sách chân GPIO an toàn sẽ tự động xổ xuống.
-2. Kiểm tra **Bảng tổng hợp phần硬件** ở đáy menuconfig để đảm bảo không có cảnh báo trùng chân.
+2. Kiểm tra **Bảng tổng hợp phần cứng** ở đáy menuconfig để đảm bảo không có cảnh báo trùng chân.
 3. Nhấn phím `S` để Lưu (Save) và `Q` để Thoát (Quit).
 
 ### 4. Biên Dịch & Nạp Lên Bo Mạch
@@ -182,70 +181,6 @@ idf.py menuconfig
 # Biên dịch và nạp tự động qua cổng COM
 idf.py build flash monitor
 ```
-
----
-
-## 🧠 Hướng Dẫn Cấu Hình System Prompt Cho AI (Gọi Đúng Công Cụ MCP)
-
-Để trợ lý AI (mô hình ngôn ngữ lớn như GPT-4o, Claude 3.5, DeepSeek-V3, Qwen) hiểu rõ phần cứng của bạn và **gọi đúng công cụ MCP thay vì bịa số liệu**, bạn hãy sao chép đoạn hướng dẫn bên dưới và dán vào mục **System Prompt / Persona Instructions** trên máy chủ hoặc nền tảng AI Backend của bạn (như Dify, FastGPT, Coze, OpenAI API, hoặc máy chủ Xiaozhi WebSocket/MQTT):
-
-### 📋 Bản System Prompt Mẫu Hoàn Chỉnh (Copy & Dán Ngay)
-
-```text
-# VAI TRÒ VÀ NHIỆM VỤ
-Bạn là Xiaozhi (Tiểu Trí) - trợ lý trí tuệ nhân tạo thông minh tích hợp trên bo mạch vi điều khiển ESP32-S3. Bạn có khả năng lắng nghe giọng nói và điều khiển trực tiếp các linh kiện phần cứng ngoại vi thông qua bộ công cụ MCP (Model Context Protocol).
-
-# NGUYÊN TẮC BẮT BUỘC KHI GỌI CÔNG CỤ NGOẠI VI (MANDATORY MCP DIRECTIVES)
-1. TUYỆT ĐỐI KHÔNG ẢO GIÁC DỮ LIỆU: Khi người dùng hỏi về các thông số thực tế (nhiệt độ, độ ẩm, khoảng cách, an ninh, pin), bạn BẮT BUỘC phải gọi công cụ MCP tương ứng để đọc cảm biến. Không được tự suy đoán hoặc bịa ra con số.
-2. BẢNG QUY ĐỔI Ý ĐỊNH NGƯỜI DÙNG SANG CÔNG CỤ PHẦN CỨNG:
-   - Nhiệt độ, độ ẩm, ánh sáng, áp suất khí quyển, nồng độ CO2, khí TVOC:
-     -> Gọi: self.sensor.get_environment()
-   - Khoảng cách vật cản trước mặt, đo đạc xa gần (Laser ToF / Siêu âm):
-     -> Gọi: self.sensor.get_distance()
-   - An toàn nhà cửa, phát hiện chuyển động, rung cửa, báo cháy, rò rỉ khí gas:
-     -> Gọi: self.sensor.get_security()
-   - Dung lượng pin (%), tình trạng cắm sạc, điện áp, công suất tiêu thụ điện:
-     -> Gọi: self.sensor.get_power()
-   - Đóng / cắt rơ-le điện 220V (bật/tắt đèn chiếu sáng, quạt máy, máy bơm):
-     -> Bật thiết bị: self.actuator.set_relay(state=true)
-     -> Tắt thiết bị: self.actuator.set_relay(state=false)
-   - Cử chỉ cảm xúc đầu Robot (Servo SG90):
-     -> Đồng ý / cảm ơn / chào hỏi: self.robot.gesture(action="nod")
-     -> Từ chối / không đồng ý / cảnh báo: self.robot.gesture(action="shake")
-     -> Trở về chính giữa: self.robot.gesture(action="center")
-   - Xe robot di chuyển (Động cơ DC cầu H TB6612FNG):
-     -> Gọi: self.robot.move(direction="forward"|"backward"|"left"|"right"|"stop", speed=60, duration_ms=1000)
-   - Bắn lệnh hồng ngoại điều khiển điều hòa, TV, quạt điện (IR 38kHz):
-     -> Bật / tắt máy lạnh: self.ir.send_remote(device="ac", command="power")
-     -> Tăng / giảm nhiệt độ máy lạnh: self.ir.send_remote(device="ac", command="temp_up"|"temp_down")
-     -> Tắt tiếng / đổi âm lượng TV: self.ir.send_remote(device="tv", command="mute"|"vol_up"|"vol_down")
-   - Đổi hiệu ứng ánh sáng đèn LED RGB (WS2812B / SK6812):
-     -> Cầu vồng rượt đuổi nhanh (chúc mừng, tiệc tùng): self.led.set_effect(effect="chase", speed_ms=15)
-     -> Cầu vồng mượt mà thư giãn: self.led.set_effect(effect="rainbow", speed_ms=30)
-     -> Đèn nhịp thở nhẹ nhàng: self.led.set_effect(effect="breathe", speed_ms=40)
-     -> Đặt màu sắc cố định: self.led.set_color(red=..., green=..., blue=...)
-     -> Tắt đèn LED: self.led.set_effect(effect="off")
-   - Báo động khẩn cấp & gửi tin nhắn cứu nạn:
-     -> Phát còi hú báo động: self.actuator.beep(frequency_hz=3000, duration_ms=1500)
-     -> Gửi tin nhắn SMS qua SIM 4G: self.cellular.send_sms(phone_number="...", message="...")
-   - Tăng / giảm âm lượng loa hoặc độ sáng màn hình:
-     -> Nếu chưa biết mức hiện tại, luôn gọi self.get_device_status() trước, sau đó tính toán và gọi self.audio_speaker.set_volume(volume=...) hoặc self.screen.set_brightness(brightness=...).
-
-# PHONG CÁCH PHẢN HỒI GIỌNG NÓI (TTS TONE):
-- Luôn đối đáp ngắn gọn, tự nhiên, thân thiện và lễ phép bằng tiếng Việt.
-- Khi thông báo kết quả từ cảm biến, luôn nói rõ số đo kèm đơn vị vật lý chuẩn xác (ví dụ: 28.5 độ C, độ ẩm 65%, khoảng cách 30 cm, pin còn 85%).
-```
-
-### 💡 Hướng Dẫn Chèn Vào Các Nền Tảng AI Thông Dụng
-
-| Nền Tảng AI Backend | Vị Trí Cần Chèn | Cách Cấu Hình Bổ Sung |
-|:---|:---|:---|
-| **Máy chủ Xiaozhi WebSocket/MQTT** | File cấu hình `system_prompt` của agent hoặc bot profile | Bot tự động nhận diện danh sách tool qua gói tin `tools/list`. |
-| **Dify.ai / FastGPT** | Mục **Chỉ thị tiền đề (Prefix Prompt)** trong Studio thiết kế Bot | Bật công tắc **Function Calling (Tools)** và chọn các tool tương ứng. |
-| **Coze / Flowise** | Khung **Persona & Prompt** của Bot | Kết nối công cụ MCP Server qua giao thức WebSocket Endpoint. |
-| **OpenAI Assistants API** | Trường `"instructions"` khi khởi tạo Assistant | Khai báo danh sách `tools: [{"type": "function", ...}]`. |
-
-> 📖 **Tra cứu đầy đủ:** Xem chi tiết toàn bộ 41 ngoại vi, schema JSON, dải giá trị tham số và hơn 20 tình huống đàm thoại mẫu tại file [**`bang_chi_thi_prompt_mcp_ngoai_vi.md`**](bang_chi_thi_prompt_mcp_ngoai_vi.md).
 
 ---
 
@@ -272,7 +207,6 @@ d:\Code\Antigravity\Xiaozhi/
 
 - 🗺️ **[Bản Đồ Cấu Hình Menuconfig](ban_do_menuconfig.md):** Sơ đồ cây phân cấp chi tiết toàn bộ các menu, tham số phụ thuộc và bảng tra cứu chân GPIO.
 - 📑 **[Danh Mục Ngoại Vi & Giao Thức](danh_sach_ngoai_vi_va_giao_thuc.md):** Tra cứu thông số kỹ thuật, thanh ghi I2C, datasheet IC và mã định danh của toàn bộ chip tương thích.
-- 🤖 **[Bảng Chỉ Thị Prompt & Hàm MCP Ngoại Vi](bang_chi_thi_prompt_mcp_ngoai_vi.md):** Hướng dẫn cấu hình System Prompt cho AI, ánh xạ 41 ngoại vi tới tên hàm MCP, tham số JSON và kịch bản giọng nói.
 - 📖 **[Tài Liệu Phần Cứng Update.md](Update.md):** Tổng hợp phần cứng chi tiết của hệ sinh thái Xiaozhi ESP32-S3.
 
 ---
@@ -330,7 +264,7 @@ Dự án phát triển dựa trên tinh thần mã nguồn mở vì cộng đồ
 6. ĐIỀU KIỆN TIÊN QUYẾT TRƯỚC KHI BÁO CÁO HOÀN THÀNH:
    - Mọi thay đổi logic hoặc Kconfig bắt buộc phải chạy lệnh kiểm thử:
      `python -m unittest discover -s scripts/tests -v`
-   - Chỉ được coi là thành công khi toàn bộ 95/95 unit tests đều đạt (OK).
+   - Chỉ được coi là thành công khi toàn bộ 93/93 unit tests đều đạt (OK).
    - Sau khi kiểm thử đạt, đồng bộ mã nguồn sạch sang 'd:/Code/Antigravity/Xiaozhi/Oginal/'
      và 'C:/Oginal/' bằng script 'copy_fixes.py'.
 -->

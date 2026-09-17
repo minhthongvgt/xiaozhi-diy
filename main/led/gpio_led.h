@@ -18,22 +18,9 @@ class GpioLed : public Led {
     virtual ~GpioLed();
 
     void OnStateChanged() override;
-    void TurnOn() override;
-    void TurnOff() override;
-    void SetBrightness(uint8_t brightness) override;
-    void SetColor(uint8_t r, uint8_t g, uint8_t b) override {
-        uint8_t br = (uint8_t)(((uint32_t)r * 299 + (uint32_t)g * 587 + (uint32_t)b * 114) / 1000);
-        SetBrightness(br);
-    }
-    void StartRainbow(int interval_ms = 25) override { TurnOn(); }
-    void StartChase(int interval_ms = 15) override { StartContinuousBlink(interval_ms); }
-    void StartBreathe(int interval_ms = 30) override { StartFadeTask(); }
-    void StartBlink(int interval_ms = 200) override { StartContinuousBlink(interval_ms); }
-    std::string GetType() const override { return "GpioLed"; }
-    void GetColor(uint8_t& r, uint8_t& g, uint8_t& b) const override {
-        r = (uint8_t)duty_; g = (uint8_t)duty_; b = (uint8_t)duty_;
-    }
-    uint8_t GetBrightness() const override { return (uint8_t)duty_; }
+    void TurnOn();
+    void TurnOff();
+    void SetBrightness(uint8_t brightness);
 
  private:
     std::mutex mutex_;

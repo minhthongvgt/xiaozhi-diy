@@ -17,31 +17,20 @@ public:
 
     void OnStateChanged() override;
 
-    void TurnOn() override;
-    void TurnOff() override;
-    void SetColor(uint8_t r, uint8_t g, uint8_t b) override;
-    void SetBrightness(uint8_t brightness) override;
+    void TurnOn();
+    void TurnOff();
+    void SetColor(uint8_t r, uint8_t g, uint8_t b);
     void BlinkOnce();
     void Blink(int times, int interval_ms);
     void StartContinuousBlink(int interval_ms);
-    void StartBlink(int interval_ms = 200) override { StartContinuousBlink(interval_ms); }
-    void StartRainbow(int interval_ms = 25) override;
-    void StartRainbow(int interval_ms, uint8_t brightness);
-    void StartChase(int interval_ms = 15) override;
-    void StartBreathe(int interval_ms = 30) override;
-    void StartBreathe(int interval_ms, uint8_t max_brightness);
+    void StartRainbow(int interval_ms = 25, uint8_t brightness = 16);
     void StopEffect();
-
-    std::string GetType() const override { return "SingleLed"; }
-    void GetColor(uint8_t& r, uint8_t& g, uint8_t& b) const override { r = r_; g = g_; b = b_; }
-    uint8_t GetBrightness() const override { return rainbow_brightness_; }
 
 private:
     enum class EffectMode {
         kNone,
         kBlink,
-        kRainbow,
-        kBreathe
+        kRainbow
     };
 
     std::mutex mutex_;
@@ -54,9 +43,6 @@ private:
     EffectMode mode_ = EffectMode::kNone;
     uint8_t rainbow_pos_ = 0;
     uint8_t rainbow_brightness_ = 16;
-    uint8_t breathe_step_ = 0;
-    bool breathe_up_ = true;
-    uint8_t breathe_brightness_ = 32;
 
     void StartBlinkTask(int times, int interval_ms);
     void OnTimer();

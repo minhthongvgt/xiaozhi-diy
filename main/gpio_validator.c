@@ -75,6 +75,12 @@ esp_err_t gpio_safety_validate(void)
 #if defined(CONFIG_CUSTOM_DISPLAY_PIN_BLK)
         { CONFIG_CUSTOM_DISPLAY_PIN_BLK, "Display Backlight", BUS_TYPE_EXCLUSIVE, true },
 #endif
+#if defined(CONFIG_CUSTOM_DISPLAY_UART_TX_PIN)
+        { CONFIG_CUSTOM_DISPLAY_UART_TX_PIN, "Display UART TX", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_DISPLAY_UART_RX_PIN)
+        { CONFIG_CUSTOM_DISPLAY_UART_RX_PIN, "Display UART RX", BUS_TYPE_EXCLUSIVE, true },
+#endif
 #endif
 
         // 2. Audio Speaker
@@ -131,24 +137,21 @@ esp_err_t gpio_safety_validate(void)
         { CONFIG_CUSTOM_BUTTON_TOUCH_GPIO, "Button Touch", BUS_TYPE_EXCLUSIVE, true },
 #endif
 #if defined(CONFIG_CUSTOM_ENABLE_BUTTON_VOLUME)
-#if defined(CONFIG_CUSTOM_BUTTON_VOL_UP_GPIO)
-        { CONFIG_CUSTOM_BUTTON_VOL_UP_GPIO, "Button Volume UP", BUS_TYPE_EXCLUSIVE, true },
-#elif defined(CONFIG_CUSTOM_BUTTON_VOLUME_UP_GPIO)
+#if defined(CONFIG_CUSTOM_BUTTON_VOLUME_UP_GPIO)
         { CONFIG_CUSTOM_BUTTON_VOLUME_UP_GPIO, "Button Volume UP", BUS_TYPE_EXCLUSIVE, true },
 #endif
-#if defined(CONFIG_CUSTOM_BUTTON_VOL_DOWN_GPIO)
-        { CONFIG_CUSTOM_BUTTON_VOL_DOWN_GPIO, "Button Volume DOWN", BUS_TYPE_EXCLUSIVE, true },
-#elif defined(CONFIG_CUSTOM_BUTTON_VOLUME_DOWN_GPIO)
+#if defined(CONFIG_CUSTOM_BUTTON_VOLUME_DOWN_GPIO)
         { CONFIG_CUSTOM_BUTTON_VOLUME_DOWN_GPIO, "Button Volume DOWN", BUS_TYPE_EXCLUSIVE, true },
 #endif
 #endif
 
         // 6. LEDs
 #if defined(CONFIG_ENABLE_CUSTOM_LEDS)
-#if defined(CONFIG_CUSTOM_LED_GPIO)
-        { CONFIG_CUSTOM_LED_GPIO, "LED Status", BUS_TYPE_EXCLUSIVE, true },
-#elif defined(CONFIG_CUSTOM_LED_WS2812_GPIO)
+#if defined(CONFIG_CUSTOM_LED_WS2812_GPIO)
         { CONFIG_CUSTOM_LED_WS2812_GPIO, "LED WS2812 RGB", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_LED_SINGLE_PWM_GPIO)
+        { CONFIG_CUSTOM_LED_SINGLE_PWM_GPIO, "LED Single PWM", BUS_TYPE_EXCLUSIVE, true },
 #endif
 #endif
 
@@ -158,12 +161,6 @@ esp_err_t gpio_safety_validate(void)
 #endif
 #if defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG) && defined(CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO)
         { CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO, "Servo Dog PWM", BUS_TYPE_EXCLUSIVE, true },
-#endif
-#if defined(CONFIG_ENABLE_BUZZER) && defined(CONFIG_BUZZER_PIN)
-        { CONFIG_BUZZER_PIN, "Buzzer Alarm", BUS_TYPE_EXCLUSIVE, true },
-#endif
-#if defined(CONFIG_ENABLE_HAPTIC_MOTOR) && defined(CONFIG_HAPTIC_PIN)
-        { CONFIG_HAPTIC_PIN, "Haptic Vibration", BUS_TYPE_EXCLUSIVE, true },
 #endif
     };
 

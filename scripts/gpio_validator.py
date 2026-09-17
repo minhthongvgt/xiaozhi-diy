@@ -97,8 +97,14 @@ def extract_pin_assignments(config: Dict[str, str]) -> List[PinAssignment]:
             config, "CONFIG_CUSTOM_DISPLAY_OLED_SH1106"
         )
         is_qspi = _is_yes(config, "CONFIG_CUSTOM_DISPLAY_QSPI_AMOLED")
+        is_uart = _is_yes(config, "CONFIG_CUSTOM_DISPLAY_UART")
 
-        if is_oled:
+        if is_uart:
+            tx = _get_int(config, "CONFIG_CUSTOM_DISPLAY_UART_TX_PIN", 17)
+            rx = _get_int(config, "CONFIG_CUSTOM_DISPLAY_UART_RX_PIN", 18)
+            assignments.append(PinAssignment("Màn hình UART (TX)", tx))
+            assignments.append(PinAssignment("Màn hình UART (RX)", rx))
+        elif is_oled:
             sda = _get_int(config, "CONFIG_CUSTOM_DISPLAY_PIN_I2C_SDA", 8)
             scl = _get_int(config, "CONFIG_CUSTOM_DISPLAY_PIN_I2C_SCL", 9)
             assignments.append(PinAssignment("Màn hình OLED (SDA)", sda, "I2C_SDA"))
@@ -313,16 +319,6 @@ def extract_pin_assignments(config: Dict[str, str]) -> List[PinAssignment]:
     if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SERVO_DOG"):
         servo_pin = _get_int(config, "CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO", 48)
         assignments.append(PinAssignment("Động cơ Servo PWM", servo_pin))
-
-    # Còi báo Buzzer
-    if _is_yes(config, "CONFIG_ENABLE_BUZZER"):
-        buzzer_pin = _get_int(config, "CONFIG_BUZZER_PIN", 41)
-        assignments.append(PinAssignment("Còi báo Buzzer", buzzer_pin))
-
-    # Động cơ rung phản hồi xúc giác Haptic Motor
-    if _is_yes(config, "CONFIG_ENABLE_HAPTIC_MOTOR"):
-        haptic_pin = _get_int(config, "CONFIG_HAPTIC_PIN", 42)
-        assignments.append(PinAssignment("Động cơ rung Haptic", haptic_pin))
 
     # Buttons
     if _is_yes(config, "CONFIG_CUSTOM_ENABLE_BUTTON_BOOT"):
@@ -624,33 +620,6 @@ def extract_pin_assignments(config: Dict[str, str]) -> List[PinAssignment]:
         assignments.append(PinAssignment("Modem di động 4G LTE (TX)", tx))
         assignments.append(PinAssignment("Modem di động 4G LTE (RX)", rx))
         assignments.append(PinAssignment("Modem di động 4G LTE (PWRKEY)", pwr))
-
-    # Công tắc gạt 2 trạng thái Slide Switch
-    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SLIDE_SWITCH"):
-        sw_pin = _get_int(config, "CONFIG_CUSTOM_SLIDE_SWITCH_PIN", 48)
-        assignments.append(PinAssignment("Công tắc gạt Slide Switch", sw_pin))
-
-    # Radar vi sóng phát hiện hiện diện 24GHz HLK-LD2410
-    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SENSOR_RADAR_LD2410"):
-        tx = _get_int(config, "CONFIG_CUSTOM_SENSOR_RADAR_TX_PIN", 43)
-        rx = _get_int(config, "CONFIG_CUSTOM_SENSOR_RADAR_RX_PIN", 44)
-        assignments.append(PinAssignment("Radar vi sóng LD2410 (TX)", tx))
-        assignments.append(PinAssignment("Radar vi sóng LD2410 (RX)", rx))
-
-    # Cảm biến từ tính Hall / Reed Switch
-    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SENSOR_HALL_REED"):
-        hall_pin = _get_int(config, "CONFIG_CUSTOM_SENSOR_HALL_REED_PIN", 21)
-        assignments.append(PinAssignment("Cảm biến từ tính Hall/Reed", hall_pin))
-
-    # Cổng giao tiếp ngoại vi phụ Sub UART / RS485
-    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_PERIPH_SUB_UART_RS485"):
-        tx = _get_int(config, "CONFIG_CUSTOM_PERIPH_SUB_UART_TX_PIN", 17)
-        rx = _get_int(config, "CONFIG_CUSTOM_PERIPH_SUB_UART_RX_PIN", 18)
-        assignments.append(PinAssignment("Cổng Sub UART/RS485 (TX)", tx))
-        assignments.append(PinAssignment("Cổng Sub UART/RS485 (RX)", rx))
-        rts = _get_int(config, "CONFIG_CUSTOM_PERIPH_SUB_UART_RTS_PIN", -1)
-        if rts >= 0:
-            assignments.append(PinAssignment("Cổng Sub UART/RS485 (RTS)", rts))
 
     return assignments
 

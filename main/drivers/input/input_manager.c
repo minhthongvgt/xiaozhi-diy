@@ -64,29 +64,8 @@ esp_err_t input_manager_init(void)
 #endif
 #endif
 
-#if defined(CONFIG_CUSTOM_ENABLE_BUTTON_VOLUME)
-#if defined(CONFIG_CUSTOM_BUTTON_VOL_UP_GPIO)
-    init_button((gpio_num_t)CONFIG_CUSTOM_BUTTON_VOL_UP_GPIO, "VOL UP Button");
-#else
-    init_button(GPIO_NUM_2, "VOL UP Button");
-#endif
-#if defined(CONFIG_CUSTOM_BUTTON_VOL_DOWN_GPIO)
-    init_button((gpio_num_t)CONFIG_CUSTOM_BUTTON_VOL_DOWN_GPIO, "VOL DOWN Button");
-#else
-    init_button(GPIO_NUM_3, "VOL DOWN Button");
-#endif
-#endif
-
 #if defined(CONFIG_ENABLE_BUTTON_WAKE)
     init_button(GPIO_NUM_47, "WAKE Button");
-#endif
-
-#if defined(CONFIG_CUSTOM_ENABLE_SLIDE_SWITCH)
-#if defined(CONFIG_CUSTOM_SLIDE_SWITCH_PIN)
-    init_button((gpio_num_t)CONFIG_CUSTOM_SLIDE_SWITCH_PIN, "Slide Switch");
-#else
-    init_button(GPIO_NUM_48, "Slide Switch");
-#endif
 #endif
 
     // 2. Rotary Encoder EC11
@@ -95,25 +74,19 @@ esp_err_t input_manager_init(void)
     gpio_num_t pin_b = GPIO_NUM_18;
     gpio_num_t pin_key = GPIO_NUM_21;
 
-#if defined(CONFIG_CUSTOM_PERIPH_ENCODER_PHASE_A)
-    pin_a = (gpio_num_t)CONFIG_CUSTOM_PERIPH_ENCODER_PHASE_A;
-#elif defined(CONFIG_CUSTOM_ROTARY_ENCODER_A_GPIO)
+#if defined(CONFIG_CUSTOM_ROTARY_ENCODER_A_GPIO)
     pin_a = (gpio_num_t)CONFIG_CUSTOM_ROTARY_ENCODER_A_GPIO;
 #elif defined(CONFIG_ROTARY_PIN_A)
     pin_a = (gpio_num_t)CONFIG_ROTARY_PIN_A;
 #endif
 
-#if defined(CONFIG_CUSTOM_PERIPH_ENCODER_PHASE_B)
-    pin_b = (gpio_num_t)CONFIG_CUSTOM_PERIPH_ENCODER_PHASE_B;
-#elif defined(CONFIG_CUSTOM_ROTARY_ENCODER_B_GPIO)
+#if defined(CONFIG_CUSTOM_ROTARY_ENCODER_B_GPIO)
     pin_b = (gpio_num_t)CONFIG_CUSTOM_ROTARY_ENCODER_B_GPIO;
 #elif defined(CONFIG_ROTARY_PIN_B)
     pin_b = (gpio_num_t)CONFIG_ROTARY_PIN_B;
 #endif
 
-#if defined(CONFIG_CUSTOM_PERIPH_ENCODER_KEY_PIN)
-    pin_key = (gpio_num_t)CONFIG_CUSTOM_PERIPH_ENCODER_KEY_PIN;
-#elif defined(CONFIG_CUSTOM_ROTARY_ENCODER_KEY_GPIO)
+#if defined(CONFIG_CUSTOM_ROTARY_ENCODER_KEY_GPIO)
     pin_key = (gpio_num_t)CONFIG_CUSTOM_ROTARY_ENCODER_KEY_GPIO;
 #elif defined(CONFIG_ROTARY_PIN_KEY)
     pin_key = (gpio_num_t)CONFIG_ROTARY_PIN_KEY;
