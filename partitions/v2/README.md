@@ -49,13 +49,14 @@ The `assets` partition stores:
 - `ota_1`: 3MB
 - `assets`: 2MB
 
-### 16MB Flash Devices (`16m.csv`) - Standard
-- `nvs`: 16KB
+### 16MB Flash Devices (`16m.csv`) - Standard (ESP32-S3 N16R8 Optimized)
+- `nvs`: 64KB (Expanded for high-capacity configuration & wear-leveling)
 - `otadata`: 8KB
 - `phy_init`: 4KB
-- `ota_0`: 4MB
-- `ota_1`: 4MB
-- `assets`: 8MB
+- `ota_0`: 5MB (Expanded from 3.9MB for modern UI and AI firmware)
+- `ota_1`: 5MB (Dual OTA slot)
+- `assets`: 4.5MB (4608KB - optimized for fonts, themes, and WakeNet models)
+- `storage`: ~1.4MB (1408KB - dedicated SPIFFS/LittleFS for user data & offline cache)
 
 ### 16MB Flash Devices (`16m_c3.csv`) - ESP32-C3 Optimized
 - `nvs`: 16KB

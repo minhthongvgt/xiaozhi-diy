@@ -1462,7 +1462,7 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
 
                     config CUSTOM_UI_WEATHER_CITY
                         string "Thành phố hiển thị thời tiết"
-                        default "TP. Hồ Chí Minh"
+                        default "TP. Ho Chi Minh"
                         depends on CUSTOM_UI_WEATHER_ENABLE
                         help
                             Tên thành phố mặc định hiển thị trên thẻ thời tiết (ví dụ: TP. Hồ Chí Minh, Hà Nội, Đà Nẵng).

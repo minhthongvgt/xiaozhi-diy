@@ -1,4 +1,5 @@
 #include "adaptive_ui.h"
+#include "lvgl_theme.h"
 #include <esp_log.h>
 #include <cstring>
 #include <cstdio>
@@ -306,7 +307,7 @@ void AdaptiveUiEngine::BuildSmartDashboard(lv_obj_t* parent) {
         lv_obj_set_style_text_color(label_weather_temp_, lv_color_hex(0xF9E2AF), 0);
 
         label_weather_desc_ = lv_label_create(panel_weather_);
-        lv_label_set_text(label_weather_desc_, "Nhiều mây, mưa rào nhẹ • 78%");
+        lv_label_set_text(label_weather_desc_, "Nhiều mây, mưa rào nhẹ - 78%");
         lv_obj_align(label_weather_desc_, LV_ALIGN_BOTTOM_LEFT, 8, -4);
         lv_obj_set_style_text_color(label_weather_desc_, GetMutedTextColor(), 0);
 
@@ -568,6 +569,12 @@ void AdaptiveUiEngine::BuildChatBubble(lv_obj_t* parent) {
     lv_obj_align(label_battery_, LV_ALIGN_RIGHT_MID, 0, 0);
     lv_obj_set_style_text_color(label_battery_, lv_color_hex(0xA6E3A1), 0);
 
+    label_notification_ = lv_label_create(panel_top_bar_);
+    lv_label_set_text(label_notification_, "");
+    lv_obj_align(label_notification_, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_set_style_text_color(label_notification_, lv_color_hex(0xF9E2AF), 0);
+    lv_obj_add_flag(label_notification_, LV_OBJ_FLAG_HIDDEN);
+
     int cur_y = metrics_.pad_y + header_h + 4;
 
     // Status strip
@@ -675,6 +682,12 @@ void AdaptiveUiEngine::BuildClassicAvatar(lv_obj_t* parent) {
     lv_obj_align(label_battery_, LV_ALIGN_RIGHT_MID, -2, 0);
     lv_obj_set_style_text_color(label_battery_, lv_color_hex(0xA6E3A1), 0);
 
+    label_notification_ = lv_label_create(panel_top_bar_);
+    lv_label_set_text(label_notification_, "");
+    lv_obj_align(label_notification_, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_set_style_text_color(label_notification_, lv_color_hex(0xF9E2AF), 0);
+    lv_obj_add_flag(label_notification_, LV_OBJ_FLAG_HIDDEN);
+
     // Huge Avatar Center Stage
     panel_avatar_ = lv_obj_create(parent);
     int face_size = std::min(metrics_.content_width, metrics_.content_height * 65 / 100);
@@ -743,6 +756,12 @@ void AdaptiveUiEngine::BuildMinimalZen(lv_obj_t* parent) {
     lv_label_set_text(label_battery_, "BAT: 100%");
     lv_obj_align(label_battery_, LV_ALIGN_RIGHT_MID, 0, 0);
     lv_obj_set_style_text_color(label_battery_, lv_color_hex(0xFFFFFF), 0);
+
+    label_notification_ = lv_label_create(panel_top_bar_);
+    lv_label_set_text(label_notification_, "");
+    lv_obj_align(label_notification_, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_set_style_text_color(label_notification_, lv_color_hex(0xFFFFFF), 0);
+    lv_obj_add_flag(label_notification_, LV_OBJ_FLAG_HIDDEN);
 
     // Large Typography Clock in Center
     label_time_ = lv_label_create(parent);
@@ -967,5 +986,21 @@ void AdaptiveUiEngine::ShowNotification(const char* notification, int duration_m
     } else {
         lv_obj_add_flag(label_notification_, LV_OBJ_FLAG_HIDDEN);
         if (label_time_) lv_obj_remove_flag(label_time_, LV_OBJ_FLAG_HIDDEN);
+    }
+}
+
+void AdaptiveUiEngine::ApplyTheme(LvglTheme* theme) {
+    if (!initialized_ || theme == nullptr) return;
+
+    auto text_font_wrapper = theme->text_font();
+    const lv_font_t* text_font = text_font_wrapper ? text_font_wrapper->font() : nullptr;
+    if (text_font != nullptr) {
+        if (root_screen_) lv_obj_set_style_text_font(root_screen_, text_font, 0);
+        if (label_chat_) lv_obj_set_style_text_font(label_chat_, text_font, 0);
+        if (label_user_chat_) lv_obj_set_style_text_font(label_user_chat_, text_font, 0);
+        if (label_status_) lv_obj_set_style_text_font(label_status_, text_font, 0);
+        if (label_prompt_) lv_obj_set_style_text_font(label_prompt_, text_font, 0);
+        if (label_weather_city_) lv_obj_set_style_text_font(label_weather_city_, text_font, 0);
+        if (label_weather_desc_) lv_obj_set_style_text_font(label_weather_desc_, text_font, 0);
     }
 }

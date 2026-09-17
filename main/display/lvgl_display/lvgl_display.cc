@@ -25,8 +25,12 @@ LvglDisplay::LvglDisplay() {
             [](void* arg) {
                 LvglDisplay* display = static_cast<LvglDisplay*>(arg);
                 DisplayLockGuard lock(display);
-                lv_obj_add_flag(display->notification_label_, LV_OBJ_FLAG_HIDDEN);
-                lv_obj_remove_flag(display->status_label_, LV_OBJ_FLAG_HIDDEN);
+                if (display->notification_label_ != nullptr) {
+                    lv_obj_add_flag(display->notification_label_, LV_OBJ_FLAG_HIDDEN);
+                }
+                if (display->status_label_ != nullptr) {
+                    lv_obj_remove_flag(display->status_label_, LV_OBJ_FLAG_HIDDEN);
+                }
             },
         .arg = this,
         .dispatch_method = ESP_TIMER_TASK,
@@ -159,7 +163,9 @@ void LvglDisplay::SetStatus(const char* status) {
     }
     lv_label_set_text(status_label_, status);
     lv_obj_remove_flag(status_label_, LV_OBJ_FLAG_HIDDEN);
-    lv_obj_add_flag(notification_label_, LV_OBJ_FLAG_HIDDEN);
+    if (notification_label_ != nullptr) {
+        lv_obj_add_flag(notification_label_, LV_OBJ_FLAG_HIDDEN);
+    }
 
     last_status_update_time_ = std::chrono::system_clock::now();
 }
@@ -185,7 +191,9 @@ void LvglDisplay::ShowNotification(const char* notification, int duration_ms) {
     }
     lv_label_set_text(notification_label_, notification);
     lv_obj_remove_flag(notification_label_, LV_OBJ_FLAG_HIDDEN);
-    lv_obj_add_flag(status_label_, LV_OBJ_FLAG_HIDDEN);
+    if (status_label_ != nullptr) {
+        lv_obj_add_flag(status_label_, LV_OBJ_FLAG_HIDDEN);
+    }
 
     esp_timer_stop(notification_timer_);
     ESP_ERROR_CHECK(esp_timer_start_once(notification_timer_, duration_ms * 1000));
@@ -199,17 +207,15 @@ void LvglDisplay::UpdateStatusBar(bool update_all) {
     // Update mute icon
     {
         DisplayLockGuard lock(this);
-        if (mute_label_ == nullptr) {
-            return;
-        }
-
-        // Update icon if mute state changes
-        if (codec->output_volume() == 0 && !muted_) {
-            muted_ = true;
-            lv_label_set_text(mute_label_, MATERIAL_SYMBOLS_VOLUME_OFF);
-        } else if (codec->output_volume() > 0 && muted_) {
-            muted_ = false;
-            lv_label_set_text(mute_label_, "");
+        if (mute_label_ != nullptr) {
+            // Update icon if mute state changes
+            if (codec->output_volume() == 0 && !muted_) {
+                muted_ = true;
+                lv_label_set_text(mute_label_, MATERIAL_SYMBOLS_VOLUME_OFF);
+            } else if (codec->output_volume() > 0 && muted_) {
+                muted_ = false;
+                lv_label_set_text(mute_label_, "");
+            }
         }
     }
 
