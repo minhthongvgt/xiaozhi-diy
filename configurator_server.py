@@ -195,6 +195,10 @@ def save_configuration_to_disk(payload):
                 if "builds" in cjson and len(cjson["builds"]) > 0:
                     sdk_append = cjson["builds"][0].get("sdkconfig_append", [])
                     if sdk_append:
+                        # Luôn đảm bảo Target được set cứng thành esp32s3 để tránh build nhầm chip
+                        if not any("CONFIG_IDF_TARGET=" in line for line in sdk_append):
+                            sdk_append.insert(0, 'CONFIG_IDF_TARGET="esp32s3"')
+                            
                         sdk_path = os.path.join(PROJECT_ROOT, "sdkconfig.defaults")
                         with open(sdk_path, "w", encoding="utf-8") as sf:
                             sf.write("\n".join(sdk_append) + "\n")

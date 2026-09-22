@@ -155,17 +155,17 @@ bool Assets::LvglStrategy::InitializePartition(Assets* assets) {
     }
 
     // Read the header first so we only mmap the payload in use.
-    // Use an aligned attribute because ESP32 will crash on unaligned 32-bit reads.
-    __attribute__((aligned(4))) uint8_t header[12] = {};
+    // Use an array of uint32_t to strictly guarantee 4-byte alignment natively on Xtensa.
+    uint32_t header[3] = {};
     esp_err_t err = esp_partition_read(assets->partition_, 0, header, sizeof(header));
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "Failed to read assets header: %s", esp_err_to_name(err));
         return false;
     }
 
-    uint32_t stored_files = *(uint32_t*)(header + 0);
-    uint32_t stored_chksum = *(uint32_t*)(header + 4);
-    uint32_t stored_len = *(uint32_t*)(header + 8);
+    uint32_t stored_files = header[0];
+    uint32_t stored_chksum = header[1];
+    uint32_t stored_len = header[2];
 
     if (stored_len == 0 || stored_len == 0xFFFFFFFF || stored_len > assets->partition_->size - 12) {
         ESP_LOGD(TAG, "The stored_len (0x%lx) is invalid or greater than the partition size (0x%lx) - 12",
