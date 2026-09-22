@@ -93,8 +93,12 @@ esp_err_t sensor_manager_init(void)
     }
 #endif
 
-#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_TP4056) || defined(CONFIG_ENABLE_BATTERY_CHARGER_TP4056)
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_BATTERY_CHARGING_DETECT) || defined(CONFIG_ENABLE_BATTERY_CHARGER_TP4056)
+#if defined(CONFIG_CUSTOM_PERIPH_BATTERY_CHRG_PIN)
+    s_chrg_pin = (gpio_num_t)CONFIG_CUSTOM_PERIPH_BATTERY_CHRG_PIN;
+#else
     s_chrg_pin = GPIO_NUM_3;
+#endif
     if (s_chrg_pin >= 0) {
         gpio_config_t chrg_conf = {
             .pin_bit_mask = (1ULL << s_chrg_pin),
@@ -104,7 +108,7 @@ esp_err_t sensor_manager_init(void)
             .intr_type = GPIO_INTR_DISABLE,
         };
         gpio_config(&chrg_conf);
-        ESP_LOGI(TAG, "TP4056 Charger Monitor configured on GPIO %d", s_chrg_pin);
+        ESP_LOGI(TAG, "Battery Charging Monitor configured on GPIO %d", s_chrg_pin);
     }
 #endif
 

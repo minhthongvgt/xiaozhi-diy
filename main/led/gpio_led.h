@@ -9,6 +9,7 @@
 #include <esp_timer.h>
 #include <atomic>
 #include <mutex>
+#include <string>
 
 class GpioLed : public Led {
  public:
@@ -18,9 +19,14 @@ class GpioLed : public Led {
     virtual ~GpioLed();
 
     void OnStateChanged() override;
-    void TurnOn();
-    void TurnOff();
-    void SetBrightness(uint8_t brightness);
+    void TurnOn() override;
+    void TurnOff() override;
+    void SetBrightness(uint8_t brightness) override;
+    uint8_t GetBrightness() const override { return (uint8_t)duty_; }
+    void StartBlink(int interval_ms = 200) override { StartContinuousBlink(interval_ms); }
+    void SetCustomMode(bool custom) override { custom_mode_ = custom; }
+    bool IsCustomMode() const override { return custom_mode_; }
+    std::string GetType() const override { return "GpioLed"; }
 
  private:
     std::mutex mutex_;
@@ -33,6 +39,7 @@ class GpioLed : public Led {
     esp_timer_handle_t blink_timer_ = nullptr;
     bool fade_up_ = true;
     TaskHandle_t event_task_handle_;
+    bool custom_mode_ = false;
     
     static void EventTask(void* arg);
     void StartBlinkTask(int times, int interval_ms);

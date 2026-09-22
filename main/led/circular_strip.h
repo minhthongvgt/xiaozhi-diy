@@ -11,6 +11,7 @@
 #include <mutex>
 #include <vector>
 #include <functional>
+#include <string>
 
 #define DEFAULT_BRIGHTNESS 32
 #define LOW_BRIGHTNESS 4
@@ -26,9 +27,21 @@ public:
 
     void OnStateChanged() override;
     void SetBrightness(uint8_t default_brightness, uint8_t low_brightness);
+    void SetBrightness(uint8_t brightness) override { SetBrightness(brightness, brightness / 8); }
+    uint8_t GetBrightness() const override { return default_brightness_; }
     void SetAllColor(StripColor color);
     void SetSingleColor(uint8_t index, StripColor color);
     void SetMultiColors(const std::vector<StripColor>& colors);
+    void SetColor(uint8_t r, uint8_t g, uint8_t b) override { SetAllColor({r, g, b}); }
+    void GetColor(uint8_t& r, uint8_t& g, uint8_t& b) const override {
+        if (!colors_.empty()) {
+            r = colors_[0].red; g = colors_[0].green; b = colors_[0].blue;
+        } else {
+            r = g = b = 0;
+        }
+    }
+    void TurnOn() override { SetBrightness(default_brightness_, low_brightness_); }
+    void TurnOff() override;
     void Blink(StripColor color, int interval_ms);
     void Breathe(StripColor low, StripColor high, int interval_ms);
     void Scroll(StripColor low, StripColor high, int length, int interval_ms);
@@ -36,7 +49,14 @@ public:
     void RainbowChase(int interval_ms = 30);
     void Rainbow(StripColor low, StripColor high, int interval_ms);
     void FadeOut(int interval_ms);
-    void TurnOff();
+
+    void StartRainbow(int interval_ms = 25) override { Rainbow(interval_ms); }
+    void StartChase(int interval_ms = 30) override { RainbowChase(interval_ms); }
+    void StartBreathe(int interval_ms = 25) override { Breathe({0, 0, 0}, {255, 255, 255}, interval_ms); }
+    void StartBlink(int interval_ms = 200) override { Blink({255, 255, 255}, interval_ms); }
+    void SetCustomMode(bool custom) override { custom_mode_ = custom; }
+    bool IsCustomMode() const override { return custom_mode_; }
+    std::string GetType() const override { return "CircularStrip"; }
 
 private:
     std::mutex mutex_;
@@ -50,6 +70,7 @@ private:
 
     uint8_t default_brightness_ = DEFAULT_BRIGHTNESS;
     uint8_t low_brightness_ = LOW_BRIGHTNESS;
+    bool custom_mode_ = false;
 
     // Per-effect state
     bool       blink_on_        = true;

@@ -2,17 +2,17 @@
 #include "audio/codecs/no_audio_codec.h"
 #include "audio/codecs/es8311_audio_codec.h"
 #include "audio/codecs/es8388_audio_codec.h"
-#if defined(CONFIG_CUSTOM_AUDIO_CODEC_ES8374)
+#if defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8374) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8374)
 #include "audio/codecs/es8374_audio_codec.h"
 #endif
-#if defined(CONFIG_CUSTOM_AUDIO_CODEC_ES8389)
+#if defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8389) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8389)
 #include "audio/codecs/es8389_audio_codec.h"
 #endif
 #include "display/lcd_display.h"
 #include "display/oled_display.h"
 #include "display/uart_display.h"
 #include "display/display.h"
-#if defined(CONFIG_CUSTOM_AUDIO_CODEC_BOX)
+#if defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_BOX) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_BOX)
 #include "audio/codecs/box_audio_codec.h"
 #endif
 #include "system_reset.h"
@@ -23,6 +23,10 @@
 #include "lamp_controller.h"
 #include "sensor_controller.h"
 #include "actuator_controller.h"
+#include "boards/common/led_mcp_controller.h"
+#include "boards/common/ir_mcp_controller.h"
+#include "boards/common/cellular_mcp_controller.h"
+#include "boards/common/robot_mcp_controller.h"
 #include "led/single_led.h"
 #include "led/circular_strip.h"
 #include "led/gpio_led.h"
@@ -164,12 +168,12 @@ private:
         sda_pin = TOUCH_I2C_SDA_PIN;
         scl_pin = TOUCH_I2C_SCL_PIN;
 #elif (defined(CONFIG_ENABLE_CUSTOM_AUDIO) || defined(CONFIG_ENABLE_CUSTOM_SPEAKER) || defined(CONFIG_ENABLE_CUSTOM_MIC)) && \
-      (defined(CONFIG_CUSTOM_AUDIO_CODEC_ES8311) || defined(CONFIG_CUSTOM_AUDIO_CODEC_ES8388) || \
-       defined(CONFIG_CUSTOM_AUDIO_CODEC_ES8374) || defined(CONFIG_CUSTOM_AUDIO_CODEC_ES8389) || \
-       defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8311) || defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8388) || \
+      (defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8311) || defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8388) || \
        defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8374) || defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8389) || \
+       defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_BOX) || \
        defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8311) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8388) || \
-       defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8374) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8389))
+       defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8374) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8389) || \
+       defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_BOX))
         sda_pin = AUDIO_CODEC_I2C_SDA_PIN;
         scl_pin = AUDIO_CODEC_I2C_SCL_PIN;
 #endif
@@ -581,10 +585,22 @@ private:
             .rx_flow_ctrl_thresh = 122,
             .source_clk = UART_SCLK_DEFAULT,
         };
-        ESP_ERROR_CHECK(uart_param_config(CUSTOM_UART_PORT, &uart_config));
-        ESP_ERROR_CHECK(uart_set_pin(CUSTOM_UART_PORT, CUSTOM_UART_TX_PIN, CUSTOM_UART_RX_PIN,
-                                     CUSTOM_UART_RTS_PIN, CUSTOM_UART_CTS_PIN));
-        ESP_ERROR_CHECK(uart_driver_install(CUSTOM_UART_PORT, 2048, 2048, 0, NULL, 0));
+        esp_err_t err = uart_param_config(CUSTOM_UART_PORT, &uart_config);
+        if (err != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to configure Custom UART param: %s", esp_err_to_name(err));
+            return;
+        }
+        err = uart_set_pin(CUSTOM_UART_PORT, CUSTOM_UART_TX_PIN, CUSTOM_UART_RX_PIN,
+                           CUSTOM_UART_RTS_PIN, CUSTOM_UART_CTS_PIN);
+        if (err != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to set Custom UART pins: %s", esp_err_to_name(err));
+            return;
+        }
+        err = uart_driver_install(CUSTOM_UART_PORT, 2048, 2048, 0, NULL, 0);
+        if (err != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to install Custom UART driver: %s", esp_err_to_name(err));
+            return;
+        }
         ESP_LOGI(TAG, "Custom UART initialized on port %d, TX: %d, RX: %d at %d bps",
                  CUSTOM_UART_PORT, CUSTOM_UART_TX_PIN, CUSTOM_UART_RX_PIN, CUSTOM_UART_BAUDRATE);
 #endif
@@ -610,6 +626,7 @@ private:
         config.pin_href = CAM_PIN_HREF;
         config.pin_sccb_sda = CAM_PIN_SIOD;
         config.pin_sccb_scl = CAM_PIN_SIOC;
+        config.sccb_i2c_port = -1; // Use software bitbang SCCB to avoid hijacking I2C_NUM_0
         config.pin_pwdn = CAM_PIN_PWDN;
         config.pin_reset = CAM_PIN_RESET;
         config.xclk_freq_hz = 20000000;
@@ -643,8 +660,10 @@ private:
 
     void InitializeMcpTools() {
 #if defined(CONFIG_ENABLE_CUSTOM_MCP_SERVER) || defined(CONFIG_ENABLE_CUSTOM_SENSORS) || \
-    defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE) || defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG) || \
-    defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE)
+    defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE) || \
+    defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE) || \
+    defined(CONFIG_CUSTOM_LED_WS2812) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_IR_REMOTE) || \
+    defined(CONFIG_CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE) || defined(CONFIG_ENABLE_ROBOT_CONTROLLER)
 #if defined(CONFIG_CUSTOM_MCP_TOOL_LAMP) || defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE)
         if (LAMP_GPIO != GPIO_NUM_NC) {
             static LampController lamp(LAMP_GPIO);
@@ -660,16 +679,32 @@ private:
         static ActuatorController actuator_ctrl;
         ESP_LOGI(TAG, "MCP Actuator Tools registered successfully");
 #endif
+#if defined(CONFIG_CUSTOM_LED_WS2812) || defined(CONFIG_ENABLE_CUSTOM_LEDS)
+        static LedMcpController led_ctrl;
+        ESP_LOGI(TAG, "MCP LED Controller registered successfully");
+#endif
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_IR_REMOTE) || defined(CONFIG_ENABLE_PERIPH_IR)
+        static IrMcpController ir_ctrl;
+        ESP_LOGI(TAG, "MCP IR Remote Controller registered successfully");
+#endif
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE) || defined(CONFIG_CUSTOM_NETWORK_4G_ML307) || defined(CONFIG_CUSTOM_NETWORK_4G_EC801E)
+        static CellularMcpController cellular_ctrl;
+        ESP_LOGI(TAG, "MCP Cellular Controller registered successfully");
+#endif
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE) || defined(CONFIG_ENABLE_ROBOT_CONTROLLER)
+        static RobotMcpController robot_ctrl;
+        ESP_LOGI(TAG, "MCP Robot Controller registered successfully");
+#endif
 #endif
     }
     void InitializeUnimplementedPeripherals() {
-#if defined(CONFIG_CUSTOM_PERIPH_ENCODER_ENABLE)
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_ROTARY_ENCODER)
         ESP_LOGW(TAG, "Driver cho ngoại vi Rotary Encoder chưa được hỗ trợ nhưng đang được bật trong menuconfig");
 #endif
-#if defined(CONFIG_CUSTOM_PERIPH_NFC_ENABLE)
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_NFC_PN532)
         ESP_LOGW(TAG, "Driver cho ngoại vi NFC/RFID chưa được hỗ trợ nhưng đang được bật trong menuconfig");
 #endif
-#if defined(CONFIG_CUSTOM_PERIPH_RTC_ENABLE)
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_RTC)
         ESP_LOGW(TAG, "Driver cho ngoại vi RTC chưa được hỗ trợ nhưng đang được bật trong menuconfig");
 #endif
 #if defined(CONFIG_CUSTOM_ENABLE_PERIPH_PCA9685)
@@ -678,10 +713,10 @@ private:
 #if defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE)
         ESP_LOGW(TAG, "Driver cho ngoại vi Motor DC (H-Bridge) chưa được hỗ trợ nhưng đang được bật trong menuconfig");
 #endif
-#if defined(CONFIG_CUSTOM_PERIPH_TWAI_ENABLE)
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_CAN_TWAI)
         ESP_LOGW(TAG, "Driver cho ngoại vi CAN/TWAI chưa được hỗ trợ nhưng đang được bật trong menuconfig");
 #endif
-#if defined(CONFIG_CUSTOM_PERIPH_4G_MODULE_ENABLE)
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE)
         ESP_LOGW(TAG, "Driver cho module 4G chưa được hỗ trợ nhưng đang được bật trong menuconfig");
 #endif
     
@@ -691,7 +726,7 @@ private:
 #if defined(CONFIG_ENABLE_SENSOR_INA2XX)
         ESP_LOGW(TAG, "INA2xx driver is not yet implemented.");
 #endif
-#if defined(CONFIG_ENABLE_STORAGE_SDCARD) || defined(CONFIG_CUSTOM_ENABLE_SDCARD)
+#if defined(CONFIG_ENABLE_STORAGE_SDCARD) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_SDCARD_SPI)
         ESP_LOGW(TAG, "SD Card driver is not yet implemented.");
 #endif
 #if defined(CONFIG_ENABLE_PERIPH_LED_DRIVER_IC)
@@ -718,7 +753,7 @@ private:
 #if defined(CONFIG_ENABLE_PERIPH_RC522) || defined(CONFIG_CUSTOM_PERIPH_RC522_SPI_CS)
         ESP_LOGW(TAG, "RFID RC522 driver is not yet implemented.");
 #endif
-#if defined(CONFIG_ENABLE_PERIPH_TP4056) || defined(CONFIG_CUSTOM_BATTERY_MONITOR_TP4056) || defined(CONFIG_CUSTOM_PERIPH_BATTERY_CHRG_PIN)
+#if defined(CONFIG_ENABLE_PERIPH_TP4056) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_BATTERY_CHARGING_DETECT) || defined(CONFIG_CUSTOM_PERIPH_BATTERY_CHRG_PIN)
         ESP_LOGW(TAG, "TP4056 / Charge Pin monitoring is not yet implemented.");
 #endif
 #if defined(CONFIG_ENABLE_SENSOR_DHT) || defined(CONFIG_CUSTOM_SENSOR_DHT_GPIO)
@@ -759,10 +794,7 @@ public:
 
         ESP_LOGI(TAG, "Initializing ESP32-S3 N16R8 Custom Board...");
 
-#if defined(CONFIG_CUSTOM_AUDIO_CODEC_ES8311) || defined(CONFIG_CUSTOM_AUDIO_CODEC_ES8388) || \
-    defined(CONFIG_CUSTOM_AUDIO_CODEC_ES8374) || defined(CONFIG_CUSTOM_AUDIO_CODEC_ES8389) || \
-    defined(CONFIG_CUSTOM_AUDIO_CODEC_BOX) || \
-    defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8311) || defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8388) || \
+#if defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8311) || defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8388) || \
     defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8374) || defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8389) || \
     defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_BOX) || \
     defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8311) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8388) || \
@@ -809,7 +841,7 @@ public:
 #if !defined(CONFIG_ENABLE_CUSTOM_AUDIO) && !defined(CONFIG_ENABLE_CUSTOM_SPEAKER) && !defined(CONFIG_ENABLE_CUSTOM_MIC)
         ESP_LOGI(TAG, "Audio hardware is disabled in configuration (Mute / Headless)");
         return nullptr;
-#elif defined(CONFIG_CUSTOM_AUDIO_CODEC_ES8311) || defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8311) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8311)
+#elif defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8311) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8311)
         if (i2c_bus_ == nullptr) {
             InitializeI2c();
         }
@@ -817,7 +849,7 @@ public:
                                             GPIO_NUM_NC, AUDIO_I2S_SPK_GPIO_BCLK, AUDIO_I2S_SPK_GPIO_LRCK,
                                             AUDIO_I2S_SPK_GPIO_DOUT, AUDIO_I2S_MIC_GPIO_DIN, GPIO_NUM_NC, 0x18, /*use_mclk=*/false);
         return &audio_codec;
-#elif defined(CONFIG_CUSTOM_AUDIO_CODEC_ES8388) || defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8388) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8388)
+#elif defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8388) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8388)
         if (i2c_bus_ == nullptr) {
             InitializeI2c();
         }
@@ -825,7 +857,7 @@ public:
                                             GPIO_NUM_NC, AUDIO_I2S_SPK_GPIO_BCLK, AUDIO_I2S_SPK_GPIO_LRCK,
                                             AUDIO_I2S_SPK_GPIO_DOUT, AUDIO_I2S_MIC_GPIO_DIN, GPIO_NUM_NC, 0x10);
         return &audio_codec;
-#elif defined(CONFIG_CUSTOM_AUDIO_CODEC_ES8374) || defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8374) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8374)
+#elif defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8374) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8374)
         if (i2c_bus_ == nullptr) {
             InitializeI2c();
         }
@@ -833,7 +865,7 @@ public:
                                             GPIO_NUM_NC, AUDIO_I2S_SPK_GPIO_BCLK, AUDIO_I2S_SPK_GPIO_LRCK,
                                             AUDIO_I2S_SPK_GPIO_DOUT, AUDIO_I2S_MIC_GPIO_DIN, GPIO_NUM_NC, 0x10);
         return &audio_codec;
-#elif defined(CONFIG_CUSTOM_AUDIO_CODEC_ES8389) || defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8389) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8389)
+#elif defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8389) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8389)
         if (i2c_bus_ == nullptr) {
             InitializeI2c();
         }
@@ -841,7 +873,7 @@ public:
                                             GPIO_NUM_NC, AUDIO_I2S_SPK_GPIO_BCLK, AUDIO_I2S_SPK_GPIO_LRCK,
                                             AUDIO_I2S_SPK_GPIO_DOUT, AUDIO_I2S_MIC_GPIO_DIN, GPIO_NUM_NC, 0x10);
         return &audio_codec;
-#elif defined(CONFIG_CUSTOM_AUDIO_CODEC_BOX) || defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_BOX) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_BOX)
+#elif defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_BOX) || defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_BOX)
         if (i2c_bus_ == nullptr) {
             InitializeI2c();
         }

@@ -9,6 +9,7 @@
 #include <esp_timer.h>
 #include <atomic>
 #include <mutex>
+#include <string>
 
 class SingleLed : public Led {
 public:
@@ -17,13 +18,24 @@ public:
 
     void OnStateChanged() override;
 
-    void TurnOn();
-    void TurnOff();
-    void SetColor(uint8_t r, uint8_t g, uint8_t b);
+    void TurnOn() override;
+    void TurnOff() override;
+    void SetColor(uint8_t r, uint8_t g, uint8_t b) override;
+    void GetColor(uint8_t& r, uint8_t& g, uint8_t& b) const override { r = r_; g = g_; b = b_; }
+    void SetBrightness(uint8_t brightness) override { rainbow_brightness_ = brightness; }
+    uint8_t GetBrightness() const override { return rainbow_brightness_; }
+    void StartRainbow(int interval_ms = 25) override { StartRainbow(interval_ms, rainbow_brightness_); }
+    void StartRainbow(int interval_ms, uint8_t brightness);
+    void StartChase(int interval_ms = 30) override { StartRainbow(interval_ms, rainbow_brightness_); }
+    void StartBreathe(int interval_ms = 25) override { StartContinuousBlink(interval_ms); }
+    void StartBlink(int interval_ms = 200) override { StartContinuousBlink(interval_ms); }
+    void SetCustomMode(bool custom) override { custom_mode_ = custom; }
+    bool IsCustomMode() const override { return custom_mode_; }
+    std::string GetType() const override { return "SingleLed"; }
+
     void BlinkOnce();
     void Blink(int times, int interval_ms);
     void StartContinuousBlink(int interval_ms);
-    void StartRainbow(int interval_ms = 25, uint8_t brightness = 16);
     void StopEffect();
 
 private:
@@ -43,6 +55,7 @@ private:
     EffectMode mode_ = EffectMode::kNone;
     uint8_t rainbow_pos_ = 0;
     uint8_t rainbow_brightness_ = 16;
+    bool custom_mode_ = false;
 
     void StartBlinkTask(int times, int interval_ms);
     void OnTimer();

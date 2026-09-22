@@ -113,6 +113,7 @@ esp_err_t gpio_safety_validate(void)
 #if defined(CONFIG_CUSTOM_AUDIO_MIC_GPIO_DIN)
         { CONFIG_CUSTOM_AUDIO_MIC_GPIO_DIN, "Audio Mic I2S DIN", BUS_TYPE_EXCLUSIVE, true },
 #endif
+#endif
 
         // 4. I2C Bus Master
 #if defined(CONFIG_CUSTOM_SENSOR_I2C_SDA)
@@ -142,6 +143,7 @@ esp_err_t gpio_safety_validate(void)
 #if defined(CONFIG_ENABLE_CUSTOM_LEDS)
 #if defined(CONFIG_CUSTOM_LED_GPIO)
         { CONFIG_CUSTOM_LED_GPIO, "LED WS2812 RGB", BUS_TYPE_EXCLUSIVE, true },
+#endif
 #endif
 #if defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE) && defined(CONFIG_CUSTOM_PERIPH_RELAY_GPIO)
         { CONFIG_CUSTOM_PERIPH_RELAY_GPIO, "Relay Control", BUS_TYPE_EXCLUSIVE, true },

@@ -123,8 +123,8 @@ esp_err_t actuator_manager_init(void)
     s_relay_pin = GPIO_NUM_13;
 #if defined(CONFIG_CUSTOM_PERIPH_RELAY_GPIO)
     s_relay_pin = (gpio_num_t)CONFIG_CUSTOM_PERIPH_RELAY_GPIO;
-#elif defined(CONFIG_CUSTOM_MCP_LAMP_GPIO)
-    s_relay_pin = (gpio_num_t)CONFIG_CUSTOM_MCP_LAMP_GPIO;
+#elif defined(CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO)
+    s_relay_pin = (gpio_num_t)CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO;
 #endif
     init_output_pin(s_relay_pin, "Relay 220V");
 #endif
@@ -145,8 +145,11 @@ esp_err_t actuator_manager_init(void)
     init_output_pin(s_haptic_pin, "Haptic Vibration Motor");
 #endif
 
-#if defined(CONFIG_ENABLE_SERVO) || defined(CONFIG_CUSTOM_PERIPH_SERVO_ENABLE)
+#if defined(CONFIG_ENABLE_SERVO) || defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG)
     s_servo_pin = GPIO_NUM_48;
+#if defined(CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO)
+    s_servo_pin = (gpio_num_t)CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO;
+#endif
     // Configure LEDC Timer for Servo PWM (50Hz)
     ledc_timer_config_t ledc_timer = {
         .speed_mode       = LEDC_LOW_SPEED_MODE,

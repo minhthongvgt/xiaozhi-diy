@@ -24,7 +24,7 @@ int32_t input_manager_get_encoder_value(void)
     return s_encoder_value;
 }
 
-static void init_button(gpio_num_t pin, const char* name)
+__attribute__((unused)) static void init_button(gpio_num_t pin, const char* name)
 {
     if (pin < 0) return;
 
@@ -47,7 +47,8 @@ esp_err_t input_manager_init(void)
 {
     ESP_LOGI(TAG, "Initializing User Inputs Subsystem (Buttons, Touch, Encoder)...");
 
-    // 1. Physical Buttons
+    // 1. Physical Buttons (On Custom N16R8, buttons are owned by C++ Button instances)
+#if !defined(CONFIG_BOARD_TYPE_ESP32_S3_N16R8_CUSTOM) && !defined(CONFIG_BOARD_TYPE_CUSTOM_S3_N16R8)
 #if defined(CONFIG_CUSTOM_ENABLE_BUTTON_BOOT) || defined(CONFIG_ENABLE_BUTTON_BOOT)
 #if defined(CONFIG_CUSTOM_BUTTON_BOOT_GPIO)
     init_button((gpio_num_t)CONFIG_CUSTOM_BUTTON_BOOT_GPIO, "BOOT Button");
@@ -66,6 +67,7 @@ esp_err_t input_manager_init(void)
 
 #if defined(CONFIG_ENABLE_BUTTON_WAKE)
     init_button(GPIO_NUM_47, "WAKE Button");
+#endif
 #endif
 
     // 2. Rotary Encoder EC11

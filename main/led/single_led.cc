@@ -186,6 +186,9 @@ void SingleLed::OnTimer() {
 }
 
 void SingleLed::OnStateChanged() {
+    if (custom_mode_) {
+        return;
+    }
     auto& app = Application::GetInstance();
     auto device_state = app.GetDeviceState();
     switch (device_state) {
