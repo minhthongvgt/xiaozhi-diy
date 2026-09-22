@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Xiaozhi Hardware Web Configurator (ESP32-S3-N16R8)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Top App Navigation -->
+  <header class="app-header">
+    <div class="brand-section">
+      <div class="brand-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <div class="brand-text">
+        <div class="brand-title-wrap">
+          <h1 class="brand-title">Xiaozhi Configurator</h1>
+          <span class="brand-badge">S3-N16R8</span>
+        </div>
+        <span class="brand-subtitle">Trình cấu hình phần cứng & GPIO vi điều khiển ESP32-S3</span>
+      </div>
+    </div>
+
+    <!-- Project Status & Actions Toolbar -->
+    <div class="action-toolbar">
+      <div class="project-status" id="project-status-bar">
+        <span class="status-dot" id="fs-status-dot"></span>
+        <span class="status-text" id="fs-status-text">Chưa mở dự án</span>
+      </div>
+      <button class="btn btn-outline" id="btn-open-dir" title="Chọn thư mục dự án trên máy tính">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+        <span>Mở Dự Án</span>
+      </button>
+      <button class="btn btn-icon" id="btn-download-config" title="Tải xuống tệp config.h dự phòng">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <div class="app-container">
+    <!-- Left Sidebar: 10 Standard Tabs + GPIO Matrix -->
+    <aside class="config-nav">
+      <div class="nav-section">
+        <div class="nav-header">
+          <span class="nav-title">Danh mục cấu hình</span>
+        </div>
+        <ul class="nav-links">
+          <li>
+            <button class="nav-link active" data-target="panel-general">
+              <span class="tab-icon">🌐</span>
+              <span class="tab-label">Cơ bản & Ngôn ngữ</span>
+              <span class="unsaved-badge" title="Có thay đổi chưa lưu">● Chưa lưu</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-target="panel-audio">
+              <span class="tab-icon">🔊</span>
+              <span class="tab-label">Âm thanh (Audio & Mic)</span>
+              <span class="unsaved-badge" title="Có thay đổi chưa lưu">● Chưa lưu</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-target="panel-display">
+              <span class="tab-icon">🖥️</span>
+              <span class="tab-label">Màn hình & Cảm ứng</span>
+              <span class="unsaved-badge" title="Có thay đổi chưa lưu">● Chưa lưu</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-target="panel-wakeword">
+              <span class="tab-icon">🎙️</span>
+              <span class="tab-label">Từ khóa & Giọng nói</span>
+              <span class="unsaved-badge" title="Có thay đổi chưa lưu">● Chưa lưu</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-target="panel-network">
+              <span class="tab-icon">📶</span>
+              <span class="tab-label">Cấp mạng Wi-Fi</span>
+              <span class="unsaved-badge" title="Có thay đổi chưa lưu">● Chưa lưu</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-target="panel-mcp">
+              <span class="tab-icon">🤖</span>
+              <span class="tab-label">Điều khiển MCP & AI</span>
+              <span class="unsaved-badge" title="Có thay đổi chưa lưu">● Chưa lưu</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-target="panel-buttons">
+              <span class="tab-icon">🔘</span>
+              <span class="tab-label">Phím bấm & Điều khiển</span>
+              <span class="unsaved-badge" title="Có thay đổi chưa lưu">● Chưa lưu</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-target="panel-peripherals">
+              <span class="tab-icon">🔌</span>
+              <span class="tab-label">Ngoại vi & Cảm biến</span>
+              <span class="unsaved-badge" title="Có thay đổi chưa lưu">● Chưa lưu</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-target="panel-communication">
+              <span class="tab-icon">📡</span>
+              <span class="tab-label">Giao tiếp & Thẻ nhớ</span>
+              <span class="unsaved-badge" title="Có thay đổi chưa lưu">● Chưa lưu</span>
+            </button>
+          </li>
+          <!-- Flash & Hardware S3-N16R8 is ALWAYS at the bottom -->
+          <li class="nav-divider"></li>
+          <li>
+            <button class="nav-link nav-link-flash" data-target="panel-flash">
+              <span class="tab-icon">⚡</span>
+              <span class="tab-label">Flash & ESP32-S3</span>
+              <span class="unsaved-badge" title="Có thay đổi chưa lưu">● Chưa lưu</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Compact Pin Matrix Widget -->
+      <div class="pin-summary-card">
+        <div class="card-header-compact">
+          <span class="nav-title">Sơ đồ chân GPIO (0–48)</span>
+        </div>
+        <div class="pin-legend">
+          <span class="legend-item"><i class="dot dot-locked"></i> 26-32: SPI Khóa</span>
+          <span class="legend-item"><i class="dot dot-used"></i> Đang dùng</span>
+        </div>
+        <div class="pin-matrix-grid" id="pin-matrix-grid">
+          <!-- Rendered dynamically by app.js -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area: Panels switch based on active tab -->
+    <main class="config-content">
+      <!-- Conflict Alert Bar -->
+      <div class="conflict-bar" id="conflict-alert-bar">
+        <div class="conflict-bar-content">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="conflict-icon"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <div id="conflict-message" class="conflict-text">Phát hiện trùng chân GPIO! Vui lòng kiểm tra lại.</div>
+        </div>
+        <span class="badge badge-danger">XUNG ĐỘT</span>
+      </div>
+
+      <!-- PANEL 1: GENERAL & LANGUAGE -->
+      <section class="tab-panel active" id="panel-general">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🌐 Cấu hình Cơ bản & Ngôn ngữ</h2>
+              <span class="group-desc">Thiết lập máy chủ cập nhật OTA, ngôn ngữ và tài nguyên biểu cảm Flash Assets</span>
+            </div>
+            <div class="tab-header-actions">
+              <span class="tab-status-pill saved" data-tab-status="panel-general">Đã lưu</span>
+              <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-general" title="Lưu thông tin mục này">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <span>Lưu mục này</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-item span-2">
+              <label class="form-label" for="general_ota_url">URL máy chủ cập nhật OTA</label>
+              <input type="text" class="form-control" id="general_ota_url" value="https://api.tenclass.net/xiaozhi/ota/">
+              <span class="form-hint">Máy chủ kiểm tra phiên bản firmware và cung cấp điểm kết nối WebSocket/MQTT</span>
+            </div>
+
+            <div class="form-item">
+              <label class="form-label" for="general_language">Ngôn ngữ đàm thoại & Hiển thị</label>
+              <select class="form-control" id="general_language">
+                <option value="LANGUAGE_VI_VN">Tiếng Việt (vi_VN)</option>
+                <option value="LANGUAGE_EN_US">English (en_US)</option>
+                <option value="LANGUAGE_ZH_CN">中文 (zh_CN)</option>
+              </select>
+              <span class="form-hint">Ngôn ngữ mặc định khi khởi động thiết bị</span>
+            </div>
+
+            <div class="form-item">
+              <label class="form-label" for="general_flash_assets">Gói tài nguyên biểu cảm & Giao diện (Flash Assets)</label>
+              <select class="form-control" id="general_flash_assets">
+                <option value="FLASH_DEFAULT_ASSETS">Gói biểu cảm AI mặc định (Đầy đủ)</option>
+                <option value="FLASH_EXPRESSION_ASSETS">Gói biểu cảm cơ bản (Tiết kiệm Flash)</option>
+                <option value="FLASH_CUSTOM_ASSETS">Giao diện tùy chỉnh từ Server Xiaozhi (.bin)</option>
+              </select>
+              <span class="form-hint">Quy chuẩn gói giao diện & biểu cảm AI nạp vào Flash (Chuẩn hóa duy nhất)</span>
+            </div>
+
+            <!-- Custom Assets File Input (Shown when FLASH_CUSTOM_ASSETS selected) -->
+            <div class="form-item span-2" id="custom-assets-group" style="display: none;">
+              <label class="form-label" for="general_custom_assets_file">Tên tệp giao diện tùy chỉnh (.bin) hoặc URL</label>
+              <input type="text" class="form-control" id="general_custom_assets_file" value="assets.bin">
+              
+              <!-- User Guide Box for Custom Assets .bin -->
+              <div class="guide-box" style="margin-top: 8px;">
+                <div class="guide-title">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                  <span>Hướng dẫn nạp tệp giao diện tùy chỉnh (.bin) từ máy chủ Xiaozhi</span>
+                </div>
+                <div class="guide-content">
+                  <ol>
+                    <li>Khi bạn tùy biến giao diện trên cổng Web Xiaozhi, máy chủ sẽ tạo ra tệp nhị phân chứa biểu cảm và font chữ (ví dụ <code>assets.bin</code> hoặc <code>custom_assets.bin</code>).</li>
+                    <li><strong>Vị trí đặt tệp:</strong> Sao chép tệp này đặt trực tiếp vào <strong>thư mục gốc của dự án</strong> (cùng cấp với tệp <code>CMakeLists.txt</code>).</li>
+                    <li><strong>Tên tệp:</strong> Điền chính xác tên tệp vào ô trên (mặc định là <code>assets.bin</code>). Hoặc bạn có thể dán trực tiếp đường dẫn URL tải về (http://...).</li>
+                    <li>Khi bạn nhấn <strong>"Lưu & Áp Dụng"</strong> và chạy lệnh <code>idf.py build flash</code>, hệ thống build sẽ tự động nạp gói giao diện này vào phân vùng Flash <code>assets</code>.</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 2: AUDIO & MICRO (SPLIT INTO 2 DISTINCT SECTIONS) -->
+      <section class="tab-panel" id="panel-audio">
+        <!-- Audio Global Settings -->
+        <div class="config-group" style="margin-bottom: 1rem;">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🔊 Cấu hình Âm thanh (Audio & Micro)</h2>
+              <span class="group-desc">Hệ thống âm thanh được chia thành 2 phần độc lập: Đầu ra Loa và Đầu vào Micro</span>
+            </div>
+            <div class="tab-header-actions">
+              <span class="tab-status-pill saved" data-tab-status="panel-audio">Đã lưu</span>
+              <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-audio" title="Lưu thông tin mục này">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <span>Lưu mục này</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-item">
+              <label class="form-label" for="audio_mode">Kiến trúc kết nối I2S</label>
+              <select class="form-control" id="audio_mode">
+                <option value="simplex">Simplex rời (Loa & Micro chạy đường Clock riêng biệt)</option>
+                <option value="duplex">Duplex chung (Loa & Micro dùng chung BCLK/WS)</option>
+                <option value="es8311">Codec tích hợp ES8311 (Điều khiển qua bus I2C)</option>
+              </select>
+              <span class="form-hint">Kiến trúc Simplex rời giúp dễ phối ghép các module phần cứng</span>
+            </div>
+
+            <div class="form-item">
+              <label class="form-label" for="audio_sample_rate">Tần số lấy mẫu (Sample Rate)</label>
+              <select class="form-control" id="audio_sample_rate">
+                <option value="16000" selected>16000 Hz (Chuẩn đàm thoại AI Xiaozhi)</option>
+                <option value="24000">24000 Hz (Chất lượng cao)</option>
+              </select>
+              <span class="form-hint">Khuyến nghị 16000 Hz để tương thích tối đa với mô hình AI Voice</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 1: AUDIO OUTPUT / SPEAKER -->
+        <div class="config-group" style="margin-bottom: 1rem;">
+          <div class="group-header">
+            <div class="group-title">
+              <h3 style="font-size: 0.95rem; font-weight: 600; color: var(--accent-cyan);">📢 Phần 1: Đầu Ra Âm Thanh / Loa (Speaker & DAC)</h3>
+              <span class="group-desc">Chọn chip giải mã DAC / Amply và cấu hình chân xuất âm thanh</span>
+            </div>
+            <span class="group-badge">Audio Output</span>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-item span-2">
+              <label class="form-label" for="audio_spk_driver">Driver Chip Loa / DAC</label>
+              <select class="form-control" id="audio_spk_driver">
+                <option value="max98357a" selected>MAX98357A / MAX98357B (I2S Class-D Amp - Rất phổ biến)</option>
+                <option value="pcm5102a">PCM5102A (I2S Hi-Fi DAC chất lượng cao)</option>
+                <option value="ns4168">NS4168 (I2S Class-D Amply)</option>
+                <option value="es8311">ES8311 DAC (Tích hợp trên chip Codec ES8311)</option>
+                <option value="es8388">ES8388 / ES8374 DAC (Stereo Codec)</option>
+                <option value="none">Không dùng Loa / Tắt đầu ra</option>
+              </select>
+            </div>
+
+            <div class="form-item">
+              <label class="form-label" for="audio_spk_bclk">Speaker BCLK (Bit Clock)</label>
+              <input type="number" class="form-control" id="audio_spk_bclk" min="0" max="48" value="15">
+              <span class="form-hint">Xung nhịp bit I2S xuất ra loa</span>
+            </div>
+
+            <div class="form-item">
+              <label class="form-label" for="audio_spk_ws">Speaker LRCK / WS (Word Select)</label>
+              <input type="number" class="form-control" id="audio_spk_ws" min="0" max="48" value="16">
+              <span class="form-hint">Xung chọn kênh trái/phải</span>
+            </div>
+
+            <div class="form-item">
+              <label class="form-label" for="audio_spk_dout">Speaker DOUT (Dữ liệu ra)</label>
+              <input type="number" class="form-control" id="audio_spk_dout" min="0" max="48" value="7">
+              <span class="form-hint">Nối vào chân DIN của module Loa/Amply</span>
+            </div>
+
+            <div class="form-item">
+              <label class="form-label" for="audio_pa_pin">Chân kích hoạt Amply (PA Pin)</label>
+              <input type="number" class="form-control" id="audio_pa_pin" min="-1" max="48" value="-1">
+              <span class="form-hint">Điền -1 nếu module không có chân kích hoạt</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: AUDIO INPUT / MICROPHONE -->
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h3 style="font-size: 0.95rem; font-weight: 600; color: #34d399;">🎙️ Phần 2: Đầu Vào Âm Thanh / Micro (Microphone & ADC)</h3>
+              <span class="group-desc">Chọn loại Micro thu âm I2S và cấu hình chân tín hiệu</span>
+            </div>
+            <span class="group-badge badge-emerald">Audio Input</span>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-item span-2">
+              <label class="form-label" for="audio_mic_driver">Driver Chip Micro / ADC</label>
+              <select class="form-control" id="audio_mic_driver">
+                <option value="inmp441" selected>INMP441 (Micro I2S MEMS kỹ thuật số đa hướng - Chuẩn)</option>
+                <option value="ics43434">ICS-43434 (Micro I2S MEMS độ ồn cực thấp)</option>
+                <option value="msm261s">MSM261S3526Z0 (Micro I2S MEMS)</option>
+                <option value="es8311">ES8311 ADC (Thu âm qua Codec ES8311)</option>
+                <option value="es7210">ES7210 (ADC thu âm đa kênh chuyên dụng)</option>
+              </select>
+            </div>
+
+            <div class="form-item mic-pin-group">
+              <label class="form-label" for="audio_mic_sck">Micro SCK / BCLK (Clock Micro)</label>
+              <input type="number" class="form-control" id="audio_mic_sck" min="0" max="48" value="5">
+              <span class="form-hint">Nối vào chân SCK của Micro</span>
+            </div>
+
+            <div class="form-item mic-pin-group">
+              <label class="form-label" for="audio_mic_ws">Micro WS (LRCK Micro)</label>
+              <input type="number" class="form-control" id="audio_mic_ws" min="0" max="48" value="4">
+              <span class="form-hint">Nối vào chân WS của Micro</span>
+            </div>
+
+            <div class="form-item mic-pin-group">
+              <label class="form-label" for="audio_mic_din">Micro DIN (SD Data từ Micro)</label>
+              <input type="number" class="form-control" id="audio_mic_din" min="0" max="48" value="6">
+              <span class="form-hint">Nối vào chân SD của Micro INMP441</span>
+            </div>
+
+            <!-- Codec I2C Bus Controls (Shown when ES8311 or Codec chosen) -->
+            <div class="form-item codec-pin-group" style="display:none;">
+              <label class="form-label" for="audio_codec_sda">Codec I2C SDA</label>
+              <input type="number" class="form-control" id="audio_codec_sda" min="0" max="48" value="8">
+            </div>
+
+            <div class="form-item codec-pin-group" style="display:none;">
+              <label class="form-label" for="audio_codec_scl">Codec I2C SCL</label>
+              <input type="number" class="form-control" id="audio_codec_scl" min="0" max="48" value="9">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 3: DISPLAY & TOUCH & UART DISPLAY -->
+      <section class="tab-panel" id="panel-display">
+        <!-- Display Screen Settings -->
+        <div class="config-group" style="margin-bottom: 1rem;">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🖥️ Màn hình & Cảm ứng (Display & Touch)</h2>
+              <span class="group-desc">Hỗ trợ màn hình LCD màu SPI, OLED I2C, hoặc Màn hình rời qua UART</span>
+            </div>
+            <div class="tab-header-actions">
+              <span class="tab-status-pill saved" data-tab-status="panel-display">Đã lưu</span>
+              <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-display" title="Lưu thông tin mục này">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <span>Lưu mục này</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-item span-2">
+              <label class="form-label" for="display_type">Bộ điều khiển màn hình</label>
+              <select class="form-control" id="display_type">
+                <option value="st7789">ST7789 (LCD màu SPI 240x320 / 240x240)</option>
+                <option value="gc9a01">GC9A01 (Màn hình tròn 240x240 SPI)</option>
+                <option value="ili9341">ILI9341 (LCD 240x320 SPI)</option>
+                <option value="ssd1306">SSD1306 (OLED 128x64 I2C)</option>
+                <option value="uart_display">Màn hình rời qua UART (Nextion LCD / D-UART)</option>
+                <option value="none">Không dùng màn hình (Chỉ âm thanh)</option>
+              </select>
+            </div>
+
+            <!-- Resolution -->
+            <div class="form-item display-common-group">
+              <label class="form-label" for="display_width">Độ rộng (Width px)</label>
+              <input type="number" class="form-control" id="display_width" value="240">
+            </div>
+
+            <div class="form-item display-common-group">
+              <label class="form-label" for="display_height">Chiều cao (Height px)</label>
+              <input type="number" class="form-control" id="display_height" value="320">
+            </div>
+
+            <!-- SPI LCD Pins -->
+            <div class="span-2 form-subheading display-spi-group">
+              <span>Chân tín hiệu SPI LCD (ST7789 / GC9A01 / ILI9341)</span>
+            </div>
+
+            <div class="form-item display-spi-group">
+              <label class="form-label" for="display_mosi">SPI MOSI (SDA)</label>
+              <input type="number" class="form-control" id="display_mosi" min="0" max="48" value="47">
+            </div>
+
+            <div class="form-item display-spi-group">
+              <label class="form-label" for="display_clk">SPI SCLK (SCK)</label>
+              <input type="number" class="form-control" id="display_clk" min="0" max="48" value="21">
+            </div>
+
+            <div class="form-item display-spi-group">
+              <label class="form-label" for="display_cs">Chip Select (CS)</label>
+              <input type="number" class="form-control" id="display_cs" min="-1" max="48" value="41">
+            </div>
+
+            <div class="form-item display-spi-group">
+              <label class="form-label" for="display_dc">Data / Command (DC)</label>
+              <input type="number" class="form-control" id="display_dc" min="0" max="48" value="40">
+            </div>
+
+            <div class="form-item display-spi-group">
+              <label class="form-label" for="display_rst">Reset Pin (RST)</label>
+              <input type="number" class="form-control" id="display_rst" min="-1" max="48" value="42">
+            </div>
+
+            <div class="form-item display-spi-group">
+              <label class="form-label" for="display_blk">Đèn nền (Backlight BLK)</label>
+              <input type="number" class="form-control" id="display_blk" min="-1" max="48" value="38">
+            </div>
+
+            <!-- UART Display Pins (Shown when uart_display chosen) -->
+            <div class="span-2 form-subheading display-uart-group" style="display: none;">
+              <span>Cấu hình Màn hình rời qua UART (Nextion / D-UART)</span>
+            </div>
+
+            <div class="form-item display-uart-group" style="display: none;">
+              <label class="form-label" for="display_uart_port">Cổng phần cứng UART</label>
+              <select class="form-control" id="display_uart_port">
+                <option value="1" selected>UART 1</option>
+                <option value="2">UART 2</option>
+              </select>
+            </div>
+
+            <div class="form-item display-uart-group" style="display: none;">
+              <label class="form-label" for="display_uart_baud">Tốc độ Baudrate</label>
+              <select class="form-control" id="display_uart_baud">
+                <option value="115200" selected>115200 bps (Chuẩn Nextion/D-UART)</option>
+                <option value="9600">9600 bps</option>
+                <option value="921600">921600 bps (Tốc độ cực cao)</option>
+              </select>
+            </div>
+
+            <div class="form-item display-uart-group" style="display: none;">
+              <label class="form-label" for="display_uart_tx">UART TX (Truyền lệnh sang màn hình)</label>
+              <input type="number" class="form-control" id="display_uart_tx" min="0" max="48" value="17">
+            </div>
+
+            <div class="form-item display-uart-group" style="display: none;">
+              <label class="form-label" for="display_uart_rx">UART RX (Nhận phản hồi từ màn hình)</label>
+              <input type="number" class="form-control" id="display_uart_rx" min="0" max="48" value="18">
+            </div>
+
+            <!-- OLED I2C Pins -->
+            <div class="form-item display-i2c-group" style="display:none;">
+              <label class="form-label" for="display_i2c_sda">OLED I2C SDA</label>
+              <input type="number" class="form-control" id="display_i2c_sda" min="0" max="48" value="8">
+            </div>
+
+            <div class="form-item display-i2c-group" style="display:none;">
+              <label class="form-label" for="display_i2c_scl">OLED I2C SCL</label>
+              <input type="number" class="form-control" id="display_i2c_scl" min="0" max="48" value="9">
+            </div>
+
+            <!-- Display Options -->
+            <div class="span-2 form-subheading display-common-group">
+              <span>Tùy chọn hiển thị</span>
+            </div>
+
+            <div class="form-item span-2 display-common-group">
+              <div class="checkbox-row">
+                <label class="form-checkbox">
+                  <input type="checkbox" id="display_invert" checked>
+                  <span>Đảo màu sắc hiển thị (Invert Color)</span>
+                </label>
+                <label class="form-checkbox">
+                  <input type="checkbox" id="ui_voice_wave" checked>
+                  <span>Hiệu ứng sóng âm động khi nói chuyện (Voice Wave)</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Touch Screen Driver Settings -->
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h3 style="font-size: 0.95rem; font-weight: 600; color: #a855f7;">👆 Driver Chip Cảm Ứng (Capacitive Touch)</h3>
+              <span class="group-desc">Chọn chip cảm ứng điện dung trên màn hình và cấu hình chân I2C/INT</span>
+            </div>
+            <span class="group-badge" style="background: rgba(168,85,247,0.12); color: #c084fc; border-color: rgba(168,85,247,0.25);">Touch Controller</span>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-item span-2">
+              <label class="form-label" for="touch_chip">Driver Chip Cảm ứng</label>
+              <select class="form-control" id="touch_chip">
+                <option value="none" selected>Không dùng cảm ứng (No Touch)</option>
+                <option value="cst816s">CST816S / CST816D / CST9217 (Màn hình tròn 240x240 và LCD nhỏ - Rất phổ biến)</option>
+                <option value="gt911">GT911 (Màn hình cảm ứng lớn 320x480 / 480x800)</option>
+                <option value="ft6236">FT6236 / FT6336 / FT5x06 (FocalTech Touch)</option>
+              </select>
+            </div>
+
+            <div class="form-item touch-fields-group" style="display: none;">
+              <label class="form-label" for="touch_sda">Touch I2C SDA</label>
+              <input type="number" class="form-control" id="touch_sda" min="0" max="48" value="8">
+              <span class="form-hint">Dùng chung bus I2C hoặc chân riêng</span>
+            </div>
+
+            <div class="form-item touch-fields-group" style="display: none;">
+              <label class="form-label" for="touch_scl">Touch I2C SCL</label>
+              <input type="number" class="form-control" id="touch_scl" min="0" max="48" value="9">
+              <span class="form-hint">Dùng chung bus I2C hoặc chân riêng</span>
+            </div>
+
+            <div class="form-item touch-fields-group" style="display: none;">
+              <label class="form-label" for="touch_int">Touch INT (Chân ngắt cảm ứng)</label>
+              <input type="number" class="form-control" id="touch_int" min="-1" max="48" value="3">
+              <span class="form-hint">Chân phát hiện thao tác chạm (-1 nếu không dùng)</span>
+            </div>
+
+            <div class="form-item touch-fields-group" style="display: none;">
+              <label class="form-label" for="touch_rst">Touch RST (Chân Reset cảm ứng)</label>
+              <input type="number" class="form-control" id="touch_rst" min="-1" max="48" value="-1">
+              <span class="form-hint">Chân reset chip cảm ứng (-1 nếu nối cứng nguồn)</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 4: WAKE WORD & VOICE AI -->
+      <section class="tab-panel" id="panel-wakeword">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🎙️ Từ khóa Đánh thức & AI Giọng nói</h2>
+              <span class="group-desc">Cấu hình từ khóa gọi AI và thuật toán khử tiếng vọng</span>
+            </div>
+            <div class="tab-header-actions">
+              <span class="tab-status-pill saved" data-tab-status="panel-wakeword">Đã lưu</span>
+              <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-wakeword" title="Lưu thông tin mục này">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <span>Lưu mục này</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-item">
+              <label class="form-label" for="wakeword_type">Chế độ từ khóa đánh thức</label>
+              <select class="form-control" id="wakeword_type">
+                <option value="USE_AFE_WAKE_WORD">WakeNet tích hợp AFE (Khuyến nghị cho S3-N16R8)</option>
+                <option value="USE_ESP_WAKE_WORD">WakeNet bản nhẹ (Tiết kiệm RAM)</option>
+                <option value="WAKE_WORD_DISABLED">Tắt từ khóa (Chỉ nhấn nút để nói)</option>
+              </select>
+              <span class="form-hint">AFE giúp nhận diện từ khóa chính xác ngay cả khi loa đang phát</span>
+            </div>
+
+            <div class="form-item">
+              <label class="form-label" for="wakeword_threshold">Ngưỡng nhạy nhận diện (%)</label>
+              <input type="number" class="form-control" id="wakeword_threshold" min="1" max="99" value="20">
+              <span class="form-hint">Mặc định 20% (Số càng nhỏ độ nhạy càng cao)</span>
+            </div>
+
+            <div class="form-item">
+              <label class="form-label" for="wakeword_pinyin">Chuỗi từ khóa Pinyin</label>
+              <input type="text" class="form-control" id="wakeword_pinyin" value="xiao tu dou">
+              <span class="form-hint">Từ khóa kích hoạt (ví dụ: xiao tu dou, ni hao)</span>
+            </div>
+
+            <div class="form-item">
+              <label class="form-label" for="wakeword_display">Tên hiển thị trên màn hình</label>
+              <input type="text" class="form-control" id="wakeword_display" value="小土豆">
+              <span class="form-hint">Chữ hiển thị khi nhận diện thành công</span>
+            </div>
+
+            <!-- Voice Processing Options -->
+            <div class="span-2 form-subheading">
+              <span>Xử lý âm thanh & Khử tiếng vọng (AEC)</span>
+            </div>
+
+            <div class="form-item span-2">
+              <label class="form-checkbox">
+                <input type="checkbox" id="audio_server_aec" checked>
+                <span>Kích hoạt khử tiếng vọng trên máy chủ đám mây (Server AEC)</span>
+              </label>
+              <span class="form-hint">Tự động triệt tiêu tiếng loa phát ra, giúp AI nghe rõ tiếng người nói</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 5: NETWORK & PROVISIONING -->
+      <section class="tab-panel" id="panel-network">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>📶 Cấp Mạng Wi-Fi</h2>
+              <span class="group-desc">Phương thức kết nối mạng lần đầu cho thiết bị</span>
+            </div>
+            <div class="tab-header-actions">
+              <span class="tab-status-pill saved" data-tab-status="panel-network">Đã lưu</span>
+              <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-network" title="Lưu thông tin mục này">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <span>Lưu mục này</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-item">
+              <label class="form-label" for="network_wifi_method">Phương thức cấp Wi-Fi ban đầu</label>
+              <select class="form-control" id="network_wifi_method">
+                <option value="USE_HOTSPOT_WIFI_PROVISIONING">Phát Wi-Fi SoftAP (Khuyến nghị - Dễ dùng nhất)</option>
+                <option value="USE_ESP_BLUFI_WIFI_PROVISIONING">Qua Bluetooth BLE (Espressif BluFi)</option>
+              </select>
+              <span class="form-hint">Thiết bị sẽ phát mạng Wi-Fi tên 'Xiaozhi-XXXX' để điện thoại kết nối và cài đặt mạng</span>
+            </div>
+
+            <div class="form-item">
+              <label class="form-label" for="network_secondary">Mạng phụ trợ mở rộng</label>
+              <select class="form-control" id="network_secondary">
+                <option value="none">Chỉ dùng Wi-Fi Onboard (Mặc định)</option>
+                <option value="ml307">Modem 4G LTE Quectel ML307 (UART)</option>
+                <option value="ec801e">Modem 4G LTE EC801E (UART)</option>
+                <option value="w5500">Cổng mạng có dây Ethernet SPI (W5500)</option>
+              </select>
+              <span class="form-hint">Kết nối dự phòng khi không có Wi-Fi</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 6: MCP SERVER & AI (NO HARDWARE PIN CONFLICTS) -->
+      <section class="tab-panel" id="panel-mcp">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🤖 Điều khiển MCP & Giao thức IoT (Model Context Protocol)</h2>
+              <span class="group-desc">Cho phép AI Xiaozhi gọi lệnh Function Calling để điều khiển ngoại vi và hệ thống</span>
+            </div>
+            <div class="tab-header-actions">
+              <span class="tab-status-pill saved" data-tab-status="panel-mcp">Đã lưu</span>
+              <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-mcp" title="Lưu thông tin mục này">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <span>Lưu mục này</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-item span-2">
+              <label class="form-checkbox">
+                <input type="checkbox" id="mcp_server_enable" checked>
+                <span class="highlight-cyan font-semibold">Kích hoạt máy chủ MCP trên thiết bị (ENABLE_CUSTOM_MCP_SERVER)</span>
+              </label>
+              <span class="form-hint">Cho phép AI Xiaozhi thực thi các công cụ điều khiển thông qua giao thức MCP</span>
+            </div>
+
+            <div class="form-item span-2">
+              <label class="form-label">Các công cụ MCP sẵn sàng cho AI</label>
+              <div class="checkbox-stack">
+                <label class="form-checkbox">
+                  <input type="checkbox" id="mcp_tool_peripherals" checked>
+                  <span><strong>Điều khiển ngoại vi phần cứng:</strong> Cho phép AI bật/tắt Relay, Đèn, Còi báo, Động cơ (Được định nghĩa trong mục 8. Ngoại vi)</span>
+                </label>
+                <label class="form-checkbox">
+                  <input type="checkbox" id="mcp_tool_info" checked>
+                  <span><strong>Đọc thông tin hệ thống:</strong> Đọc mức pin, cường độ Wi-Fi, bộ nhớ RAM/Flash qua hàm <code>self.get_system_info</code></span>
+                </label>
+                <label class="form-checkbox">
+                  <input type="checkbox" id="mcp_tool_reboot" checked>
+                  <span><strong>Khởi động lại thiết bị:</strong> Cho phép AI ra lệnh reboot khi cần cập nhật qua <code>self.reboot</code></span>
+                </label>
+                <label class="form-checkbox">
+                  <input type="checkbox" id="mcp_tool_theme" checked>
+                  <span><strong>Đổi phong cách giao diện:</strong> Cho phép AI đổi theme màn hình qua <code>self.display.set_theme</code></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="span-2" style="margin-top: 0.5rem; padding: 0.85rem; border-radius: var(--radius-sm); background: rgba(56, 189, 248, 0.06); border: 1px solid rgba(56, 189, 248, 0.2);">
+              <div style="font-size: 0.8rem; color: #93c5fd; line-height: 1.45;">
+                💡 <strong>Nguyên tắc phần cứng:</strong> Toàn bộ chân GPIO của Relay, Đèn, Còi hoặc Động cơ được cấu hình tập trung tại <strong>Mục 8. Ngoại vi & Cảm biến</strong>. MCP hoạt động như một tầng giao thức phần mềm điều khiển các ngoại vi đó, hoàn toàn không tạo chân riêng và không gây xung đột chân GPIO.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 7: BUTTONS & INPUT -->
+      <section class="tab-panel" id="panel-buttons">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🔘 Phím bấm & Điều khiển</h2>
+              <span class="group-desc">Cấu hình nút nhấn (BOOT, Touch, Wake, Âm lượng) và núm xoay EC11</span>
+            </div>
+            <div class="tab-header-actions">
+              <button class="btn btn-outline btn-sm" id="btn-add-button">+ Thêm phím bấm</button>
+              <span class="tab-status-pill saved" data-tab-status="panel-buttons">Đã lưu</span>
+              <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-buttons" title="Lưu thông tin mục này">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <span>Lưu mục này</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="configured-items-grid" id="buttons-list">
+            <!-- Rendered dynamically by app.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 8: PERIPHERALS & SENSORS -->
+      <section class="tab-panel" id="panel-peripherals">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🔌 Ngoại vi & Cảm biến</h2>
+              <span class="group-desc">Quản lý phần cứng vật lý: LED trạng thái, Relay/Đèn bàn, Còi báo, Động cơ, Cảm biến</span>
+            </div>
+            <div class="tab-header-actions">
+              <button class="btn btn-outline btn-sm" id="btn-add-peripheral">+ Thêm linh kiện</button>
+              <span class="tab-status-pill saved" data-tab-status="panel-peripherals">Đã lưu</span>
+              <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-peripherals" title="Lưu thông tin mục này">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <span>Lưu mục này</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="configured-items-grid" id="peripherals-list">
+            <!-- Rendered dynamically by app.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 9: COMM & STORAGE -->
+      <section class="tab-panel" id="panel-communication">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>📡 Giao tiếp & Thẻ nhớ</h2>
+              <span class="group-desc">Khe cắm thẻ nhớ MicroSD qua SPI, cổng UART mở rộng hoặc I2C dùng chung</span>
+            </div>
+            <div class="tab-header-actions">
+              <button class="btn btn-outline btn-sm" id="btn-add-comm">+ Thêm kết nối</button>
+              <span class="tab-status-pill saved" data-tab-status="panel-communication">Đã lưu</span>
+              <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-communication" title="Lưu thông tin mục này">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <span>Lưu mục này</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="configured-items-grid" id="communication-list">
+            <!-- Rendered dynamically by app.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 10: FLASH & ESP32-S3 (ALWAYS AT THE BOTTOM) -->
+      <section class="tab-panel" id="panel-flash">
+        <div class="config-group flash-card-container">
+          <div class="group-header">
+            <div class="group-title">
+              <h2 class="text-emerald">⚡ Phần cứng ESP32-S3-N16R8</h2>
+              <span class="group-desc">Thông số bộ nhớ và phân vùng chuẩn của vi điều khiển ESP32-S3-N16R8</span>
+            </div>
+            <div class="tab-header-actions">
+              <span class="group-badge badge-emerald">TARGET: S3-N16R8</span>
+              <span class="tab-status-pill saved" data-tab-status="panel-flash">Đã lưu</span>
+              <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-flash" title="Lưu thông tin mục này">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <span>Lưu mục này</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Hardware Specs Grid (Optimized for N16R8) -->
+          <!-- Hardware Specs Form (Customizable Partitions & Memory) -->
+          <div class="form-grid">
+            <div class="form-item">
+              <label class="form-label" for="flash_size">Dung lượng Flash</label>
+              <select class="form-control" id="flash_size">
+                <option value="8MB">8 MB</option>
+                <option value="16MB" selected>16 MB</option>
+                <option value="32MB">32 MB</option>
+              </select>
+              <span class="form-subtext">Chip mặc định: 16MB QIO 80MHz</span>
+            </div>
+            
+            <div class="form-item">
+              <label class="form-label" for="psram_mode">Bộ nhớ PSRAM</label>
+              <select class="form-control" id="psram_mode">
+                <option value="OCT" selected>8 MB (Octal SPI)</option>
+                <option value="QUAD">2 MB / 8 MB (Quad SPI)</option>
+                <option value="none">Không sử dụng PSRAM</option>
+              </select>
+              <span class="form-subtext">Octal PSRAM dùng chung chân GPIO 26-32</span>
+            </div>
+
+            <div class="form-item">
+              <label class="form-label" for="partition_table">Bảng phân vùng (Partition Table)</label>
+              <select class="form-control" id="partition_table">
+                <option value="partitions/v2/8m.csv">8MB (App 3MB x 2 + Assets 1MB)</option>
+                <option value="partitions/v2/16m.csv" selected>16MB (App 5MB x 2 + Assets 4.5MB)</option>
+                <option value="partitions/v2/32m.csv">32MB (App 8MB x 2 + Assets 8MB)</option>
+              </select>
+              <span class="form-subtext">Cần khớp với Dung lượng Flash đã chọn ở trên</span>
+            </div>
+            
+            <div class="form-item">
+              <label class="form-label" for="cpu_freq">Xung nhịp CPU</label>
+              <select class="form-control" id="cpu_freq">
+                <option value="160">160 MHz</option>
+                <option value="240" selected>240 MHz (Khuyên dùng)</option>
+              </select>
+              <span class="form-subtext">ESP32-S3 Xtensa Dual-Core</span>
+            </div>
+          </div>
+
+          <!-- Hidden Form Inputs for compatibility -->
+          <input type="hidden" id="flash_mode" value="QIO">
+          <input type="hidden" id="flash_freq" value="80M">
+          <input type="hidden" id="psram_speed" value="80M">
+
+          <!-- Hardware Rule Alert -->
+          <div class="hardware-rule-card">
+            <div class="rule-header">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              <span>QUY TẮC PHẦN CỨNG: KHÓA CHẶT GPIO 26 – 32</span>
+            </div>
+            <p class="rule-body">
+              Trên chip <strong>ESP32-S3-N16R8</strong>, toàn bộ các chân <strong>GPIO 26, 27, 28, 29, 30, 31, 32</strong> được đấu nối cứng bên trong vi điều khiển cho bus Octal Flash và Octal PSRAM. Trình cấu hình sẽ tự động <strong>khóa và báo lỗi xung đột</strong> nếu có bất kỳ ngoại vi nào được gán vào dải chân này để bảo vệ chip không bị treo.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Dynamic Modal for Adding Items (Buttons, Peripherals, Comm) -->
+  <div class="modal-overlay" id="add-item-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-dialog-title">Thêm linh kiện mới</h3>
+        <button class="modal-close" id="modal-btn-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-item" style="margin-bottom: 1.25rem;">
+          <label class="form-label" for="modal-item-type">Chọn loại linh kiện / module</label>
+          <select class="form-control" id="modal-item-type">
+            <!-- Populated dynamically based on category -->
+          </select>
+        </div>
+        <div id="modal-dynamic-fields">
+          <!-- Dynamic GPIO fields rendered based on selection -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="modal-btn-cancel">Hủy bỏ</button>
+        <button class="btn btn-primary" id="modal-btn-confirm">Thêm vào cấu hình</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Build & Success Modal -->
+  <div class="modal-overlay" id="success-modal">
+    <div class="modal-card" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 class="modal-title text-emerald">Đã lưu cấu hình thành công!</h3>
+        <button class="modal-close" id="btn-close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">
+          Cấu hình chân phần cứng và bảng chọn Kconfig đã được cập nhật trực tiếp vào dự án Xiaozhi.
+        </p>
+        <div class="build-cmd-box">
+          <span class="cmd-label">Lệnh biên dịch nạp chip:</span>
+          <div class="cmd-row">
+            <code id="build-command">idf.py build flash monitor</code>
+            <button class="btn btn-outline btn-xs" id="btn-copy-cmd">Sao chép</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="btn-modal-ok">Hoàn tất</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unsaved Changes Prompt Modal -->
+  <div class="modal-overlay" id="unsaved-modal">
+    <div class="modal-card" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title" style="color: #f59e0b; display: flex; align-items: center; gap: 8px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <span>Thay đổi chưa được lưu</span>
+        </h3>
+        <button class="modal-close" id="unsaved-btn-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="unsaved-modal-desc" style="color: var(--text-secondary); line-height: 1.5; font-size: 0.88rem; margin: 0;">
+          Bạn đang có một số thay đổi trong mục này chưa được lưu lại. Bạn có muốn lưu thay đổi trước khi chuyển sang mục khác không?
+        </p>
+      </div>
+      <div class="modal-footer" style="display: flex; gap: 8px; justify-content: flex-end;">
+        <button type="button" class="btn btn-outline" id="unsaved-btn-stay">Ở lại</button>
+        <button type="button" class="btn btn-outline" id="unsaved-btn-discard" style="color: #f43f5e; border-color: rgba(244, 63, 94, 0.3);">Bỏ qua thay đổi</button>
+        <button type="button" class="btn btn-primary" id="unsaved-btn-save">Lưu & Tiếp tục</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

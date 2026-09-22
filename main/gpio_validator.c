@@ -1,0 +1,573 @@
+/**
+ * @file gpio_validator.c
+ * @brief ESP32-S3 N16R8 Hardware GPIO Safety Validator Implementation
+ */
+
+#include "gpio_validator.h"
+#include <sdkconfig.h>
+#include <esp_log.h>
+
+#define TAG "GPIO_Validator"
+
+typedef enum {
+    BUS_TYPE_EXCLUSIVE = 0,
+    BUS_TYPE_I2C_SDA,
+    BUS_TYPE_I2C_SCL,
+    BUS_TYPE_I2S_BCLK,
+    BUS_TYPE_I2S_WS,
+} pin_bus_type_t;
+
+typedef struct {
+    int pin;
+    const char *name;
+    pin_bus_type_t bus_type;
+    bool is_active;
+} configured_pin_t;
+
+bool gpio_is_pin_safe(gpio_num_t pin, const char* periph_name)
+{
+    if (pin < 0) {
+        return true; // NC (-1) is not connected, always safe
+    }
+
+#if defined(CONFIG_BOARD_TYPE_ESP32_S3_N16R8_CUSTOM) || defined(CONFIG_IDF_TARGET_ESP32S3)
+    if (ESP32S3_N16R8_IS_RESERVED_PIN(pin)) {
+        ESP_LOGE(TAG, "[CRITICAL] Peripheral '%s' assigned to GPIO %d which is in forbidden Octal PSRAM/Flash range [26..37]!",
+                 periph_name ? periph_name : "Unknown", pin);
+        return false;
+    }
+#endif
+
+    // Check strapping / USB pins and warn
+    if (pin == 19 || pin == 20) {
+        ESP_LOGW(TAG, "[WARNING] Peripheral '%s' assigned to GPIO %d (USB D+/D-). USB CDC/JTAG debugging will be impaired.",
+                 periph_name ? periph_name : "Unknown", pin);
+    } else if (pin == 0) {
+        ESP_LOGW(TAG, "[NOTICE] Peripheral '%s' assigned to GPIO 0 (BOOT Strapping Pin).",
+                 periph_name ? periph_name : "Unknown");
+    }
+
+    return true;
+}
+
+esp_err_t gpio_safety_validate(void)
+{
+    ESP_LOGI(TAG, "Starting Hardware Safety Validation for ESP32-S3 N16R8...");
+
+    configured_pin_t pins[] = {
+        // 1. Display pins
+#if defined(CONFIG_ENABLE_CUSTOM_DISPLAY)
+#if defined(CONFIG_CUSTOM_DISPLAY_PIN_MOSI)
+        { CONFIG_CUSTOM_DISPLAY_PIN_MOSI, "Display SPI MOSI", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_DISPLAY_PIN_CLK)
+        { CONFIG_CUSTOM_DISPLAY_PIN_CLK, "Display SPI CLK", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_DISPLAY_PIN_CS)
+        { CONFIG_CUSTOM_DISPLAY_PIN_CS, "Display CS", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_DISPLAY_PIN_DC)
+        { CONFIG_CUSTOM_DISPLAY_PIN_DC, "Display DC", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_DISPLAY_PIN_RST)
+        { CONFIG_CUSTOM_DISPLAY_PIN_RST, "Display RST", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_DISPLAY_PIN_BLK)
+        { CONFIG_CUSTOM_DISPLAY_PIN_BLK, "Display Backlight", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_DISPLAY_UART_TX_PIN)
+        { CONFIG_CUSTOM_DISPLAY_UART_TX_PIN, "Display UART TX", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_DISPLAY_UART_RX_PIN)
+        { CONFIG_CUSTOM_DISPLAY_UART_RX_PIN, "Display UART RX", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#endif
+
+        // 2. Audio Speaker
+#if defined(CONFIG_ENABLE_CUSTOM_SPEAKER)
+#if defined(CONFIG_CUSTOM_AUDIO_I2S_SPK_GPIO_BCLK)
+        { CONFIG_CUSTOM_AUDIO_I2S_SPK_GPIO_BCLK, "Audio Speaker I2S BCLK", BUS_TYPE_I2S_BCLK, true },
+#endif
+#if defined(CONFIG_CUSTOM_AUDIO_I2S_SPK_GPIO_LRCK)
+        { CONFIG_CUSTOM_AUDIO_I2S_SPK_GPIO_LRCK, "Audio Speaker I2S LRCK", BUS_TYPE_I2S_WS, true },
+#endif
+#if defined(CONFIG_CUSTOM_AUDIO_I2S_SPK_GPIO_DOUT)
+        { CONFIG_CUSTOM_AUDIO_I2S_SPK_GPIO_DOUT, "Audio Speaker I2S DOUT", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#endif
+
+        // 3. Audio Microphone
+#if defined(CONFIG_ENABLE_CUSTOM_MIC)
+#if defined(CONFIG_CUSTOM_AUDIO_I2S_MIC_GPIO_SCK)
+        { CONFIG_CUSTOM_AUDIO_I2S_MIC_GPIO_SCK, "Audio Mic I2S SCK",
+#if defined(CONFIG_CUSTOM_AUDIO_I2S_DUPLEX)
+          BUS_TYPE_I2S_BCLK,
+#else
+          BUS_TYPE_EXCLUSIVE,
+#endif
+          true },
+#endif
+#if defined(CONFIG_CUSTOM_AUDIO_I2S_MIC_GPIO_WS)
+        { CONFIG_CUSTOM_AUDIO_I2S_MIC_GPIO_WS, "Audio Mic I2S WS",
+#if defined(CONFIG_CUSTOM_AUDIO_I2S_DUPLEX)
+          BUS_TYPE_I2S_WS,
+#else
+          BUS_TYPE_EXCLUSIVE,
+#endif
+          true },
+#endif
+#if defined(CONFIG_CUSTOM_AUDIO_I2S_MIC_GPIO_DIN)
+        { CONFIG_CUSTOM_AUDIO_I2S_MIC_GPIO_DIN, "Audio Mic I2S DIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#endif
+
+        // 4. I2C Bus Master
+#if defined(CONFIG_CUSTOM_I2C_SDA_PIN)
+        { CONFIG_CUSTOM_I2C_SDA_PIN, "I2C SDA Bus", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_I2C_SCL_PIN)
+        { CONFIG_CUSTOM_I2C_SCL_PIN, "I2C SCL Bus", BUS_TYPE_I2C_SCL, true },
+#endif
+
+        // 5. Buttons
+#if defined(CONFIG_CUSTOM_ENABLE_BUTTON_BOOT) && defined(CONFIG_CUSTOM_BUTTON_BOOT_GPIO)
+        { CONFIG_CUSTOM_BUTTON_BOOT_GPIO, "Button Boot", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_ENABLE_BUTTON_TOUCH) && defined(CONFIG_CUSTOM_BUTTON_TOUCH_GPIO)
+        { CONFIG_CUSTOM_BUTTON_TOUCH_GPIO, "Button Touch", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_ENABLE_BUTTON_VOLUME)
+#if defined(CONFIG_CUSTOM_BUTTON_VOLUME_UP_GPIO)
+        { CONFIG_CUSTOM_BUTTON_VOLUME_UP_GPIO, "Button Volume UP", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_BUTTON_VOLUME_DOWN_GPIO)
+        { CONFIG_CUSTOM_BUTTON_VOLUME_DOWN_GPIO, "Button Volume DOWN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#endif
+
+        // 6. LEDs
+#if defined(CONFIG_ENABLE_CUSTOM_LEDS)
+#if defined(CONFIG_CUSTOM_LED_WS2812_GPIO)
+        { CONFIG_CUSTOM_LED_WS2812_GPIO, "LED WS2812 RGB", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_LED_SINGLE_PWM_GPIO)
+        { CONFIG_CUSTOM_LED_SINGLE_PWM_GPIO, "LED Single PWM", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#endif
+
+        // 7. Relay & Actuators
+#if defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE) && defined(CONFIG_CUSTOM_PERIPH_RELAY_GPIO)
+        { CONFIG_CUSTOM_PERIPH_RELAY_GPIO, "Relay Control", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG) && defined(CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO)
+        { CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO, "Servo Dog PWM", BUS_TYPE_EXCLUSIVE, true },
+#endif
+        // --- AUTO-GENERATED MISSING PINS ---
+#if defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_I2C_SCL)
+        { CONFIG_CUSTOM_AUDIO_MIC_CODEC_I2C_SCL, "CUSTOM_AUDIO_MIC_CODEC_I2C_SCL", BUS_TYPE_I2C_SCL, true },
+#endif
+#if defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_I2C_SDA)
+        { CONFIG_CUSTOM_AUDIO_MIC_CODEC_I2C_SDA, "CUSTOM_AUDIO_MIC_CODEC_I2C_SDA", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_AUDIO_MIC_GPIO_DIN)
+        { CONFIG_CUSTOM_AUDIO_MIC_GPIO_DIN, "CUSTOM_AUDIO_MIC_GPIO_DIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_AUDIO_MIC_GPIO_SCK)
+        { CONFIG_CUSTOM_AUDIO_MIC_GPIO_SCK, "CUSTOM_AUDIO_MIC_GPIO_SCK", BUS_TYPE_I2S_BCLK, true },
+#endif
+#if defined(CONFIG_CUSTOM_AUDIO_MIC_GPIO_WS)
+        { CONFIG_CUSTOM_AUDIO_MIC_GPIO_WS, "CUSTOM_AUDIO_MIC_GPIO_WS", BUS_TYPE_I2S_WS, true },
+#endif
+#if defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_I2C_SCL)
+        { CONFIG_CUSTOM_AUDIO_SPK_CODEC_I2C_SCL, "CUSTOM_AUDIO_SPK_CODEC_I2C_SCL", BUS_TYPE_I2C_SCL, true },
+#endif
+#if defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_I2C_SDA)
+        { CONFIG_CUSTOM_AUDIO_SPK_CODEC_I2C_SDA, "CUSTOM_AUDIO_SPK_CODEC_I2C_SDA", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_AUDIO_SPK_GPIO_BCLK)
+        { CONFIG_CUSTOM_AUDIO_SPK_GPIO_BCLK, "CUSTOM_AUDIO_SPK_GPIO_BCLK", BUS_TYPE_I2S_BCLK, true },
+#endif
+#if defined(CONFIG_CUSTOM_AUDIO_SPK_GPIO_DOUT)
+        { CONFIG_CUSTOM_AUDIO_SPK_GPIO_DOUT, "CUSTOM_AUDIO_SPK_GPIO_DOUT", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_AUDIO_SPK_GPIO_LRCK)
+        { CONFIG_CUSTOM_AUDIO_SPK_GPIO_LRCK, "CUSTOM_AUDIO_SPK_GPIO_LRCK", BUS_TYPE_I2S_WS, true },
+#endif
+#if defined(CONFIG_CUSTOM_BATTERY_BQ27220_I2C_SCL)
+        { CONFIG_CUSTOM_BATTERY_BQ27220_I2C_SCL, "CUSTOM_BATTERY_BQ27220_I2C_SCL", BUS_TYPE_I2C_SCL, true },
+#endif
+#if defined(CONFIG_CUSTOM_BATTERY_BQ27220_I2C_SDA)
+        { CONFIG_CUSTOM_BATTERY_BQ27220_I2C_SDA, "CUSTOM_BATTERY_BQ27220_I2C_SDA", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_BUTTON_VOL_DOWN_GPIO)
+        { CONFIG_CUSTOM_BUTTON_VOL_DOWN_GPIO, "CUSTOM_BUTTON_VOL_DOWN_GPIO", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_BUTTON_VOL_UP_GPIO)
+        { CONFIG_CUSTOM_BUTTON_VOL_UP_GPIO, "CUSTOM_BUTTON_VOL_UP_GPIO", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_CAM_PIN_D0)
+        { CONFIG_CUSTOM_CAM_PIN_D0, "CUSTOM_CAM_PIN_D0", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_CAM_PIN_D1)
+        { CONFIG_CUSTOM_CAM_PIN_D1, "CUSTOM_CAM_PIN_D1", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_CAM_PIN_D2)
+        { CONFIG_CUSTOM_CAM_PIN_D2, "CUSTOM_CAM_PIN_D2", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_CAM_PIN_D3)
+        { CONFIG_CUSTOM_CAM_PIN_D3, "CUSTOM_CAM_PIN_D3", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_CAM_PIN_D4)
+        { CONFIG_CUSTOM_CAM_PIN_D4, "CUSTOM_CAM_PIN_D4", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_CAM_PIN_D5)
+        { CONFIG_CUSTOM_CAM_PIN_D5, "CUSTOM_CAM_PIN_D5", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_CAM_PIN_D6)
+        { CONFIG_CUSTOM_CAM_PIN_D6, "CUSTOM_CAM_PIN_D6", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_CAM_PIN_D7)
+        { CONFIG_CUSTOM_CAM_PIN_D7, "CUSTOM_CAM_PIN_D7", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_CAM_PIN_HREF)
+        { CONFIG_CUSTOM_CAM_PIN_HREF, "CUSTOM_CAM_PIN_HREF", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_CAM_PIN_PCLK)
+        { CONFIG_CUSTOM_CAM_PIN_PCLK, "CUSTOM_CAM_PIN_PCLK", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_CAM_PIN_PWDN)
+        { CONFIG_CUSTOM_CAM_PIN_PWDN, "CUSTOM_CAM_PIN_PWDN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_CAM_PIN_RESET)
+        { CONFIG_CUSTOM_CAM_PIN_RESET, "CUSTOM_CAM_PIN_RESET", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_CAM_PIN_SIOC)
+        { CONFIG_CUSTOM_CAM_PIN_SIOC, "CUSTOM_CAM_PIN_SIOC", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_CAM_PIN_SIOD)
+        { CONFIG_CUSTOM_CAM_PIN_SIOD, "CUSTOM_CAM_PIN_SIOD", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_CAM_PIN_VSYNC)
+        { CONFIG_CUSTOM_CAM_PIN_VSYNC, "CUSTOM_CAM_PIN_VSYNC", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_CAM_PIN_XCLK)
+        { CONFIG_CUSTOM_CAM_PIN_XCLK, "CUSTOM_CAM_PIN_XCLK", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_DISPLAY_PIN_I2C_SCL)
+        { CONFIG_CUSTOM_DISPLAY_PIN_I2C_SCL, "CUSTOM_DISPLAY_PIN_I2C_SCL", BUS_TYPE_I2C_SCL, true },
+#endif
+#if defined(CONFIG_CUSTOM_DISPLAY_PIN_I2C_SDA)
+        { CONFIG_CUSTOM_DISPLAY_PIN_I2C_SDA, "CUSTOM_DISPLAY_PIN_I2C_SDA", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_ETH_SPI_CS_PIN)
+        { CONFIG_CUSTOM_ETH_SPI_CS_PIN, "CUSTOM_ETH_SPI_CS_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_ETH_SPI_INT_PIN)
+        { CONFIG_CUSTOM_ETH_SPI_INT_PIN, "CUSTOM_ETH_SPI_INT_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_ETH_SPI_RST_PIN)
+        { CONFIG_CUSTOM_ETH_SPI_RST_PIN, "CUSTOM_ETH_SPI_RST_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_EXPANDER_I2C_SCL)
+        { CONFIG_CUSTOM_EXPANDER_I2C_SCL, "CUSTOM_EXPANDER_I2C_SCL", BUS_TYPE_I2C_SCL, true },
+#endif
+#if defined(CONFIG_CUSTOM_EXPANDER_I2C_SDA)
+        { CONFIG_CUSTOM_EXPANDER_I2C_SDA, "CUSTOM_EXPANDER_I2C_SDA", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_EXPANDER_INT_PIN)
+        { CONFIG_CUSTOM_EXPANDER_INT_PIN, "CUSTOM_EXPANDER_INT_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_EXPANDER_RST_PIN)
+        { CONFIG_CUSTOM_EXPANDER_RST_PIN, "CUSTOM_EXPANDER_RST_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_IMU_I2C_SCL)
+        { CONFIG_CUSTOM_IMU_I2C_SCL, "CUSTOM_IMU_I2C_SCL", BUS_TYPE_I2C_SCL, true },
+#endif
+#if defined(CONFIG_CUSTOM_IMU_I2C_SDA)
+        { CONFIG_CUSTOM_IMU_I2C_SDA, "CUSTOM_IMU_I2C_SDA", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_LED_GPIO)
+        { CONFIG_CUSTOM_LED_GPIO, "CUSTOM_LED_GPIO", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO)
+        { CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO, "CUSTOM_MCP_TOOL_LAMP_GPIO", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_MODEM_PWRKEY_PIN)
+        { CONFIG_CUSTOM_MODEM_PWRKEY_PIN, "CUSTOM_MODEM_PWRKEY_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_MODEM_UART_RX_PIN)
+        { CONFIG_CUSTOM_MODEM_UART_RX_PIN, "CUSTOM_MODEM_UART_RX_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_MODEM_UART_TX_PIN)
+        { CONFIG_CUSTOM_MODEM_UART_TX_PIN, "CUSTOM_MODEM_UART_TX_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_4G_PWRKEY_PIN)
+        { CONFIG_CUSTOM_PERIPH_4G_PWRKEY_PIN, "CUSTOM_PERIPH_4G_PWRKEY_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_4G_UART_RX_PIN)
+        { CONFIG_CUSTOM_PERIPH_4G_UART_RX_PIN, "CUSTOM_PERIPH_4G_UART_RX_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_4G_UART_TX_PIN)
+        { CONFIG_CUSTOM_PERIPH_4G_UART_TX_PIN, "CUSTOM_PERIPH_4G_UART_TX_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_BATTERY_CHRG_PIN)
+        { CONFIG_CUSTOM_PERIPH_BATTERY_CHRG_PIN, "CUSTOM_PERIPH_BATTERY_CHRG_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_ENCODER_KEY_PIN)
+        { CONFIG_CUSTOM_PERIPH_ENCODER_KEY_PIN, "CUSTOM_PERIPH_ENCODER_KEY_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_IR_RX_PIN)
+        { CONFIG_CUSTOM_PERIPH_IR_RX_PIN, "CUSTOM_PERIPH_IR_RX_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_IR_TX_PIN)
+        { CONFIG_CUSTOM_PERIPH_IR_TX_PIN, "CUSTOM_PERIPH_IR_TX_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_LED_IC_I2C_SCL)
+        { CONFIG_CUSTOM_PERIPH_LED_IC_I2C_SCL, "CUSTOM_PERIPH_LED_IC_I2C_SCL", BUS_TYPE_I2C_SCL, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_LED_IC_I2C_SDA)
+        { CONFIG_CUSTOM_PERIPH_LED_IC_I2C_SDA, "CUSTOM_PERIPH_LED_IC_I2C_SDA", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_MOTOR_DIRA_PIN)
+        { CONFIG_CUSTOM_PERIPH_MOTOR_DIRA_PIN, "CUSTOM_PERIPH_MOTOR_DIRA_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_MOTOR_DIRB_PIN)
+        { CONFIG_CUSTOM_PERIPH_MOTOR_DIRB_PIN, "CUSTOM_PERIPH_MOTOR_DIRB_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_MOTOR_PWMA_PIN)
+        { CONFIG_CUSTOM_PERIPH_MOTOR_PWMA_PIN, "CUSTOM_PERIPH_MOTOR_PWMA_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_MOTOR_PWMB_PIN)
+        { CONFIG_CUSTOM_PERIPH_MOTOR_PWMB_PIN, "CUSTOM_PERIPH_MOTOR_PWMB_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_NFC_I2C_SCL)
+        { CONFIG_CUSTOM_PERIPH_NFC_I2C_SCL, "CUSTOM_PERIPH_NFC_I2C_SCL", BUS_TYPE_I2C_SCL, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_NFC_I2C_SDA)
+        { CONFIG_CUSTOM_PERIPH_NFC_I2C_SDA, "CUSTOM_PERIPH_NFC_I2C_SDA", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_NFC_IRQ_PIN)
+        { CONFIG_CUSTOM_PERIPH_NFC_IRQ_PIN, "CUSTOM_PERIPH_NFC_IRQ_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_NFC_RST_PIN)
+        { CONFIG_CUSTOM_PERIPH_NFC_RST_PIN, "CUSTOM_PERIPH_NFC_RST_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_PCA9685_I2C_SCL)
+        { CONFIG_CUSTOM_PERIPH_PCA9685_I2C_SCL, "CUSTOM_PERIPH_PCA9685_I2C_SCL", BUS_TYPE_I2C_SCL, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_PCA9685_I2C_SDA)
+        { CONFIG_CUSTOM_PERIPH_PCA9685_I2C_SDA, "CUSTOM_PERIPH_PCA9685_I2C_SDA", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_PCA9685_OE_PIN)
+        { CONFIG_CUSTOM_PERIPH_PCA9685_OE_PIN, "CUSTOM_PERIPH_PCA9685_OE_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_RC522_RST_PIN)
+        { CONFIG_CUSTOM_PERIPH_RC522_RST_PIN, "CUSTOM_PERIPH_RC522_RST_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_RTC_I2C_SCL)
+        { CONFIG_CUSTOM_PERIPH_RTC_I2C_SCL, "CUSTOM_PERIPH_RTC_I2C_SCL", BUS_TYPE_I2C_SCL, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_RTC_I2C_SDA)
+        { CONFIG_CUSTOM_PERIPH_RTC_I2C_SDA, "CUSTOM_PERIPH_RTC_I2C_SDA", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_RTC_INT_PIN)
+        { CONFIG_CUSTOM_PERIPH_RTC_INT_PIN, "CUSTOM_PERIPH_RTC_INT_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_TOUCH_I2C_SCL)
+        { CONFIG_CUSTOM_PERIPH_TOUCH_I2C_SCL, "CUSTOM_PERIPH_TOUCH_I2C_SCL", BUS_TYPE_I2C_SCL, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_TOUCH_I2C_SDA)
+        { CONFIG_CUSTOM_PERIPH_TOUCH_I2C_SDA, "CUSTOM_PERIPH_TOUCH_I2C_SDA", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_TOUCH_INT_PIN)
+        { CONFIG_CUSTOM_PERIPH_TOUCH_INT_PIN, "CUSTOM_PERIPH_TOUCH_INT_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_TOUCH_RST_PIN)
+        { CONFIG_CUSTOM_PERIPH_TOUCH_RST_PIN, "CUSTOM_PERIPH_TOUCH_RST_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_TWAI_RX_PIN)
+        { CONFIG_CUSTOM_PERIPH_TWAI_RX_PIN, "CUSTOM_PERIPH_TWAI_RX_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_TWAI_TX_PIN)
+        { CONFIG_CUSTOM_PERIPH_TWAI_TX_PIN, "CUSTOM_PERIPH_TWAI_TX_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_PMIC_I2C_SCL)
+        { CONFIG_CUSTOM_PMIC_I2C_SCL, "CUSTOM_PMIC_I2C_SCL", BUS_TYPE_I2C_SCL, true },
+#endif
+#if defined(CONFIG_CUSTOM_PMIC_I2C_SDA)
+        { CONFIG_CUSTOM_PMIC_I2C_SDA, "CUSTOM_PMIC_I2C_SDA", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_PMIC_INT_PIN)
+        { CONFIG_CUSTOM_PMIC_INT_PIN, "CUSTOM_PMIC_INT_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_APDS9960_I2C_SCL)
+        { CONFIG_CUSTOM_SENSOR_APDS9960_I2C_SCL, "CUSTOM_SENSOR_APDS9960_I2C_SCL", BUS_TYPE_I2C_SCL, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_APDS9960_I2C_SDA)
+        { CONFIG_CUSTOM_SENSOR_APDS9960_I2C_SDA, "CUSTOM_SENSOR_APDS9960_I2C_SDA", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_APDS9960_INT_PIN)
+        { CONFIG_CUSTOM_SENSOR_APDS9960_INT_PIN, "CUSTOM_SENSOR_APDS9960_INT_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_BH1750_I2C_SCL)
+        { CONFIG_CUSTOM_SENSOR_BH1750_I2C_SCL, "CUSTOM_SENSOR_BH1750_I2C_SCL", BUS_TYPE_I2C_SCL, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_BH1750_I2C_SDA)
+        { CONFIG_CUSTOM_SENSOR_BH1750_I2C_SDA, "CUSTOM_SENSOR_BH1750_I2C_SDA", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_BMP280_I2C_SCL)
+        { CONFIG_CUSTOM_SENSOR_BMP280_I2C_SCL, "CUSTOM_SENSOR_BMP280_I2C_SCL", BUS_TYPE_I2C_SCL, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_BMP280_I2C_SDA)
+        { CONFIG_CUSTOM_SENSOR_BMP280_I2C_SDA, "CUSTOM_SENSOR_BMP280_I2C_SDA", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_DHT_GPIO)
+        { CONFIG_CUSTOM_SENSOR_DHT_GPIO, "CUSTOM_SENSOR_DHT_GPIO", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_DS18B20_PIN)
+        { CONFIG_CUSTOM_SENSOR_DS18B20_PIN, "CUSTOM_SENSOR_DS18B20_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_FLAME_PIN)
+        { CONFIG_CUSTOM_SENSOR_FLAME_PIN, "CUSTOM_SENSOR_FLAME_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_FLOW_PULSE_PIN)
+        { CONFIG_CUSTOM_SENSOR_FLOW_PULSE_PIN, "CUSTOM_SENSOR_FLOW_PULSE_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_GAS_I2C_SCL)
+        { CONFIG_CUSTOM_SENSOR_GAS_I2C_SCL, "CUSTOM_SENSOR_GAS_I2C_SCL", BUS_TYPE_I2C_SCL, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_GAS_I2C_SDA)
+        { CONFIG_CUSTOM_SENSOR_GAS_I2C_SDA, "CUSTOM_SENSOR_GAS_I2C_SDA", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_HCSR04_ECHO_GPIO)
+        { CONFIG_CUSTOM_SENSOR_HCSR04_ECHO_GPIO, "CUSTOM_SENSOR_HCSR04_ECHO_GPIO", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_HCSR04_TRIG_GPIO)
+        { CONFIG_CUSTOM_SENSOR_HCSR04_TRIG_GPIO, "CUSTOM_SENSOR_HCSR04_TRIG_GPIO", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_I2C_SCL)
+        { CONFIG_CUSTOM_SENSOR_I2C_SCL, "CUSTOM_SENSOR_I2C_SCL", BUS_TYPE_I2C_SCL, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_I2C_SDA)
+        { CONFIG_CUSTOM_SENSOR_I2C_SDA, "CUSTOM_SENSOR_I2C_SDA", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_INA2XX_I2C_SCL)
+        { CONFIG_CUSTOM_SENSOR_INA2XX_I2C_SCL, "CUSTOM_SENSOR_INA2XX_I2C_SCL", BUS_TYPE_I2C_SCL, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_INA2XX_I2C_SDA)
+        { CONFIG_CUSTOM_SENSOR_INA2XX_I2C_SDA, "CUSTOM_SENSOR_INA2XX_I2C_SDA", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_MQ_ANALOG_PIN)
+        { CONFIG_CUSTOM_SENSOR_MQ_ANALOG_PIN, "CUSTOM_SENSOR_MQ_ANALOG_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_PIR_GPIO)
+        { CONFIG_CUSTOM_SENSOR_PIR_GPIO, "CUSTOM_SENSOR_PIR_GPIO", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_VIBRATION_PIN)
+        { CONFIG_CUSTOM_SENSOR_VIBRATION_PIN, "CUSTOM_SENSOR_VIBRATION_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_VL53LX_I2C_SCL)
+        { CONFIG_CUSTOM_SENSOR_VL53LX_I2C_SCL, "CUSTOM_SENSOR_VL53LX_I2C_SCL", BUS_TYPE_I2C_SCL, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_VL53LX_I2C_SDA)
+        { CONFIG_CUSTOM_SENSOR_VL53LX_I2C_SDA, "CUSTOM_SENSOR_VL53LX_I2C_SDA", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_SENSOR_VL53LX_XSHUT_PIN)
+        { CONFIG_CUSTOM_SENSOR_VL53LX_XSHUT_PIN, "CUSTOM_SENSOR_VL53LX_XSHUT_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_TOUCH_PIN_INT)
+        { CONFIG_CUSTOM_TOUCH_PIN_INT, "CUSTOM_TOUCH_PIN_INT", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_TOUCH_PIN_RST)
+        { CONFIG_CUSTOM_TOUCH_PIN_RST, "CUSTOM_TOUCH_PIN_RST", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_TOUCH_PIN_SCL)
+        { CONFIG_CUSTOM_TOUCH_PIN_SCL, "CUSTOM_TOUCH_PIN_SCL", BUS_TYPE_I2C_SCL, true },
+#endif
+#if defined(CONFIG_CUSTOM_TOUCH_PIN_SDA)
+        { CONFIG_CUSTOM_TOUCH_PIN_SDA, "CUSTOM_TOUCH_PIN_SDA", BUS_TYPE_I2C_SDA, true },
+#endif
+#if defined(CONFIG_CUSTOM_TOUCH_SLIDER_PAD1_GPIO)
+        { CONFIG_CUSTOM_TOUCH_SLIDER_PAD1_GPIO, "CUSTOM_TOUCH_SLIDER_PAD1_GPIO", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_TOUCH_SLIDER_PAD2_GPIO)
+        { CONFIG_CUSTOM_TOUCH_SLIDER_PAD2_GPIO, "CUSTOM_TOUCH_SLIDER_PAD2_GPIO", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_TOUCH_SLIDER_PAD3_GPIO)
+        { CONFIG_CUSTOM_TOUCH_SLIDER_PAD3_GPIO, "CUSTOM_TOUCH_SLIDER_PAD3_GPIO", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_UART_PIN_CTS)
+        { CONFIG_CUSTOM_UART_PIN_CTS, "CUSTOM_UART_PIN_CTS", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_UART_PIN_RTS)
+        { CONFIG_CUSTOM_UART_PIN_RTS, "CUSTOM_UART_PIN_RTS", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_UART_PIN_RX)
+        { CONFIG_CUSTOM_UART_PIN_RX, "CUSTOM_UART_PIN_RX", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_CUSTOM_UART_PIN_TX)
+        { CONFIG_CUSTOM_UART_PIN_TX, "CUSTOM_UART_PIN_TX", BUS_TYPE_EXCLUSIVE, true },
+#endif
+
+    };
+
+    size_t count = sizeof(pins) / sizeof(pins[0]);
+    bool has_error = false;
+
+    // Step 1: Check forbidden ranges
+    for (size_t i = 0; i < count; i++) {
+        if (!pins[i].is_active || pins[i].pin < 0) {
+            continue;
+        }
+        if (!gpio_is_pin_safe((gpio_num_t)pins[i].pin, pins[i].name)) {
+            has_error = true;
+        }
+    }
+
+    // Step 2: Check duplicate conflicts
+    for (size_t i = 0; i < count; i++) {
+        if (!pins[i].is_active || pins[i].pin < 0) continue;
+
+        for (size_t j = i + 1; j < count; j++) {
+            if (!pins[j].is_active || pins[j].pin < 0) continue;
+
+            if (pins[i].pin == pins[j].pin) {
+                // Check if this sharing is allowed
+                bool allowed = false;
+                if (pins[i].bus_type == BUS_TYPE_I2C_SDA && pins[j].bus_type == BUS_TYPE_I2C_SDA) {
+                    allowed = true;
+                } else if (pins[i].bus_type == BUS_TYPE_I2C_SCL && pins[j].bus_type == BUS_TYPE_I2C_SCL) {
+                    allowed = true;
+                } else if (pins[i].bus_type == BUS_TYPE_I2S_BCLK && pins[j].bus_type == BUS_TYPE_I2S_BCLK) {
+                    allowed = true;
+                } else if (pins[i].bus_type == BUS_TYPE_I2S_WS && pins[j].bus_type == BUS_TYPE_I2S_WS) {
+                    allowed = true;
+                }
+
+                if (!allowed) {
+                    ESP_LOGE(TAG, "[PIN CONFLICT] GPIO %d is concurrently claimed by '%s' and '%s'!",
+                             pins[i].pin, pins[i].name, pins[j].name);
+                    has_error = true;
+                }
+            }
+        }
+    }
+
+    if (has_error) {
+        ESP_LOGE(TAG, "Hardware Safety Validation FAILED! System boot aborted.");
+        return ESP_ERR_INVALID_STATE;
+    }
+
+    ESP_LOGI(TAG, "Hardware Safety Validation PASSED: All assigned GPIOs are safe and collision-free.");
+    return ESP_OK;
+}
+
+esp_err_t gpio_validator_run(void)
+{
+    return gpio_safety_validate();
+}
+
+const char* gpio_validator_get_error_log(void)
+{
+    return "Check your menuconfig or board pinout. Pins in range 26..37 or duplicate pin assignments detected.";
+}
