@@ -1,0 +1,71 @@
+   <div class="form-item" style="margin-bottom: 1.25rem;">
+          <label class="form-label" for="modal-item-type">Chọn loại linh kiện / module</label>
+          <select class="form-control" id="modal-item-type">
+            <!-- Populated dynamically based on category -->
+          </select>
+        </div>
+        <div id="modal-dynamic-fields">
+          <!-- Dynamic GPIO fields rendered based on selection -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="modal-btn-cancel">Hủy bỏ</button>
+        <button class="btn btn-primary" id="modal-btn-confirm">Thêm vào cấu hình</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Build & Success Modal -->
+  <div class="modal-overlay" id="success-modal">
+    <div class="modal-card" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 class="modal-title text-emerald">Đã lưu cấu hình thành công!</h3>
+        <button class="modal-close" id="btn-close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">
+          Cấu hình chân phần cứng và bảng chọn Kconfig đã được cập nhật trực tiếp vào dự án Xiaozhi.
+        </p>
+        <div class="build-cmd-box">
+          <span class="cmd-label">Lệnh biên dịch nạp chip:</span>
+          <div class="cmd-row">
+            <code id="build-command">idf.py build flash monitor</code>
+            <button class="btn btn-outline btn-xs" id="btn-copy-cmd">Sao chép</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="btn-modal-ok">Hoàn tất</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unsaved Changes Prompt Modal -->
+  <div class="modal-overlay" id="unsaved-modal">
+    <div class="modal-card" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title" style="color: #f59e0b; display: flex; align-items: center; gap: 8px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <span>Thay đổi chưa được lưu</span>
+        </h3>
+        <button class="modal-close" id="unsaved-btn-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="unsaved-modal-desc" style="color: var(--text-secondary); line-height: 1.5; font-size: 0.88rem; margin: 0;">
+          Bạn đang có một số thay đổi trong mục này chưa được lưu lại. Bạn có muốn lưu thay đổi trước khi chuyển sang mục khác không?
+        </p>
+      </div>
+      <div class="modal-footer" style="display: flex; gap: 8px; justify-content: flex-end;">
+        <button type="button" class="btn btn-outline" id="unsaved-btn-stay">Ở lại</button>
+        <button type="button" class="btn btn-outline" id="unsaved-btn-discard" style="color: #f43f5e; border-color: rgba(244, 63, 94, 0.3);">Bỏ qua thay đổi</button>
+        <button type="button" class="btn btn-primary" id="unsaved-btn-save">Lưu & Tiếp tục</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
