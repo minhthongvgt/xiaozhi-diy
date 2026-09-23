@@ -1,1 +1,0 @@
-{"target": "esp32s3", "builds": [{"name": "custom-s3-n16r8", "sdkconfig_append": ["CONFIG_BOARD_TYPE_CUSTOM_S3_N16R8=y", "# CONFIG_SPIRAM is not set", "CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y"]}]}
