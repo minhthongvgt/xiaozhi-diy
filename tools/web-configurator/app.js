@@ -1949,9 +1949,7 @@ class GUIController {
     if (flashSelect && partitionSelect) {
       flashSelect.addEventListener("change", (e) => {
         const size = e.target.value;
-        if (size === "8MB") partitionSelect.value = "partitions/v2/8m.csv";
-        else if (size === "16MB") partitionSelect.value = "partitions/v2/16m.csv";
-        else if (size === "32MB") partitionSelect.value = "partitions/v2/32m.csv";
+        if (size === "16MB") partitionSelect.value = "partitions/v2/16m.csv";
         GUIController.syncUIToState();
       });
     }
