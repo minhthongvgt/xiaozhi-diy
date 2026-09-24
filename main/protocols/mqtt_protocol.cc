@@ -12,6 +12,9 @@
 #define TAG "MQTT"
 
 MqttProtocol::MqttProtocol() {
+    udp_port_ = 0;
+    local_sequence_ = 0;
+    remote_sequence_ = 0;
     event_group_handle_ = xEventGroupCreate();
 
     // Initialize reconnect timer

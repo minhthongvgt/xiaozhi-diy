@@ -122,7 +122,6 @@ bool WebsocketProtocol::OpenAudioChannel() {
                         .payload = std::vector<uint8_t>(payload, payload + bp2->payload_size)}));
                 } else if (version_ == 3) {
                     BinaryProtocol3* bp3 = (BinaryProtocol3*)data;
-                    bp3->type = bp3->type;
                     bp3->payload_size = ntohs(bp3->payload_size);
                     auto payload = (uint8_t*)bp3->payload;
                     on_incoming_audio_(std::make_unique<AudioStreamPacket>(AudioStreamPacket{

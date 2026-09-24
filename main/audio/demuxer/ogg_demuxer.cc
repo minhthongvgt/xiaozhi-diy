@@ -229,7 +229,6 @@ size_t OggDemuxer::Process(const uint8_t* data, size_t size)
                         data + processed, to_copy);
                 
                 processed += to_copy;
-                ctx_.data_offset += to_copy;
                 ctx_.bytes_needed = 0;
                 
                 state_ = ParseState::PARSE_DATA;
