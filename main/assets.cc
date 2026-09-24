@@ -43,10 +43,6 @@ bool Assets::FindPartition(Assets* assets) {
     assets->partition_ = esp_partition_find_first(ESP_PARTITION_TYPE_ANY, ESP_PARTITION_SUBTYPE_ANY,
                                                   "model");
     if (assets->partition_ == nullptr) {
-        assets->partition_ = esp_partition_find_first(ESP_PARTITION_TYPE_ANY, ESP_PARTITION_SUBTYPE_ANY,
-                                                      "assets");
-    }
-    if (assets->partition_ == nullptr) {
         ESP_LOGI(TAG, "No assets partition found");
         return false;
     }
