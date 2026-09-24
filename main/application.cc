@@ -682,8 +682,11 @@ void Application::InitializeProtocol() {
             if (cJSON_IsObject(payload)) {
                 char* payload_str = cJSON_PrintUnformatted(payload);
                 if (payload_str) {
-                    McpServer::GetInstance().ParseMessage(std::string(payload_str));
+                    std::string message(payload_str);
                     cJSON_free(payload_str);
+                    Schedule([message]() {
+                        McpServer::GetInstance().ParseMessage(message);
+                    });
                 }
             }
         } else if (strcmp(type->valuestring, "system") == 0) {

@@ -17,7 +17,6 @@
 #include <cstring>
 
 #define TAG "Assets"
-#define PARTITION_LABEL "model"
 
 struct mmap_assets_table {
     char asset_name[32];   /*!< Name of the asset */
@@ -42,7 +41,11 @@ Assets::~Assets() { UnApplyPartition(); }
 
 bool Assets::FindPartition(Assets* assets) {
     assets->partition_ = esp_partition_find_first(ESP_PARTITION_TYPE_ANY, ESP_PARTITION_SUBTYPE_ANY,
-                                                  PARTITION_LABEL);
+                                                  "model");
+    if (assets->partition_ == nullptr) {
+        assets->partition_ = esp_partition_find_first(ESP_PARTITION_TYPE_ANY, ESP_PARTITION_SUBTYPE_ANY,
+                                                      "assets");
+    }
     if (assets->partition_ == nullptr) {
         ESP_LOGI(TAG, "No assets partition found");
         return false;
@@ -441,7 +444,7 @@ bool Assets::EmoteStrategy::InitializePartition(Assets* assets) {
     }
 
     auto display = Board::GetInstance().GetDisplay();
-    if (display == nullptr || !display->MountAssets(PARTITION_LABEL)) {
+    if (display == nullptr || !display->MountAssets(assets->partition_->label)) {
         ESP_LOGE(TAG, "Emote display is not initialized");
         return false;
     }
