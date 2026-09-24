@@ -9,7 +9,6 @@ Knob::Knob(gpio_num_t pin_a, gpio_num_t pin_b) {
         .gpio_encoder_b = static_cast<uint8_t>(pin_b),
     };
 
-    esp_err_t err = ESP_OK;
     knob_handle_ = iot_knob_create(&config);
     if (knob_handle_ == NULL) {
         ESP_LOGE(TAG, "Failed to create knob instance");
