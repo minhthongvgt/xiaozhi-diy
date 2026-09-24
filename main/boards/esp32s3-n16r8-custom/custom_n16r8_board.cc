@@ -913,8 +913,12 @@ public:
         // Simplex Mode (Separate Clocks) - Supports MAX98357A, PCM5102A + INMP441/MSM261S
 #if defined(CONFIG_CUSTOM_AUDIO_DAC_PCM5102A)
         ESP_LOGI(TAG, "Audio DAC output configured for PCM5102A Hi-Fi I2S DAC (32-bit/384kHz)");
+#elif defined(CONFIG_CUSTOM_AUDIO_DAC_MAX98360A)
+        ESP_LOGI(TAG, "Audio DAC output configured for MAX98360A Class-D I2S Amplifier");
 #elif defined(CONFIG_CUSTOM_AUDIO_DAC_MAX98357A)
         ESP_LOGI(TAG, "Audio DAC output configured for MAX98357A Class-D I2S Amplifier");
+#else
+        ESP_LOGI(TAG, "Audio DAC output configured for Generic I2S Simplex Amplifier");
 #endif
         static NoAudioCodecSimplex audio_codec(AUDIO_INPUT_SAMPLE_RATE, AUDIO_OUTPUT_SAMPLE_RATE,
                                                AUDIO_I2S_SPK_GPIO_BCLK, AUDIO_I2S_SPK_GPIO_LRCK, AUDIO_I2S_SPK_GPIO_DOUT,
