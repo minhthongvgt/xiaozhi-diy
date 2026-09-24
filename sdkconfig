@@ -967,85 +967,45 @@ CONFIG_PARTITION_TABLE_MD5=y
 #
 # default:
 CONFIG_OTA_URL="https://api.tenclass.net/xiaozhi/ota/"
-# default:
-CONFIG_LANGUAGE_ZH_CN=y
-# default:
+# CONFIG_LANGUAGE_ZH_CN is not set
 # CONFIG_LANGUAGE_ZH_TW is not set
-# default:
 # CONFIG_LANGUAGE_EN_US is not set
-# default:
 # CONFIG_LANGUAGE_JA_JP is not set
-# default:
 # CONFIG_LANGUAGE_KO_KR is not set
-# default:
-# CONFIG_LANGUAGE_VI_VN is not set
-# default:
+CONFIG_LANGUAGE_VI_VN=y
 # CONFIG_LANGUAGE_TH_TH is not set
-# default:
 # CONFIG_LANGUAGE_DE_DE is not set
-# default:
 # CONFIG_LANGUAGE_FR_FR is not set
-# default:
 # CONFIG_LANGUAGE_ES_ES is not set
-# default:
 # CONFIG_LANGUAGE_IT_IT is not set
-# default:
 # CONFIG_LANGUAGE_RU_RU is not set
-# default:
 # CONFIG_LANGUAGE_AR_SA is not set
-# default:
 # CONFIG_LANGUAGE_HI_IN is not set
-# default:
 # CONFIG_LANGUAGE_MR_IN is not set
-# default:
 # CONFIG_LANGUAGE_PT_PT is not set
-# default:
 # CONFIG_LANGUAGE_PT_BR is not set
-# default:
 # CONFIG_LANGUAGE_PL_PL is not set
-# default:
 # CONFIG_LANGUAGE_CS_CZ is not set
-# default:
 # CONFIG_LANGUAGE_FI_FI is not set
-# default:
 # CONFIG_LANGUAGE_TR_TR is not set
-# default:
 # CONFIG_LANGUAGE_ID_ID is not set
-# default:
 # CONFIG_LANGUAGE_UK_UA is not set
-# default:
 # CONFIG_LANGUAGE_RO_RO is not set
-# default:
 # CONFIG_LANGUAGE_BG_BG is not set
-# default:
 # CONFIG_LANGUAGE_CA_ES is not set
-# default:
 # CONFIG_LANGUAGE_DA_DK is not set
-# default:
 # CONFIG_LANGUAGE_EL_GR is not set
-# default:
 # CONFIG_LANGUAGE_FA_IR is not set
-# default:
 # CONFIG_LANGUAGE_FIL_PH is not set
-# default:
 # CONFIG_LANGUAGE_HE_IL is not set
-# default:
 # CONFIG_LANGUAGE_HR_HR is not set
-# default:
 # CONFIG_LANGUAGE_HU_HU is not set
-# default:
 # CONFIG_LANGUAGE_MS_MY is not set
-# default:
 # CONFIG_LANGUAGE_NB_NO is not set
-# default:
 # CONFIG_LANGUAGE_NL_NL is not set
-# default:
 # CONFIG_LANGUAGE_SK_SK is not set
-# default:
 # CONFIG_LANGUAGE_SL_SI is not set
-# default:
 # CONFIG_LANGUAGE_SV_SE is not set
-# default:
 # CONFIG_LANGUAGE_SR_RS is not set
 CONFIG_BOARD_TYPE_ESP32_S3_N16R8_CUSTOM=y
 # default:
@@ -1121,8 +1081,8 @@ CONFIG_USE_HOTSPOT_WIFI_PROVISIONING=y
 # 1. Màn hình, Giao diện & Flash Assets (Display, UI Style & Assets)
 #
 CONFIG_ENABLE_CUSTOM_DISPLAY=y
-# CONFIG_CUSTOM_DISPLAY_ST7789 is not set
-CONFIG_CUSTOM_DISPLAY_ST7796=y
+CONFIG_CUSTOM_DISPLAY_ST7789=y
+# CONFIG_CUSTOM_DISPLAY_ST7796 is not set
 # CONFIG_CUSTOM_DISPLAY_ST7735 is not set
 # CONFIG_CUSTOM_DISPLAY_ST7701 is not set
 # CONFIG_CUSTOM_DISPLAY_ILI9341 is not set
@@ -1139,8 +1099,8 @@ CONFIG_CUSTOM_DISPLAY_ST7796=y
 # CONFIG_CUSTOM_DISPLAY_NONE is not set
 # default:
 # CONFIG_ENABLE_CUSTOM_SECONDARY_UART_DISPLAY is not set
-CONFIG_CUSTOM_DISPLAY_WIDTH=320
-CONFIG_CUSTOM_DISPLAY_HEIGHT=480
+CONFIG_CUSTOM_DISPLAY_WIDTH=240
+CONFIG_CUSTOM_DISPLAY_HEIGHT=320
 CONFIG_CUSTOM_DISPLAY_PIN_MOSI=47
 CONFIG_CUSTOM_DISPLAY_PIN_CLK=21
 CONFIG_CUSTOM_DISPLAY_PIN_CS=41
@@ -1176,9 +1136,9 @@ CONFIG_FLASH_DEFAULT_ASSETS=y
 # 2. Âm thanh: Loa & Micro (Audio: Speaker & Microphone)
 #
 CONFIG_ENABLE_CUSTOM_SPEAKER=y
-# CONFIG_CUSTOM_AUDIO_DAC_MAX98357A is not set
+CONFIG_CUSTOM_AUDIO_DAC_MAX98357A=y
 # CONFIG_CUSTOM_AUDIO_DAC_MAX98360A is not set
-CONFIG_CUSTOM_AUDIO_DAC_PCM5102A=y
+# CONFIG_CUSTOM_AUDIO_DAC_PCM5102A is not set
 # CONFIG_CUSTOM_AUDIO_DAC_PCM5100A is not set
 # CONFIG_CUSTOM_AUDIO_DAC_CS4344 is not set
 # CONFIG_CUSTOM_AUDIO_DAC_PT8211 is not set
@@ -1255,8 +1215,23 @@ CONFIG_CUSTOM_BUTTON_BOOT_GPIO=0
 #
 # default:
 # CONFIG_ENABLE_CUSTOM_CAMERA is not set
+CONFIG_ENABLE_CUSTOM_LEDS=y
 # default:
-# CONFIG_ENABLE_CUSTOM_LEDS is not set
+CONFIG_CUSTOM_LED_WS2812=y
+# default:
+# CONFIG_CUSTOM_LED_SINGLE_PWM is not set
+# default:
+# CONFIG_CUSTOM_LED_CIRCULAR_STRIP is not set
+# default:
+# CONFIG_CUSTOM_LED_USER_CUSTOM is not set
+# default:
+# CONFIG_CUSTOM_LED_NONE is not set
+# default:
+CONFIG_CUSTOM_LED_GPIO=48
+# default:
+CONFIG_CUSTOM_LED_COUNT=1
+# default:
+CONFIG_CUSTOM_LED_FAST_RAINBOW_EFFECT=y
 # default:
 # CONFIG_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC is not set
 # end of 4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)
@@ -1395,11 +1370,15 @@ CONFIG_CUSTOM_BATTERY_MONITOR_NONE=y
 #
 
 #
-#  [Loa DAC]  PCM5102A I2S Stereo    | DOUT: 7, BCLK: 15, LRCK: 16                
+#  [Loa DAC]  MAX98357A I2S Mono     | DOUT: 7, BCLK: 15, LRCK: 16                
 #
 
 #
 #  [Micro]    INMP441 / MSM261S I2S  | DIN: 6, SCK: 5, WS: 4                      
+#
+
+#
+#  [Den LED]  RGB WS2812 / SK6812    | DATA: 48 (RMT)                             
 #
 
 #

@@ -2,6 +2,10 @@
 # CMakeLists in this exact order for cmake to work correctly
 cmake_minimum_required(VERSION 3.16)
 
+# Force Python UTF-8 encoding for all CMake child processes to prevent UnicodeDecodeError on Windows
+set(ENV{PYTHONUTF8} "1")
+set(ENV{PYTHONIOENCODING} "utf-8")
+
 # Add this line to disable the specific warning
 add_compile_options(-Wno-missing-field-initializers)
 
