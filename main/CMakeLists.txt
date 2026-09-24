@@ -654,23 +654,23 @@ function(get_assets_local_file assets_source assets_local_file_var)
 endfunction()
 
 
-partition_table_get_partition_info(size "--partition-name model" "size")
-partition_table_get_partition_info(offset "--partition-name model" "offset")
+partition_table_get_partition_info(size "--partition-name assets" "size")
+partition_table_get_partition_info(offset "--partition-name assets" "offset")
 if ("${size}" AND "${offset}")
     # Flash assets based on configuration
     if(CONFIG_FLASH_DEFAULT_ASSETS)
         # Build default assets based on configuration
         build_default_assets_bin()
-        esptool_py_flash_to_partition(flash "model" "${GENERATED_ASSETS_LOCAL_FILE}")
+        esptool_py_flash_to_partition(flash "assets" "${GENERATED_ASSETS_LOCAL_FILE}")
         message(STATUS "Generated default assets flash configured: ${GENERATED_ASSETS_LOCAL_FILE} -> assets partition")
     elseif(CONFIG_FLASH_CUSTOM_ASSETS)
         # Flash custom assets
         get_assets_local_file("${CONFIG_CUSTOM_ASSETS_FILE}" ASSETS_LOCAL_FILE)
-        esptool_py_flash_to_partition(flash "model" "${ASSETS_LOCAL_FILE}")
+        esptool_py_flash_to_partition(flash "assets" "${ASSETS_LOCAL_FILE}")
         message(STATUS "Custom assets flash configured: ${ASSETS_LOCAL_FILE} -> assets partition")
     elseif(CONFIG_FLASH_EXPRESSION_ASSETS)
         set(ASSETS_NAME "expression_assets")
-        set(ASSETS_PARTITION "model")
+        set(ASSETS_PARTITION "assets")
         set(ASSETS_FILE "${CMAKE_BINARY_DIR}/${ASSETS_NAME}.bin")
 
         if(EMOTE_EXTERNAL_PATH)
