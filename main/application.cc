@@ -43,7 +43,7 @@ Application::Application() : notify_player_(audio_service_) {
                                                 .dispatch_method = ESP_TIMER_TASK,
                                                 .name = "clock_timer",
                                                 .skip_unhandled_events = true};
-    esp_timer_create(&clock_timer_args, &clock_timer_handle_);
+    ESP_ERROR_CHECK(esp_timer_create(&clock_timer_args, &clock_timer_handle_));
 }
 
 Application::~Application() {
@@ -100,7 +100,7 @@ void Application::Initialize() {
     });
 
     // Start the clock timer to update the status bar
-    esp_timer_start_periodic(clock_timer_handle_, 1000000);
+    ESP_ERROR_CHECK(esp_timer_start_periodic(clock_timer_handle_, 1000000));
 
     // Add MCP common tools (only once during initialization)
     auto& mcp_server = McpServer::GetInstance();
@@ -301,14 +301,14 @@ void Application::HandleNetworkConnectedEvent() {
             return;
         }
 
-        xTaskCreate(
+        xTaskCreatePinnedToCore(
             [](void* arg) {
                 Application* app = static_cast<Application*>(arg);
                 app->ActivationTask();
                 app->activation_task_handle_ = nullptr;
                 vTaskDelete(NULL);
             },
-            "activation", 4096 * 2, this, 2, &activation_task_handle_);
+            "activation", 4096 * 2, this, 2, &activation_task_handle_, 1);
     }
 
     // Update the status bar immediately to show the network state
@@ -680,7 +680,11 @@ void Application::InitializeProtocol() {
         } else if (strcmp(type->valuestring, "mcp") == 0) {
             auto payload = cJSON_GetObjectItem(root, "payload");
             if (cJSON_IsObject(payload)) {
-                McpServer::GetInstance().ParseMessage(payload);
+                char* payload_str = cJSON_PrintUnformatted(payload);
+                if (payload_str) {
+                    McpServer::GetInstance().ParseMessage(std::string(payload_str));
+                    cJSON_free(payload_str);
+                }
             }
         } else if (strcmp(type->valuestring, "system") == 0) {
             auto command = cJSON_GetObjectItem(root, "command");

@@ -135,11 +135,11 @@ void Ml307Board::NetworkTask() {
 
 void Ml307Board::StartNetwork() {
     // Create network initialization task and return immediately
-    xTaskCreate([](void* arg) {
+    xTaskCreatePinnedToCore([](void* arg) {
         Ml307Board* board = static_cast<Ml307Board*>(arg);
         board->NetworkTask();
         vTaskDelete(NULL);
-    }, "ml307_net", 4096, this, 5, NULL);
+    }, "ml307_net", 4096, this, 5, NULL, 0);
 }
 
 NetworkInterface* Ml307Board::GetNetwork() {

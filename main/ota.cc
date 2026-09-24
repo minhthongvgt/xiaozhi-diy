@@ -376,20 +376,10 @@ bool Ota::Upgrade(const std::string& firmware_url, std::function<void(int progre
     heap_caps_free(buffer);
 
     esp_err_t err = esp_ota_end(update_handle);
-    if (err != ESP_OK) {
-        if (err == ESP_ERR_OTA_VALIDATE_FAILED) {
-            ESP_LOGE(TAG, "Image validation failed, image is corrupted");
-        } else {
-            ESP_LOGE(TAG, "Failed to end OTA: %s", esp_err_to_name(err));
-        }
-        return false;
-    }
+    ESP_ERROR_CHECK(err);
 
     err = esp_ota_set_boot_partition(update_partition);
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to set boot partition: %s", esp_err_to_name(err));
-        return false;
-    }
+    ESP_ERROR_CHECK(err);
 
     ESP_LOGI(TAG, "Firmware upgrade successful");
     return true;
@@ -438,10 +428,7 @@ std::string Ota::GetActivationPayload() {
     
     // 使用Key0计算HMAC
     esp_err_t ret = esp_hmac_calculate(HMAC_KEY0, (uint8_t*)activation_challenge_.data(), activation_challenge_.size(), hmac_result);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "HMAC calculation failed: %s", esp_err_to_name(ret));
-        return "{}";
-    }
+    ESP_ERROR_CHECK(ret);
 
     for (size_t i = 0; i < sizeof(hmac_result); i++) {
         char buffer[3];

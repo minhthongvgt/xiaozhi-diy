@@ -63,7 +63,7 @@ esp_err_t esp_lcd_new_panel_nv3030b(const esp_lcd_panel_io_handle_t io, const es
     {                                                           \
         .sclk_io_num = sclk,                                    \
         .mosi_io_num = mosi,                                    \
-        .miso_io_num = -1,                                      \
+        .miso_io_num = GPIO_NUM_NC,                                      \
         .quadhd_io_num = -1,                                    \
         .quadwp_io_num = -1,                                    \
         .max_transfer_sz = max_trans_sz,                        \

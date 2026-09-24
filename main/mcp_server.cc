@@ -169,10 +169,10 @@ void McpServer::AddUserOnlyTools() {
         AddUserOnlyTool("self.screen.get_info",
                         "Information about the screen, including width, height, etc.",
                         PropertyList(), [display](const PropertyList& properties) -> ReturnValue {
-                            cJSON* json = cJSON_CreateObject();
-                            cJSON_AddNumberToObject(json, "width", display->width());
-                            cJSON_AddNumberToObject(json, "height", display->height());
-                            cJSON_AddBoolToObject(json, "monochrome", display->IsMonochrome());
+                            nlohmann::json json;
+                            json["width"] = display->width();
+                            json["height"] = display->height();
+                            json["monochrome"] = display->IsMonochrome();
                             return json;
                         });
 
@@ -328,26 +328,24 @@ void McpServer::AddUserOnlyTool(const std::string& name, const std::string& desc
 }
 
 void McpServer::ParseMessage(const std::string& message, ResponseSender response_sender) {
-    CJsonUniquePtr json(cJSON_Parse(message.c_str()));
-    if (json == nullptr) {
-        ESP_LOGE(TAG, "Failed to parse MCP message: %s", message.c_str());
+    nlohmann::json json = nlohmann::json::parse(message, nullptr, false);
+    if (json.is_discarded()) {
+        ESP_LOGE(TAG, "Failed to parse MCP message");
         return;
     }
-    ParseMessage(json.get(), std::move(response_sender));
+    ParseMessage(json, std::move(response_sender));
 }
 
-void McpServer::ParseCapabilities(const cJSON* capabilities) {
-    auto vision = cJSON_GetObjectItem(capabilities, "vision");
-    if (cJSON_IsObject(vision)) {
-        auto url = cJSON_GetObjectItem(vision, "url");
-        auto token = cJSON_GetObjectItem(vision, "token");
-        if (cJSON_IsString(url)) {
+void McpServer::ParseCapabilities(const nlohmann::json& capabilities) {
+    if (capabilities.contains("vision") && capabilities["vision"].is_object()) {
+        auto vision = capabilities["vision"];
+        if (vision.contains("url") && vision["url"].is_string()) {
             auto camera = Board::GetInstance().GetCamera();
             if (camera) {
-                std::string url_str = std::string(url->valuestring);
+                std::string url_str = vision["url"].get<std::string>();
                 std::string token_str;
-                if (cJSON_IsString(token)) {
-                    token_str = std::string(token->valuestring);
+                if (vision.contains("token") && vision["token"].is_string()) {
+                    token_str = vision["token"].get<std::string>();
                 }
                 camera->SetExplainUrl(url_str, token_str);
             }
@@ -355,47 +353,38 @@ void McpServer::ParseCapabilities(const cJSON* capabilities) {
     }
 }
 
-void McpServer::ParseMessage(const cJSON* json, ResponseSender response_sender) {
-    // Check JSONRPC version
-    auto version = cJSON_GetObjectItem(json, "jsonrpc");
-    if (version == nullptr || !cJSON_IsString(version) ||
-        strcmp(version->valuestring, "2.0") != 0) {
-        ESP_LOGE(TAG, "Invalid JSONRPC version: %s", version ? version->valuestring : "null");
+void McpServer::ParseMessage(const nlohmann::json& json, ResponseSender response_sender) {
+    if (!json.contains("jsonrpc") || !json["jsonrpc"].is_string() || json["jsonrpc"] != "2.0") {
+        ESP_LOGE(TAG, "Invalid JSONRPC version");
         return;
     }
 
-    // Check method
-    auto method = cJSON_GetObjectItem(json, "method");
-    if (method == nullptr || !cJSON_IsString(method)) {
+    if (!json.contains("method") || !json["method"].is_string()) {
         ESP_LOGE(TAG, "Missing method");
         return;
     }
 
-    auto method_str = std::string(method->valuestring);
+    auto method_str = json["method"].get<std::string>();
     if (method_str.find("notifications") == 0) {
         return;
     }
 
-    // Check params
-    auto params = cJSON_GetObjectItem(json, "params");
-    if (params != nullptr && !cJSON_IsObject(params)) {
+    if (json.contains("params") && !json["params"].is_object()) {
         ESP_LOGE(TAG, "Invalid params for method: %s", method_str.c_str());
         return;
     }
 
-    auto id = cJSON_GetObjectItem(json, "id");
-    if (id == nullptr || !cJSON_IsNumber(id)) {
+    if (!json.contains("id") || !json["id"].is_number()) {
         ESP_LOGE(TAG, "Invalid id for method: %s", method_str.c_str());
         return;
     }
-    auto id_int = id->valueint;
+    int id_int = json["id"].get<int>();
+
+    const nlohmann::json& params = json.contains("params") ? json["params"] : nlohmann::json::object();
 
     if (method_str == "initialize") {
-        if (cJSON_IsObject(params)) {
-            auto capabilities = cJSON_GetObjectItem(params, "capabilities");
-            if (cJSON_IsObject(capabilities)) {
-                ParseCapabilities(capabilities);
-            }
+        if (params.contains("capabilities") && params["capabilities"].is_object()) {
+            ParseCapabilities(params["capabilities"]);
         }
         auto app_desc = esp_app_get_description();
         std::string message =
@@ -407,37 +396,32 @@ void McpServer::ParseMessage(const cJSON* json, ResponseSender response_sender) 
     } else if (method_str == "tools/list") {
         std::string cursor_str = "";
         bool list_user_only_tools = false;
-        if (params != nullptr) {
-            auto cursor = cJSON_GetObjectItem(params, "cursor");
-            if (cJSON_IsString(cursor)) {
-                cursor_str = std::string(cursor->valuestring);
-            }
-            auto with_user_tools = cJSON_GetObjectItem(params, "withUserTools");
-            if (cJSON_IsBool(with_user_tools)) {
-                list_user_only_tools = with_user_tools->valueint == 1;
-            }
+        if (params.contains("cursor") && params["cursor"].is_string()) {
+            cursor_str = params["cursor"].get<std::string>();
+        }
+        if (params.contains("withUserTools") && params["withUserTools"].is_boolean()) {
+            list_user_only_tools = params["withUserTools"].get<bool>();
         }
         GetToolsList(id_int, cursor_str, list_user_only_tools, response_sender);
     } else if (method_str == "tools/call") {
-        if (!cJSON_IsObject(params)) {
-            ESP_LOGE(TAG, "tools/call: Missing params");
-            ReplyError(id_int, -32602, "Missing params", response_sender);
-            return;
-        }
-        auto tool_name = cJSON_GetObjectItem(params, "name");
-        if (!cJSON_IsString(tool_name)) {
-            ESP_LOGE(TAG, "tools/call: Missing name");
+        if (!params.contains("name") || !params["name"].is_string()) {
+            ESP_LOGE(TAG, "tools/call: Missing tool name");
             ReplyError(id_int, -32602, "Missing tool name", response_sender);
             return;
         }
-        auto tool_arguments = cJSON_GetObjectItem(params, "arguments");
-        if (tool_arguments != nullptr && !cJSON_IsObject(tool_arguments)) {
-            ESP_LOGE(TAG, "tools/call: Invalid arguments");
-            ReplyError(id_int, -32602, "Invalid arguments: expected object", response_sender);
-            return;
+        std::string tool_name = params["name"].get<std::string>();
+        
+        nlohmann::json tool_arguments = nlohmann::json::object();
+        if (params.contains("arguments")) {
+            if (!params["arguments"].is_object()) {
+                ESP_LOGE(TAG, "tools/call: Invalid arguments");
+                ReplyError(id_int, -32602, "Invalid arguments: expected object", response_sender);
+                return;
+            }
+            tool_arguments = params["arguments"];
         }
-        DoToolCall(id_int, std::string(tool_name->valuestring), tool_arguments,
-                   std::move(response_sender));
+        
+        DoToolCall(id_int, tool_name, tool_arguments, std::move(response_sender));
     } else {
         ESP_LOGE(TAG, "Method not implemented: %s", method_str.c_str());
         ReplyError(id_int, -32601, "Method not implemented: " + method_str, response_sender);
@@ -537,7 +521,7 @@ void McpServer::GetToolsList(int id, const std::string& cursor, bool list_user_o
     ReplyResult(id, json, response_sender);
 }
 
-void McpServer::DoToolCall(int id, const std::string& tool_name, const cJSON* tool_arguments,
+void McpServer::DoToolCall(int id, const std::string& tool_name, const nlohmann::json& tool_arguments,
                            ResponseSender response_sender) {
     auto tool_iter = std::find_if(tools_.begin(), tools_.end(), [&tool_name](const auto& tool) {
         return tool->name() == tool_name;
@@ -554,18 +538,18 @@ void McpServer::DoToolCall(int id, const std::string& tool_name, const cJSON* to
     for (auto& argument : arguments) {
         bool found = false;
         std::expected<void, std::string> validation;
-        if (cJSON_IsObject(tool_arguments)) {
-            auto value = cJSON_GetObjectItem(tool_arguments, argument.name().c_str());
-            if (argument.type() == kPropertyTypeBoolean && cJSON_IsBool(value)) {
-                validation = argument.set_value<bool>(value->valueint == 1);
+        if (tool_arguments.contains(argument.name())) {
+            const auto& value = tool_arguments[argument.name()];
+            if (argument.type() == kPropertyTypeBoolean && value.is_boolean()) {
+                validation = argument.set_value<bool>(value.get<bool>());
                 found = true;
-            } else if (argument.type() == kPropertyTypeInteger && cJSON_IsNumber(value)) {
-                validation = argument.set_value<int>(value->valueint);
+            } else if (argument.type() == kPropertyTypeInteger && value.is_number_integer()) {
+                validation = argument.set_value<int>(value.get<int>());
                 found = true;
-            } else if (argument.type() == kPropertyTypeString && cJSON_IsString(value)) {
-                validation = argument.set_value<std::string>(value->valuestring);
+            } else if (argument.type() == kPropertyTypeString && value.is_string()) {
+                validation = argument.set_value<std::string>(value.get<std::string>());
                 found = true;
-            } else if (value != nullptr) {
+            } else {
                 ESP_LOGE(TAG, "tools/call: Invalid type for argument: %s", argument.name().c_str());
                 ReplyError(id, -32602, "Invalid type for argument: " + argument.name(),
                            response_sender);

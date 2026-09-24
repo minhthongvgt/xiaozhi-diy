@@ -52,25 +52,25 @@ GpioLed::GpioLed(gpio_num_t gpio, int output_invert, ledc_timer_t timer_num, led
 
     ESP_ERROR_CHECK(ledc_timer_config(&ledc_timer));
 
-    ledc_channel_.channel    = channel,
-    ledc_channel_.duty       = 0,
-    ledc_channel_.gpio_num   = gpio,
-    ledc_channel_.speed_mode = LEDC_LS_MODE,
-    ledc_channel_.hpoint     = 0,
-    ledc_channel_.timer_sel  = timer_num,
-    ledc_channel_.flags.output_invert = output_invert & 0x01,
+    ledc_channel_.channel    = channel;
+    ledc_channel_.duty       = 0;
+    ledc_channel_.gpio_num   = gpio;
+    ledc_channel_.speed_mode = LEDC_LS_MODE;
+    ledc_channel_.hpoint     = 0;
+    ledc_channel_.timer_sel  = timer_num;
+    ledc_channel_.flags.output_invert = output_invert & 0x01;
 
     // Set LED Controller with previously prepared configuration
-    ledc_channel_config(&ledc_channel_);
+    ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel_));
 
     // Initialize fade service.
-    ledc_fade_func_install(0);
+    ESP_ERROR_CHECK(ledc_fade_func_install(0));
 
     // When the callback registered by ledc_cb_degister is called, run led ->OnFadeEnd()
     ledc_cbs_t ledc_callbacks = {
         .fade_cb = FadeCallback
     };
-    ledc_cb_register(ledc_channel_.speed_mode, ledc_channel_.channel, &ledc_callbacks, this);
+    ESP_ERROR_CHECK(ledc_cb_register(ledc_channel_.speed_mode, ledc_channel_.channel, &ledc_callbacks, this));
 
     esp_timer_create_args_t blink_timer_args = {
         .callback = [](void *arg) {
@@ -84,8 +84,8 @@ GpioLed::GpioLed(gpio_num_t gpio, int output_invert, ledc_timer_t timer_num, led
     };
     ESP_ERROR_CHECK(esp_timer_create(&blink_timer_args, &blink_timer_));
 
-    xTaskCreate(EventTask, "LedEvent", 2048, this, 
-            tskIDLE_PRIORITY + 2, &event_task_handle_);
+    xTaskCreatePinnedToCore(EventTask, "LedEvent", 4096, this, 
+            tskIDLE_PRIORITY + 2, &event_task_handle_, 1);
 
     ledc_initialized_ = true;
 }
@@ -119,8 +119,8 @@ void GpioLed::TurnOn() {
     std::lock_guard<std::mutex> lock(mutex_);
     esp_timer_stop(blink_timer_);
     ledc_fade_stop(ledc_channel_.speed_mode, ledc_channel_.channel);
-    ledc_set_duty(ledc_channel_.speed_mode, ledc_channel_.channel, duty_);
-    ledc_update_duty(ledc_channel_.speed_mode, ledc_channel_.channel);
+    ESP_ERROR_CHECK(ledc_set_duty(ledc_channel_.speed_mode, ledc_channel_.channel, duty_));
+    ESP_ERROR_CHECK(ledc_update_duty(ledc_channel_.speed_mode, ledc_channel_.channel));
 }
 
 void GpioLed::TurnOff() {
@@ -131,8 +131,8 @@ void GpioLed::TurnOff() {
     std::lock_guard<std::mutex> lock(mutex_);
     esp_timer_stop(blink_timer_);
     ledc_fade_stop(ledc_channel_.speed_mode, ledc_channel_.channel);
-    ledc_set_duty(ledc_channel_.speed_mode, ledc_channel_.channel, 0);
-    ledc_update_duty(ledc_channel_.speed_mode, ledc_channel_.channel);
+    ESP_ERROR_CHECK(ledc_set_duty(ledc_channel_.speed_mode, ledc_channel_.channel, 0));
+    ESP_ERROR_CHECK(ledc_update_duty(ledc_channel_.speed_mode, ledc_channel_.channel));
 }
 
 void GpioLed::BlinkOnce() {
@@ -165,15 +165,15 @@ void GpioLed::OnBlinkTimer() {
     std::lock_guard<std::mutex> lock(mutex_);
     blink_counter_--;
     if (blink_counter_ & 1) {
-        ledc_set_duty(ledc_channel_.speed_mode, ledc_channel_.channel, duty_);
+        ESP_ERROR_CHECK(ledc_set_duty(ledc_channel_.speed_mode, ledc_channel_.channel, duty_));
     } else {
-        ledc_set_duty(ledc_channel_.speed_mode, ledc_channel_.channel, 0);
+        ESP_ERROR_CHECK(ledc_set_duty(ledc_channel_.speed_mode, ledc_channel_.channel, 0));
 
         if (blink_counter_ == 0) {
             esp_timer_stop(blink_timer_);
         }
     }
-    ledc_update_duty(ledc_channel_.speed_mode, ledc_channel_.channel);
+    ESP_ERROR_CHECK(ledc_update_duty(ledc_channel_.speed_mode, ledc_channel_.channel));
 }
 
 void GpioLed::StartFadeTask() {
@@ -185,29 +185,29 @@ void GpioLed::StartFadeTask() {
     esp_timer_stop(blink_timer_);
     ledc_fade_stop(ledc_channel_.speed_mode, ledc_channel_.channel);
     fade_up_ = true;
-    ledc_set_fade_with_time(ledc_channel_.speed_mode,
-                            ledc_channel_.channel, LEDC_DUTY, LEDC_FADE_TIME);
-    ledc_fade_start(ledc_channel_.speed_mode,
-                    ledc_channel_.channel, LEDC_FADE_NO_WAIT);
+    ESP_ERROR_CHECK(ledc_set_fade_with_time(ledc_channel_.speed_mode,
+                            ledc_channel_.channel, LEDC_DUTY, LEDC_FADE_TIME));
+    ESP_ERROR_CHECK(ledc_fade_start(ledc_channel_.speed_mode,
+                    ledc_channel_.channel, LEDC_FADE_NO_WAIT));
 }
 
 void GpioLed::OnFadeEnd() {
     std::lock_guard<std::mutex> lock(mutex_);
     fade_up_ = !fade_up_;
-    ledc_set_fade_with_time(ledc_channel_.speed_mode,
-                            ledc_channel_.channel, fade_up_ ? LEDC_DUTY : 0, LEDC_FADE_TIME);
-    ledc_fade_start(ledc_channel_.speed_mode,
-                    ledc_channel_.channel, LEDC_FADE_NO_WAIT);
+    ESP_ERROR_CHECK(ledc_set_fade_with_time(ledc_channel_.speed_mode,
+                            ledc_channel_.channel, fade_up_ ? LEDC_DUTY : 0, LEDC_FADE_TIME));
+    ESP_ERROR_CHECK(ledc_fade_start(ledc_channel_.speed_mode,
+                    ledc_channel_.channel, LEDC_FADE_NO_WAIT));
 }
 
 bool IRAM_ATTR GpioLed::FadeCallback(const ledc_cb_param_t *param, void *user_arg) {
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
     if (param->event == LEDC_FADE_END_EVT) {
         auto led = static_cast<GpioLed*>(user_arg);
-        BaseType_t xHigherPriorityTaskWoken = pdFALSE;
         xTaskNotifyFromISR(led->event_task_handle_, 0x01, eSetValueWithOverwrite,
                            &xHigherPriorityTaskWoken);
     }
-    return true;
+    return xHigherPriorityTaskWoken == pdTRUE;
 }
 
 void GpioLed::OnStateChanged() {

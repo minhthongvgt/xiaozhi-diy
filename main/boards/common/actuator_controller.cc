@@ -75,7 +75,9 @@ ActuatorController::ActuatorController() {
                        "Get the current power state of the 220V relay",
                        PropertyList(),
                        [](const PropertyList& properties) -> ReturnValue {
-        return actuator_get_relay() ? "{\"state\": true}" : "{\"state\": false}";
+        nlohmann::json j;
+        j["state"] = actuator_get_relay();
+        return j;
     });
 
     ESP_LOGI(TAG, "ActuatorController registered 6 MCP tools: set_servo, set_motor, beep, vibrate, set_relay, get_relay");

@@ -63,7 +63,7 @@ void EthernetBoard::SetNetworkEventCallback(NetworkEventCallback callback) {
 }
 
 void EthernetBoard::StartNetwork() {
-    xTaskCreate(NetworkTaskEntry, "eth_net", 4096, this, 5, nullptr);
+    xTaskCreatePinnedToCore(NetworkTaskEntry, "eth_net", 4096, this, 5, nullptr, 0);
 }
 
 void EthernetBoard::NetworkTaskEntry(void* arg) {

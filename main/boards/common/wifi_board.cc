@@ -35,7 +35,7 @@ WifiBoard::WifiBoard() {
         .name = "wifi_connect_timer",
         .skip_unhandled_events = true
     };
-    esp_timer_create(&timer_args, &connect_timer_);
+    ESP_ERROR_CHECK(esp_timer_create(&timer_args, &connect_timer_));
 }
 
 WifiBoard::~WifiBoard() {
@@ -104,7 +104,7 @@ void WifiBoard::TryWifiConnect() {
     if (have_ssid) {
         // Start connection attempt with timeout
         ESP_LOGI(TAG, "Starting WiFi connection attempt");
-        esp_timer_start_once(connect_timer_, CONNECT_TIMEOUT_SEC * 1000000ULL);
+        ESP_ERROR_CHECK(esp_timer_start_once(connect_timer_, CONNECT_TIMEOUT_SEC * 1000000ULL));
         WifiManager::GetInstance().StartStation();
     } else {
         // No SSID configured, enter config mode
@@ -204,7 +204,7 @@ void WifiBoard::EnterWifiConfigMode() {
         // Reset protocol (close audio channel, reset protocol)
         Application::GetInstance().ResetProtocol();
 
-        xTaskCreate([](void* arg) {
+        xTaskCreatePinnedToCore([](void* arg) {
             auto* board = static_cast<WifiBoard*>(arg);
 
             // Wait for 1 second to allow speaking to finish gracefully
@@ -218,7 +218,7 @@ void WifiBoard::EnterWifiConfigMode() {
             board->StartWifiConfigMode();
 
             vTaskDelete(NULL);
-        }, "wifi_cfg_delay", 4096, this, 2, NULL);
+        }, "wifi_cfg_delay", 4096, this, 2, NULL, 0);
         return;
     }
 

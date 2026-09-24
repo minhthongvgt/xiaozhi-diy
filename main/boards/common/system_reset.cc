@@ -39,9 +39,7 @@ void SystemReset::CheckButtons() {
 void SystemReset::ResetNvsFlash() {
     ESP_LOGI(TAG, "Resetting NVS flash");
     esp_err_t ret = nvs_flash_erase();
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to erase NVS flash");
-    }
+    ESP_ERROR_CHECK(ret);
     ret = nvs_flash_init();
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to initialize NVS flash");

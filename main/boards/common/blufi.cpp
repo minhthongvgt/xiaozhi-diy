@@ -829,12 +829,12 @@ void Blufi::_handle_event(esp_blufi_cb_event_t event, esp_blufi_cb_param_t* para
             } else {
                 esp_blufi_adv_stop();
                 if (!m_deinited) {
-                    xTaskCreate(
+                    xTaskCreatePinnedToCore(
                         [](void* ctx) {
                             static_cast<Blufi*>(ctx)->deinit();
                             vTaskDelete(nullptr);
                         },
-                        "blufi_deinit", 4096, this, 5, nullptr);
+                        "blufi_deinit", 4096, this, 5, nullptr, 0);
                 }
             }
             break;
@@ -899,7 +899,7 @@ void Blufi::_handle_event(esp_blufi_cb_event_t event, esp_blufi_cb_param_t* para
 
             wifi_manager.StartStation();
 
-            xTaskCreate(
+            xTaskCreatePinnedToCore(
                 [](void* ctx) {
                     auto* self = static_cast<Blufi*>(ctx);
                     auto& wifi = WifiManager::GetInstance();

@@ -45,11 +45,7 @@ esp_err_t bus_manager_init_i2c(gpio_num_t sda_pin, gpio_num_t scl_pin, uint32_t 
     };
 
     esp_err_t ret = i2c_new_master_bus(&bus_config, &s_i2c_bus);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to initialize I2C master bus (SDA: %d, SCL: %d): %s",
-                 sda_pin, scl_pin, esp_err_to_name(ret));
-        return ret;
-    }
+    ESP_ERROR_CHECK(ret);
 
     ESP_LOGI(TAG, "I2C Master Bus initialized successfully on SDA: %d, SCL: %d, Speed: %lu Hz",
              sda_pin, scl_pin, (unsigned long)clk_speed_hz);
@@ -84,12 +80,9 @@ esp_err_t bus_manager_add_i2c_device(const i2c_device_config_t *dev_cfg, i2c_mas
 
     esp_err_t ret = i2c_master_bus_add_device(s_i2c_bus, dev_cfg, dev_handle);
     bus_manager_i2c_unlock();
-
-    if (ret == ESP_OK) {
-        ESP_LOGD(TAG, "I2C Device registered at address 0x%02X", dev_cfg->device_address);
-    } else {
-        ESP_LOGE(TAG, "Failed to add I2C device (addr 0x%02X): %s", dev_cfg->device_address, esp_err_to_name(ret));
-    }
+    ESP_ERROR_CHECK(ret);
+    
+    ESP_LOGD(TAG, "I2C Device registered at address 0x%02X", dev_cfg->device_address);
     return ret;
 }
 
@@ -139,15 +132,14 @@ esp_err_t bus_manager_init_spi(spi_host_device_t host_id,
         .mosi_io_num = mosi_pin,
         .miso_io_num = miso_pin,
         .sclk_io_num = sclk_pin,
-        .quadwp_io_num = -1,
-        .quadhd_io_num = -1,
+        .quadwp_io_num = GPIO_NUM_NC,
+        .quadhd_io_num = GPIO_NUM_NC,
         .max_transfer_sz = max_transfer_sz > 0 ? max_transfer_sz : 4096,
     };
 
     esp_err_t ret = spi_bus_initialize(host_id, &buscfg, SPI_DMA_CH_AUTO);
-    if (ret != ESP_OK && ret != ESP_ERR_INVALID_STATE) {
-        ESP_LOGE(TAG, "Failed to initialize SPI Host %d: %s", host_id, esp_err_to_name(ret));
-        return ret;
+    if (ret != ESP_ERR_INVALID_STATE) {
+        ESP_ERROR_CHECK(ret);
     }
 
     if (host_id == SPI2_HOST) {

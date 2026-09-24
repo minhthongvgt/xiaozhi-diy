@@ -31,7 +31,9 @@ public:
 
                 auto led = Board::GetInstance().GetLed();
                 if (!led) {
-                    return "{\"error\": \"No status LED configured on this board\"}";
+                    nlohmann::json j;
+                    j["error"] = "No status LED configured on this board";
+                    return j;
                 }
 
                 // Handling auto / restore status mode
@@ -57,7 +59,9 @@ public:
                     led->SetCustomMode(false);
                     led->TurnOff();
                 } else {
-                    return "{\"error\": \"Unsupported effect: " + effect + "\"}";
+                    nlohmann::json j;
+                    j["error"] = "Unsupported effect: " + effect;
+                    return j;
                 }
 
                 return true;
@@ -80,7 +84,9 @@ public:
 
                 auto led = Board::GetInstance().GetLed();
                 if (!led) {
-                    return "{\"error\": \"No status LED configured on this board\"}";
+                    nlohmann::json j;
+                    j["error"] = "No status LED configured on this board";
+                    return j;
                 }
 
                 led->SetCustomMode(true);
@@ -105,7 +111,9 @@ public:
 
                 auto led = Board::GetInstance().GetLed();
                 if (!led) {
-                    return "{\"error\": \"No status LED configured on this board\"}";
+                    nlohmann::json j;
+                    j["error"] = "No status LED configured on this board";
+                    return j;
                 }
 
                 led->SetBrightness(br);
@@ -121,18 +129,22 @@ public:
             [](const PropertyList& properties) -> ReturnValue {
                 auto led = Board::GetInstance().GetLed();
                 if (!led) {
-                    return "{\"configured\": false}";
+                    nlohmann::json j;
+                    j["configured"] = false;
+                    return j;
                 }
 
                 uint8_t r = 0, g = 0, b = 0;
                 led->GetColor(r, g, b);
-                char buf[220];
-                snprintf(buf, sizeof(buf),
-                         "{\"configured\": true, \"type\": \"%s\", \"custom_mode\": %s, \"brightness\": %d, \"color\": {\"r\": %d, \"g\": %d, \"b\": %d}}",
-                         led->GetType().c_str(),
-                         led->IsCustomMode() ? "true" : "false",
-                         led->GetBrightness(), r, g, b);
-                return std::string(buf);
+                nlohmann::json j;
+                j["configured"] = true;
+                j["type"] = led->GetType();
+                j["custom_mode"] = led->IsCustomMode();
+                j["brightness"] = led->GetBrightness();
+                j["color"]["r"] = r;
+                j["color"]["g"] = g;
+                j["color"]["b"] = b;
+                return j;
             }
         );
 

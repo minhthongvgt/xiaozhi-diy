@@ -70,9 +70,8 @@ bool AdcBatteryMonitor::IsCharging() {
     if (adc_battery_estimation_handle_ != nullptr) {
         bool is_charging = false;
         esp_err_t err = adc_battery_estimation_get_charging_state(adc_battery_estimation_handle_, &is_charging);
-        if (err == ESP_OK) {
-            return is_charging;
-        }
+        ESP_ERROR_CHECK(err);
+        return is_charging;
     }
     
     // 回退到GPIO读取或返回默认值
@@ -95,9 +94,7 @@ uint8_t AdcBatteryMonitor::GetBatteryLevel() {
     
     float capacity = 0;
     esp_err_t err = adc_battery_estimation_get_capacity(adc_battery_estimation_handle_, &capacity);
-    if (err != ESP_OK) {
-        return 100; // 出错时返回默认值
-    }
+    ESP_ERROR_CHECK(err);
     return (uint8_t)capacity;
 }
 

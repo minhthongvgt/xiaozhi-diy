@@ -16,17 +16,9 @@ Knob::Knob(gpio_num_t pin_a, gpio_num_t pin_b) {
         return;
     }
 
-    err = iot_knob_register_cb(knob_handle_, KNOB_LEFT, knob_callback, this);
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to register left callback: %s", esp_err_to_name(err));
-        return;
-    }
+    ESP_ERROR_CHECK(iot_knob_register_cb(knob_handle_, KNOB_LEFT, knob_callback, this));
 
-    err = iot_knob_register_cb(knob_handle_, KNOB_RIGHT, knob_callback, this);
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to register right callback: %s", esp_err_to_name(err));
-        return;
-    }
+    ESP_ERROR_CHECK(iot_knob_register_cb(knob_handle_, KNOB_RIGHT, knob_callback, this));
 
     ESP_LOGI(TAG, "Knob initialized with pins A:%d B:%d", pin_a, pin_b);
 }

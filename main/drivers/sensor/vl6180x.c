@@ -140,11 +140,7 @@ esp_err_t vl6180x_init(const vl6180x_config_t *config, vl6180x_handle_t *out_han
         .scl_speed_hz = 400000,
     };
     esp_err_t ret = i2c_master_bus_add_device(dev->i2c_bus, &dev_cfg, &dev->i2c_dev);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to add VL6180X to I2C bus: %s", esp_err_to_name(ret));
-        free(dev);
-        return ret;
-    }
+    ESP_ERROR_CHECK(ret);
 
     // 3. Verify Model ID (should be 0xB4 = 180)
     uint8_t model_id = 0;

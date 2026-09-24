@@ -32,10 +32,7 @@ static constexpr bool kConfiguredVFlip = false;
 
 Esp32Camera::Esp32Camera(const camera_config_t& config) {
     esp_err_t err = esp_camera_init(&config);
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "esp_camera_init failed with error 0x%x", err);
-        return;
-    }
+    ESP_ERROR_CHECK(err);
 
     sensor_t* s = esp_camera_sensor_get();
     if (s) {

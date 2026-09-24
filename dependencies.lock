@@ -983,6 +983,16 @@ dependencies:
     source:
       type: idf
     version: 6.1.0
+  johboh/nlohmann-json:
+    component_hash: 2a97e10124d755da820b0381e36a9a6504574328f262964ccea3f8b2f228fc66
+    dependencies:
+    - name: idf
+      require: private
+      version: '>=4.4'
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 3.12.0
   laride/heatshrink:
     component_hash: 0828b0fea3f0754f8404a5279e883c52fe27494bbe1762e38d5cd96c99229e47
     dependencies:
@@ -1153,6 +1163,7 @@ direct_dependencies:
 - espressif2022/esp_emote_expression
 - espressif2022/image_player
 - idf
+- johboh/nlohmann-json
 - lvgl/lvgl
 - m5stack/m5ioe1
 - m5stack/m5pm1
@@ -1162,6 +1173,6 @@ direct_dependencies:
 - waveshare/esp_lcd_sh8601
 - waveshare/esp_lcd_touch_cst9217
 - wvirgil123/sscma_client
-manifest_hash: 061ac374d304516dad2f4db488232a79b0e55930c6a8c55da4b831077b929559
+manifest_hash: 3e75a804dc7a5605eaa3f22005a80f2a2681c2a675362cd284745bd0dc52a319
 target: esp32s3
 version: 3.0.0

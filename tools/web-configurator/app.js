@@ -224,7 +224,7 @@ class ConfigParser {
 
       val = val.replace(/\/\/.*$/, "").trim();
       val = val.replace(/\/\*.*?\*\//, "").trim();
-      val = val.replace(/\(\(gpio_num_t\)([0-9\-]+)\)/, "$1");
+      val = val.replace(/static_cast<gpio_num_t>\\(([0-9\\-]+)\\)/, "$1");
       val = val.replace(/\(\(adc_channel_t\)([0-9\-]+)\)/, "$1");
       val = val.replace(/GPIO_NUM_([0-9]+)/, "$1");
       val = val.replace(/ADC_CHANNEL_([0-9]+)/, "$1");
@@ -579,7 +579,7 @@ class CodeGenerator {
     const isSpiDisplay = s.display.type === "st7789" || s.display.type === "gc9a01" || s.display.type === "ili9341";
     const isOled = s.display.type === "ssd1306";
 
-    const gpioMacro = (pin) => (pin !== undefined && pin !== null && pin >= 0 ? `((gpio_num_t)${pin})` : "GPIO_NUM_NC");
+    const gpioMacro = (pin) => (pin !== undefined && pin !== null && pin >= 0 ? `static_cast<gpio_num_t>(${pin})` : "GPIO_NUM_NC");
 
     // Extract buttons
     const bootBtn = s.buttons.find(b => b.type === "boot")?.pin ?? 0;
@@ -856,21 +856,45 @@ ${i2c ? `// Shared I2C Bus Master
       sdkAppend.push(`CONFIG_CUSTOM_ASSETS_FILE="${s.general.custom_assets_file || "assets.bin"}"`);
     }
 
-    if (s.display.type === "uart_display") {
+    if (s.display.type === "user_custom") {
+      sdkAppend.push("CONFIG_CUSTOM_DISPLAY_USER_CUSTOM=y");
+    } else if (s.display.type === "uart_display") {
       sdkAppend.push("CONFIG_DISPLAY_TYPE_UART=y");
     } else {
       sdkAppend.push("# CONFIG_DISPLAY_TYPE_UART is not set");
+      sdkAppend.push("# CONFIG_CUSTOM_DISPLAY_USER_CUSTOM is not set");
     }
 
     const touchChips = ["CST816", "FT6X36", "GT911", "CHSC5816"];
     if (s.display.touch_chip && s.display.touch_chip !== "none") {
       const selected = s.display.touch_chip.toUpperCase();
-      sdkAppend.push(`CONFIG_CUSTOM_TOUCH_${selected}=y`);
-      touchChips.forEach(chip => {
-        if (chip !== selected) sdkAppend.push(`# CONFIG_CUSTOM_TOUCH_${chip} is not set`);
-      });
+      if (selected === "USER_CUSTOM") {
+        sdkAppend.push("CONFIG_CUSTOM_TOUCH_USER_CUSTOM=y");
+        touchChips.forEach(chip => sdkAppend.push(`# CONFIG_CUSTOM_TOUCH_${chip} is not set`));
+      } else {
+        sdkAppend.push(`CONFIG_CUSTOM_TOUCH_${selected}=y`);
+        touchChips.forEach(chip => {
+          if (chip !== selected) sdkAppend.push(`# CONFIG_CUSTOM_TOUCH_${chip} is not set`);
+        });
+        sdkAppend.push("# CONFIG_CUSTOM_TOUCH_USER_CUSTOM is not set");
+      }
     } else {
       touchChips.forEach(chip => sdkAppend.push(`# CONFIG_CUSTOM_TOUCH_${chip} is not set`));
+      sdkAppend.push("# CONFIG_CUSTOM_TOUCH_USER_CUSTOM is not set");
+    }
+
+    if (s.audio && s.audio.spk_driver === "user_custom") {
+      sdkAppend.push("CONFIG_CUSTOM_AUDIO_SPK_CODEC_USER_CUSTOM=y");
+    }
+    if (s.audio && s.audio.mic_driver === "user_custom") {
+      sdkAppend.push("CONFIG_CUSTOM_AUDIO_MIC_CODEC_USER_CUSTOM=y");
+    }
+
+    if (s.peripherals && s.peripherals.some(p => p.type === "user_custom_led")) {
+      sdkAppend.push("CONFIG_CUSTOM_LED_USER_CUSTOM=y");
+    }
+    if (s.peripherals && s.peripherals.some(p => p.type === "user_custom_sensors")) {
+      sdkAppend.push("CONFIG_CUSTOM_ENABLE_USER_CUSTOM_SENSORS=y");
     }
 
     const configObj = {
@@ -906,6 +930,7 @@ ${i2c ? `// Shared I2C Bus Master
 // ==============================================================================
 
 #include "wifi_board.h"
+#include "user_driver_registry.h"
 #include "audio/codecs/no_audio_codec.h"
 ${isEs8311 ? '#include "audio/codecs/es8311_audio_codec.h"\n' : ''}
 ${isOled ? '#include "display/oled_display.h"\n' : ''}
@@ -957,8 +982,8 @@ ${isSpiDisplay ? `    void InitializeSpi() {
         esp_lcd_panel_handle_t panel = nullptr;
 
         esp_lcd_panel_io_spi_config_t io_config = {};
-        io_config.cs_gpio_num = DISPLAY_CS_PIN;
-        io_config.dc_gpio_num = DISPLAY_DC_PIN;
+        io_config.cs_gpio_num = static_cast<int>(DISPLAY_CS_PIN);
+        io_config.dc_gpio_num = static_cast<int>(DISPLAY_DC_PIN);
         io_config.spi_mode = DISPLAY_SPI_MODE;
         io_config.pclk_hz = 40 * 1000 * 1000;
         io_config.trans_queue_depth = 10;
@@ -967,7 +992,7 @@ ${isSpiDisplay ? `    void InitializeSpi() {
         ESP_ERROR_CHECK(esp_lcd_new_panel_io_spi(SPI3_HOST, &io_config, &panel_io));
 
         esp_lcd_panel_dev_config_t panel_config = {};
-        panel_config.reset_gpio_num = DISPLAY_RST_PIN;
+        panel_config.reset_gpio_num = static_cast<int>(DISPLAY_RST_PIN);
         panel_config.rgb_ele_order = DISPLAY_RGB_ORDER;
         panel_config.bits_per_pixel = 16;
 ${s.display.type === "gc9a01" ?
@@ -1036,8 +1061,8 @@ ${needI2cBus ? `    void InitializeI2cBus() {
         if (i2c_bus_ != nullptr) return;
         i2c_master_bus_config_t bus_config = {
             .i2c_port = (i2c_port_t)0,
-            .sda_io_num = ${hasTouchScreen ? '(gpio_num_t)TOUCH_I2C_SDA_PIN' : '(gpio_num_t)AUDIO_CODEC_I2C_SDA_PIN'},
-            .scl_io_num = ${hasTouchScreen ? '(gpio_num_t)TOUCH_I2C_SCL_PIN' : '(gpio_num_t)AUDIO_CODEC_I2C_SCL_PIN'},
+            .sda_io_num = ${hasTouchScreen ? 'static_cast<gpio_num_t>(TOUCH_I2C_SDA_PIN)' : 'static_cast<gpio_num_t>(AUDIO_CODEC_I2C_SDA_PIN)'},
+            .scl_io_num = ${hasTouchScreen ? 'static_cast<gpio_num_t>(TOUCH_I2C_SCL_PIN)' : 'static_cast<gpio_num_t>(AUDIO_CODEC_I2C_SCL_PIN)'},
             .clk_source = I2C_CLK_SRC_DEFAULT,
             .glitch_ignore_cnt = 7,
             .intr_priority = 0,
@@ -1054,28 +1079,25 @@ ${hasTouchScreen ? `    void InitializeTouchScreen() {
         esp_lcd_touch_config_t tp_cfg = {
             .x_max = DISPLAY_WIDTH,
             .y_max = DISPLAY_HEIGHT,
-            .rst_gpio_num = (gpio_num_t)TOUCH_RST_PIN,
-            .int_gpio_num = (gpio_num_t)TOUCH_INT_PIN,
+            .rst_gpio_num = static_cast<gpio_num_t>(TOUCH_RST_PIN),
+            .int_gpio_num = static_cast<gpio_num_t>(TOUCH_INT_PIN),
             .levels = { .reset = 0, .interrupt = 0 },
             .flags = { .swap_xy = 0, .mirror_x = 0, .mirror_y = 0 },
         };
 ${s.display.touch_chip === "cst816s" ?
 `        tp_io_config.dev_addr = ESP_LCD_TOUCH_IO_I2C_CST816S_ADDRESS;
-        esp_err_t ret = esp_lcd_new_panel_io_i2c(i2c_bus_, &tp_io_config, &tp_io_handle);
-        if (ret == ESP_OK) {
-            ret = esp_lcd_touch_new_i2c_cst816s(tp_io_handle, &tp_cfg, &touch_handle_);
-        }` :
+        ESP_ERROR_CHECK(esp_lcd_new_panel_io_i2c(i2c_bus_, &tp_io_config, &tp_io_handle));
+        ESP_ERROR_CHECK(esp_lcd_touch_new_i2c_cst816s(tp_io_handle, &tp_cfg, &touch_handle_));
+        ` :
 s.display.touch_chip === "gt911" ?
 `        tp_io_config.dev_addr = ESP_LCD_TOUCH_IO_I2C_GT911_ADDRESS;
-        esp_err_t ret = esp_lcd_new_panel_io_i2c(i2c_bus_, &tp_io_config, &tp_io_handle);
-        if (ret == ESP_OK) {
-            ret = esp_lcd_touch_new_i2c_gt911(tp_io_handle, &tp_cfg, &touch_handle_);
-        }` :
+        ESP_ERROR_CHECK(esp_lcd_new_panel_io_i2c(i2c_bus_, &tp_io_config, &tp_io_handle));
+        ESP_ERROR_CHECK(esp_lcd_touch_new_i2c_gt911(tp_io_handle, &tp_cfg, &touch_handle_));
+        ` :
 `        tp_io_config.dev_addr = ESP_LCD_TOUCH_IO_I2C_FT5x06_ADDRESS;
-        esp_err_t ret = esp_lcd_new_panel_io_i2c(i2c_bus_, &tp_io_config, &tp_io_handle);
-        if (ret == ESP_OK) {
-            ret = esp_lcd_touch_new_i2c_ft5x06(tp_io_handle, &tp_cfg, &touch_handle_);
-        }`}
+        ESP_ERROR_CHECK(esp_lcd_new_panel_io_i2c(i2c_bus_, &tp_io_config, &tp_io_handle));
+        ESP_ERROR_CHECK(esp_lcd_touch_new_i2c_ft5x06(tp_io_handle, &tp_cfg, &touch_handle_));
+        `}
     }` : ''}
 
     void InitializeButtons() {
@@ -1089,9 +1111,8 @@ s.display.touch_chip === "gt911" ?
         });
     }
 
-${hasLamp ? `    void InitializeTools() {
-        static LampController lamp(LAMP_GPIO);
-    }` : ''}
+${hasLamp || (s.peripherals && s.peripherals.some(p => p.type === "user_custom_sensors")) ? `    void InitializeTools() {
+${hasLamp ? '        static LampController lamp(LAMP_GPIO);\n' : ''}${s.peripherals && s.peripherals.some(p => p.type === "user_custom_sensors") ? '        InitializeUserCustomSensors(this);\n' : ''}    }` : ''}
 
 public:
     CustomS3N16R8Board() :
@@ -1112,7 +1133,8 @@ ${hasBacklight ? `        if (DISPLAY_BACKLIGHT_PIN != GPIO_NUM_NC) {
     }
 
     virtual Led* GetLed() override {
-${hasLed ? `        if (BUILTIN_LED_GPIO != GPIO_NUM_NC) {
+${s.peripherals && s.peripherals.some(p => p.type === "user_custom_led") ? `        Led* user_led = CreateUserCustomLedDriver();
+        if (user_led != nullptr) return user_led;\n` : ''}${hasLed ? `        if (BUILTIN_LED_GPIO != GPIO_NUM_NC) {
             static SingleLed led(BUILTIN_LED_GPIO);
             return &led;
         }` : ''}
@@ -1120,7 +1142,10 @@ ${hasLed ? `        if (BUILTIN_LED_GPIO != GPIO_NUM_NC) {
     }
 
     virtual AudioCodec* GetAudioCodec() override {
-${isSimplex ? `        static NoAudioCodecSimplex audio_codec(
+${(s.audio && (s.audio.spk_driver === "user_custom" || s.audio.mic_driver === "user_custom")) ? `        AudioCodec* user_codec = CreateUserCustomAudioCodecDriver();
+        if (user_codec != nullptr) {
+            return user_codec;
+        }\n` : ''}${isSimplex ? `        static NoAudioCodecSimplex audio_codec(
             AUDIO_INPUT_SAMPLE_RATE, AUDIO_OUTPUT_SAMPLE_RATE,
             AUDIO_I2S_SPK_GPIO_BCLK, AUDIO_I2S_SPK_GPIO_LRCK, AUDIO_I2S_SPK_GPIO_DOUT,
             AUDIO_I2S_MIC_GPIO_SCK, AUDIO_I2S_MIC_GPIO_WS, AUDIO_I2S_MIC_GPIO_DIN
@@ -2435,6 +2460,10 @@ class GUIController {
     } else if (category === "peripherals") {
       titleEl.innerHTML = "<span>🔌</span> Thêm Actuator & Sensor (main/drivers/actuator & sensor)";
       selectEl.innerHTML = `
+        <optgroup label="✨ Driver Tùy Chỉnh (User Custom Drivers)">
+          <option value="user_custom_led">✨ Driver LED Tùy Chỉnh (User Custom LED Driver)</option>
+          <option value="user_custom_sensors">✨ Driver Cảm Biến / Mạch Mở Rộng Tùy Chỉnh (User Custom Sensors Driver)</option>
+        </optgroup>
         <optgroup label="Actuators (Thiết bị chấp hành)">
           <option value="actuator_pca9685">Mở rộng PWM PCA9685 (I2C)</option>
           <option value="led">Built-in Status LED (Đèn LED trạng thái)</option>

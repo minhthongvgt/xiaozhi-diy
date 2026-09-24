@@ -238,9 +238,7 @@ int NoAudioCodec::Write(const int16_t* data, int samples) {
 
     size_t bytes_written = 0;
     esp_err_t ret = i2s_channel_write(tx_handle_, tx_buffer_.data(), samples * sizeof(int32_t), &bytes_written, pdMS_TO_TICKS(1000));
-    if (ret != ESP_OK) {
-        return 0;
-    }
+    ESP_ERROR_CHECK(ret);
     return bytes_written / sizeof(int32_t);
 }
 

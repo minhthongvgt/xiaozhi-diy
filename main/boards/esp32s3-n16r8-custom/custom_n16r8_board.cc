@@ -243,11 +243,7 @@ private:
             },
         };
         esp_err_t ret = esp_lcd_new_panel_io_i2c(i2c_bus_, &io_config, &panel_io);
-        if (ret != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to create OLED panel IO: %s. Falling back to NoDisplay", esp_err_to_name(ret));
-            display_ = new NoDisplay();
-            return;
-        }
+    ESP_ERROR_CHECK(ret);
 
         esp_lcd_panel_dev_config_t panel_config = {};
         panel_config.reset_gpio_num = DISPLAY_RST_PIN;
@@ -290,9 +286,9 @@ private:
 #else
         // SPI LCD display (ST7789, ST7796, ST7735, ILI9341, ILI9486, GC9A01, GC9107, NV3023, JD9853...)
         spi_bus_config_t buscfg = {};
-        buscfg.mosi_io_num = DISPLAY_MOSI_PIN;
+        buscfg.mosi_io_num = static_cast<int>(static_cast<gpio_num_t>(DISPLAY_MOSI_PIN));
         buscfg.miso_io_num = GPIO_NUM_NC;
-        buscfg.sclk_io_num = DISPLAY_CLK_PIN;
+        buscfg.sclk_io_num = static_cast<int>(static_cast<gpio_num_t>(DISPLAY_CLK_PIN));
         buscfg.quadwp_io_num = GPIO_NUM_NC;
         buscfg.quadhd_io_num = GPIO_NUM_NC;
         // Allocate enough for LVGL partial refresh lines; capped to prevent DMA exhaustion
@@ -312,8 +308,8 @@ private:
         esp_lcd_panel_handle_t panel = nullptr;
 
         esp_lcd_panel_io_spi_config_t io_config = {};
-        io_config.cs_gpio_num = DISPLAY_CS_PIN;
-        io_config.dc_gpio_num = DISPLAY_DC_PIN;
+        io_config.cs_gpio_num = static_cast<gpio_num_t>(DISPLAY_CS_PIN);
+        io_config.dc_gpio_num = static_cast<gpio_num_t>(DISPLAY_DC_PIN);
         io_config.spi_mode = 0;
 #if defined(CONFIG_CUSTOM_DISPLAY_ST7735)
         io_config.pclk_hz = 20 * 1000 * 1000;
@@ -448,10 +444,7 @@ private:
 #endif
         UartDisplay* secondary_uart = new UartDisplay(DISPLAY_UART_PORT, DISPLAY_UART_TX_PIN, DISPLAY_UART_RX_PIN,
                                                        DISPLAY_UART_BAUDRATE, proto);
-        if (display_ == nullptr || dynamic_cast<NoDisplay*>(display_) != nullptr) {
-            if (display_ != nullptr) {
-                delete display_;
-            }
+        if (display_ == nullptr) {
             display_ = secondary_uart;
         } else {
             display_ = new DualDisplay(display_, secondary_uart);
@@ -599,22 +592,15 @@ private:
             .rx_flow_ctrl_thresh = 122,
             .source_clk = UART_SCLK_DEFAULT,
         };
-        esp_err_t err = uart_param_config(CUSTOM_UART_PORT, &uart_config);
-        if (err != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to configure Custom UART param: %s", esp_err_to_name(err));
-            return;
-        }
-        err = uart_set_pin(CUSTOM_UART_PORT, CUSTOM_UART_TX_PIN, CUSTOM_UART_RX_PIN,
-                           CUSTOM_UART_RTS_PIN, CUSTOM_UART_CTS_PIN);
-        if (err != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to set Custom UART pins: %s", esp_err_to_name(err));
-            return;
-        }
-        err = uart_driver_install(CUSTOM_UART_PORT, 2048, 2048, 0, NULL, 0);
-        if (err != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to install Custom UART driver: %s", esp_err_to_name(err));
-            return;
-        }
+        ESP_ERROR_CHECK(uart_param_config(static_cast<uart_port_t>(CUSTOM_UART_PORT), &uart_config));
+        
+        int tx_pin = (CUSTOM_UART_TX_PIN != GPIO_NUM_NC) ? CUSTOM_UART_TX_PIN : UART_PIN_NO_CHANGE;
+        int rx_pin = (CUSTOM_UART_RX_PIN != GPIO_NUM_NC) ? CUSTOM_UART_RX_PIN : UART_PIN_NO_CHANGE;
+        int rts_pin = (CUSTOM_UART_RTS_PIN != GPIO_NUM_NC) ? CUSTOM_UART_RTS_PIN : UART_PIN_NO_CHANGE;
+        int cts_pin = (CUSTOM_UART_CTS_PIN != GPIO_NUM_NC) ? CUSTOM_UART_CTS_PIN : UART_PIN_NO_CHANGE;
+        
+        ESP_ERROR_CHECK(uart_set_pin(static_cast<uart_port_t>(CUSTOM_UART_PORT), tx_pin, rx_pin, rts_pin, cts_pin));
+        ESP_ERROR_CHECK(uart_driver_install(static_cast<uart_port_t>(CUSTOM_UART_PORT), 2048, 2048, 0, NULL, 0));
         ESP_LOGI(TAG, "Custom UART initialized on port %d, TX: %d, RX: %d at %d bps",
                  CUSTOM_UART_PORT, CUSTOM_UART_TX_PIN, CUSTOM_UART_RX_PIN, CUSTOM_UART_BAUDRATE);
 #endif

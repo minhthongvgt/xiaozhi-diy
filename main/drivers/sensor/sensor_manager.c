@@ -36,8 +36,8 @@ esp_err_t sensor_manager_init(void)
             .atten = ADC_ATTEN_DB_12,
             .bitwidth = ADC_BITWIDTH_DEFAULT,
         };
-        adc_oneshot_config_channel(s_adc1_handle, ADC_CHANNEL_0, &chan_cfg);
-        adc_oneshot_config_channel(s_adc1_handle, ADC_CHANNEL_1, &chan_cfg);
+        ESP_ERROR_CHECK(adc_oneshot_config_channel(s_adc1_handle, ADC_CHANNEL_0, &chan_cfg));
+        ESP_ERROR_CHECK(adc_oneshot_config_channel(s_adc1_handle, ADC_CHANNEL_1, &chan_cfg));
     } else {
         ESP_LOGW(TAG, "ADC1 Oneshot Unit init returned: %s", esp_err_to_name(ret));
     }
@@ -58,7 +58,7 @@ esp_err_t sensor_manager_init(void)
             .pull_down_en = GPIO_PULLDOWN_ENABLE,
             .intr_type = GPIO_INTR_DISABLE,
         };
-        gpio_config(&pir_conf);
+        ESP_ERROR_CHECK(gpio_config(&pir_conf));
         ESP_LOGI(TAG, "PIR Motion Sensor configured on GPIO %d", s_pir_pin);
     }
 #endif
@@ -73,7 +73,7 @@ esp_err_t sensor_manager_init(void)
             .pull_down_en = GPIO_PULLDOWN_DISABLE,
             .intr_type = GPIO_INTR_DISABLE,
         };
-        gpio_config(&vib_conf);
+        ESP_ERROR_CHECK(gpio_config(&vib_conf));
         ESP_LOGI(TAG, "SW-420 Vibration Sensor configured on GPIO %d", s_vib_pin);
     }
 #endif
@@ -88,7 +88,7 @@ esp_err_t sensor_manager_init(void)
             .pull_down_en = GPIO_PULLDOWN_DISABLE,
             .intr_type = GPIO_INTR_DISABLE,
         };
-        gpio_config(&flame_conf);
+        ESP_ERROR_CHECK(gpio_config(&flame_conf));
         ESP_LOGI(TAG, "Flame Sensor configured on GPIO %d", s_flame_pin);
     }
 #endif
@@ -107,7 +107,7 @@ esp_err_t sensor_manager_init(void)
             .pull_down_en = GPIO_PULLDOWN_DISABLE,
             .intr_type = GPIO_INTR_DISABLE,
         };
-        gpio_config(&chrg_conf);
+        ESP_ERROR_CHECK(gpio_config(&chrg_conf));
         ESP_LOGI(TAG, "Battery Charging Monitor configured on GPIO %d", s_chrg_pin);
     }
 #endif

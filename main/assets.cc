@@ -17,7 +17,7 @@
 #include <cstring>
 
 #define TAG "Assets"
-#define PARTITION_LABEL "assets"
+#define PARTITION_LABEL "model"
 
 struct mmap_assets_table {
     char asset_name[32];   /*!< Name of the asset */
@@ -158,10 +158,7 @@ bool Assets::LvglStrategy::InitializePartition(Assets* assets) {
     // Use an array of uint32_t to strictly guarantee 4-byte alignment natively on Xtensa.
     uint32_t header[3] = {};
     esp_err_t err = esp_partition_read(assets->partition_, 0, header, sizeof(header));
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to read assets header: %s", esp_err_to_name(err));
-        return false;
-    }
+    ESP_ERROR_CHECK(err);
 
     uint32_t stored_files = header[0];
     uint32_t stored_chksum = header[1];
@@ -606,12 +603,7 @@ bool Assets::Download(std::string url,
                 ESP_LOGD(TAG, "Erasing sector %u (offset: %u, size: %u)", current_sector,
                          sector_start, SECTOR_SIZE);
                 esp_err_t err = esp_partition_erase_range(partition_, sector_start, SECTOR_SIZE);
-                if (err != ESP_OK) {
-                    ESP_LOGE(TAG, "Failed to erase sector %u at offset %u: %s", current_sector,
-                             sector_start, esp_err_to_name(err));
-                    erase_failed = true;
-                    break;
-                }
+    ESP_ERROR_CHECK(err);
                 current_sector++;
             }
 
@@ -621,11 +613,7 @@ bool Assets::Download(std::string url,
 
             esp_err_t err = esp_partition_write(partition_, HEADER_SIZE + total_written,
                                                 buffer.get() + buf_pos, write_len);
-            if (err != ESP_OK) {
-                ESP_LOGE(TAG, "Failed to write to assets partition at offset %u: %s",
-                         (unsigned int)(HEADER_SIZE + total_written), esp_err_to_name(err));
-                break;
-            }
+    ESP_ERROR_CHECK(err);
 
             total_written += write_len;
             recent_written += write_len;
@@ -658,10 +646,7 @@ bool Assets::Download(std::string url,
     // Write header
     if (success) {
         esp_err_t err = esp_partition_write(partition_, 0, header_buf, HEADER_SIZE);
-        if (err != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to write assets header to partition: %s", esp_err_to_name(err));
-            success = false;
-        }
+    ESP_ERROR_CHECK(err);
     }
 
     if (!success) {

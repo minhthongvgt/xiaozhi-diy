@@ -24,7 +24,11 @@ public:
                 std::string cmd = properties["command"].value<std::string>();
 
                 ESP_LOGI(TAG_IR_MCP, "Transmitting 38kHz IR signal for %s: %s", dev.c_str(), cmd.c_str());
-                return "{\"status\": \"success\", \"device\": \"" + dev + "\", \"command\": \"" + cmd + "\"}";
+                nlohmann::json j;
+                j["status"] = "success";
+                j["device"] = dev;
+                j["command"] = cmd;
+                return j;
             }
         );
 

@@ -106,13 +106,9 @@ static void __attribute__((unused)) init_output_pin(gpio_num_t pin, const char *
         .pull_down_en = GPIO_PULLDOWN_DISABLE,
         .intr_type = GPIO_INTR_DISABLE,
     };
-    esp_err_t ret = gpio_config(&io_conf);
-    if (ret == ESP_OK) {
-        gpio_set_level(pin, 0);
-        ESP_LOGI(TAG, "Configured actuator output '%s' on GPIO %d", name, pin);
-    } else {
-        ESP_LOGE(TAG, "Failed to configure output '%s' on GPIO %d: %s", name, pin, esp_err_to_name(ret));
-    }
+    ESP_ERROR_CHECK(gpio_config(&io_conf));
+    gpio_set_level(pin, 0);
+    ESP_LOGI(TAG, "Configured actuator output '%s' on GPIO %d", name, pin);
 }
 
 esp_err_t actuator_manager_init(void)

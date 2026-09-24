@@ -27,7 +27,9 @@ public:
 
         auto& mcp_server = McpServer::GetInstance();
         mcp_server.AddTool("self.lamp.get_state", "Get the power state of the lamp", PropertyList(), [this](const PropertyList& properties) -> ReturnValue {
-            return power_ ? "{\"power\": true}" : "{\"power\": false}";
+            nlohmann::json j;
+            j["power"] = power_;
+            return j;
         });
 
         mcp_server.AddTool("self.lamp.turn_on", "Turn on the lamp", PropertyList(), [this](const PropertyList& properties) -> ReturnValue {

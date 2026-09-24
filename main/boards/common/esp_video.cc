@@ -108,10 +108,7 @@ static void log_available_video_devices() {
 #endif  // CONFIG_XIAOZHI_ENABLE_CAMERA_DEBUG_MODE
 
 EspVideo::EspVideo(const esp_video_init_config_t& config) {
-    if (esp_video_init(&config) != ESP_OK) {
-        ESP_LOGE(TAG, "esp_video_init failed");
-        return;
-    }
+    ESP_ERROR_CHECK(esp_video_init(&config));
 
 #ifdef CONFIG_XIAOZHI_ENABLE_CAMERA_DEBUG_MODE
     esp_log_level_set(TAG, ESP_LOG_DEBUG);
@@ -356,7 +353,7 @@ EspVideo::EspVideo(const esp_video_init_config_t& config) {
 
 #ifdef CONFIG_ESP_VIDEO_ENABLE_ISP_VIDEO_DEVICE
     // 当启用 ISP 时，ISP 需要一些照片来初始化参数，因此开启后后台拍摄5s照片并丢弃
-    xTaskCreate(
+    xTaskCreatePinnedToCore(
         [](void* arg) {
             EspVideo* self = static_cast<EspVideo*>(arg);
             uint16_t capture_count = 0;
@@ -381,7 +378,7 @@ EspVideo::EspVideo(const esp_video_init_config_t& config) {
             self->streaming_on_ = true;
             vTaskDelete(NULL);
         },
-        "CameraInitTask", 4096, this, 5, nullptr);
+        "CameraInitTask", 4096, this, 5, nullptr, 1);
 #else
     ESP_LOGI(TAG, "Camera init success");
     streaming_on_ = true;
@@ -858,13 +855,7 @@ bool EspVideo::Capture() {
 
                 esp_err_t ret = jpeg_to_image(frame_.data, frame_.len, &out_data, &out_len,
                                               &out_width, &out_height, &out_stride);
-                if (ret != ESP_OK) {
-                    ESP_LOGE(TAG, "Failed to decode JPEG image: %d (%s)", (int)ret,
-                             esp_err_to_name(ret));
-                    if (out_data) {
-                        heap_caps_free(out_data);
-                        out_data = nullptr;
-                    }
+    ESP_ERROR_CHECK(ret);
                     return false;
                 }
 

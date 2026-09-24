@@ -47,11 +47,7 @@ SingleLed::SingleLed(gpio_num_t gpio) {
     rmt_config.resolution_hz = 10 * 1000 * 1000; // 10MHz
 
     esp_err_t ret = led_strip_new_rmt_device(&strip_config, &rmt_config, &led_strip_);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to create SingleLed RMT device: %s", esp_err_to_name(ret));
-        led_strip_ = nullptr;
-        return;
-    }
+    ESP_ERROR_CHECK(ret);
     led_strip_clear(led_strip_);
 
     esp_timer_create_args_t timer_args = {

@@ -22,24 +22,13 @@ UartDisplay::UartDisplay(uart_port_t uart_num, int tx_pin, int rx_pin, int baud_
         .flags = {}
     };
 
-    esp_err_t ret = uart_param_config(uart_num_, &uart_config);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to config UART %d: %s", (int)uart_num_, esp_err_to_name(ret));
-        return;
-    }
+    esp_err_t ret = uart_param_config(static_cast<uart_port_t>(uart_num_), &uart_config);
+    ESP_ERROR_CHECK(ret);
 
-    ret = uart_set_pin(uart_num_, tx_pin, rx_pin, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to set UART pins (TX=%d, RX=%d): %s", tx_pin, rx_pin, esp_err_to_name(ret));
-        return;
-    }
+    ESP_ERROR_CHECK(uart_set_pin(static_cast<uart_port_t>(uart_num_), tx_pin, rx_pin, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
 
     const int rx_buffer_size = 512;
-    ret = uart_driver_install(uart_num_, rx_buffer_size, 0, 0, nullptr, 0);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to install UART driver: %s", esp_err_to_name(ret));
-        return;
-    }
+    ESP_ERROR_CHECK(uart_driver_install(static_cast<uart_port_t>(uart_num_), rx_buffer_size, 0, 0, nullptr, 0));
 
     is_initialized_ = true;
     ESP_LOGI(TAG, "UartDisplay initialized on UART %d (TX=%d, RX=%d, baud=%d, proto=%d)",

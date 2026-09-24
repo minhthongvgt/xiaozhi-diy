@@ -224,14 +224,14 @@ bool AfeAudioEngine::Initialize(AudioCodec* codec, int frame_duration_ms,
         return false;
     }
 
-    processing_task_ = xTaskCreateStatic(
+    processing_task_ = xTaskCreateStaticPinnedToCore(
         [](void* arg) {
             auto* engine = static_cast<AfeAudioEngine*>(arg);
             engine->ProcessingTask();
             vTaskDelete(nullptr);
         },
-        "audio_afe", kProcessingTaskStackSize, this, 3, processing_task_stack_,
-        processing_task_buffer_);
+        "audio_afe", kProcessingTaskStackSize, this, 19, processing_task_stack_,
+        processing_task_buffer_, 1);
     if (processing_task_ == nullptr) {
         ESP_LOGE(TAG, "Failed to create AFE processing task, internal free=%u largest=%u",
                  heap_caps_get_free_size(MALLOC_CAP_INTERNAL),
@@ -551,7 +551,7 @@ void AfeAudioEngine::EncodeWakeWordData() {
         assert(wake_word_encode_task_buffer_ != nullptr);
     }
 
-    wake_word_encode_task_ = xTaskCreateStatic(
+    wake_word_encode_task_ = xTaskCreateStaticPinnedToCore(
         [](void* arg) {
             auto* engine = static_cast<AfeAudioEngine*>(arg);
             auto start_time = esp_timer_get_time();
@@ -616,8 +616,8 @@ void AfeAudioEngine::EncodeWakeWordData() {
             }
             vTaskDelete(nullptr);
         },
-        "encode_wake_word", stack_size, this, 2, wake_word_encode_task_stack_,
-        wake_word_encode_task_buffer_);
+        "encode_wake_word", stack_size, this, 15, wake_word_encode_task_stack_,
+        wake_word_encode_task_buffer_, 1);
 }
 
 bool AfeAudioEngine::GetWakeWordOpus(std::vector<uint8_t>& opus) {

@@ -25,7 +25,10 @@ public:
                 std::string msg = properties["message"].value<std::string>();
 
                 ESP_LOGI(TAG_CELLULAR_MCP, "Sending SMS to %s: %s", phone.c_str(), msg.c_str());
-                return "{\"status\": \"sent\", \"recipient\": \"" + phone + "\"}";
+                nlohmann::json j;
+                j["status"] = "sent";
+                j["recipient"] = phone;
+                return j;
             }
         );
 
@@ -35,7 +38,12 @@ public:
             "Get 4G LTE cellular modem network status, signal strength (CSQ) and SIM state",
             PropertyList(),
             [](const PropertyList& properties) -> ReturnValue {
-                return "{\"sim_ready\": true, \"signal_csq\": 28, \"rat\": \"LTE Cat.1\", \"operator\": \"Online\"}";
+                nlohmann::json j;
+                j["sim_ready"] = true;
+                j["signal_csq"] = 28;
+                j["rat"] = "LTE Cat.1";
+                j["operator"] = "Online";
+                return j;
             }
         );
 
