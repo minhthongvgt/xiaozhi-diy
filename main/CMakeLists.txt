@@ -85,6 +85,8 @@ list(APPEND SOURCES
     "drivers/audio/audio_init.c"
     "drivers/sensor/sensor_manager.c"
     "drivers/sensor/sensor_init.c"
+    "drivers/sensor/vl6180x.c"
+    "drivers/sensor/dht.c"
     "drivers/actuator/actuator_manager.c"
     "drivers/actuator/actuator_init.c"
     "drivers/storage/storage_manager.c"

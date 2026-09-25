@@ -28,7 +28,6 @@
 #include "boards/common/ir_mcp_controller.h"
 #include "boards/common/cellular_mcp_controller.h"
 #include "boards/common/robot_mcp_controller.h"
-#include "boards/common/press_to_talk_mcp_tool.h"
 #include "led/single_led.h"
 #include "led/circular_strip.h"
 #include "led/gpio_led.h"
@@ -667,9 +666,7 @@ private:
     defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE) || \
     defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE) || \
     defined(CONFIG_CUSTOM_LED_WS2812) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_IR_REMOTE) || \
-    defined(CONFIG_CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE) || defined(CONFIG_ENABLE_ROBOT_CONTROLLER) || \
-    defined(CONFIG_ENABLE_BUZZER) || defined(CONFIG_ENABLE_HAPTIC_MOTOR) || \
-    defined(CONFIG_CUSTOM_ENABLE_BUTTON_BOOT) || defined(CONFIG_CUSTOM_ENABLE_BUTTON_TOUCH)
+    defined(CONFIG_CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE) || defined(CONFIG_ENABLE_ROBOT_CONTROLLER)
 #if defined(CONFIG_CUSTOM_MCP_TOOL_LAMP) || defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE)
         if (LAMP_GPIO != GPIO_NUM_NC) {
             static LampController lamp(LAMP_GPIO);
@@ -681,21 +678,15 @@ private:
         ESP_LOGI(TAG, "MCP Sensor Tools registered successfully");
 #endif
 #if defined(CONFIG_CUSTOM_MCP_TOOL_ACTUATOR) || defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE) || \
-    defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE) || \
-    defined(CONFIG_ENABLE_BUZZER) || defined(CONFIG_ENABLE_HAPTIC_MOTOR)
+    defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE)
         static ActuatorController actuator_ctrl;
-        ESP_LOGI(TAG, "MCP Actuator Tools (Beep/Vibrate/Servo/Motor/Relay) registered successfully");
-#endif
-#if defined(CONFIG_CUSTOM_ENABLE_BUTTON_BOOT) || defined(CONFIG_CUSTOM_ENABLE_BUTTON_TOUCH) || defined(CONFIG_CUSTOM_MCP_TOOL_PRESS_TO_TALK)
-        static PressToTalkMcpTool press_to_talk_tool;
-        press_to_talk_tool.Initialize();
-        ESP_LOGI(TAG, "MCP Press-to-Talk Tool registered successfully");
+        ESP_LOGI(TAG, "MCP Actuator Tools registered successfully");
 #endif
 #if defined(CONFIG_CUSTOM_LED_WS2812) || defined(CONFIG_ENABLE_CUSTOM_LEDS)
         static LedMcpController led_ctrl;
         ESP_LOGI(TAG, "MCP LED Controller registered successfully");
 #endif
-#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_IR_REMOTE)
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_IR_REMOTE) || defined(CONFIG_ENABLE_PERIPH_IR)
         static IrMcpController ir_ctrl;
         ESP_LOGI(TAG, "MCP IR Remote Controller registered successfully");
 #endif
@@ -703,7 +694,7 @@ private:
         static CellularMcpController cellular_ctrl;
         ESP_LOGI(TAG, "MCP Cellular Controller registered successfully");
 #endif
-#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE)
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE) || defined(CONFIG_ENABLE_ROBOT_CONTROLLER)
         static RobotMcpController robot_ctrl;
         ESP_LOGI(TAG, "MCP Robot Controller registered successfully");
 #endif
@@ -727,78 +718,79 @@ private:
 #if defined(CONFIG_CUSTOM_ENABLE_PERIPH_PCA9685)
         ESP_LOGW(TAG, "Driver cho ngoại vi PCA9685 chưa được hỗ trợ nhưng đang được bật trong menuconfig");
 #endif
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE)
+        ESP_LOGW(TAG, "Driver cho ngoại vi Motor DC (H-Bridge) chưa được hỗ trợ nhưng đang được bật trong menuconfig");
+#endif
 #if defined(CONFIG_CUSTOM_ENABLE_PERIPH_CAN_TWAI)
         ESP_LOGW(TAG, "Driver cho ngoại vi CAN/TWAI chưa được hỗ trợ nhưng đang được bật trong menuconfig");
 #endif
 #if defined(CONFIG_CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE)
         ESP_LOGW(TAG, "Driver cho module 4G chưa được hỗ trợ nhưng đang được bật trong menuconfig");
 #endif
-#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_IR_REMOTE)
-        ESP_LOGW(TAG, "IR driver hardware transmission is not yet implemented.");
+    
+#if defined(CONFIG_ENABLE_PERIPH_IR)
+        ESP_LOGW(TAG, "IR driver is not yet implemented.");
 #endif
-#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_INA2XX)
+#if defined(CONFIG_ENABLE_SENSOR_INA2XX)
         ESP_LOGW(TAG, "INA2xx driver is not yet implemented.");
 #endif
-#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_SDCARD_SPI)
+#if defined(CONFIG_ENABLE_STORAGE_SDCARD) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_SDCARD_SPI)
         ESP_LOGW(TAG, "SD Card driver is not yet implemented.");
 #endif
-#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC)
+#if defined(CONFIG_ENABLE_PERIPH_LED_DRIVER_IC)
         ESP_LOGW(TAG, "LED Driver IC (AW9523B/IS31FL3731) is not yet implemented.");
 #endif
-#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_DS18B20)
+#if defined(CONFIG_ENABLE_CUSTOM_TOUCH) && !defined(CONFIG_CUSTOM_TOUCH_NONE)
+        // Wait, touch is already partially implemented, so skip.
+#endif
+#if defined(CONFIG_ENABLE_SENSOR_DS18B20) || defined(CONFIG_CUSTOM_SENSOR_DS18B20_PIN)
         ESP_LOGW(TAG, "DS18B20 Temperature sensor driver is not yet implemented.");
 #endif
-#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_FLOW_PCNT)
+#if defined(CONFIG_ENABLE_SENSOR_FLOW) || defined(CONFIG_CUSTOM_SENSOR_FLOW_PULSE_PIN)
         ESP_LOGW(TAG, "Water Flow sensor driver is not yet implemented.");
 #endif
-#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_GAS_ANALOG_MQ)
+#if defined(CONFIG_ENABLE_SENSOR_MQ) || defined(CONFIG_CUSTOM_SENSOR_MQ_ANALOG_PIN) || defined(CONFIG_CUSTOM_SENSOR_GAS_I2C_SDA)
         ESP_LOGW(TAG, "MQ/Gas sensor driver is not yet implemented.");
 #endif
-#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_RFID_RC522)
+#if defined(CONFIG_ENABLE_SENSOR_VIBRATION) || defined(CONFIG_CUSTOM_SENSOR_VIBRATION_PIN)
+        ESP_LOGW(TAG, "Vibration sensor driver is not yet implemented.");
+#endif
+#if defined(CONFIG_ENABLE_SENSOR_FLAME) || defined(CONFIG_CUSTOM_SENSOR_FLAME_PIN)
+        ESP_LOGW(TAG, "Flame sensor driver is not yet implemented.");
+#endif
+#if defined(CONFIG_ENABLE_PERIPH_RC522) || defined(CONFIG_CUSTOM_PERIPH_RC522_SPI_CS)
         ESP_LOGW(TAG, "RFID RC522 driver is not yet implemented.");
 #endif
-#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_HCSR04)
+#if defined(CONFIG_ENABLE_PERIPH_TP4056) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_BATTERY_CHARGING_DETECT) || defined(CONFIG_CUSTOM_PERIPH_BATTERY_CHRG_PIN)
+        ESP_LOGW(TAG, "TP4056 / Charge Pin monitoring is not yet implemented.");
+#endif
+#if defined(CONFIG_ENABLE_SENSOR_DHT) || defined(CONFIG_CUSTOM_SENSOR_DHT_GPIO)
+        ESP_LOGW(TAG, "DHT Temperature/Humidity sensor driver is not yet implemented.");
+#endif
+#if defined(CONFIG_ENABLE_SENSOR_HCSR04) || defined(CONFIG_CUSTOM_SENSOR_HCSR04_TRIG_GPIO)
         ESP_LOGW(TAG, "HC-SR04 Ultrasonic sensor driver is not yet implemented.");
 #endif
-#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_BMP280)
+#if defined(CONFIG_ENABLE_SENSOR_PIR) || defined(CONFIG_CUSTOM_SENSOR_PIR_GPIO)
+        ESP_LOGW(TAG, "PIR Motion sensor driver is not yet implemented.");
+#endif
+#if defined(CONFIG_ENABLE_SENSOR_BMP280) || defined(CONFIG_CUSTOM_SENSOR_BMP280_I2C_SDA)
         ESP_LOGW(TAG, "BMP280 Pressure sensor driver is not yet implemented.");
 #endif
-#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_BH1750)
+#if defined(CONFIG_ENABLE_SENSOR_BH1750) || defined(CONFIG_CUSTOM_SENSOR_BH1750_I2C_SDA)
         ESP_LOGW(TAG, "BH1750 Light sensor driver is not yet implemented.");
 #endif
-#if defined(CONFIG_CUSTOM_BATTERY_MONITOR_BQ27220)
+#if defined(CONFIG_ENABLE_BATTERY_BQ27220) || defined(CONFIG_CUSTOM_BATTERY_MONITOR_BQ27220)
         ESP_LOGW(TAG, "BQ27220 Battery gauge driver is not yet implemented.");
 #endif
-#if defined(CONFIG_CUSTOM_ENABLE_TOUCH_SLIDER)
+#if defined(CONFIG_ENABLE_TOUCH_SLIDER) || defined(CONFIG_CUSTOM_TOUCH_SLIDER_PAD1_GPIO)
         ESP_LOGW(TAG, "Touch Slider driver is not yet implemented.");
 #endif
-#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_APDS9960)
+#if defined(CONFIG_ENABLE_SENSOR_APDS9960) || defined(CONFIG_CUSTOM_SENSOR_APDS9960_I2C_SDA)
         ESP_LOGW(TAG, "APDS9960 Gesture/Color sensor driver is not yet implemented.");
 #endif
-#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_VL53LX)
+#if defined(CONFIG_ENABLE_SENSOR_VL53LX) || defined(CONFIG_CUSTOM_SENSOR_VL53LX_I2C_SDA)
         ESP_LOGW(TAG, "VL53L0X/VL53L1X ToF sensor driver is not yet implemented.");
 #endif
-
-        // Các ngoại vi & cảm biến ĐÃ được hỗ trợ đầy đủ bởi SensorManager & ActuatorManager:
-#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE)
-        ESP_LOGI(TAG, "Motor DC (H-Bridge) driver active (Handled by ActuatorManager & RobotController)");
-#endif
-#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_PIR)
-        ESP_LOGI(TAG, "PIR Motion sensor active (Handled by SensorManager)");
-#endif
-#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_VIBRATION_SW420)
-        ESP_LOGI(TAG, "SW-420 Vibration sensor active (Handled by SensorManager)");
-#endif
-#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_FLAME)
-        ESP_LOGI(TAG, "Flame sensor active (Handled by SensorManager)");
-#endif
-#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_BATTERY_CHARGING_DETECT)
-        ESP_LOGI(TAG, "Battery Charging Detect active (Handled by SensorManager)");
-#endif
-#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_DHT11_22)
-        ESP_LOGI(TAG, "DHT11/22 Temperature/Humidity sensor active (Handled by SensorManager)");
-#endif
-    }
 }
 
 public:

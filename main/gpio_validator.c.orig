@@ -151,12 +151,6 @@ esp_err_t gpio_safety_validate(void)
 #if defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG) && defined(CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO)
         { CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO, "Servo Dog PWM", BUS_TYPE_EXCLUSIVE, true },
 #endif
-#if defined(CONFIG_ENABLE_BUZZER) && defined(CONFIG_BUZZER_PIN)
-        { CONFIG_BUZZER_PIN, "Buzzer Alarm", BUS_TYPE_EXCLUSIVE, true },
-#endif
-#if defined(CONFIG_ENABLE_HAPTIC_MOTOR) && defined(CONFIG_HAPTIC_PIN)
-        { CONFIG_HAPTIC_PIN, "Haptic Vibration Motor", BUS_TYPE_EXCLUSIVE, true },
-#endif
         // --- AUTO-GENERATED MISSING PINS ---
 #if defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_I2C_SCL)
         { CONFIG_CUSTOM_AUDIO_MIC_CODEC_I2C_SCL, "CUSTOM_AUDIO_MIC_CODEC_I2C_SCL", BUS_TYPE_I2C_SCL, true },

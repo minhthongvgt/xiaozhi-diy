@@ -90,6 +90,17 @@ esp_err_t sensor_read_power(sensor_power_t *out_pwr);
  */
 esp_err_t sensor_manager_read_all(sensor_data_t *out_data);
 
+/**
+ * @brief Configure or dynamically update the DHT11/22 GPIO pin
+ * @param pin User-selected GPIO pin number (or GPIO_NUM_NC to disable)
+ */
+void sensor_set_dht_pin(gpio_num_t pin);
+
+/**
+ * @brief Get current DHT11/22 GPIO pin
+ */
+gpio_num_t sensor_get_dht_pin(void);
+
 #ifdef __cplusplus
 }
 #endif

@@ -451,6 +451,19 @@
 #define LAMP_GPIO GPIO_NUM_13
 #endif
 
+// 8.1. Buzzer Alarm & Haptic Vibration (ESP-IDF 6.1 Strict Type Safety)
+#if defined(CONFIG_ENABLE_BUZZER) && defined(CONFIG_BUZZER_PIN) && (CONFIG_BUZZER_PIN >= 0)
+#define BUZZER_PIN ((gpio_num_t)CONFIG_BUZZER_PIN)
+#else
+#define BUZZER_PIN GPIO_NUM_NC
+#endif
+
+#if defined(CONFIG_ENABLE_HAPTIC_MOTOR) && defined(CONFIG_HAPTIC_PIN) && (CONFIG_HAPTIC_PIN >= 0)
+#define HAPTIC_PIN ((gpio_num_t)CONFIG_HAPTIC_PIN)
+#else
+#define HAPTIC_PIN GPIO_NUM_NC
+#endif
+
 // 9. Cảm biến phổ biến (Popular Sensors)
 #ifdef CONFIG_CUSTOM_SENSOR_DHT_GPIO
 #define SENSOR_DHT_GPIO ((gpio_num_t)CONFIG_CUSTOM_SENSOR_DHT_GPIO)

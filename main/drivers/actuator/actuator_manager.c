@@ -115,71 +115,100 @@ esp_err_t actuator_manager_init(void)
 {
     ESP_LOGI(TAG, "Initializing Actuators Subsystem (Relay, Servo, DC Motor, Buzzer)...");
 
-#if defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE) || defined(CONFIG_ENABLE_RELAY)
-    s_relay_pin = GPIO_NUM_13;
-#if defined(CONFIG_CUSTOM_PERIPH_RELAY_GPIO)
+#if defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE)
+#if defined(CONFIG_CUSTOM_PERIPH_RELAY_GPIO) && (CONFIG_CUSTOM_PERIPH_RELAY_GPIO >= 0)
     s_relay_pin = (gpio_num_t)CONFIG_CUSTOM_PERIPH_RELAY_GPIO;
-#elif defined(CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO)
+#elif defined(CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO) && (CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO >= 0)
     s_relay_pin = (gpio_num_t)CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO;
+#else
+    s_relay_pin = GPIO_NUM_NC;
 #endif
-    init_output_pin(s_relay_pin, "Relay 220V");
+    if (s_relay_pin != GPIO_NUM_NC) {
+        init_output_pin(s_relay_pin, "Relay 220V");
+    }
 #endif
 
 #if defined(CONFIG_ENABLE_BUZZER)
-    s_buzzer_pin = GPIO_NUM_41;
-#if defined(CONFIG_BUZZER_PIN)
+#if defined(CONFIG_BUZZER_PIN) && (CONFIG_BUZZER_PIN >= 0)
     s_buzzer_pin = (gpio_num_t)CONFIG_BUZZER_PIN;
+#else
+    s_buzzer_pin = GPIO_NUM_NC;
 #endif
-    init_output_pin(s_buzzer_pin, "Buzzer Alarm");
+    if (s_buzzer_pin != GPIO_NUM_NC) {
+        init_output_pin(s_buzzer_pin, "Buzzer Alarm");
+    }
 #endif
 
 #if defined(CONFIG_ENABLE_HAPTIC_MOTOR)
-    s_haptic_pin = GPIO_NUM_42;
-#if defined(CONFIG_HAPTIC_PIN)
+#if defined(CONFIG_HAPTIC_PIN) && (CONFIG_HAPTIC_PIN >= 0)
     s_haptic_pin = (gpio_num_t)CONFIG_HAPTIC_PIN;
+#else
+    s_haptic_pin = GPIO_NUM_NC;
 #endif
-    init_output_pin(s_haptic_pin, "Haptic Vibration Motor");
+    if (s_haptic_pin != GPIO_NUM_NC) {
+        init_output_pin(s_haptic_pin, "Haptic Vibration Motor");
+    }
 #endif
 
-#if defined(CONFIG_ENABLE_SERVO) || defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG)
-    s_servo_pin = GPIO_NUM_48;
-#if defined(CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO)
+#if defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG)
+#if defined(CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO) && (CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO >= 0)
     s_servo_pin = (gpio_num_t)CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO;
+#else
+    s_servo_pin = GPIO_NUM_NC;
 #endif
-    // Configure LEDC Timer for Servo PWM (50Hz)
-    ledc_timer_config_t ledc_timer = {
-        .speed_mode       = LEDC_LOW_SPEED_MODE,
-        .timer_num        = LEDC_TIMER_1,
-        .duty_resolution  = LEDC_TIMER_14_BIT,
-        .freq_hz          = 50,
-        .clk_cfg          = LEDC_AUTO_CLK
-    };
-    ledc_timer_config(&ledc_timer);
+    if (s_servo_pin != GPIO_NUM_NC) {
+        // Configure LEDC Timer for Servo PWM (50Hz)
+        ledc_timer_config_t ledc_timer = {
+            .speed_mode       = LEDC_LOW_SPEED_MODE,
+            .timer_num        = LEDC_TIMER_1,
+            .duty_resolution  = LEDC_TIMER_14_BIT,
+            .freq_hz          = 50,
+            .clk_cfg          = LEDC_AUTO_CLK
+        };
+        ledc_timer_config(&ledc_timer);
 
-    ledc_channel_config_t ledc_channel = {
-        .speed_mode     = LEDC_LOW_SPEED_MODE,
-        .channel        = LEDC_CHANNEL_1,
-        .timer_sel      = LEDC_TIMER_1,
-        .intr_type      = LEDC_INTR_DISABLE,
-        .gpio_num       = s_servo_pin,
-        .duty           = 1229, // 90 degrees default
-        .hpoint         = 0
-    };
-    ledc_channel_config(&ledc_channel);
-    ESP_LOGI(TAG, "Servo PWM configured on GPIO %d (50Hz, LEDC Timer1 Ch1)", s_servo_pin);
+        ledc_channel_config_t ledc_channel = {
+            .speed_mode     = LEDC_LOW_SPEED_MODE,
+            .channel        = LEDC_CHANNEL_1,
+            .timer_sel      = LEDC_TIMER_1,
+            .intr_type      = LEDC_INTR_DISABLE,
+            .gpio_num       = s_servo_pin,
+            .duty           = 1229, // 90 degrees default
+            .hpoint         = 0
+        };
+        ledc_channel_config(&ledc_channel);
+        ESP_LOGI(TAG, "Servo PWM configured on GPIO %d (50Hz, LEDC Timer1 Ch1)", s_servo_pin);
+    }
 #endif
 
-#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE) || defined(CONFIG_ENABLE_MOTOR_DRIVER)
-    s_motor_pwma = GPIO_NUM_1;
-    s_motor_dira = GPIO_NUM_2;
-    s_motor_pwmb = GPIO_NUM_41;
-    s_motor_dirb = GPIO_NUM_42;
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE)
+#if defined(CONFIG_CUSTOM_PERIPH_MOTOR_PWMA_PIN) && (CONFIG_CUSTOM_PERIPH_MOTOR_PWMA_PIN >= 0)
+    s_motor_pwma = (gpio_num_t)CONFIG_CUSTOM_PERIPH_MOTOR_PWMA_PIN;
+#else
+    s_motor_pwma = GPIO_NUM_NC;
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_MOTOR_DIRA_PIN) && (CONFIG_CUSTOM_PERIPH_MOTOR_DIRA_PIN >= 0)
+    s_motor_dira = (gpio_num_t)CONFIG_CUSTOM_PERIPH_MOTOR_DIRA_PIN;
+#else
+    s_motor_dira = GPIO_NUM_NC;
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_MOTOR_PWMB_PIN) && (CONFIG_CUSTOM_PERIPH_MOTOR_PWMB_PIN >= 0)
+    s_motor_pwmb = (gpio_num_t)CONFIG_CUSTOM_PERIPH_MOTOR_PWMB_PIN;
+#else
+    s_motor_pwmb = GPIO_NUM_NC;
+#endif
+#if defined(CONFIG_CUSTOM_PERIPH_MOTOR_DIRB_PIN) && (CONFIG_CUSTOM_PERIPH_MOTOR_DIRB_PIN >= 0)
+    s_motor_dirb = (gpio_num_t)CONFIG_CUSTOM_PERIPH_MOTOR_DIRB_PIN;
+#else
+    s_motor_dirb = GPIO_NUM_NC;
+#endif
 
-    init_output_pin(s_motor_pwma, "Motor DC PWMA");
-    init_output_pin(s_motor_dira, "Motor DC DIRA");
-    init_output_pin(s_motor_pwmb, "Motor DC PWMB");
-    init_output_pin(s_motor_dirb, "Motor DC DIRB");
-    ESP_LOGI(TAG, "DC Motor H-Bridge Driver TB6612 configured (PWMA: 1, DIRA: 2, PWMB: 41, DIRB: 42)");
+    if (s_motor_pwma != GPIO_NUM_NC) init_output_pin(s_motor_pwma, "Motor DC PWMA");
+    if (s_motor_dira != GPIO_NUM_NC) init_output_pin(s_motor_dira, "Motor DC DIRA");
+    if (s_motor_pwmb != GPIO_NUM_NC) init_output_pin(s_motor_pwmb, "Motor DC PWMB");
+    if (s_motor_dirb != GPIO_NUM_NC) init_output_pin(s_motor_dirb, "Motor DC DIRB");
+    ESP_LOGI(TAG, "DC Motor H-Bridge Driver configured (PWMA: %d, DIRA: %d, PWMB: %d, DIRB: %d)",
+             s_motor_pwma, s_motor_dira, s_motor_pwmb, s_motor_dirb);
 #endif
 
     ESP_LOGI(TAG, "Actuators Subsystem initialized successfully.");
