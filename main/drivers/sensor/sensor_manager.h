@@ -9,6 +9,7 @@
 #include <esp_err.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <driver/gpio.h>
 
 #ifdef __cplusplus
 extern "C" {

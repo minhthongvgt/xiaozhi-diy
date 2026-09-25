@@ -799,7 +799,6 @@ private:
         ESP_LOGI(TAG, "DHT11/22 Temperature/Humidity sensor active (Handled by SensorManager)");
 #endif
     }
-}
 
 public:
     CustomN16R8Board() :

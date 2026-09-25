@@ -58,6 +58,12 @@ def test_all():
     assert 'esp_timer_get_time' in dht_c, "Missing high precision timer in dht.c"
     print("✓ [Pass] dht.c verified (FreeRTOS critical section, high resolution timer, no printf)")
 
+    # 3b. sensor_manager.h
+    with open('main/drivers/sensor/sensor_manager.h', 'r', encoding='utf-8') as f:
+        sensor_h = f.read()
+    assert '<driver/gpio.h>' in sensor_h, "Missing driver/gpio.h in sensor_manager.h"
+    print("✓ [Pass] sensor_manager.h verified (driver/gpio.h included for gpio_num_t)")
+
     # 4. sensor_manager.c - Kiểm tra loại bỏ GPIO hardcode & macro ảo
     with open('main/drivers/sensor/sensor_manager.c', 'r', encoding='utf-8') as f:
         sensor_c = f.read()
