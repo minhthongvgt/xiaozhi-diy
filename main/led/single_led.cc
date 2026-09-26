@@ -47,7 +47,11 @@ SingleLed::SingleLed(gpio_num_t gpio) {
     rmt_config.resolution_hz = 10 * 1000 * 1000; // 10MHz
 
     esp_err_t ret = led_strip_new_rmt_device(&strip_config, &rmt_config, &led_strip_);
-    ESP_ERROR_CHECK(ret);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to create SingleLed RMT device on GPIO %d: %s", gpio, esp_err_to_name(ret));
+        led_strip_ = nullptr;
+        return;
+    }
     led_strip_clear(led_strip_);
 
     esp_timer_create_args_t timer_args = {
@@ -60,7 +64,11 @@ SingleLed::SingleLed(gpio_num_t gpio) {
         .name = "single_led_timer",
         .skip_unhandled_events = false,
     };
-    esp_timer_create(&timer_args, &timer_);
+    ret = esp_timer_create(&timer_args, &timer_);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to create single_led_timer: %s", esp_err_to_name(ret));
+        timer_ = nullptr;
+    }
 }
 
 SingleLed::~SingleLed() {
@@ -83,6 +91,18 @@ void SingleLed::SetColor(uint8_t r, uint8_t g, uint8_t b) {
     b_ = b;
 }
 
+void SingleLed::SetBrightness(uint8_t brightness) {
+    rainbow_brightness_ = brightness;
+    if (custom_mode_ && mode_ == EffectMode::kNone && led_strip_ != nullptr) {
+        std::lock_guard<std::mutex> lock(mutex_);
+        uint8_t r = (uint16_t)r_ * rainbow_brightness_ / 255;
+        uint8_t g = (uint16_t)g_ * rainbow_brightness_ / 255;
+        uint8_t b = (uint16_t)b_ * rainbow_brightness_ / 255;
+        led_strip_set_pixel(led_strip_, 0, r, g, b);
+        led_strip_refresh(led_strip_);
+    }
+}
+
 void SingleLed::TurnOn() {
     if (led_strip_ == nullptr) {
         return;
@@ -93,7 +113,15 @@ void SingleLed::TurnOn() {
         esp_timer_stop(timer_);
     }
     mode_ = EffectMode::kNone;
-    led_strip_set_pixel(led_strip_, 0, r_, g_, b_);
+    uint8_t r = (uint16_t)r_ * rainbow_brightness_ / 255;
+    uint8_t g = (uint16_t)g_ * rainbow_brightness_ / 255;
+    uint8_t b = (uint16_t)b_ * rainbow_brightness_ / 255;
+    if ((r_ || g_ || b_) && !r && !g && !b && rainbow_brightness_ > 0) {
+        r = r_ ? 1 : 0;
+        g = g_ ? 1 : 0;
+        b = b_ ? 1 : 0;
+    }
+    led_strip_set_pixel(led_strip_, 0, r, g, b);
     led_strip_refresh(led_strip_);
 }
 
@@ -154,6 +182,25 @@ void SingleLed::StartRainbow(int interval_ms, uint8_t brightness) {
     esp_timer_start_periodic(timer_, interval_ms * 1000);
 }
 
+void SingleLed::StartBreathe(int interval_ms) {
+    if (led_strip_ == nullptr || timer_ == nullptr) {
+        return;
+    }
+
+    std::lock_guard<std::mutex> lock(mutex_);
+    esp_timer_stop(timer_);
+
+    mode_ = EffectMode::kBreathe;
+    breathe_up_ = true;
+    breathe_val_ = 0;
+    if (r_ == 0 && g_ == 0 && b_ == 0) {
+        r_ = 0;
+        g_ = rainbow_brightness_;
+        b_ = rainbow_brightness_;
+    }
+    esp_timer_start_periodic(timer_, interval_ms * 1000);
+}
+
 void SingleLed::OnTimer() {
     std::lock_guard<std::mutex> lock(mutex_);
     if (led_strip_ == nullptr) {
@@ -163,7 +210,10 @@ void SingleLed::OnTimer() {
     if (mode_ == EffectMode::kBlink) {
         blink_counter_--;
         if (blink_counter_ & 1) {
-            led_strip_set_pixel(led_strip_, 0, r_, g_, b_);
+            uint8_t r = (uint16_t)r_ * rainbow_brightness_ / 255;
+            uint8_t g = (uint16_t)g_ * rainbow_brightness_ / 255;
+            uint8_t b = (uint16_t)b_ * rainbow_brightness_ / 255;
+            led_strip_set_pixel(led_strip_, 0, r, g, b);
             led_strip_refresh(led_strip_);
         } else {
             led_strip_clear(led_strip_);
@@ -176,6 +226,26 @@ void SingleLed::OnTimer() {
         rainbow_pos_ += 4; // Advance hue smoothly
         uint8_t r = 0, g = 0, b = 0;
         GetRainbowColor(rainbow_pos_, rainbow_brightness_, r, g, b);
+        led_strip_set_pixel(led_strip_, 0, r, g, b);
+        led_strip_refresh(led_strip_);
+    } else if (mode_ == EffectMode::kBreathe) {
+        if (breathe_up_) {
+            if (breathe_val_ >= 250) {
+                breathe_up_ = false;
+            } else {
+                breathe_val_ += 5;
+            }
+        } else {
+            if (breathe_val_ <= 5) {
+                breathe_up_ = true;
+            } else {
+                breathe_val_ -= 5;
+            }
+        }
+        uint32_t scale = (uint32_t)rainbow_brightness_ * breathe_val_ / 255;
+        uint8_t r = (uint32_t)r_ * scale / 255;
+        uint8_t g = (uint32_t)g_ * scale / 255;
+        uint8_t b = (uint32_t)b_ * scale / 255;
         led_strip_set_pixel(led_strip_, 0, r, g, b);
         led_strip_refresh(led_strip_);
     }

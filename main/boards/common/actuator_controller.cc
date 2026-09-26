@@ -19,6 +19,26 @@ ActuatorController::ActuatorController() {
         return true;
     });
 
+    // Tool lấy góc hiện tại và trạng thái của Servo
+    mcp_server.AddTool("self.actuator.get_servo",
+                       "Get the current angle (0 to 180 degrees) and active state of the interactive servo",
+                       PropertyList(),
+                       [](const PropertyList& properties) -> ReturnValue {
+        nlohmann::json j;
+        j["angle"] = actuator_get_servo_angle();
+        j["attached"] = actuator_is_servo_attached();
+        return j;
+    });
+
+    // Tool giải phóng lực giữ / ngắt xung Servo (detach) để chống rung và tiết kiệm năng lượng
+    mcp_server.AddTool("self.actuator.detach_servo",
+                       "Detach servo PWM signal to release holding torque and prevent jitter/overheating",
+                       PropertyList(),
+                       [](const PropertyList& properties) -> ReturnValue {
+        actuator_servo_detach();
+        return true;
+    });
+
     // 2. Tool điều khiển động cơ DC (TB6612FNG)
     mcp_server.AddTool("self.actuator.set_motor",
                        "Set DC motor speed (-100 to 100 percent) for motor 1 or 2",
@@ -80,5 +100,5 @@ ActuatorController::ActuatorController() {
         return j;
     });
 
-    ESP_LOGI(TAG, "ActuatorController registered 6 MCP tools: set_servo, set_motor, beep, vibrate, set_relay, get_relay");
+    ESP_LOGI(TAG, "ActuatorController registered 8 MCP tools: set_servo, get_servo, detach_servo, set_motor, beep, vibrate, set_relay, get_relay");
 }

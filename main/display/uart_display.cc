@@ -1,18 +1,32 @@
 #include "uart_display.h"
+#include <driver/gpio.h>
 #include <esp_log.h>
+#include <nlohmann/json.hpp>
 #include <cstring>
 #include <vector>
 
 #define TAG "UartDisplay"
 
-UartDisplay::UartDisplay(uart_port_t uart_num, int tx_pin, int rx_pin, int baud_rate,
+UartDisplay::UartDisplay(uart_port_t uart_num, gpio_num_t tx_pin, gpio_num_t rx_pin, int baud_rate,
                          UartDisplayProtocol protocol)
     : uart_num_(uart_num), protocol_(protocol) {
     
     mutex_ = xSemaphoreCreateMutex();
 
+    if (tx_pin == GPIO_NUM_NC || !GPIO_IS_VALID_GPIO(tx_pin)) {
+        ESP_LOGE(TAG, "UartDisplay TX pin (%d) is invalid or not connected. Init aborted.", static_cast<int>(tx_pin));
+        return;
+    }
+
+    if (uart_is_driver_installed(static_cast<uart_port_t>(uart_num_))) {
+        ESP_LOGW(TAG, "UART %d driver already installed; reusing existing driver for UartDisplay", static_cast<int>(uart_num_));
+        is_initialized_ = true;
+        SetStatus("Connected");
+        return;
+    }
+
     uart_config_t uart_config = {
-        .baud_rate = baud_rate,
+        .baud_rate = (baud_rate > 0) ? baud_rate : 115200,
         .data_bits = UART_DATA_8_BITS,
         .parity    = UART_PARITY_DISABLE,
         .stop_bits = UART_STOP_BITS_1,
@@ -23,16 +37,29 @@ UartDisplay::UartDisplay(uart_port_t uart_num, int tx_pin, int rx_pin, int baud_
     };
 
     esp_err_t ret = uart_param_config(static_cast<uart_port_t>(uart_num_), &uart_config);
-    ESP_ERROR_CHECK(ret);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "uart_param_config failed on UART %d: %s", static_cast<int>(uart_num_), esp_err_to_name(ret));
+        return;
+    }
 
-    ESP_ERROR_CHECK(uart_set_pin(static_cast<uart_port_t>(uart_num_), tx_pin, rx_pin, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
+    int tx = static_cast<int>(tx_pin);
+    int rx = (rx_pin != GPIO_NUM_NC && GPIO_IS_VALID_GPIO(rx_pin)) ? static_cast<int>(rx_pin) : UART_PIN_NO_CHANGE;
+    ret = uart_set_pin(static_cast<uart_port_t>(uart_num_), tx, rx, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "uart_set_pin failed on UART %d (TX=%d, RX=%d): %s", static_cast<int>(uart_num_), tx, rx, esp_err_to_name(ret));
+        return;
+    }
 
     const int rx_buffer_size = 512;
-    ESP_ERROR_CHECK(uart_driver_install(static_cast<uart_port_t>(uart_num_), rx_buffer_size, 0, 0, nullptr, 0));
+    ret = uart_driver_install(static_cast<uart_port_t>(uart_num_), rx_buffer_size, 0, 0, nullptr, 0);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "uart_driver_install failed on UART %d: %s", static_cast<int>(uart_num_), esp_err_to_name(ret));
+        return;
+    }
 
     is_initialized_ = true;
     ESP_LOGI(TAG, "UartDisplay initialized on UART %d (TX=%d, RX=%d, baud=%d, proto=%d)",
-             (int)uart_num_, tx_pin, rx_pin, baud_rate, (int)protocol_);
+             static_cast<int>(uart_num_), static_cast<int>(tx_pin), static_cast<int>(rx_pin), baud_rate, static_cast<int>(protocol_));
 
     // Send initial test/welcome packet
     SetStatus("Connected");
@@ -73,11 +100,32 @@ void UartDisplay::SendNextionCmd(const std::string& cmd) {
     uart_write_bytes(uart_num_, (const char*)tail, 3);
 }
 
+static std::string escape_nextion_string(const char* str) {
+    if (!str) return "";
+    std::string escaped;
+    escaped.reserve(strlen(str) + 8);
+    for (const char* p = str; *p; ++p) {
+        if (*p == '"') {
+            escaped += "\\\"";
+        } else if (*p == '\r') {
+            continue;
+        } else {
+            escaped += *p;
+        }
+    }
+    return escaped;
+}
+
 void UartDisplay::SendDwinText(uint16_t vp_addr, const std::string& text) {
     if (!is_initialized_) return;
     // DWIN DGUS frame: 5A A5 [Length] 82 [VP_H] [VP_L] [Data...] [00 00]
-    size_t data_len = text.length() + 2; // text + string terminator
-    size_t frame_len = 3 + data_len;     // 82 + VP_H + VP_L + data
+    // Clamp to 240 bytes max to prevent 8-bit length byte overflow (3 + len <= 255)
+    std::string safe_text = text;
+    if (safe_text.length() > 240) {
+        safe_text = safe_text.substr(0, 240);
+    }
+    size_t data_len = safe_text.length() + 2; // text + string terminator
+    size_t frame_len = 3 + data_len;         // 82 + VP_H + VP_L + data
     std::vector<uint8_t> frame;
     frame.reserve(3 + frame_len);
     frame.push_back(0x5A);
@@ -86,7 +134,7 @@ void UartDisplay::SendDwinText(uint16_t vp_addr, const std::string& text) {
     frame.push_back(0x82); // Write command
     frame.push_back(static_cast<uint8_t>((vp_addr >> 8) & 0xFF));
     frame.push_back(static_cast<uint8_t>(vp_addr & 0xFF));
-    for (char c : text) {
+    for (char c : safe_text) {
         frame.push_back(static_cast<uint8_t>(c));
     }
     frame.push_back(0x00);
@@ -100,11 +148,15 @@ void UartDisplay::SetStatus(const char* status) {
 
     switch (protocol_) {
         case UartDisplayProtocol::NextionTjc:
-            SendNextionCmd(std::string("t_status.txt=\"") + status + "\"");
+            SendNextionCmd(std::string("t_status.txt=\"") + escape_nextion_string(status) + "\"");
             break;
-        case UartDisplayProtocol::JsonStream:
-            SendRawString(std::string("{\"type\":\"status\",\"val\":\"") + status + "\"}\n");
+        case UartDisplayProtocol::JsonStream: {
+            nlohmann::json j;
+            j["type"] = "status";
+            j["val"] = status;
+            SendRawString(j.dump() + "\n");
             break;
+        }
         case UartDisplayProtocol::RawText:
             SendRawString(std::string("STATUS:") + status + "\r\n");
             break;
@@ -120,11 +172,15 @@ void UartDisplay::ShowNotification(const char* notification, int duration_ms) {
 
     switch (protocol_) {
         case UartDisplayProtocol::NextionTjc:
-            SendNextionCmd(std::string("t_notify.txt=\"") + notification + "\"");
+            SendNextionCmd(std::string("t_notify.txt=\"") + escape_nextion_string(notification) + "\"");
             break;
-        case UartDisplayProtocol::JsonStream:
-            SendRawString(std::string("{\"type\":\"notify\",\"val\":\"") + notification + "\"}\n");
+        case UartDisplayProtocol::JsonStream: {
+            nlohmann::json j;
+            j["type"] = "notify";
+            j["val"] = notification;
+            SendRawString(j.dump() + "\n");
             break;
+        }
         case UartDisplayProtocol::RawText:
             SendRawString(std::string("NOTIFY:") + notification + "\r\n");
             break;
@@ -144,11 +200,15 @@ void UartDisplay::SetEmotion(const char* emotion) {
 
     switch (protocol_) {
         case UartDisplayProtocol::NextionTjc:
-            SendNextionCmd(std::string("t_emotion.txt=\"") + emotion + "\"");
+            SendNextionCmd(std::string("t_emotion.txt=\"") + escape_nextion_string(emotion) + "\"");
             break;
-        case UartDisplayProtocol::JsonStream:
-            SendRawString(std::string("{\"type\":\"emotion\",\"val\":\"") + emotion + "\"}\n");
+        case UartDisplayProtocol::JsonStream: {
+            nlohmann::json j;
+            j["type"] = "emotion";
+            j["val"] = emotion;
+            SendRawString(j.dump() + "\n");
             break;
+        }
         case UartDisplayProtocol::RawText:
             SendRawString(std::string("EMOTION:") + emotion + "\r\n");
             break;
@@ -163,16 +223,23 @@ void UartDisplay::SetChatMessage(const char* role, const char* content) {
     if (!role || !content) return;
 
     switch (protocol_) {
-        case UartDisplayProtocol::NextionTjc:
+        case UartDisplayProtocol::NextionTjc: {
+            std::string escaped = escape_nextion_string(content);
             if (strcmp(role, "user") == 0) {
-                SendNextionCmd(std::string("t_user.txt=\"") + content + "\"");
+                SendNextionCmd(std::string("t_user.txt=\"") + escaped + "\"");
             } else {
-                SendNextionCmd(std::string("t_chat.txt=\"") + content + "\"");
+                SendNextionCmd(std::string("t_chat.txt=\"") + escaped + "\"");
             }
             break;
-        case UartDisplayProtocol::JsonStream:
-            SendRawString(std::string("{\"type\":\"chat\",\"role\":\"") + role + "\",\"content\":\"" + content + "\"}\n");
+        }
+        case UartDisplayProtocol::JsonStream: {
+            nlohmann::json j;
+            j["type"] = "chat";
+            j["role"] = role;
+            j["content"] = content;
+            SendRawString(j.dump() + "\n");
             break;
+        }
         case UartDisplayProtocol::RawText:
             SendRawString(std::string("CHAT:") + role + ":" + content + "\r\n");
             break;

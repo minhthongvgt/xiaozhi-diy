@@ -22,6 +22,10 @@ public:
     virtual void StartChase(int interval_ms = 30) {}
     virtual void StartBreathe(int interval_ms = 25) {}
     virtual void StartBlink(int interval_ms = 200) {}
+    virtual void StartScanner(int interval_ms = 30) {}
+    virtual void StartColorWipe(int interval_ms = 30) {}
+    virtual void SetPixel(uint16_t index, uint8_t r, uint8_t g, uint8_t b) {}
+    virtual uint16_t GetLedCount() const { return 1; }
     virtual std::string GetType() const { return "Led"; }
 };
 

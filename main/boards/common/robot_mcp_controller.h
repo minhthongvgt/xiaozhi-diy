@@ -54,10 +54,10 @@ public:
             }
         );
 
-        // 2. Tool thực hiện cử chỉ cảm xúc của robot (gật đầu, lắc đầu, vẫy)
+        // 2. Tool thực hiện cử chỉ cảm xúc của robot (gật đầu, lắc đầu, vẫy, thả lỏng)
         mcp_server.AddTool(
             "self.robot.gesture",
-            "Perform robot interactive physical gesture (gestures: 'nod', 'shake', 'center')",
+            "Perform robot interactive physical gesture (gestures: 'nod', 'shake', 'center', 'relax')",
             PropertyList({
                 Property("action", kPropertyTypeString)
             }),
@@ -76,6 +76,8 @@ public:
                     actuator_set_servo_angle(135);
                     vTaskDelay(pdMS_TO_TICKS(200));
                     actuator_set_servo_angle(90);
+                } else if (action == "relax" || action == "detach") {
+                    actuator_servo_detach();
                 } else {
                     actuator_set_servo_angle(90);
                 }

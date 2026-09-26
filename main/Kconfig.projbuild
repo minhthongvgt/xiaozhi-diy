@@ -1423,9 +1423,12 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 default 48
 
             config CUSTOM_LED_COUNT
-                int "Số lượng mắt LED trên dây"
-                range 1 256
+                int "Số lượng mắt LED trên dải/vòng (Hỗ trợ tối đa 1024 mắt LED)"
+                range 1 1024
                 default 1
+                help
+                    Số lượng mắt LED kỹ thuật số WS2812/SK6812 (từ 1 đến 1024 mắt LED).
+                    Khi cấu hình trên 24 mắt LED, hệ thống tự động kích hoạt kênh DMA để đảm bảo khung hình mượt mà và không giật lag.
 
             config CUSTOM_LED_FAST_RAINBOW_EFFECT
                 bool "Hiệu ứng Đổi Màu Cầu Vồng Nhanh (Fast Rainbow Effect khi nói / khởi động)"

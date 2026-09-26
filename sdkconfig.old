@@ -1241,20 +1241,14 @@ CONFIG_CUSTOM_BUTTON_BOOT_GPIO=0
 # default:
 # CONFIG_ENABLE_CUSTOM_CAMERA is not set
 CONFIG_ENABLE_CUSTOM_LEDS=y
-# default:
-CONFIG_CUSTOM_LED_WS2812=y
-# default:
+# CONFIG_CUSTOM_LED_WS2812 is not set
 # CONFIG_CUSTOM_LED_SINGLE_PWM is not set
-# default:
-# CONFIG_CUSTOM_LED_CIRCULAR_STRIP is not set
-# default:
+CONFIG_CUSTOM_LED_CIRCULAR_STRIP=y
 # CONFIG_CUSTOM_LED_USER_CUSTOM is not set
-# default:
 # CONFIG_CUSTOM_LED_NONE is not set
 # default:
 CONFIG_CUSTOM_LED_GPIO=48
-# default:
-CONFIG_CUSTOM_LED_COUNT=1
+CONFIG_CUSTOM_LED_COUNT=16
 # default:
 CONFIG_CUSTOM_LED_FAST_RAINBOW_EFFECT=y
 # default:
@@ -1400,10 +1394,6 @@ CONFIG_CUSTOM_BATTERY_MONITOR_NONE=y
 
 #
 #  [Micro]    INMP441 / MSM261S I2S  | DIN: 6, SCK: 5, WS: 4                      
-#
-
-#
-#  [Den LED]  RGB WS2812 / SK6812    | DATA: 48 (RMT)                             
 #
 
 #

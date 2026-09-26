@@ -40,6 +40,23 @@ void actuator_set_servo_angle(uint8_t angle_deg);
 uint8_t actuator_get_servo_angle(void);
 
 /**
+ * @brief Detach Servo PWM signal (releases holding torque, prevents buzz/overheat/battery drain)
+ */
+void actuator_servo_detach(void);
+
+/**
+ * @brief Check if Servo is currently attached (PWM active)
+ */
+bool actuator_is_servo_attached(void);
+
+/**
+ * @brief Set custom pulse width range for servo (in microseconds)
+ * @param min_us Minimum pulse width at 0 degrees (default: 500)
+ * @param max_us Maximum pulse width at 180 degrees (default: 2500)
+ */
+void actuator_set_servo_pulse_range(uint16_t min_us, uint16_t max_us);
+
+/**
  * @brief Set DC Motor speed and direction (-100 to +100)
  */
 void actuator_set_dc_motor(int motor_id, int speed_pct);

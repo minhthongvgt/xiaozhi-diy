@@ -433,22 +433,31 @@ private:
 #endif
 
 #if defined(CONFIG_ENABLE_CUSTOM_SECONDARY_UART_DISPLAY) || defined(CONFIG_CUSTOM_SECONDARY_UART_DISPLAY_ENABLE) || defined(CONFIG_CUSTOM_DISPLAY_UART)
-        ESP_LOGI(TAG, "Initializing Secondary External UART Display (TX: %d, RX: %d, Baud: %d)",
-                 DISPLAY_UART_TX_PIN, DISPLAY_UART_RX_PIN, DISPLAY_UART_BAUDRATE);
-        UartDisplayProtocol proto = UartDisplayProtocol::NextionTjc;
+        if (DISPLAY_UART_TX_PIN != GPIO_NUM_NC) {
+            ESP_LOGI(TAG, "Initializing Secondary External UART Display (Port: %d, TX: %d, RX: %d, Baud: %d)",
+                     (int)DISPLAY_UART_PORT, (int)DISPLAY_UART_TX_PIN, (int)DISPLAY_UART_RX_PIN, DISPLAY_UART_BAUDRATE);
+            UartDisplayProtocol proto = UartDisplayProtocol::NextionTjc;
 #if defined(CONFIG_CUSTOM_DISPLAY_UART_PROTO_JSON)
-        proto = UartDisplayProtocol::JsonStream;
+            proto = UartDisplayProtocol::JsonStream;
 #elif defined(CONFIG_CUSTOM_DISPLAY_UART_PROTO_RAW_TEXT)
-        proto = UartDisplayProtocol::RawText;
+            proto = UartDisplayProtocol::RawText;
 #elif defined(CONFIG_CUSTOM_DISPLAY_UART_PROTO_DWIN)
-        proto = UartDisplayProtocol::DwinDgus;
+            proto = UartDisplayProtocol::DwinDgus;
 #endif
-        UartDisplay* secondary_uart = new UartDisplay(DISPLAY_UART_PORT, DISPLAY_UART_TX_PIN, DISPLAY_UART_RX_PIN,
-                                                       DISPLAY_UART_BAUDRATE, proto);
-        if (display_ == nullptr) {
-            display_ = secondary_uart;
+            UartDisplay* secondary_uart = new UartDisplay(DISPLAY_UART_PORT, DISPLAY_UART_TX_PIN, DISPLAY_UART_RX_PIN,
+                                                           DISPLAY_UART_BAUDRATE, proto);
+            if (secondary_uart->IsInitialized()) {
+                if (display_ == nullptr) {
+                    display_ = secondary_uart;
+                } else {
+                    display_ = new DualDisplay(display_, secondary_uart);
+                }
+            } else {
+                ESP_LOGE(TAG, "Secondary UART Display failed to initialize; freeing instance");
+                delete secondary_uart;
+            }
         } else {
-            display_ = new DualDisplay(display_, secondary_uart);
+            ESP_LOGW(TAG, "Secondary UART Display enabled but TX pin is NC; skipping init");
         }
 #endif
     }
@@ -583,8 +592,19 @@ private:
 
     void InitializeUart() {
 #if defined(CONFIG_ENABLE_CUSTOM_UART)
+        uart_port_t port = static_cast<uart_port_t>(CUSTOM_UART_PORT);
+        if (uart_is_driver_installed(port)) {
+            ESP_LOGW(TAG, "UART port %d driver is already installed, skipping Custom UART initialization", (int)port);
+            return;
+        }
+
+        if (CUSTOM_UART_TX_PIN == GPIO_NUM_NC && CUSTOM_UART_RX_PIN == GPIO_NUM_NC) {
+            ESP_LOGW(TAG, "Custom UART pins are not configured (both TX and RX are NC). Skipping init.");
+            return;
+        }
+
         uart_config_t uart_config = {
-            .baud_rate = CUSTOM_UART_BAUDRATE,
+            .baud_rate = (CUSTOM_UART_BAUDRATE > 0) ? CUSTOM_UART_BAUDRATE : 115200,
             .data_bits = UART_DATA_8_BITS,
             .parity = UART_PARITY_DISABLE,
             .stop_bits = UART_STOP_BITS_1,
@@ -593,17 +613,31 @@ private:
             .rx_flow_ctrl_thresh = 122,
             .source_clk = UART_SCLK_DEFAULT,
         };
-        ESP_ERROR_CHECK(uart_param_config(static_cast<uart_port_t>(CUSTOM_UART_PORT), &uart_config));
+        esp_err_t err = uart_param_config(port, &uart_config);
+        if (err != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to configure UART %d parameters: %s", (int)port, esp_err_to_name(err));
+            return;
+        }
         
         int tx_pin = (CUSTOM_UART_TX_PIN != GPIO_NUM_NC) ? CUSTOM_UART_TX_PIN : UART_PIN_NO_CHANGE;
         int rx_pin = (CUSTOM_UART_RX_PIN != GPIO_NUM_NC) ? CUSTOM_UART_RX_PIN : UART_PIN_NO_CHANGE;
         int rts_pin = (CUSTOM_UART_RTS_PIN != GPIO_NUM_NC) ? CUSTOM_UART_RTS_PIN : UART_PIN_NO_CHANGE;
         int cts_pin = (CUSTOM_UART_CTS_PIN != GPIO_NUM_NC) ? CUSTOM_UART_CTS_PIN : UART_PIN_NO_CHANGE;
         
-        ESP_ERROR_CHECK(uart_set_pin(static_cast<uart_port_t>(CUSTOM_UART_PORT), tx_pin, rx_pin, rts_pin, cts_pin));
-        ESP_ERROR_CHECK(uart_driver_install(static_cast<uart_port_t>(CUSTOM_UART_PORT), 2048, 2048, 0, NULL, 0));
-        ESP_LOGI(TAG, "Custom UART initialized on port %d, TX: %d, RX: %d at %d bps",
-                 CUSTOM_UART_PORT, CUSTOM_UART_TX_PIN, CUSTOM_UART_RX_PIN, CUSTOM_UART_BAUDRATE);
+        err = uart_set_pin(port, tx_pin, rx_pin, rts_pin, cts_pin);
+        if (err != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to set UART %d pins (TX: %d, RX: %d): %s", (int)port, tx_pin, rx_pin, esp_err_to_name(err));
+            return;
+        }
+
+        err = uart_driver_install(port, 2048, 2048, 0, NULL, 0);
+        if (err != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to install UART %d driver: %s", (int)port, esp_err_to_name(err));
+            return;
+        }
+
+        ESP_LOGI(TAG, "Custom UART initialized successfully on port %d, TX: %d, RX: %d at %d bps",
+                 (int)port, CUSTOM_UART_TX_PIN, CUSTOM_UART_RX_PIN, CUSTOM_UART_BAUDRATE);
 #endif
     }
 
@@ -703,7 +737,7 @@ private:
         static CellularMcpController cellular_ctrl;
         ESP_LOGI(TAG, "MCP Cellular Controller registered successfully");
 #endif
-#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE)
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE) || defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG)
         static RobotMcpController robot_ctrl;
         ESP_LOGI(TAG, "MCP Robot Controller registered successfully");
 #endif

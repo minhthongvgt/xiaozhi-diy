@@ -18,7 +18,7 @@ public:
         // 1. Tool điều khiển hiệu ứng ánh sáng LED RGB
         mcp_server.AddTool(
             "self.led.set_effect",
-            "Set dynamic lighting effect on status LED (supported effects: 'rainbow', 'chase', 'breathe', 'blink', 'off', 'auto')",
+            "Set dynamic lighting effect on status LED (supported effects: 'rainbow', 'chase', 'breathe', 'blink', 'scanner', 'wipe', 'off', 'auto')",
             PropertyList({
                 Property("effect", kPropertyTypeString),
                 Property("speed_ms", kPropertyTypeInteger, 25, 10, 1000)
@@ -55,6 +55,12 @@ public:
                 } else if (effect == "blink") {
                     led->SetCustomMode(true);
                     led->StartBlink(speed);
+                } else if (effect == "scanner") {
+                    led->SetCustomMode(true);
+                    led->StartScanner(speed);
+                } else if (effect == "wipe") {
+                    led->SetCustomMode(true);
+                    led->StartColorWipe(speed);
                 } else if (effect == "off") {
                     led->SetCustomMode(false);
                     led->TurnOff();
@@ -68,10 +74,10 @@ public:
             }
         );
 
-        // 2. Tool đặt màu sắc tĩnh cho LED RGB
+        // 2. Tool đặt màu sắc tĩnh cho toàn bộ dải LED RGB
         mcp_server.AddTool(
             "self.led.set_color",
-            "Set static RGB color for status LED (red: 0..255, green: 0..255, blue: 0..255)",
+            "Set static RGB color for all LEDs (red: 0..255, green: 0..255, blue: 0..255)",
             PropertyList({
                 Property("red", kPropertyTypeInteger, 0, 0, 255),
                 Property("green", kPropertyTypeInteger, 0, 0, 255),
@@ -96,7 +102,42 @@ public:
             }
         );
 
-        // 3. Tool điều chỉnh độ sáng đèn LED (0-100%)
+        // 3. Tool đặt màu sắc cho một mắt LED cụ thể trên dải LED (0..count-1)
+        mcp_server.AddTool(
+            "self.led.set_pixel",
+            "Set static RGB color for a specific pixel on the LED strip (index: 0..count-1, red: 0..255, green: 0..255, blue: 0..255)",
+            PropertyList({
+                Property("index", kPropertyTypeInteger, 0, 0, 1023),
+                Property("red", kPropertyTypeInteger, 0, 0, 255),
+                Property("green", kPropertyTypeInteger, 0, 0, 255),
+                Property("blue", kPropertyTypeInteger, 0, 0, 255)
+            }),
+            [](const PropertyList& properties) -> ReturnValue {
+                int index = properties["index"].value<int>();
+                uint8_t r = (uint8_t)properties["red"].value<int>();
+                uint8_t g = (uint8_t)properties["green"].value<int>();
+                uint8_t b = (uint8_t)properties["blue"].value<int>();
+
+                auto led = Board::GetInstance().GetLed();
+                if (!led) {
+                    nlohmann::json j;
+                    j["error"] = "No status LED configured on this board";
+                    return j;
+                }
+
+                if (index < 0 || index >= led->GetLedCount()) {
+                    nlohmann::json j;
+                    j["error"] = "Pixel index " + std::to_string(index) + " out of range (0.." + std::to_string(led->GetLedCount() - 1) + ")";
+                    return j;
+                }
+
+                led->SetCustomMode(true);
+                led->SetPixel(static_cast<uint16_t>(index), r, g, b);
+                return true;
+            }
+        );
+
+        // 4. Tool điều chỉnh độ sáng đèn LED (0-100%)
         mcp_server.AddTool(
             "self.led.set_brightness",
             "Set brightness level of status LED (brightness: 0..100 percent)",
@@ -121,10 +162,10 @@ public:
             }
         );
 
-        // 4. Tool đọc trạng thái đèn LED hiện tại
+        // 5. Tool đọc trạng thái đèn LED hiện tại
         mcp_server.AddTool(
             "self.led.get_state",
-            "Get current operational status, custom mode, brightness and RGB color of the LED",
+            "Get current operational status, pixel count, custom mode, brightness and RGB color of the LED",
             PropertyList(),
             [](const PropertyList& properties) -> ReturnValue {
                 auto led = Board::GetInstance().GetLed();
@@ -139,8 +180,10 @@ public:
                 nlohmann::json j;
                 j["configured"] = true;
                 j["type"] = led->GetType();
+                j["count"] = led->GetLedCount();
                 j["custom_mode"] = led->IsCustomMode();
-                j["brightness"] = led->GetBrightness();
+                j["brightness"] = (static_cast<int>(led->GetBrightness()) * 100 + 127) / 255;
+                j["brightness_raw"] = led->GetBrightness();
                 j["color"]["r"] = r;
                 j["color"]["g"] = g;
                 j["color"]["b"] = b;
@@ -148,7 +191,7 @@ public:
             }
         );
 
-        ESP_LOGI(TAG_LED_MCP, "LedMcpController registered 4 tools: set_effect, set_color, set_brightness, get_state");
+        ESP_LOGI(TAG_LED_MCP, "LedMcpController registered 5 tools: set_effect, set_color, set_pixel, set_brightness, get_state");
     }
 };
 

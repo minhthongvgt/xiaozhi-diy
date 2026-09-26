@@ -33,15 +33,15 @@ static inline StripColor Wheel(uint8_t wheel_pos, uint8_t brightness) {
 }
 
 CircularStrip::CircularStrip(gpio_num_t gpio, uint16_t max_leds) : max_leds_(max_leds) {
-    if (gpio == GPIO_NUM_NC) {
-        ESP_LOGW(TAG, "CircularStrip initialized with GPIO_NUM_NC, LED will not function");
-        return;
-    }
-
     if (max_leds_ <= 0) {
         max_leds_ = 1;
     }
     colors_.resize(max_leds_);
+
+    if (gpio == GPIO_NUM_NC) {
+        ESP_LOGW(TAG, "CircularStrip initialized with GPIO_NUM_NC, LED will not function");
+        return;
+    }
 
     led_strip_config_t strip_config = {};
     strip_config.strip_gpio_num = gpio;
@@ -51,9 +51,21 @@ CircularStrip::CircularStrip(gpio_num_t gpio, uint16_t max_leds) : max_leds_(max
 
     led_strip_rmt_config_t rmt_config = {};
     rmt_config.resolution_hz = 10 * 1000 * 1000; // 10MHz
+    if (max_leds_ > 24) {
+        rmt_config.flags.with_dma = 1;
+    }
 
     esp_err_t ret = led_strip_new_rmt_device(&strip_config, &rmt_config, &led_strip_);
-    ESP_ERROR_CHECK(ret);
+    if (ret != ESP_OK && rmt_config.flags.with_dma) {
+        ESP_LOGW(TAG, "RMT with DMA failed (%s), falling back to standard RMT channel", esp_err_to_name(ret));
+        rmt_config.flags.with_dma = 0;
+        ret = led_strip_new_rmt_device(&strip_config, &rmt_config, &led_strip_);
+    }
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to create CircularStrip RMT device on GPIO %d: %s", gpio, esp_err_to_name(ret));
+        led_strip_ = nullptr;
+        return;
+    }
     led_strip_clear(led_strip_);
 
     esp_timer_create_args_t strip_timer_args = {
@@ -69,7 +81,11 @@ CircularStrip::CircularStrip(gpio_num_t gpio, uint16_t max_leds) : max_leds_(max
         .name = "strip_timer",
         .skip_unhandled_events = false,
     };
-    esp_timer_create(&strip_timer_args, &strip_timer_);
+    ret = esp_timer_create(&strip_timer_args, &strip_timer_);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to create strip_timer: %s", esp_err_to_name(ret));
+        strip_timer_ = nullptr;
+    }
 }
 
 CircularStrip::~CircularStrip() {
@@ -100,13 +116,13 @@ void CircularStrip::SetAllColor(StripColor color) {
     led_strip_refresh(led_strip_);
 }
 
-void CircularStrip::SetSingleColor(uint8_t index, StripColor color) {
+void CircularStrip::SetSingleColor(uint16_t index, StripColor color) {
     std::lock_guard<std::mutex> lock(mutex_);
     if (strip_timer_ != nullptr) {
         esp_timer_stop(strip_timer_);
     }
     strip_callback_ = nullptr;
-    if (led_strip_ == nullptr || index >= max_leds_) return;
+    if (led_strip_ == nullptr || index >= max_leds_ || index >= colors_.size()) return;
 
     colors_[index] = color;
     led_strip_set_pixel(led_strip_, index, color.red, color.green, color.blue);
@@ -129,6 +145,34 @@ void CircularStrip::SetMultiColors(const std::vector<StripColor>& colors) {
     led_strip_refresh(led_strip_);
 }
 
+void CircularStrip::TurnOn() {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (strip_timer_ != nullptr) {
+        esp_timer_stop(strip_timer_);
+    }
+    strip_callback_ = nullptr;
+    if (led_strip_ == nullptr) return;
+
+    bool all_zero = true;
+    for (const auto& c : colors_) {
+        if (c.red != 0 || c.green != 0 || c.blue != 0) {
+            all_zero = false;
+            break;
+        }
+    }
+    if (all_zero) {
+        for (int i = 0; i < max_leds_ && i < static_cast<int>(colors_.size()); i++) {
+            colors_[i] = { default_brightness_, default_brightness_, default_brightness_ };
+            led_strip_set_pixel(led_strip_, i, default_brightness_, default_brightness_, default_brightness_);
+        }
+    } else {
+        for (int i = 0; i < max_leds_ && i < static_cast<int>(colors_.size()); i++) {
+            led_strip_set_pixel(led_strip_, i, colors_[i].red, colors_[i].green, colors_[i].blue);
+        }
+    }
+    led_strip_refresh(led_strip_);
+}
+
 void CircularStrip::TurnOff() {
     std::lock_guard<std::mutex> lock(mutex_);
     if (strip_timer_ != nullptr) {
@@ -141,13 +185,15 @@ void CircularStrip::TurnOff() {
 }
 
 void CircularStrip::Blink(StripColor color, int interval_ms) {
-    for (int i = 0; i < max_leds_; i++) {
+    if (led_strip_ == nullptr) return;
+    for (int i = 0; i < max_leds_ && i < static_cast<int>(colors_.size()); i++) {
         colors_[i] = color;
     }
     blink_on_ = true;
     StartStripTask(interval_ms, [this]() {
+        if (led_strip_ == nullptr) return;
         if (blink_on_) {
-            for (int i = 0; i < max_leds_; i++) {
+            for (int i = 0; i < max_leds_ && i < static_cast<int>(colors_.size()); i++) {
                 led_strip_set_pixel(led_strip_, i, colors_[i].red, colors_[i].green, colors_[i].blue);
             }
             led_strip_refresh(led_strip_);
@@ -159,9 +205,11 @@ void CircularStrip::Blink(StripColor color, int interval_ms) {
 }
 
 void CircularStrip::FadeOut(int interval_ms) {
+    if (led_strip_ == nullptr) return;
     StartStripTask(interval_ms, [this]() {
+        if (led_strip_ == nullptr) return;
         bool all_off = true;
-        for (int i = 0; i < max_leds_; i++) {
+        for (int i = 0; i < max_leds_ && i < static_cast<int>(colors_.size()); i++) {
             colors_[i].red /= 2;
             colors_[i].green /= 2;
             colors_[i].blue /= 2;
@@ -182,43 +230,72 @@ void CircularStrip::FadeOut(int interval_ms) {
 }
 
 void CircularStrip::Breathe(StripColor low, StripColor high, int interval_ms) {
+    if (led_strip_ == nullptr) return;
     breathe_up_    = true;
     breathe_color_ = low;
-    StartStripTask(interval_ms, [this, low, high]() {
+    int delta = std::max({std::abs(high.red - low.red), std::abs(high.green - low.green), std::abs(high.blue - low.blue)});
+    int step = std::max(1, delta / 30);
+
+    StartStripTask(interval_ms, [this, low, high, step]() {
+        if (led_strip_ == nullptr) return;
         if (breathe_up_) {
-            if (breathe_color_.red   < high.red)   breathe_color_.red++;
-            if (breathe_color_.green < high.green) breathe_color_.green++;
-            if (breathe_color_.blue  < high.blue)  breathe_color_.blue++;
-            if (breathe_color_.red == high.red && breathe_color_.green == high.green && breathe_color_.blue == high.blue)
+            breathe_color_.red   = (breathe_color_.red + step < high.red) ? breathe_color_.red + step : high.red;
+            breathe_color_.green = (breathe_color_.green + step < high.green) ? breathe_color_.green + step : high.green;
+            breathe_color_.blue  = (breathe_color_.blue + step < high.blue) ? breathe_color_.blue + step : high.blue;
+            if (breathe_color_.red >= high.red && breathe_color_.green >= high.green && breathe_color_.blue >= high.blue)
                 breathe_up_ = false;
         } else {
-            if (breathe_color_.red   > low.red)   breathe_color_.red--;
-            if (breathe_color_.green > low.green) breathe_color_.green--;
-            if (breathe_color_.blue  > low.blue)  breathe_color_.blue--;
-            if (breathe_color_.red == low.red && breathe_color_.green == low.green && breathe_color_.blue == low.blue)
+            breathe_color_.red   = (breathe_color_.red > low.red + step) ? breathe_color_.red - step : low.red;
+            breathe_color_.green = (breathe_color_.green > low.green + step) ? breathe_color_.green - step : low.green;
+            breathe_color_.blue  = (breathe_color_.blue > low.blue + step) ? breathe_color_.blue - step : low.blue;
+            if (breathe_color_.red <= low.red && breathe_color_.green <= low.green && breathe_color_.blue <= low.blue)
                 breathe_up_ = true;
         }
-        for (int i = 0; i < max_leds_; i++)
+        for (int i = 0; i < max_leds_ && i < static_cast<int>(colors_.size()); i++)
             led_strip_set_pixel(led_strip_, i, breathe_color_.red, breathe_color_.green, breathe_color_.blue);
         led_strip_refresh(led_strip_);
     });
 }
 
+void CircularStrip::StartBreathe(int interval_ms) {
+    StripColor target = { default_brightness_, default_brightness_, default_brightness_ };
+    if (!colors_.empty() && (colors_[0].red != 0 || colors_[0].green != 0 || colors_[0].blue != 0)) {
+        target = colors_[0];
+    }
+    Breathe({0, 0, 0}, target, interval_ms);
+}
+
+void CircularStrip::StartBlink(int interval_ms) {
+    StripColor target = { default_brightness_, default_brightness_, default_brightness_ };
+    if (!colors_.empty() && (colors_[0].red != 0 || colors_[0].green != 0 || colors_[0].blue != 0)) {
+        target = colors_[0];
+    }
+    Blink(target, interval_ms);
+}
+
 void CircularStrip::Scroll(StripColor low, StripColor high, int length, int interval_ms) {
-    for (int i = 0; i < max_leds_; i++) {
+    if (led_strip_ == nullptr) return;
+    for (int i = 0; i < max_leds_ && i < static_cast<int>(colors_.size()); i++) {
         colors_[i] = low;
     }
     scroll_offset_ = 0;
     StartStripTask(interval_ms, [this, low, high, length]() {
+        if (led_strip_ == nullptr) return;
         int offset = scroll_offset_;
-        for (int i = 0; i < max_leds_; i++) {
+        for (int i = 0; i < max_leds_ && i < static_cast<int>(colors_.size()); i++) {
             colors_[i] = low;
         }
-        for (int j = 0; j < length; j++) {
-            int i = (offset + j) % max_leds_;
-            colors_[i] = high;
+        int effective_len = length;
+        if (effective_len >= max_leds_) {
+            effective_len = std::max(1, max_leds_ / 2);
         }
-        for (int i = 0; i < max_leds_; i++) {
+        for (int j = 0; j < effective_len; j++) {
+            int i = (offset + j) % max_leds_;
+            if (i < static_cast<int>(colors_.size())) {
+                colors_[i] = high;
+            }
+        }
+        for (int i = 0; i < max_leds_ && i < static_cast<int>(colors_.size()); i++) {
             led_strip_set_pixel(led_strip_, i, colors_[i].red, colors_[i].green, colors_[i].blue);
         }
         led_strip_refresh(led_strip_);
@@ -226,12 +303,107 @@ void CircularStrip::Scroll(StripColor low, StripColor high, int length, int inte
     });
 }
 
+void CircularStrip::Scanner(StripColor color, int length, int interval_ms) {
+    if (led_strip_ == nullptr) return;
+    scanner_pos_ = 0;
+    scanner_forward_ = true;
+    StartStripTask(interval_ms, [this, color, length]() {
+        if (led_strip_ == nullptr) return;
+        // Smooth decaying tail
+        for (int i = 0; i < max_leds_ && i < static_cast<int>(colors_.size()); i++) {
+            colors_[i].red   /= 2;
+            colors_[i].green /= 2;
+            colors_[i].blue  /= 2;
+        }
+
+        int effective_len = length;
+        if (effective_len >= max_leds_) {
+            effective_len = std::max(1, max_leds_ / 4);
+        }
+
+        for (int j = 0; j < effective_len; j++) {
+            int idx = scanner_pos_ + (scanner_forward_ ? j : -j);
+            if (idx >= 0 && idx < max_leds_ && idx < static_cast<int>(colors_.size())) {
+                colors_[idx] = color;
+            }
+        }
+
+        for (int i = 0; i < max_leds_ && i < static_cast<int>(colors_.size()); i++) {
+            led_strip_set_pixel(led_strip_, i, colors_[i].red, colors_[i].green, colors_[i].blue);
+        }
+        led_strip_refresh(led_strip_);
+
+        if (scanner_forward_) {
+            scanner_pos_++;
+            if (scanner_pos_ >= max_leds_ - effective_len) {
+                scanner_forward_ = false;
+            }
+        } else {
+            scanner_pos_--;
+            if (scanner_pos_ <= 0) {
+                scanner_forward_ = true;
+            }
+        }
+    });
+}
+
+void CircularStrip::ColorWipe(StripColor color, int interval_ms) {
+    if (led_strip_ == nullptr) return;
+    wipe_index_ = 0;
+    wipe_clear_ = false;
+    StartStripTask(interval_ms, [this, color]() {
+        if (led_strip_ == nullptr) return;
+        if (!wipe_clear_) {
+            if (wipe_index_ < max_leds_ && wipe_index_ < static_cast<int>(colors_.size())) {
+                colors_[wipe_index_] = color;
+                led_strip_set_pixel(led_strip_, wipe_index_, color.red, color.green, color.blue);
+                led_strip_refresh(led_strip_);
+                wipe_index_++;
+            } else {
+                wipe_clear_ = true;
+                wipe_index_ = 0;
+            }
+        } else {
+            if (wipe_index_ < max_leds_ && wipe_index_ < static_cast<int>(colors_.size())) {
+                colors_[wipe_index_] = {0, 0, 0};
+                led_strip_set_pixel(led_strip_, wipe_index_, 0, 0, 0);
+                led_strip_refresh(led_strip_);
+                wipe_index_++;
+            } else {
+                wipe_clear_ = false;
+                wipe_index_ = 0;
+            }
+        }
+    });
+}
+
+void CircularStrip::StartScanner(int interval_ms) {
+    StripColor target = { default_brightness_, default_brightness_, default_brightness_ };
+    if (!colors_.empty() && (colors_[0].red != 0 || colors_[0].green != 0 || colors_[0].blue != 0)) {
+        target = colors_[0];
+    } else {
+        target = { default_brightness_, 0, 0 };
+    }
+    int len = std::max(1, max_leds_ / 6);
+    Scanner(target, len, interval_ms);
+}
+
+void CircularStrip::StartColorWipe(int interval_ms) {
+    StripColor target = { default_brightness_, default_brightness_, default_brightness_ };
+    if (!colors_.empty() && (colors_[0].red != 0 || colors_[0].green != 0 || colors_[0].blue != 0)) {
+        target = colors_[0];
+    }
+    ColorWipe(target, interval_ms);
+}
+
 void CircularStrip::Rainbow(int interval_ms) {
+    if (led_strip_ == nullptr) return;
     rainbow_offset_ = 0;
     StartStripTask(interval_ms, [this]() {
+        if (led_strip_ == nullptr) return;
         rainbow_offset_ += 4;
         StripColor c = Wheel(rainbow_offset_, default_brightness_);
-        for (int i = 0; i < max_leds_; i++) {
+        for (int i = 0; i < max_leds_ && i < static_cast<int>(colors_.size()); i++) {
             colors_[i] = c;
             led_strip_set_pixel(led_strip_, i, c.red, c.green, c.blue);
         }
@@ -240,11 +412,15 @@ void CircularStrip::Rainbow(int interval_ms) {
 }
 
 void CircularStrip::RainbowChase(int interval_ms) {
+    if (led_strip_ == nullptr) return;
     rainbow_offset_ = 0;
     StartStripTask(interval_ms, [this]() {
+        if (led_strip_ == nullptr) return;
         rainbow_offset_ += 4;
-        for (int i = 0; i < max_leds_; i++) {
-            uint8_t pixel_hue = rainbow_offset_ + (i * 256 / (max_leds_ > 0 ? max_leds_ : 1));
+        // For strips longer than 64 LEDs, repeat rainbow cycles every 48 LEDs
+        int cycle_len = (max_leds_ > 64) ? 48 : (max_leds_ > 0 ? max_leds_ : 1);
+        for (int i = 0; i < max_leds_ && i < static_cast<int>(colors_.size()); i++) {
+            uint8_t pixel_hue = rainbow_offset_ + ((i % cycle_len) * 256 / cycle_len);
             StripColor c = Wheel(pixel_hue, default_brightness_);
             colors_[i] = c;
             led_strip_set_pixel(led_strip_, i, c.red, c.green, c.blue);
@@ -272,7 +448,20 @@ void CircularStrip::StartStripTask(int interval_ms, std::function<void()> cb) {
 void CircularStrip::SetBrightness(uint8_t default_brightness, uint8_t low_brightness) {
     default_brightness_ = default_brightness;
     low_brightness_ = low_brightness;
-    OnStateChanged();
+    if (!custom_mode_) {
+        OnStateChanged();
+    } else {
+        std::lock_guard<std::mutex> lock(mutex_);
+        if (led_strip_ != nullptr) {
+            for (int i = 0; i < max_leds_ && i < static_cast<int>(colors_.size()); i++) {
+                uint8_t r = (uint16_t)colors_[i].red * default_brightness_ / 255;
+                uint8_t g = (uint16_t)colors_[i].green * default_brightness_ / 255;
+                uint8_t b = (uint16_t)colors_[i].blue * default_brightness_ / 255;
+                led_strip_set_pixel(led_strip_, i, r, g, b);
+            }
+            led_strip_refresh(led_strip_);
+        }
+    }
 }
 
 void CircularStrip::OnStateChanged() {

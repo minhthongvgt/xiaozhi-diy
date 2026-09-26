@@ -22,13 +22,22 @@ public:
     void TurnOff() override;
     void SetColor(uint8_t r, uint8_t g, uint8_t b) override;
     void GetColor(uint8_t& r, uint8_t& g, uint8_t& b) const override { r = r_; g = g_; b = b_; }
-    void SetBrightness(uint8_t brightness) override { rainbow_brightness_ = brightness; }
+    void SetBrightness(uint8_t brightness) override;
     uint8_t GetBrightness() const override { return rainbow_brightness_; }
     void StartRainbow(int interval_ms = 25) override { StartRainbow(interval_ms, rainbow_brightness_); }
     void StartRainbow(int interval_ms, uint8_t brightness);
     void StartChase(int interval_ms = 30) override { StartRainbow(interval_ms, rainbow_brightness_); }
-    void StartBreathe(int interval_ms = 25) override { StartContinuousBlink(interval_ms); }
+    void StartBreathe(int interval_ms = 25) override;
     void StartBlink(int interval_ms = 200) override { StartContinuousBlink(interval_ms); }
+    void StartScanner(int interval_ms = 30) override { StartContinuousBlink(interval_ms); }
+    void StartColorWipe(int interval_ms = 30) override { StartRainbow(interval_ms, rainbow_brightness_); }
+    void SetPixel(uint16_t index, uint8_t r, uint8_t g, uint8_t b) override {
+        if (index == 0) {
+            SetColor(r, g, b);
+            TurnOn();
+        }
+    }
+    uint16_t GetLedCount() const override { return 1; }
     void SetCustomMode(bool custom) override { custom_mode_ = custom; }
     bool IsCustomMode() const override { return custom_mode_; }
     std::string GetType() const override { return "SingleLed"; }
@@ -42,7 +51,8 @@ private:
     enum class EffectMode {
         kNone,
         kBlink,
-        kRainbow
+        kRainbow,
+        kBreathe
     };
 
     std::mutex mutex_;
@@ -54,8 +64,10 @@ private:
 
     EffectMode mode_ = EffectMode::kNone;
     uint8_t rainbow_pos_ = 0;
-    uint8_t rainbow_brightness_ = 16;
+    uint8_t rainbow_brightness_ = 255;
     bool custom_mode_ = false;
+    bool breathe_up_ = true;
+    uint8_t breathe_val_ = 0;
 
     void StartBlinkTask(int times, int interval_ms);
     void OnTimer();

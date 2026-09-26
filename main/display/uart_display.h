@@ -2,6 +2,7 @@
 #define UART_DISPLAY_H
 
 #include "display.h"
+#include <driver/gpio.h>
 #include <driver/uart.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>
@@ -16,7 +17,7 @@ enum class UartDisplayProtocol {
 
 class UartDisplay : public Display {
 public:
-    UartDisplay(uart_port_t uart_num, int tx_pin, int rx_pin, int baud_rate,
+    UartDisplay(uart_port_t uart_num, gpio_num_t tx_pin, gpio_num_t rx_pin, int baud_rate,
                 UartDisplayProtocol protocol = UartDisplayProtocol::NextionTjc);
     virtual ~UartDisplay();
 
@@ -31,6 +32,7 @@ public:
 
     virtual bool IsMonochrome() const override { return false; }
     virtual bool SupportsGuiOperations() const override { return false; }
+    bool IsInitialized() const { return is_initialized_; }
 
 protected:
     virtual bool Lock(int timeout_ms = 0) override;

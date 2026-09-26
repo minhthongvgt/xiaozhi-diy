@@ -59,13 +59,14 @@ Giao diện được căn chỉnh theo tỉ lệ công thái học hiện đại
 | **Strapping Pins** | **GPIO 0, 3, 45, 46** | GPIO 0 dùng cho phím BOOT. Chú ý mức logic khi khởi động để tránh vào sai chế độ nạp ROM. |
 | **I2S Audio (Phần 1: Loa)** | GPIO 14, 15, 7, 2 | BCLK, WS/LRCK, DOUT (MAX98357A / PCM5102A / NS4168 / ES8311 / ES8388). Chân PA bật amply. |
 | **I2S Audio (Phần 2: Mic)** | GPIO 4, 5, 6 | SCK, WS, DIN (INMP441 / ICS-43434 / MSM261S / ES7210). |
-| **SPI Display (TFT LCD)** | GPIO 21, 38, 40, 41, 42, 47 | MOSI=47, CLK=21, CS=41, DC=40, RST=42, BLK=38 (Hỗ trợ ST7789, GC9A01, ILI9341). |
-| **UART Display (Nextion/D-UART)** | GPIO 17, 18 | TX=17, RX=18 (Màn hình thông minh giao tiếp qua UART). |
+| **UART Display (Nextion/DWIN/JSON)** | **GPIO 17, 18** | TX=17, RX=18 trên `UART_NUM_1` (Màn hình thông minh rời; tự động escape chuỗi, chống tràn khung DGUS). |
+| **Custom UART Subsystem** | **UART_NUM_2** | Cổng UART mở rộng cho Modem 4G, AI Vision, Bus Servo (Tự động cách ly với UART Display). |
 | **Touch Controller (Cảm ứng)** | GPIO 8, 9, 3, 10 | I2C SDA=8, SCL=9, ngắt INT=3, reset RST=10 (CST816S, GT911, FT6236). |
 | **I2C Bus & Cảm biến** | GPIO 8, 9 | SDA=8, SCL=9 (Hỗ trợ OLED SSD1306, ToF VL6180X, Codec ES8311). |
-| **Relay / Lamp (Ngoại vi)** | GPIO 13 | Quản lý độc quyền tại Tab Ngoại vi, liên kết tự động với công cụ AI MCP. |
+| **Servo PWM (Động cơ)** | **GPIO 13** | Tần số 50Hz, 14-bit duty trên LEDC Timer 2 (Độc lập chống xung đột backlight/LED). |
+| **Relay / Lamp (Ngoại vi)** | **GPIO 45** | Rơ-le 220V / Đèn bàn, liên kết tự động với công cụ AI MCP. |
 | **Built-in LED** | GPIO 48 | Đèn LED báo trạng thái hệ thống. |
-| **Cổng kết nối mở rộng** | GPIO 1, 11, 12, 35, 36, 37, 39, 43, 44 | Tự do cấu hình cho Servo, Còi Buzzer, Động cơ DC TB6612, Encoder EC11, Cảm biến siêu âm, Thẻ nhớ SD Card. |
+| **Cổng kết nối mở rộng** | GPIO 1, 11, 12, 35, 36, 37, 39, 43, 44 | Tự do cấu hình cho Còi Buzzer (41), Rung Haptic (42), Động cơ DC TB6612, Encoder EC11, Cảm biến siêu âm, Thẻ nhớ SD Card. |
 
 ---
 
