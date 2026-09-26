@@ -3,7 +3,7 @@
  * @brief Storage Subsystem Manager Implementation (ESP-IDF 6.1)
  */
 
-#include "storage_manager.h"
+#include "drivers/storage/storage_manager.h"
 #include "boards/common/bus_manager.h"
 #include <esp_log.h>
 #include <sdkconfig.h>

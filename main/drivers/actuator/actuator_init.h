@@ -7,7 +7,7 @@
 #define DRIVERS_ACTUATOR_INIT_H
 
 #include <esp_err.h>
-#include "actuator_manager.h"
+#include "drivers/actuator/actuator_manager.h"
 
 #ifdef __cplusplus
 extern "C" {

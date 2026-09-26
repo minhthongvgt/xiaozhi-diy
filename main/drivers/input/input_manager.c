@@ -3,7 +3,7 @@
  * @brief Input Peripherals Driver Manager Implementation (ESP-IDF 6.1)
  */
 
-#include "input_manager.h"
+#include "drivers/input/input_manager.h"
 #include "boards/common/bus_manager.h"
 #include <esp_log.h>
 #include <sdkconfig.h>

@@ -3,9 +3,9 @@
  * @brief Sensors Subsystem Manager Implementation (ESP-IDF 6.1)
  */
 
-#include "sensor_manager.h"
-#include "vl6180x.h"
-#include "dht.h"
+#include "drivers/sensor/sensor_manager.h"
+#include "drivers/sensor/vl6180x.h"
+#include "drivers/sensor/dht.h"
 #include "boards/common/bus_manager.h"
 #include <esp_log.h>
 #include <sdkconfig.h>
@@ -40,10 +40,19 @@ esp_err_t sensor_manager_init(void)
             .atten = ADC_ATTEN_DB_12,
             .bitwidth = ADC_BITWIDTH_DEFAULT,
         };
-        ESP_ERROR_CHECK(adc_oneshot_config_channel(s_adc1_handle, ADC_CHANNEL_0, &chan_cfg));
-        ESP_ERROR_CHECK(adc_oneshot_config_channel(s_adc1_handle, ADC_CHANNEL_1, &chan_cfg));
+        // Use graceful error handling instead of ESP_ERROR_CHECK to avoid abort on channel config fail
+        esp_err_t ch_ret = adc_oneshot_config_channel(s_adc1_handle, ADC_CHANNEL_0, &chan_cfg);
+        if (ch_ret != ESP_OK) {
+            ESP_LOGW(TAG, "ADC1 CH0 (Gas/MQ) config failed: %s", esp_err_to_name(ch_ret));
+        }
+        ch_ret = adc_oneshot_config_channel(s_adc1_handle, ADC_CHANNEL_1, &chan_cfg);
+        if (ch_ret != ESP_OK) {
+            ESP_LOGW(TAG, "ADC1 CH1 (LDR) config failed: %s", esp_err_to_name(ch_ret));
+        }
     } else {
-        ESP_LOGW(TAG, "ADC1 Oneshot Unit init returned: %s", esp_err_to_name(ret));
+        ESP_LOGW(TAG, "ADC1 Oneshot Unit init returned: %s — analog sensors (Gas, LDR) will use fallback values",
+                 esp_err_to_name(ret));
+        s_adc1_handle = NULL; // Ensure handle stays NULL if init failed
     }
 
     // 2. Configure Digital Sensors (DHT11/22, PIR, Vibration, Flame, TP4056)
@@ -135,6 +144,14 @@ esp_err_t sensor_manager_init(void)
     }
 #endif
 
+    // LOG-01: Report I2C bus readiness for lazy-init sensors (VL6180X)
+    i2c_master_bus_handle_t i2c_check = bus_manager_get_i2c_bus();
+    if (i2c_check != NULL) {
+        ESP_LOGI(TAG, "I2C Bus is available — VL6180X ToF/ALS will be initialized on first read.");
+    } else {
+        ESP_LOGW(TAG, "I2C Bus not yet set by board — VL6180X ToF/ALS will retry on first sensor read.");
+    }
+
     ESP_LOGI(TAG, "Sensors Subsystem initialized successfully.");
     return ESP_OK;
 }
@@ -147,6 +164,8 @@ static vl6180x_handle_t get_vl6180x_dev(void)
 
     i2c_master_bus_handle_t i2c_bus = bus_manager_get_i2c_bus();
     if (i2c_bus == NULL) {
+        // LOG-02: Clear warning — sensor read called before board set the I2C bus
+        ESP_LOGD(TAG, "VL6180X lazy-init skipped: I2C bus not yet registered by board.");
         return NULL;
     }
 
@@ -189,14 +208,13 @@ esp_err_t sensor_read_environment(sensor_environment_t *out_env)
     if (!out_env) return ESP_ERR_INVALID_ARG;
     memset(out_env, 0, sizeof(sensor_environment_t));
 
-    // Default baseline readings
-    out_env->temperature_c = 26.5f;
-    out_env->humidity_pct = 58.0f;
-    out_env->pressure_hpa = 1013.25f;
-    out_env->light_lux = 350.0f;
-    out_env->co2_ppm = 420.0f;
-    out_env->tvoc_ppb = 15.0f;
-    out_env->valid = true;
+    // Baseline fallback readings (used when no real sensor is active)
+    // temperature_c, humidity_pct: set to 0.0 — real values come from DHT below
+    // pressure_hpa, co2_ppm, tvoc_ppb: no physical sensor driver exists yet — remain 0.0
+    // MGR-BUG-01 fix: valid starts as false; only set true when real data is obtained
+    out_env->valid = false;
+
+    bool has_real_data = false;
 
     // 0. Read real-time Temperature & Humidity from DHT11 / DHT22 on user-selected GPIO
     if (s_dht_pin != GPIO_NUM_NC) {
@@ -205,7 +223,10 @@ esp_err_t sensor_read_environment(sensor_environment_t *out_env)
         if (dht_read_data(s_dht_pin, &dht_temp, &dht_hum) == ESP_OK) {
             out_env->temperature_c = dht_temp;
             out_env->humidity_pct = dht_hum;
-            ESP_LOGD(TAG, "DHT read OK on user GPIO %d: Temp=%.1f C, Hum=%.1f%%", s_dht_pin, dht_temp, dht_hum);
+            has_real_data = true;
+            ESP_LOGD(TAG, "DHT read OK on GPIO %d: Temp=%.1f C, Hum=%.1f%%", s_dht_pin, dht_temp, dht_hum);
+        } else {
+            ESP_LOGD(TAG, "DHT read failed on GPIO %d — using fallback Temp=%.1f C", s_dht_pin, out_env->temperature_c);
         }
     }
 
@@ -217,6 +238,7 @@ esp_err_t sensor_read_environment(sensor_environment_t *out_env)
         if (vl6180x_read_ambient_lux(tof, &tof_lux) == ESP_OK) {
             out_env->light_lux = tof_lux;
             lux_read_ok = true;
+            has_real_data = true;
         }
     }
 
@@ -226,9 +248,14 @@ esp_err_t sensor_read_environment(sensor_environment_t *out_env)
         if (adc_oneshot_read(s_adc1_handle, ADC_CHANNEL_1, &raw_val) == ESP_OK) {
             // Convert ADC 12-bit (0..4095) to estimated lux range (0..1000)
             out_env->light_lux = (float)raw_val * (1000.0f / 4095.0f);
+            has_real_data = true;
         }
     }
 
+    out_env->valid = has_real_data;
+    if (!has_real_data) {
+        ESP_LOGD(TAG, "No real sensor data — environment struct contains fallback baseline values");
+    }
     return ESP_OK;
 }
 
@@ -237,10 +264,8 @@ esp_err_t sensor_read_distance(sensor_distance_t *out_dist)
     if (!out_dist) return ESP_ERR_INVALID_ARG;
     memset(out_dist, 0, sizeof(sensor_distance_t));
 
-    // Default standard distance snapshot (fallback baseline)
-    out_dist->distance_laser_mm = 350.0f;     // 35cm baseline
-    out_dist->distance_ultrasonic_cm = 35.0f;
-    out_dist->valid = true;
+    // valid=false by default — only set true when real data is obtained
+    out_dist->valid = false;
 
     // Read real-time distance from VL6180X Laser ToF Sensor
     vl6180x_handle_t tof = get_vl6180x_dev();
@@ -249,8 +274,12 @@ esp_err_t sensor_read_distance(sensor_distance_t *out_dist)
         if (vl6180x_read_distance_mm(tof, &real_dist_mm) == ESP_OK) {
             out_dist->distance_laser_mm = real_dist_mm;
             out_dist->distance_ultrasonic_cm = real_dist_mm / 10.0f;
+            out_dist->valid = true;
+        } else {
+            ESP_LOGD(TAG, "VL6180X distance read failed");
         }
     }
+    // Ultrasonic (HC-SR04) not yet implemented — remains 0.0 when no ToF available
 
     return ESP_OK;
 }
@@ -260,31 +289,40 @@ esp_err_t sensor_read_security(sensor_security_t *out_sec)
     if (!out_sec) return ESP_ERR_INVALID_ARG;
     memset(out_sec, 0, sizeof(sensor_security_t));
 
-    // Read digital inputs
+    bool has_real_data = false;
+
+    // Read digital inputs (PIR, vibration, flame)
     if (s_pir_pin != GPIO_NUM_NC) {
         out_sec->motion_detected = (gpio_get_level(s_pir_pin) == 1);
+        has_real_data = true;
     }
     if (s_vib_pin != GPIO_NUM_NC) {
-        out_sec->vibration_detected = (gpio_get_level(s_vib_pin) == 0); // Active low on shock
+        // SW-420 normally-closed: no vibration=LOW, vibration=HIGH (pull-up)
+        out_sec->vibration_detected = (gpio_get_level(s_vib_pin) == 1);
+        has_real_data = true;
     }
     if (s_flame_pin != GPIO_NUM_NC) {
-        out_sec->flame_detected = (gpio_get_level(s_flame_pin) == 0); // Active low on flame detection
+        out_sec->flame_detected = (gpio_get_level(s_flame_pin) == 0); // Active low
+        has_real_data = true;
     }
 
     // Read Gas Sensor (MQ-2) via ADC1 Channel 0
-    out_sec->gas_level_ppm = 120.0f;
+    // gas_level_ppm stays 0.0 if ADC not available (no hardcoded fake value)
+    out_sec->gas_level_ppm = 0.0f;
     out_sec->gas_leak_alert = false;
     if (s_adc1_handle) {
         int raw_gas = 0;
         if (adc_oneshot_read(s_adc1_handle, ADC_CHANNEL_0, &raw_gas) == ESP_OK) {
+            // Linear estimate: 0-1000 ppm range (MQ-2 requires calibration for precision)
             out_sec->gas_level_ppm = (float)raw_gas * (1000.0f / 4095.0f);
             if (out_sec->gas_level_ppm > 400.0f) {
                 out_sec->gas_leak_alert = true;
             }
+            has_real_data = true;
         }
     }
 
-    out_sec->valid = true;
+    out_sec->valid = has_real_data;
     return ESP_OK;
 }
 
@@ -293,17 +331,20 @@ esp_err_t sensor_read_power(sensor_power_t *out_pwr)
     if (!out_pwr) return ESP_ERR_INVALID_ARG;
     memset(out_pwr, 0, sizeof(sensor_power_t));
 
-    out_pwr->battery_voltage = 3.85f;
-    out_pwr->battery_percentage = 78;
-    out_pwr->bus_current_ma = 180.0f;
-    out_pwr->bus_power_mw = 693.0f;
-    out_pwr->is_charging = false;
+    // No hardcoded fake values — all fields remain 0 until real hardware provides data
+    out_pwr->valid = false;
 
+    // Read charging status from TP4056 CHRG GPIO (active low = charging)
     if (s_chrg_pin != GPIO_NUM_NC) {
-        out_pwr->is_charging = (gpio_get_level(s_chrg_pin) == 0); // TP4056 CHRG pin is active low
+        out_pwr->is_charging = (gpio_get_level(s_chrg_pin) == 0);
+        out_pwr->valid = true;
     }
 
-    out_pwr->valid = true;
+    // NOTE: battery_voltage, battery_percentage, bus_current_ma, bus_power_mw
+    // require a dedicated ADC battery monitor (e.g. AdcBatteryMonitor class)
+    // or an INA219 power monitor on I2C — not yet implemented in C driver layer.
+    // Those fields remain 0.0 / 0 until a real measurement path is added.
+
     return ESP_OK;
 }
 

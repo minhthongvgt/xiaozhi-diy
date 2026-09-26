@@ -3,7 +3,7 @@
  * @brief DHT11 / DHT22 Single-Wire Temperature & Humidity Sensor Driver Implementation (ESP-IDF 6.1)
  */
 
-#include "dht.h"
+#include "drivers/sensor/dht.h"
 #include <esp_log.h>
 #include <esp_timer.h>
 #include <freertos/FreeRTOS.h>
@@ -120,7 +120,26 @@ esp_err_t dht_read_raw(gpio_num_t pin, dht_type_t type, float *out_temp, float *
     float hum = 0.0f;
     float temp = 0.0f;
 
-    if (type == DHT_TYPE_DHT22 || (type == DHT_TYPE_AUTO && (data[0] > 100 || (data[0] == 0 && data[1] > 0)))) {
+    // DHT-BUG-02 fix: Improved AUTO detection
+    // DHT22 uses 16-bit encoding where humidity = (data[0]<<8 | data[1]) * 0.1
+    // DHT11 uses 8-bit integer: humidity = data[0] (1-99%), data[1] = decimal (usually 0)
+    // Key difference: in DHT22 mode, the 16-bit combined value is typically > 100 (in tenths)
+    //   e.g. 60.5% RH → 0x0259 = 601. data[0]=2, data[1]=89 (data[1] is rarely 0 in DHT22)
+    // In DHT11 mode: data[1] is decimal part of humidity, usually 0 (DHT11 has no decimal)
+    // Reliable heuristic: detect DHT22 if combined 16-bit humidity > 1000 (> 100.0%RH threshold
+    //   is impossible so it can't be DHT11 integer), OR if data[1] > 9 (decimal part too large for DHT11)
+    bool is_dht22 = false;
+    if (type == DHT_TYPE_DHT22) {
+        is_dht22 = true;
+    } else if (type == DHT_TYPE_AUTO) {
+        uint16_t combined_hum16 = ((uint16_t)data[0] << 8) | data[1];
+        // DHT22: 16-bit value > 1000 means > 100.0% — impossible for DHT11 integer
+        // DHT22: data[1] > 9 means decimal part is too large for DHT11 (DHT11 decimal is 0 or single digit)
+        // DHT22: data[2] high byte (for temperature) having data[3] > 9 also suggests 16-bit encoding
+        is_dht22 = (combined_hum16 > 1000) || (data[1] > 9) || (data[3] > 9);
+    }
+
+    if (is_dht22) {
         // DHT22 (AM2302) 16-bit encoding
         hum = (float)((data[0] << 8) | data[1]) * 0.1f;
         int16_t raw_temp = (int16_t)(((data[2] & 0x7F) << 8) | data[3]);

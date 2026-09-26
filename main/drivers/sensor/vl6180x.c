@@ -3,12 +3,13 @@
  * @brief STMicroelectronics VL6180 / VL6180X Time-of-Flight & Ambient Light Sensor Driver
  */
 
-#include "vl6180x.h"
+#include "drivers/sensor/vl6180x.h"
 #include <esp_log.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <esp_rom_sys.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define TAG "VL6180X"
 
@@ -140,7 +141,13 @@ esp_err_t vl6180x_init(const vl6180x_config_t *config, vl6180x_handle_t *out_han
         .scl_speed_hz = 400000,
     };
     esp_err_t ret = i2c_master_bus_add_device(dev->i2c_bus, &dev_cfg, &dev->i2c_dev);
-    ESP_ERROR_CHECK(ret);
+    if (ret != ESP_OK) {
+        // VL-BUG-01 fix: graceful error with cleanup to avoid memory leak on abort
+        ESP_LOGD(TAG, "VL6180X I2C device registration failed: %s", esp_err_to_name(ret));
+        free(dev);
+        *out_handle = NULL;
+        return ret;
+    }
 
     // 3. Verify Model ID (should be 0xB4 = 180)
     uint8_t model_id = 0;
@@ -341,8 +348,9 @@ esp_err_t vl6180x_set_scaling(vl6180x_handle_t handle, uint8_t scaling)
     // Scaling x2: ECE factor / 2
     // Scaling x3: ECE factor / 3
     uint16_t ece_factor = 0x60 / scaling;
-    vl6180x_write_reg16(handle, VL6180X_REG_SYSRANGE_CROSSTALK_VALID_HEIGHT, 20 / scaling);
-    vl6180x_write_reg16(handle, VL6180X_REG_SYSRANGE_EARLY_CONVERGENCE_ESTIMATE, ece_factor);
+    // VL-BUG-02 fix: CROSSTALK_VALID_HEIGHT (0x0021) is a 1-byte register — use write_reg8
+    vl6180x_write_reg8(handle, VL6180X_REG_SYSRANGE_CROSSTALK_VALID_HEIGHT, (uint8_t)(20 / scaling));
+    vl6180x_write_reg8(handle, VL6180X_REG_SYSRANGE_EARLY_CONVERGENCE_ESTIMATE, (uint8_t)ece_factor);
 
     handle->scaling = scaling;
     ESP_LOGD(TAG, "Range scaling set to %ux (Max range: %dmm)", scaling, scaling * 100);

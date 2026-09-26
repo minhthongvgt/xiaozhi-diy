@@ -7,7 +7,7 @@
 #define DRIVERS_INPUT_INIT_H
 
 #include <esp_err.h>
-#include "input_manager.h"
+#include "drivers/input/input_manager.h"
 
 #ifdef __cplusplus
 extern "C" {

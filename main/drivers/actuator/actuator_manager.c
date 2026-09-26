@@ -3,7 +3,7 @@
  * @brief Actuators Subsystem Manager Implementation (ESP-IDF 6.1)
  */
 
-#include "actuator_manager.h"
+#include "drivers/actuator/actuator_manager.h"
 #include <esp_log.h>
 #include <sdkconfig.h>
 #include <driver/gpio.h>

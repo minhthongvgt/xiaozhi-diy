@@ -7,7 +7,7 @@
 #define DRIVERS_SENSOR_INIT_H
 
 #include <esp_err.h>
-#include "sensor_manager.h"
+#include "drivers/sensor/sensor_manager.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -63,6 +63,14 @@ typedef struct {
 
 /**
  * @brief Initialize all configured sensor peripherals
+ *
+ * @note ADC1 is initialized for analog sensors (Gas MQ-2, LDR).
+ *       Digital sensors (DHT, PIR, Vibration, Flame) are GPIO-configured here.
+ *
+ * @note Precondition for VL6180X (ToF/ALS): The active board class MUST call
+ *       bus_manager_init_i2c() or bus_manager_set_i2c_bus() BEFORE any call to
+ *       sensor_read_environment() or sensor_read_distance().
+ *       VL6180X uses lazy initialization via get_vl6180x_dev().
  */
 esp_err_t sensor_manager_init(void);
 
@@ -72,7 +80,10 @@ esp_err_t sensor_manager_init(void);
 esp_err_t sensor_read_environment(sensor_environment_t *out_env);
 
 /**
- * @brief Read snapshot of distance sensors (VL53L0X, HC-SR04)
+ * @brief Read snapshot of distance sensors (VL6180X Laser ToF, HC-SR04)
+ *
+ * @note VL6180X is auto-initialized on first call if I2C bus is available.
+ *       If I2C bus is not set, returns fallback baseline values.
  */
 esp_err_t sensor_read_distance(sensor_distance_t *out_dist);
 
