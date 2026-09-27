@@ -1,0 +1,5 @@
+"-specs=D:/Code/Antigravity/xiaozhi-v2/build/bootloader/specs/picolibc.specs"
+-mlongcalls
+-fno-builtin-memcpy
+-fno-builtin-memset
+-fno-builtin-bzero

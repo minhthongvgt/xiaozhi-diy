@@ -1,0 +1,87 @@
+int "Ethernet PHY Address" default 1
+config CUSTOM_WAKE_WORD_THRESHOLD default 20
+depends on USE_CUSTOM_WAKE_WORD Custom Wake Word Threshold, range 1-99, the smaller the more sensitive, default 20
+int "Cổng UART phần cứng (1: UART1, 2: UART2)" default 1
+int "Chân TX kết nối chân RX của Màn hình" default 17
+int "Chân RX kết nối chân TX của Màn hình" default 18
+int default 19200 if CUSTOM_DISPLAY_UART_BAUDRATE_19200
+default 38400 if CUSTOM_DISPLAY_UART_BAUDRATE_38400 default 115200 if CUSTOM_DISPLAY_UART_BAUDRATE_115200
+default 57600 if CUSTOM_DISPLAY_UART_BAUDRATE_57600 default 230400 if CUSTOM_DISPLAY_UART_BAUDRATE_230400
+default 460800 if CUSTOM_DISPLAY_UART_BAUDRATE_460800 default 115200
+range 1 1024 default 128 if CUSTOM_DISPLAY_OLED_SSD1306 || CUSTOM_DISPLAY_OLED_SH1106 || CUSTOM_DISPLAY_ST7735 || CUSTOM_DISPLAY_GC9107
+default 320 if CUSTOM_DISPLAY_ST7796 || CUSTOM_DISPLAY_ILI9486 default 240 if CUSTOM_DISPLAY_GC9A01 || CUSTOM_DISPLAY_JD9853
+default 128 if CUSTOM_DISPLAY_OLED_SSD1306 || CUSTOM_DISPLAY_OLED_SH1106 || CUSTOM_DISPLAY_ST7735 || CUSTOM_DISPLAY_GC9107 default 240
+default 480 if CUSTOM_DISPLAY_ST7796 || CUSTOM_DISPLAY_ILI9486 default 160 if CUSTOM_DISPLAY_ST7735
+default 64 if CUSTOM_DISPLAY_OLED_SSD1306 || CUSTOM_DISPLAY_OLED_SH1106 default 240 if CUSTOM_DISPLAY_GC9A01 || CUSTOM_DISPLAY_JD9853
+default 160 if CUSTOM_DISPLAY_ST7735 default 128 if CUSTOM_DISPLAY_GC9107
+depends on !CUSTOM_DISPLAY_OLED_SSD1306 && !CUSTOM_DISPLAY_OLED_SH1106 && !CUSTOM_DISPLAY_QSPI_AMOLED && !CUSTOM_DISPLAY_UART && !CUSTOM_DISPLAY_NONE default 21
+depends on CUSTOM_DISPLAY_QSPI_AMOLED default 10
+depends on CUSTOM_DISPLAY_QSPI_AMOLED default 15
+depends on CUSTOM_DISPLAY_QSPI_AMOLED default 11
+depends on CUSTOM_DISPLAY_QSPI_AMOLED default 12
+depends on CUSTOM_DISPLAY_QSPI_AMOLED default 13
+depends on CUSTOM_DISPLAY_QSPI_AMOLED default 14
+depends on CUSTOM_DISPLAY_QSPI_AMOLED default 16
+int "Chân reset cảm ứng RST GPIO (-1 nếu không nối)" default 2
+int "Chân xung nhịp Loa I2S BCLK (BCK)" default 15
+int "Chân xung nhịp Loa I2S LRCK / WS (LCK)" default 16
+int "Chân phát UART TX GPIO" default 17
+int "Chân nhận UART RX GPIO" default 18
+int "Tốc độ baud truyền thông (Baudrate)" default 115200
+depends on CUSTOM_UART_USE_FLOW_CONTROL default 19
+depends on CUSTOM_UART_USE_FLOW_CONTROL default 20
+depends on CUSTOM_NETWORK_4G_ML307 || CUSTOM_NETWORK_4G_NT26 || CUSTOM_NETWORK_4G_EC801E default 17
+depends on CUSTOM_NETWORK_4G_ML307 || CUSTOM_NETWORK_4G_NT26 || CUSTOM_NETWORK_4G_EC801E default 18
+depends on CUSTOM_NETWORK_4G_ML307 || CUSTOM_NETWORK_4G_NT26 || CUSTOM_NETWORK_4G_EC801E default 2
+depends on CUSTOM_NETWORK_ETH_W5500 || CUSTOM_NETWORK_ETH_DM9051 default 10
+depends on CUSTOM_NETWORK_ETH_W5500 || CUSTOM_NETWORK_ETH_DM9051 default 11
+depends on CUSTOM_NETWORK_ETH_W5500 || CUSTOM_NETWORK_ETH_DM9051 default 14
+depends on CUSTOM_MCP_TOOL_LAMP default 13
+depends on CUSTOM_ENABLE_BUTTON_TOUCH default 1
+depends on CUSTOM_ENABLE_BUTTON_VOLUME default 2
+depends on CUSTOM_ENABLE_TOUCH_SLIDER default 1
+depends on CUSTOM_ENABLE_TOUCH_SLIDER default 2
+int "Chân ngắt INT cảm biến cử chỉ APDS-9960 (-1 nếu không dùng)" default 21
+int "Chân xung pha A (CLK) Encoder" default 17
+int "Chân xung pha B (DT) Encoder" default 18
+int "Chân phím nhấn SW Encoder (-1 nếu không dùng)" default 21
+int "Chân khởi động lại cảm ứng RST (-1 nếu không dùng)" default 21
+depends on !CUSTOM_CAMERA_USB_UVC default 10
+depends on !CUSTOM_CAMERA_USB_UVC default 12
+depends on !CUSTOM_CAMERA_USB_UVC default 13
+depends on !CUSTOM_CAMERA_USB_UVC default 14
+depends on !CUSTOM_CAMERA_USB_UVC && CUSTOM_CAM_USE_RESET default 15
+depends on !CUSTOM_CAMERA_USB_UVC && CUSTOM_CAM_USE_PWDN default 16
+depends on !CUSTOM_CAMERA_USB_UVC default 11
+depends on !CUSTOM_CAMERA_USB_UVC default 2
+depends on !CUSTOM_CAMERA_USB_UVC default 21
+int "Số lượng mắt LED trên dây" default 1
+depends on CUSTOM_ENABLE_SENSOR_DHT11_22 default 14
+depends on CUSTOM_ENABLE_SENSOR_LDR default 1
+int "Chân analog đọc điện áp cảm biến MQ (kênh ADC1)" default 1
+depends on CUSTOM_ENABLE_SENSOR_HCSR04 default 11
+depends on CUSTOM_ENABLE_SENSOR_HCSR04 default 12
+depends on CUSTOM_ENABLE_SENSOR_PIR default 10
+int "Chân điều khiển nguồn XSHUT (-1 nếu không nối)" default 18
+int "Chân ngắt IRQ module NFC PN532 (-1 nếu không nối)" default 17
+int "Chân Reset RST module NFC PN532 (-1 nếu không nối)" default 18
+int "Chân ngắt báo thức INT RTC (-1 nếu không nối)" default 17
+int "Chân SPI SCK đầu đọc RFID RC522" default 12
+int "Chân SPI MOSI đầu đọc RFID RC522" default 11
+int "Chân SPI MISO đầu đọc RFID RC522" default 13
+int "Chân chọn chip SPI CS đầu đọc RFID RC522" default 21
+int "Chân Reset RST đầu đọc RFID RC522 (-1 nếu không dùng)" default 16
+depends on CUSTOM_PERIPH_RELAY_ENABLE default 13
+int "Chân LED phát hồng ngoại IR TX GPIO" default 17
+int "Chân mắt thu hồng ngoại IR RX GPIO (-1 nếu không dùng)" default 18
+int "Chân điều tốc PWM Động cơ A (PWMA)" default 1
+int "Chân hướng quay Động cơ A (DIRA / IN1)" default 2
+depends on CUSTOM_BATTERY_MONITOR_ADC default 100
+depends on CUSTOM_BATTERY_MONITOR_ADC default 100
+int "Chân xung nhịp SPI SCK thẻ nhớ" default 12
+int "Chân dữ liệu SPI MOSI thẻ nhớ" default 11
+int "Chân dữ liệu SPI MISO thẻ nhớ" default 13
+int "Chân chọn chip SPI CS thẻ nhớ" default 10
+int "Chân phát dữ liệu TWAI TX" default 15
+int "Chân nhận dữ liệu TWAI RX" default 16
+int "Chân điều khiển kích nguồn PWR_KEY Modem 4G" default 2

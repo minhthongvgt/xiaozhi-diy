@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+D:/Code/Antigravity/xiaozhi-v2/build/CMakeFiles/bootloader
+D:/Code/Antigravity/xiaozhi-v2/build/CMakeFiles/bootloader.rule
+D:/Code/Antigravity/xiaozhi-v2/build/CMakeFiles/bootloader-complete.rule
+D:/Code/Antigravity/xiaozhi-v2/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+D:/Code/Antigravity/xiaozhi-v2/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+D:/Code/Antigravity/xiaozhi-v2/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+D:/Code/Antigravity/xiaozhi-v2/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+D:/Code/Antigravity/xiaozhi-v2/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+D:/Code/Antigravity/xiaozhi-v2/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+D:/Code/Antigravity/xiaozhi-v2/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
