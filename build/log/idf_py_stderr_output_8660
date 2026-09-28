@@ -1,2 +1,0 @@
-Command: ninja all
-ninja: error: 'D:/Code/Antigravity/xiaozhi-v2/partitions/v2/16m.csv', needed by 'partition_table/partition-table.bin', missing and no known rule to make it
