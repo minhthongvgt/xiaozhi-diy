@@ -38,7 +38,7 @@ const DEFAULT_CONFIG = {
     spiram:          true,
     spiram_mode:     "OCT",
     spiram_speed:    "80M",
-    partition_table: "partitions.csv",
+    partition_table: "partitions/16m.csv",
   },
 
   // ── 1. Cơ bản & Ngôn ngữ ───────────────────────────────────────────────
@@ -61,7 +61,7 @@ const DEFAULT_CONFIG = {
     use_blk:  true,  pin_blk: -1,
     pin_i2c_sda: -1, pin_i2c_scl: -1,
     offset_x: 0,  offset_y: 0,
-    mirror_x: false, mirror_y: false, swap_xy: false, invert_color: true,
+    mirror_x: false, mirror_y: false, swap_xy: false, invert_color: false,
     // UART display
     uart_secondary:  false,
     uart_port:       1,
@@ -116,7 +116,7 @@ const DEFAULT_CONFIG = {
     custom_word:           "xiao tu dou",
     custom_display:        "小土豆",
     threshold:             20,
-    device_aec:            false,
+    device_aec:            true,
     server_aec:            false,
     send_data:             true,
     detection_in_listening:false,
@@ -129,7 +129,7 @@ const DEFAULT_CONFIG = {
 
   // ── 9. Phím bấm & Input ────────────────────────────────────────────────
   buttons: {
-    boot_enable:   false, boot_gpio:     -1,
+    boot_enable:   true, boot_gpio:     0,
     touch_enable:  false, touch_gpio:    -1,
     vol_enable:    false, vol_up_gpio:   -1, vol_down_gpio: -1,
     slider_enable: false,
@@ -154,9 +154,9 @@ const DEFAULT_CONFIG = {
 
   // ── 11. LED ────────────────────────────────────────────────────────────
   led: {
-    enable:  false,
+    enable:  true,
     type:    "CUSTOM_LED_WS2812",
-    gpio:   -1,
+    gpio:   48,
     count:   1,
     rainbow: true,
   },
@@ -226,6 +226,15 @@ const DEFAULT_CONFIG = {
 let configState = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
 let conflictErrors = [];
 let isServerMode = false;
+let serverProjectInfo = null;
+
+function apiFetch(endpoint, options = {}) {
+  let url = endpoint;
+  if (typeof window !== 'undefined' && window.location.protocol === 'file:') {
+    url = 'http://localhost:8080' + endpoint;
+  }
+  return fetch(url, options);
+}
 
 // ============================================================================
 // SdkconfigParser  —  sdkconfig.defaults text  →  configState
@@ -253,7 +262,10 @@ class SdkconfigParser {
   /** Helper — lấy bool (y) */
   static _y(m, k)         { return m[k] === 'y'; }
   /** Helper — lấy int với fallback */
-  static _i(m, k, def=-1) { return k in m ? (parseInt(m[k], 10) ?? def) : def; }
+  static _i(m, k, def=-1) {
+    const value = parseInt(m[k], 10);
+    return Number.isNaN(value) ? def : value;
+  }
   /** Helper — lấy string, bỏ dấu ngoặc kép */
   static _s(m, k, def='') { return k in m ? m[k].replace(/^"|"$/g,'') : def; }
   /** Helper — một trong nhiều choice → trả key tên option đang =y */
@@ -272,7 +284,7 @@ class SdkconfigParser {
 
     // ── system ────────────────────────────────────────────────────────────
     s.system.spiram      = y('CONFIG_SPIRAM');
-    s.system.spiram_mode = y('CONFIG_SPIRAM_MODE_OCT') ? 'OCT' : 'QUAD';
+    s.system.spiram_mode = 'OCT';
     s.system.spiram_speed= y('CONFIG_SPIRAM_SPEED_80M') ? '80M' : '40M';
     s.system.flash_mode  = y('CONFIG_ESPTOOLPY_FLASHMODE_DIO') ? 'DIO' : 'QIO';
     s.system.flash_freq  = y('CONFIG_ESPTOOLPY_FLASHFREQ_40M') ? '40M' : '80M';
@@ -616,8 +628,7 @@ class SdkconfigGenerator {
            ['ESPTOOLPY_FLASHFREQ_80M','ESPTOOLPY_FLASHFREQ_40M']);
     if (s.system.spiram) {
       en('CONFIG_SPIRAM');
-      choice(`SPIRAM_MODE_${s.system.spiram_mode}`,
-             ['SPIRAM_MODE_OCT','SPIRAM_MODE_QUAD']);
+      choice('SPIRAM_MODE_OCT', ['SPIRAM_MODE_OCT']);
       choice(`SPIRAM_SPEED_${s.system.spiram_speed}`,
              ['SPIRAM_SPEED_80M','SPIRAM_SPEED_40M']);
     } else {
@@ -1322,7 +1333,7 @@ class BuildController {
     // 7. Hủy tiến trình (Cancel)
     document.getElementById('btn-idf-cancel')?.addEventListener('click', async () => {
       try {
-        const res = await fetch('/api/idf/cancel', { method: 'POST' });
+        const res = await apiFetch('/api/idf/cancel', { method: 'POST' });
         const data = await res.json();
         GUIController.showToast(data.message || 'Đã gửi lệnh dừng tiến trình', 'warning');
       } catch (e) {
@@ -1350,7 +1361,7 @@ class BuildController {
       }
       BuildController.logOffset = 0;
       try {
-        await fetch('/api/idf/clear-logs', { method: 'POST' });
+        await apiFetch('/api/idf/clear-logs', { method: 'POST' });
       } catch (e) { }
     });
 
@@ -1387,7 +1398,7 @@ class BuildController {
 
   static async applyCustomPath(customPath) {
     try {
-      const res = await fetch('/api/idf/set-path', {
+      const res = await apiFetch('/api/idf/set-path', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ path: customPath })
@@ -1406,7 +1417,7 @@ class BuildController {
 
   static async resetCustomPath() {
     try {
-      const res = await fetch('/api/idf/reset-path', { method: 'POST' });
+      const res = await apiFetch('/api/idf/reset-path', { method: 'POST' });
       const data = await res.json();
       if (data.success) {
         GUIController.showToast(data.message || 'Đã khôi phục chế độ tự động', 'info');
@@ -1429,7 +1440,7 @@ class BuildController {
     }
 
     try {
-      const res = await fetch('/api/idf/scan-all', { cache: 'no-store' });
+      const res = await apiFetch('/api/idf/scan-all', { cache: 'no-store' });
       const data = await res.json();
       if (loading) loading.style.display = 'none';
 
@@ -1472,7 +1483,7 @@ class BuildController {
 
   static async fetchStatus() {
     try {
-      const res = await fetch('/api/idf/status', { cache: 'no-store' });
+      const res = await apiFetch('/api/idf/status', { cache: 'no-store' });
       if (!res.ok) return;
       const data = await res.json();
       BuildController.currentStatus = data;
@@ -1598,7 +1609,7 @@ class BuildController {
 
   static async refreshPorts() {
     try {
-      const res = await fetch('/api/idf/ports', { cache: 'no-store' });
+      const res = await apiFetch('/api/idf/ports', { cache: 'no-store' });
       if (!res.ok) return;
       const data = await res.json();
       BuildController.renderPortOptions(data.ports);
@@ -1631,7 +1642,7 @@ class BuildController {
     BuildController.logOffset = 0;
 
     try {
-      const res = await fetch(`/api/idf/${action}`, {
+      const res = await apiFetch(`/api/idf/${action}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -1728,7 +1739,7 @@ class BuildController {
     if (BuildController.pollTimer) clearInterval(BuildController.pollTimer);
     BuildController.pollTimer = setInterval(async () => {
       try {
-        const res = await fetch(`/api/idf/logs?offset=${BuildController.logOffset}`, { cache: 'no-store' });
+        const res = await apiFetch(`/api/idf/logs?offset=${BuildController.logOffset}`, { cache: 'no-store' });
         if (!res.ok) return;
         const data = await res.json();
 
@@ -1837,28 +1848,35 @@ class GUIController {
   // ── Kết nối server và nạp cấu hình ──────────────────────────────────────
   static async autoConnect() {
     try {
-      const res = await fetch('/api/project', { cache: 'no-store' });
-      if (!res.ok) return;
+      const res = await apiFetch('/api/project', { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const info = await res.json();
-      if (!info.success) return;
+      if (!info.success) throw new Error(info.error || 'Server không xác nhận');
 
       isServerMode = true;
       serverProjectInfo = info;
       GUIController._setStatus('connected', `Dự án: ${info.root_path}`);
 
       // Nạp sdkconfig.defaults
-      const cfgRes = await fetch('/api/config', { cache: 'no-store' });
-      if (!cfgRes.ok) return;
-      const cfgData = await cfgRes.json();
-      if (cfgData.content && cfgData.content.trim()) {
-        configState = SdkconfigParser.parse(cfgData.content);
-        GUIController.syncStateToUI();
-        GUIController.initSnapshots();
-        GUIController.updateValidation();
-        GUIController.showToast(`Đã nạp cấu hình từ sdkconfig.defaults`, 'success');
+      const cfgRes = await apiFetch('/api/config', { cache: 'no-store' });
+      if (cfgRes.ok) {
+        const cfgData = await cfgRes.json();
+        if (cfgData.content && cfgData.content.trim()) {
+          configState = SdkconfigParser.parse(cfgData.content);
+          GUIController.syncStateToUI();
+          GUIController.initSnapshots();
+          GUIController.updateValidation();
+          GUIController.showToast(`Đã nạp cấu hình từ sdkconfig.defaults`, 'success');
+        }
       }
     } catch (e) {
-      console.log('Standalone mode (không có server):', e.message);
+      isServerMode = false;
+      console.warn('Không thể kết nối Configurator Server:', e.message);
+      if (typeof window !== 'undefined' && window.location.protocol === 'file:') {
+        GUIController._setStatus('error', 'Chưa chạy run_configurator.bat');
+      } else {
+        GUIController._setStatus('error', 'Chưa kết nối Server');
+      }
     }
   }
 
@@ -2042,7 +2060,7 @@ class GUIController {
     if (isServerMode) {
       try {
         const lines = SdkconfigGenerator.build(configState);
-        const res = await fetch('/api/save', {
+        const res = await apiFetch('/api/save', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ sdkconfig_lines: lines }),
@@ -2100,6 +2118,7 @@ class GUIController {
   static async openProjectModal() {
     const modal = document.getElementById('project-modal');
     if (!modal) return;
+    modal.classList.add('active');
     modal.classList.add('visible');
 
     const input = document.getElementById('input-project-root');
@@ -2111,7 +2130,9 @@ class GUIController {
   }
 
   static closeProjectModal() {
-    document.getElementById('project-modal')?.classList.remove('visible');
+    const modal = document.getElementById('project-modal');
+    modal?.classList.remove('active');
+    modal?.classList.remove('visible');
   }
 
   static async loadDetectedProjects() {
@@ -2120,7 +2141,7 @@ class GUIController {
     container.innerHTML = '<span style="font-size:0.75rem; color:var(--text-muted); padding:4px;">Đang quét dự án Xiaozhi trên máy tính...</span>';
 
     try {
-      const res = await fetch('/api/project/scan-all', { cache: 'no-store' });
+      const res = await apiFetch('/api/project/scan-all', { cache: 'no-store' });
       const data = await res.json();
       if (data.success && Array.isArray(data.projects)) {
         container.innerHTML = '';
@@ -2155,7 +2176,12 @@ class GUIController {
         });
       }
     } catch (e) {
-      container.innerHTML = `<span style="font-size:0.75rem; color:var(--accent-rose); padding:4px;">Lỗi quét: ${e.message}</span>`;
+      container.innerHTML = `
+        <div style="font-size:0.75rem; color:var(--accent-rose); padding:8px; background:rgba(244,63,94,0.1); border:1px solid rgba(244,63,94,0.25); border-radius:4px; line-height:1.45;">
+          <strong>Chưa kết nối Backend Server (HTTP 8080):</strong><br>
+          <span style="color:var(--text-secondary);">Vui lòng khởi động <code>run_configurator.bat</code> từ thư mục dự án để kích hoạt máy chủ cấu hình tại <code>http://localhost:8080/</code>.</span>
+        </div>
+      `;
     }
   }
 
@@ -2165,7 +2191,7 @@ class GUIController {
       return;
     }
     try {
-      const res = await fetch('/api/project/set-root', {
+      const res = await apiFetch('/api/project/set-root', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ root_path: newPath })
@@ -2178,7 +2204,7 @@ class GUIController {
         GUIController.closeProjectModal();
 
         // Nạp lại cấu hình từ dự án mới
-        const cfgRes = await fetch('/api/config', { cache: 'no-store' });
+        const cfgRes = await apiFetch('/api/config', { cache: 'no-store' });
         if (cfgRes.ok) {
           const cfgData = await cfgRes.json();
           if (cfgData.content) {
@@ -2200,7 +2226,7 @@ class GUIController {
 
   static async resetProjectRoot() {
     try {
-      const res = await fetch('/api/project/reset-root', { method: 'POST' });
+      const res = await apiFetch('/api/project/reset-root', { method: 'POST' });
       const data = await res.json();
       if (data.success) {
         serverProjectInfo = data.project_info || { root_path: data.root_path };
@@ -2208,7 +2234,7 @@ class GUIController {
         GUIController.showToast(data.message || 'Đã khôi phục chế độ tự động', 'info');
         GUIController.closeProjectModal();
 
-        const cfgRes = await fetch('/api/config', { cache: 'no-store' });
+        const cfgRes = await apiFetch('/api/config', { cache: 'no-store' });
         if (cfgRes.ok) {
           const cfgData = await cfgRes.json();
           if (cfgData.content) {
@@ -2227,37 +2253,21 @@ class GUIController {
 
   static bindOpenDir() {
     const triggerModal = async () => {
-      if (isServerMode) {
-        await GUIController.openProjectModal();
-      } else {
-        if (!window.showDirectoryPicker) {
-          alert('Trình duyệt không hỗ trợ File System API. Dùng Chrome/Edge.');
-          return;
-        }
-        try {
-          const dir = await window.showDirectoryPicker({ mode: 'readwrite' });
-          try {
-            const fh   = await dir.getFileHandle('sdkconfig.defaults');
-            const file = await fh.getFile();
-            const text = await file.text();
-            configState = SdkconfigParser.parse(text);
-            GUIController.syncStateToUI();
-            GUIController.initSnapshots();
-            GUIController.updateValidation();
-            GUIController._setStatus('connected', `Dự án: ${dir.name}`);
-            GUIController.showToast('Đã nạp cấu hình từ sdkconfig.defaults!', 'success');
-          } catch {
-            GUIController._setStatus('connected', `Dự án: ${dir.name}`);
-            GUIController.showToast('Chưa có sdkconfig.defaults, dùng cấu hình mặc định.', 'warning');
-          }
-        } catch (e) {
-          if (e.name !== 'AbortError') alert('Lỗi mở thư mục: ' + e.message);
-        }
+      if (!isServerMode) {
+        await GUIController.autoConnect();
       }
+      await GUIController.openProjectModal();
     };
 
     document.getElementById('btn-open-dir')?.addEventListener('click', triggerModal);
     document.getElementById('project-status-bar')?.addEventListener('click', triggerModal);
+
+    // Đóng modal khi click vào backdrop
+    document.getElementById('project-modal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'project-modal') {
+        GUIController.closeProjectModal();
+      }
+    });
 
     // Modal events
     document.getElementById('btn-close-project-modal')?.addEventListener('click', () => GUIController.closeProjectModal());
@@ -2474,6 +2484,23 @@ class GUIController {
     document.getElementById('led_enable')?.dispatchEvent(new Event('change'));
     document.getElementById('mcp_enable')?.dispatchEvent(new Event('change'));
     document.getElementById('uart_enable')?.dispatchEvent(new Event('change'));
+
+    // Buttons
+    document.getElementById('buttons_boot')?.dispatchEvent(new Event('change'));
+    document.getElementById('buttons_touch')?.dispatchEvent(new Event('change'));
+    document.getElementById('buttons_vol')?.dispatchEvent(new Event('change'));
+    document.getElementById('buttons_slider')?.dispatchEvent(new Event('change'));
+    document.getElementById('buttons_rotary')?.dispatchEvent(new Event('change'));
+
+    // Peripherals
+    document.getElementById('servo_enable')?.dispatchEvent(new Event('change'));
+    document.getElementById('buzzer_enable')?.dispatchEvent(new Event('change'));
+    document.getElementById('haptic_enable')?.dispatchEvent(new Event('change'));
+    document.getElementById('relay_enable')?.dispatchEvent(new Event('change'));
+    document.getElementById('motor_dc_enable')?.dispatchEvent(new Event('change'));
+    document.getElementById('battery_enable')?.dispatchEvent(new Event('change'));
+    document.getElementById('ina2xx_enable')?.dispatchEvent(new Event('change'));
+    document.getElementById('tp4056_enable')?.dispatchEvent(new Event('change'));
   }
 
   // ── syncUIToState ─────────────────────────────────────────────────────────
@@ -2825,8 +2852,12 @@ class GUIController {
 // ============================================================================
 // Bootstrap
 // ============================================================================
-if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
-  window.addEventListener('DOMContentLoaded', () => GUIController.init());
+if (typeof window !== 'undefined') {
+  if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', () => GUIController.init());
+  } else {
+    GUIController.init();
+  }
 }
 
 // Node.js test export

@@ -138,7 +138,6 @@ size_t OggDemuxer::Process(const uint8_t* data, size_t size)
                     processed += i;
                     
                     // The matched "OggS" bytes do not need to be copied.
-                    // memcpy(ctx_.header, data + processed, 4);
                     processed += 4;
                     
                     state_ = ParseState::PARSE_HEADER;

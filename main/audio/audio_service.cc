@@ -136,7 +136,7 @@ void AudioService::Start() {
             audio_service->AudioInputTask();
             vTaskDelete(NULL);
         },
-        "audio_input", 2048 * 3, this, 19, &audio_input_task_handle_, 1);
+        "audio_input", 2048 * 3, this, 23, &audio_input_task_handle_, 1);
 
     /* Start the audio output task */
     xTaskCreatePinnedToCore(
@@ -145,7 +145,7 @@ void AudioService::Start() {
             audio_service->AudioOutputTask();
             vTaskDelete(NULL);
         },
-        "audio_output", 2048 * 4, this, 18, &audio_output_task_handle_, 1);
+        "audio_output", 2048 * 4, this, 23, &audio_output_task_handle_, 1);
 #else
     /* Start the audio input task */
     xTaskCreatePinnedToCore(
@@ -154,7 +154,7 @@ void AudioService::Start() {
             audio_service->AudioInputTask();
             vTaskDelete(NULL);
         },
-        "audio_input", 2048 * 2, this, 19, &audio_input_task_handle_, 1);
+        "audio_input", 2048 * 2, this, 23, &audio_input_task_handle_, 1);
 
     /* Start the audio output task */
     xTaskCreatePinnedToCore(
@@ -163,7 +163,7 @@ void AudioService::Start() {
             audio_service->AudioOutputTask();
             vTaskDelete(NULL);
         },
-        "audio_output", 2048 * 4, this, 18, &audio_output_task_handle_, 1);
+        "audio_output", 2048 * 4, this, 23, &audio_output_task_handle_, 1);
 #endif
 
     /* Start the opus codec task (Stack > 16KB -> PSRAM) */
@@ -179,7 +179,7 @@ void AudioService::Start() {
             audio_service->OpusCodecTask();
             vTaskDelete(NULL);
         },
-        "opus_codec", 2048 * 12, this, 15, opus_codec_stack_, opus_codec_tcb_, 1);
+        "opus_codec", 2048 * 12, this, 3, opus_codec_stack_, opus_codec_tcb_, 1);
 }
 
 void AudioService::Stop() {

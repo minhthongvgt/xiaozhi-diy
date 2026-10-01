@@ -230,7 +230,7 @@ bool AfeAudioEngine::Initialize(AudioCodec* codec, int frame_duration_ms,
             engine->ProcessingTask();
             vTaskDelete(nullptr);
         },
-        "audio_afe", kProcessingTaskStackSize, this, 19, processing_task_stack_,
+        "audio_afe", kProcessingTaskStackSize, this, 5, processing_task_stack_,
         processing_task_buffer_, 1);
     if (processing_task_ == nullptr) {
         ESP_LOGE(TAG, "Failed to create AFE processing task, internal free=%u largest=%u",
@@ -616,7 +616,7 @@ void AfeAudioEngine::EncodeWakeWordData() {
             }
             vTaskDelete(nullptr);
         },
-        "encode_wake_word", stack_size, this, 15, wake_word_encode_task_stack_,
+        "encode_wake_word", stack_size, this, 4, wake_word_encode_task_stack_,
         wake_word_encode_task_buffer_, 1);
 }
 

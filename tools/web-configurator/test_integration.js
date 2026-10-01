@@ -32,7 +32,7 @@ if (fs.existsSync(sdkDefaultsPath)) {
   const state = SdkconfigParser.parse(content);
   assert(state && typeof state === 'object', "Phân tích cú pháp tệp sdkconfig.defaults thành công");
   assert(state.system.flash_size === "16MB", `Trích xuất dung lượng Flash: ${state.system.flash_size}`);
-  assert(state.system.partition_table.includes("partitions.csv"), `Trích xuất phân vùng: ${state.system.partition_table}`);
+  assert(state.system.partition_table.includes("partitions/16m.csv"), `Trích xuất phân vùng: ${state.system.partition_table}`);
 } else {
   assert(false, "Không tìm thấy tệp sdkconfig.defaults");
 }
@@ -61,15 +61,15 @@ if (fs.existsSync(kconfigProjPath)) {
   assert(false, "Không tìm thấy tệp main/Kconfig.projbuild");
 }
 
-// 4. Kiểm tra tệp bảng phân vùng Flash (partitions.csv)
-const partitionPath = path.join(projectRoot, 'partitions.csv');
-console.log("\n4. Kiểm tra tệp bảng phân vùng Flash (partitions.csv):");
+// 4. Kiểm tra tệp bảng phân vùng Flash (partitions/16m.csv)
+const partitionPath = path.join(projectRoot, 'partitions', '16m.csv');
+console.log("\n4. Kiểm tra tệp bảng phân vùng Flash (partitions/16m.csv):");
 if (fs.existsSync(partitionPath)) {
   const partContent = fs.readFileSync(partitionPath, 'utf8');
   assert(partContent.includes('app0') && partContent.includes('app1'), "Bảng phân vùng hỗ trợ 2 phân vùng OTA (app0, app1)");
   assert(partContent.includes('nvs'), "Bảng phân vùng có vùng lưu trữ NVS");
 } else {
-  assert(false, "Không tìm thấy tệp partitions.csv");
+  assert(false, "Không tìm thấy tệp partitions/16m.csv");
 }
 
 // 5. Kiểm tra khả năng tạo lại cấu hình tương thích Kconfig

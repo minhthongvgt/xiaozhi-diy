@@ -18,9 +18,7 @@ bool LiteAudioEngine::Initialize(AudioCodec* codec, int frame_duration_ms, srmod
 
     should_have_wake_word_ = models_list != nullptr &&
         esp_srmodel_filter(models_list, ESP_WN_PREFIX, nullptr) != nullptr;
-#if CONFIG_USE_ESP_WAKE_WORD
-    should_have_wake_word_ = should_have_wake_word_ || models_list == nullptr;
-#endif
+
     {
         std::lock_guard<std::mutex> lock(wake_word_mutex_);
         if (!CreateWakeWordLocked()) {

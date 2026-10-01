@@ -8,6 +8,12 @@
 SensorController::SensorController() {
     auto& mcp_server = McpServer::GetInstance();
 
+#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_DHT11_22) || \
+    defined(CONFIG_CUSTOM_ENABLE_SENSOR_I2C_TEMP_HUMID) || \
+    defined(CONFIG_CUSTOM_ENABLE_SENSOR_BMP280) || \
+    defined(CONFIG_CUSTOM_ENABLE_SENSOR_BH1750) || \
+    defined(CONFIG_CUSTOM_ENABLE_SENSOR_LDR) || \
+    defined(CONFIG_CUSTOM_ENABLE_SENSOR_GAS_CO2)
     // 1. Tool đọc thông số môi trường (Nhiệt độ, độ ẩm, áp suất, ánh sáng, CO2)
     mcp_server.AddTool("self.sensor.get_environment",
                        "Get current environmental sensor readings (temperature, humidity, light lux, barometric pressure, CO2). Field 'valid' indicates real sensor data vs no sensor connected.",
@@ -22,7 +28,9 @@ SensorController::SensorController() {
                  env.valid ? "true" : "false");
         return std::string(buf);
     });
+#endif
 
+#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_HCSR04)
     // 2. Tool đọc khoảng cách vật cản (ToF Laser / Ultrasonic)
     mcp_server.AddTool("self.sensor.get_distance",
                        "Get distance to nearest obstacle using Laser ToF (mm). Field 'valid' is false when no sensor is connected.",
@@ -37,7 +45,12 @@ SensorController::SensorController() {
                  dist.valid ? "true" : "false");
         return std::string(buf);
     });
+#endif
 
+#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_PIR) || \
+    defined(CONFIG_CUSTOM_ENABLE_SENSOR_VIBRATION_SW420) || \
+    defined(CONFIG_CUSTOM_ENABLE_SENSOR_FLAME) || \
+    defined(CONFIG_CUSTOM_ENABLE_SENSOR_GAS_ANALOG_MQ)
     // 3. Tool kiểm tra an ninh & cảnh báo (PIR chuyển động, Rung, Lửa, Khí gas)
     mcp_server.AddTool("self.sensor.get_security",
                        "Check safety and security sensors (PIR motion, vibration, flame, gas leak). Field 'valid' is false when no sensor is connected.",
@@ -56,7 +69,10 @@ SensorController::SensorController() {
                  sec.valid ? "true" : "false");
         return std::string(buf);
     });
+#endif
 
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_BATTERY_CHARGING_DETECT) || \
+    defined(CONFIG_CUSTOM_ENABLE_SENSOR_INA2XX)
     // 4. Tool đọc thông số nguồn điện & dung lượng Pin
     mcp_server.AddTool("self.sensor.get_power",
                        "Get battery charging status (TP4056 CHRG pin). Note: battery_voltage/percentage/current require dedicated ADC monitor hardware. Field 'valid' is false when no power sensor is connected.",
@@ -73,6 +89,7 @@ SensorController::SensorController() {
                  pwr.valid ? "true" : "false");
         return std::string(buf);
     });
+#endif
 
-    ESP_LOGI(TAG, "SensorController registered 4 MCP tools: environment, distance, security, power");
+    ESP_LOGI(TAG, "SensorController registered active MCP tools based on user config");
 }

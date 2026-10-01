@@ -1041,31 +1041,31 @@ private:
     defined(CONFIG_CUSTOM_ENABLE_BUTTON_BOOT) || defined(CONFIG_CUSTOM_ENABLE_BUTTON_TOUCH)
 #if defined(CONFIG_CUSTOM_MCP_TOOL_LAMP) || defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE)
         if (GPIO_IS_VALID_GPIO(LAMP_GPIO)) {
-            static LampController lamp(LAMP_GPIO);
+            static LampController lamp __attribute__((unused)) (LAMP_GPIO);
             ESP_LOGI(TAG, "MCP Lamp Controller registered on GPIO %d", LAMP_GPIO);
         }
 #endif
 #if defined(CONFIG_CUSTOM_MCP_TOOL_SENSOR) || defined(CONFIG_ENABLE_CUSTOM_SENSORS)
-        static SensorController sensor_ctrl;
+        static SensorController sensor_ctrl __attribute__((unused));
         ESP_LOGI(TAG, "MCP Sensor Tools registered successfully");
 #endif
 #if defined(CONFIG_CUSTOM_MCP_TOOL_ACTUATOR) || defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE) || \
     defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE) || \
     defined(CONFIG_ENABLE_BUZZER) || defined(CONFIG_ENABLE_HAPTIC_MOTOR)
-        static ActuatorController actuator_ctrl;
+        static ActuatorController actuator_ctrl __attribute__((unused));
         ESP_LOGI(TAG, "MCP Actuator Tools (Beep/Vibrate/Servo/Motor/Relay) registered successfully");
 #endif
 #if defined(CONFIG_CUSTOM_ENABLE_BUTTON_BOOT) || defined(CONFIG_CUSTOM_ENABLE_BUTTON_TOUCH) || defined(CONFIG_CUSTOM_MCP_TOOL_PRESS_TO_TALK)
-        static PressToTalkMcpTool press_to_talk_tool;
+        static PressToTalkMcpTool press_to_talk_tool __attribute__((unused));
         press_to_talk_tool.Initialize();
         ESP_LOGI(TAG, "MCP Press-to-Talk Tool registered successfully");
 #endif
 #if defined(CONFIG_CUSTOM_LED_WS2812) || defined(CONFIG_ENABLE_CUSTOM_LEDS)
-        static LedMcpController led_ctrl;
+        static LedMcpController led_ctrl __attribute__((unused));
         ESP_LOGI(TAG, "MCP LED Controller registered successfully");
 #endif
 #if defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE) || defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG)
-        static RobotMcpController robot_ctrl;
+        static RobotMcpController robot_ctrl __attribute__((unused));
         ESP_LOGI(TAG, "MCP Robot Controller registered successfully");
 #endif
 #endif
@@ -1159,18 +1159,18 @@ public:
 #if !defined(CONFIG_ENABLE_CUSTOM_LEDS) || defined(CONFIG_CUSTOM_LED_NONE)
         return nullptr;
 #elif defined(CONFIG_CUSTOM_LED_CIRCULAR_STRIP)
-        static CircularStrip led(BUILTIN_LED_GPIO, BUILTIN_LED_COUNT);
+        static CircularStrip led __attribute__((unused)) (BUILTIN_LED_GPIO, BUILTIN_LED_COUNT);
         return &led;
 #elif defined(CONFIG_CUSTOM_LED_WS2812)
         if (BUILTIN_LED_COUNT > 1) {
-            static CircularStrip led(BUILTIN_LED_GPIO, BUILTIN_LED_COUNT);
+            static CircularStrip led __attribute__((unused)) (BUILTIN_LED_GPIO, BUILTIN_LED_COUNT);
             return &led;
         } else {
-            static SingleLed led(BUILTIN_LED_GPIO);
+            static SingleLed led __attribute__((unused)) (BUILTIN_LED_GPIO);
             return &led;
         }
 #elif defined(CONFIG_CUSTOM_LED_SINGLE_PWM)
-        static GpioLed led(BUILTIN_LED_GPIO);
+        static GpioLed led __attribute__((unused)) (BUILTIN_LED_GPIO);
         return &led;
 #elif defined(CONFIG_CUSTOM_LED_USER_CUSTOM)
         static Led* user_led = CreateUserCustomLedDriver();

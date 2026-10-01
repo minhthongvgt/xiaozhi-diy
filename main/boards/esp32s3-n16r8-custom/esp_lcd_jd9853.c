@@ -204,53 +204,6 @@ typedef struct
     uint8_t data_bytes; // Length of data in above data array; 0xFF = end of cmds.
 } lcd_init_cmd_t;
 
-// static const jd9853_lcd_init_cmd_t vendor_specific_init_default[] = {
-// //  {cmd, { data }, data_size, delay_ms}
-//     /* Power contorl B, power control = 0, DC_ENA = 1 */
-//     {0xCF, (uint8_t []){0x00, 0xAA, 0XE0}, 3, 0},
-//     /* Power on sequence control,
-//      * cp1 keeps 1 frame, 1st frame enable
-//      * vcl = 0, ddvdh=3, vgh=1, vgl=2
-//      * DDVDH_ENH=1
-//      */
-//     {0xED, (uint8_t []){0x67, 0x03, 0X12, 0X81}, 4, 0},
-//     /* Driver timing control A,
-//      * non-overlap=default +1
-//      * EQ=default - 1, CR=default
-//      * pre-charge=default - 1
-//      */
-//     {0xE8, (uint8_t []){0x8A, 0x01, 0x78}, 3, 0},
-//     /* Power control A, Vcore=1.6V, DDVDH=5.6V */
-//     {0xCB, (uint8_t []){0x39, 0x2C, 0x00, 0x34, 0x02}, 5, 0},
-//     /* Pump ratio control, DDVDH=2xVCl */
-//     {0xF7, (uint8_t []){0x20}, 1, 0},
-
-//     {0xF7, (uint8_t []){0x20}, 1, 0},
-//     /* Driver timing control, all=0 unit */
-//     {0xEA, (uint8_t []){0x00, 0x00}, 2, 0},
-//     /* Power control 1, GVDD=4.75V */
-//     {0xC0, (uint8_t []){0x23}, 1, 0},
-//     /* Power control 2, DDVDH=VCl*2, VGH=VCl*7, VGL=-VCl*3 */
-//     {0xC1, (uint8_t []){0x11}, 1, 0},
-//     /* VCOM control 1, VCOMH=4.025V, VCOML=-0.950V */
-//     {0xC5, (uint8_t []){0x43, 0x4C}, 2, 0},
-//     /* VCOM control 2, VCOMH=VMH-2, VCOML=VML-2 */
-//     {0xC7, (uint8_t []){0xA0}, 1, 0},
-//     /* Frame rate control, f=fosc, 70Hz fps */
-//     {0xB1, (uint8_t []){0x00, 0x1B}, 2, 0},
-//     /* Enable 3G, disabled */
-//     {0xF2, (uint8_t []){0x00}, 1, 0},
-//     /* Gamma set, curve 1 */
-//     {0x26, (uint8_t []){0x01}, 1, 0},
-//     /* Positive gamma correction */
-//     {0xE0, (uint8_t []){0x1F, 0x36, 0x36, 0x3A, 0x0C, 0x05, 0x4F, 0X87, 0x3C, 0x08, 0x11, 0x35, 0x19, 0x13, 0x00}, 15, 0},
-//     /* Negative gamma correction */
-//     {0xE1, (uint8_t []){0x00, 0x09, 0x09, 0x05, 0x13, 0x0A, 0x30, 0x78, 0x43, 0x07, 0x0E, 0x0A, 0x26, 0x2C, 0x1F}, 15, 0},
-//     /* Entry mode set, Low vol detect disabled, normal display */
-//     {0xB7, (uint8_t []){0x07}, 1, 0},
-//     /* Display function control */
-//     {0xB6, (uint8_t []){0x08, 0x82, 0x27}, 3, 0},
-// };
 
 static const jd9853_lcd_init_cmd_t vendor_specific_init_default[] = {
     {0x11, (uint8_t []){ 0x00 }, 0, 120},

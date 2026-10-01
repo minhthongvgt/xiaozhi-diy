@@ -131,5 +131,14 @@ console.log("\n5. Kiểm tra tính toàn vẹn SdkconfigGenerator và SdkconfigP
   assert(parsedState.sensors.dht_gpio === 12, "Parse lại DHT GPIO chính xác (12)");
 }
 
+// ----------------------------------------------------------------------------
+// TEST 6: INVALID NUMERIC VALUES FALL BACK TO DEFAULTS
+// ----------------------------------------------------------------------------
+console.log("\n6. Kiểm tra fallback khi giá trị số trong sdkconfig không hợp lệ:");
+{
+  const parsed = SdkconfigParser.parse("CONFIG_CUSTOM_DISPLAY_WIDTH=not-a-number");
+  assert(parsed.display.width === 240, "Giá trị số không hợp lệ phải quay về mặc định 240");
+}
+
 console.log(`\n=== TỔNG KẾT ENGINE TEST: ${passed} PASS, ${failed} FAIL ===`);
 if (failed > 0) process.exit(1);

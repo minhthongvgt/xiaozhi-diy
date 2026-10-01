@@ -608,6 +608,9 @@ def scan_all_idf_installations():
         patterns = [
             os.path.join(drv, "idf"),
             os.path.join(drv, "idf", "*"),
+            os.path.join(drv, "idf", "esp-idf"),
+            os.path.join(drv, "idf", "v*", "esp-idf"),
+            os.path.join(drv, "idf", "frameworks", "esp-idf*"),
             os.path.join(drv, "esp-idf"),
             os.path.join(drv, "esp-idf-*"),
             os.path.join(drv, "esp", "esp-idf"),
@@ -670,6 +673,11 @@ def find_profile_script_and_python(idf_path: str):
         profile_candidates.extend(glob.glob(os.path.join(drv, "Espressif", "tools", "Microsoft.*.PowerShell_profile.ps1")))
         profile_candidates.extend(glob.glob(os.path.join(drv, "Espressif", "Microsoft.*.PowerShell_profile.ps1")))
         py_candidates.extend(glob.glob(os.path.join(drv, "Espressif", "tools", "python", "*", "venv", "Scripts", "python.exe")))
+        
+        # Thêm quét cho thư mục C:\idf theo yêu cầu
+        profile_candidates.extend(glob.glob(os.path.join(drv, "idf", "tools", "Microsoft.*.PowerShell_profile.ps1")))
+        profile_candidates.extend(glob.glob(os.path.join(drv, "idf", "Microsoft.*.PowerShell_profile.ps1")))
+        py_candidates.extend(glob.glob(os.path.join(drv, "idf", "tools", "python", "*", "venv", "Scripts", "python.exe")))
 
     # 3. Quét tương đối từ thư mục idf_path
     if idf_path:

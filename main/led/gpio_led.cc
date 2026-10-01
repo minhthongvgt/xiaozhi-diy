@@ -267,7 +267,6 @@ void GpioLed::OnStateChanged() {
         case kDeviceStateIdle:
             SetBrightness(IDLE_BRIGHTNESS);
             TurnOn();
-            // TurnOff();
             break;
         case kDeviceStateConnecting:
             SetBrightness(DEFAULT_BRIGHTNESS);
@@ -280,7 +279,6 @@ void GpioLed::OnStateChanged() {
             } else {
                 SetBrightness(LOW_BRIGHTNESS);
             }
-            // TurnOn();
             StartFadeTask();
             break;
         case kDeviceStateSpeaking:

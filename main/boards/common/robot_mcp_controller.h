@@ -15,6 +15,7 @@ public:
     RobotMcpController() {
         auto& mcp_server = McpServer::GetInstance();
 
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE)
         // 1. Tool điều khiển xe robot di chuyển
         mcp_server.AddTool(
             "self.robot.move",
@@ -53,7 +54,9 @@ public:
                 return true;
             }
         );
+#endif
 
+#if defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG)
         // 2. Tool thực hiện cử chỉ cảm xúc của robot (gật đầu, lắc đầu, vẫy, thả lỏng)
         mcp_server.AddTool(
             "self.robot.gesture",
@@ -84,8 +87,9 @@ public:
                 return true;
             }
         );
+#endif
 
-        ESP_LOGI(TAG_ROBOT_MCP, "RobotMcpController registered tools: self.robot.move, self.robot.gesture");
+        ESP_LOGI(TAG_ROBOT_MCP, "RobotMcpController registered active MCP tools based on user config");
     }
 };
 

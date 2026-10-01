@@ -709,6 +709,7 @@ bool Blufi::start_wifi_scan() {
             m_scan_in_progress = false;
             return false;
         }
+        esp_wifi_set_ps(WIFI_PS_NONE);
         // Register scan event handler
         esp_event_handler_instance_t scan_event_instance;
         esp_event_handler_instance_register(WIFI_EVENT, ESP_EVENT_ANY_ID,
@@ -730,6 +731,7 @@ bool Blufi::start_wifi_scan() {
             m_scan_in_progress = false;
             return false;
         }
+        esp_wifi_set_ps(WIFI_PS_NONE);
         err = esp_wifi_scan_start(NULL, false);
         if (err != ESP_OK) {
             ESP_LOGE(BLUFI_TAG, "Failed to start WiFi scan: %s", esp_err_to_name(err));

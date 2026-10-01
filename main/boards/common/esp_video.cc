@@ -208,10 +208,7 @@ EspVideo::EspVideo(const esp_video_init_config_t& config) {
             case V4L2_PIX_FMT_RGB565:
             case V4L2_PIX_FMT_RGB565X:  // byte-swapped to RGB565 in Capture()
                 return 1;
-#ifdef CONFIG_XIAOZHI_ENABLE_HARDWARE_JPEG_ENCODER
-            case V4L2_PIX_FMT_YUV420:  // 软件 JPEG 编码器不支持 YUV420 格式
-                return 2;
-#endif  // CONFIG_XIAOZHI_ENABLE_HARDWARE_JPEG_ENCODER
+
             case V4L2_PIX_FMT_YUYV:
             case V4L2_PIX_FMT_UYVY:
                 return 3;
@@ -233,10 +230,7 @@ EspVideo::EspVideo(const esp_video_init_config_t& config) {
                 return 11;
             case V4L2_PIX_FMT_RGB24:
                 return 12;
-#ifdef CONFIG_XIAOZHI_ENABLE_HARDWARE_JPEG_ENCODER
-            case V4L2_PIX_FMT_YUV420:
-                return 13;
-#endif  // CONFIG_XIAOZHI_ENABLE_HARDWARE_JPEG_ENCODER
+
 #ifdef CONFIG_XIAOZHI_CAMERA_ALLOW_JPEG_INPUT
             case V4L2_PIX_FMT_JPEG:
                 return 5;

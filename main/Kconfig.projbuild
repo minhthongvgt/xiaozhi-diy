@@ -8,7 +8,7 @@ config OTA_URL
 
 choice
     prompt "Default Language"
-    default LANGUAGE_ZH_CN
+    default LANGUAGE_VI_VN
     help
         Select device display language
 
@@ -134,7 +134,7 @@ config USE_MULTILINE_CHAT_MESSAGE
 
 choice WAKE_WORD_TYPE
     prompt "Wake Word Implementation Type"
-    default USE_AFE_WAKE_WORD if (IDF_TARGET_ESP32S3 || IDF_TARGET_ESP32P4 || IDF_TARGET_ESP32S31) && SPIRAM
+    default USE_AFE_WAKE_WORD if IDF_TARGET_ESP32S3 && SPIRAM
     default WAKE_WORD_DISABLED
     help
         Choose the type of wake word implementation to use
@@ -144,23 +144,17 @@ choice WAKE_WORD_TYPE
         help
             Disable wake word detection
 
-    config USE_ESP_WAKE_WORD
-        bool "Wakenet model without AFE"
-        depends on IDF_TARGET_ESP32C3 || IDF_TARGET_ESP32C5 || IDF_TARGET_ESP32C6 || (IDF_TARGET_ESP32 && SPIRAM)
-        help
-            Support ESP32 C3、ESP32 C5 与 ESP32 C6, and (ESP32 with PSRAM)
-
     config USE_AFE_WAKE_WORD
         bool "Wakenet model with AFE"
-        depends on (IDF_TARGET_ESP32S3 || IDF_TARGET_ESP32P4 || IDF_TARGET_ESP32S31) && SPIRAM
+        depends on IDF_TARGET_ESP32S3 && SPIRAM
         help
-            Support AEC if available, requires ESP32-S3, ESP32-P4, or ESP32-S31 and PSRAM
+            Support AEC if available, requires ESP32-S3 and PSRAM
 
     config USE_CUSTOM_WAKE_WORD
         bool "Multinet model (Custom Wake Word)"
-        depends on (IDF_TARGET_ESP32S3 || IDF_TARGET_ESP32P4 || IDF_TARGET_ESP32S31) && SPIRAM
+        depends on IDF_TARGET_ESP32S3 && SPIRAM
         help
-            Requires ESP32-S3, ESP32-P4, or ESP32-S31 and PSRAM
+            Requires ESP32-S3 and PSRAM
 
 endchoice
 
@@ -206,15 +200,15 @@ config WAKE_WORD_DETECTION_IN_LISTENING
 config USE_AUDIO_PROCESSOR
     bool "Enable AFE Audio Processing"
     default y
-    depends on (IDF_TARGET_ESP32S3 || IDF_TARGET_ESP32P4 || IDF_TARGET_ESP32S31) && SPIRAM
+    depends on IDF_TARGET_ESP32S3 && SPIRAM
     help
         Enable the shared AFE uplink path with AEC and VAD. Noise suppression
         is not enabled because this project does not provide an NSNet model.
-        Requires ESP32-S3, ESP32-P4, or ESP32-S31 with PSRAM.
+        Requires ESP32-S3 with PSRAM.
 
 config USE_DEVICE_AEC
     bool "Enable Device-Side AEC"
-    default n
+    default y
     depends on USE_AUDIO_PROCESSOR
     help
         To work properly, device-side AEC requires a clean output reference path from the speaker signal and physical acoustic isolation between the microphone and speaker.
@@ -301,21 +295,6 @@ menu "Camera Configuration"
 
             Not currently supported when used simultaneously with XIAOZHI_ENABLE_ROTATE_CAMERA_IMAGE.
 
-    config XIAOZHI_ENABLE_HARDWARE_JPEG_ENCODER
-        bool "Enable Hardware JPEG Encoder"
-        default y
-        depends on SOC_JPEG_ENCODE_SUPPORTED
-        help
-            Use hardware JPEG encoder on ESP32-P4 to encode image to JPEG.
-            See https://docs.espressif.com/projects/esp-idf/en/stable/esp32p4/api-reference/peripherals/jpeg.html for more details.
-
-    config XIAOZHI_ENABLE_HARDWARE_JPEG_DECODER
-        bool "Enable Hardware JPEG Decoder"
-        default n
-        depends on SOC_JPEG_DECODE_SUPPORTED && XIAOZHI_CAMERA_ALLOW_JPEG_INPUT
-        help
-            Use hardware JPEG decoder on ESP32-P4 to decode JPEG to image.
-            See https://docs.espressif.com/projects/esp-idf/en/stable/esp32p4/api-reference/peripherals/jpeg.html for more details.
 
     config XIAOZHI_ENABLE_CAMERA_DEBUG_MODE
         bool "Enable Camera Debug Mode"
@@ -510,7 +489,7 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 range 1 1024
                 default 320 if CUSTOM_DISPLAY_ST7796 || CUSTOM_DISPLAY_ILI9486
                 default 128 if CUSTOM_DISPLAY_OLED_SSD1306 || CUSTOM_DISPLAY_OLED_SH1106 || CUSTOM_DISPLAY_ST7735 || CUSTOM_DISPLAY_GC9107
-                default 240 if CUSTOM_DISPLAY_GC9A01 || CUSTOM_DISPLAY_JD9853
+                default 240 if CUSTOM_DISPLAY_GC9A01 || CUSTOM_DISPLAY_JD9853 || CUSTOM_DISPLAY_ST7789 || CUSTOM_DISPLAY_ILI9341
                 default 240
 
             config CUSTOM_DISPLAY_HEIGHT
@@ -519,7 +498,8 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 default 480 if CUSTOM_DISPLAY_ST7796 || CUSTOM_DISPLAY_ILI9486
                 default 64 if CUSTOM_DISPLAY_OLED_SSD1306 || CUSTOM_DISPLAY_OLED_SH1106
                 default 160 if CUSTOM_DISPLAY_ST7735
-                default 240 if CUSTOM_DISPLAY_GC9A01 || CUSTOM_DISPLAY_JD9853
+                default 240 if CUSTOM_DISPLAY_GC9A01 || CUSTOM_DISPLAY_JD9853 || CUSTOM_DISPLAY_ST7789
+                default 320 if CUSTOM_DISPLAY_ILI9341
                 default 128 if CUSTOM_DISPLAY_GC9107
                 default 320
 
@@ -761,7 +741,7 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
 
             config CUSTOM_DISPLAY_INVERT_COLOR
                 bool "Đảo ngược màu sắc hiển thị (Invert Color)"
-                default y
+                default n
         endif
 
         choice FLASH_ASSET_CHOICE
@@ -1069,7 +1049,7 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
         # 4. Nút bấm BOOT Onboard
         config CUSTOM_ENABLE_BUTTON_BOOT
             bool "Nút bấm BOOT Onboard (BOOT Button)"
-            default n
+            default y
             help
                 Nút nhấn chuyển đổi trạng thái nói và vào chế độ cấu hình Wi-Fi.
 
@@ -1077,7 +1057,7 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             int "Chân GPIO nút Boot"
             depends on CUSTOM_ENABLE_BUTTON_BOOT
             range -1 48
-                default -1
+                default 0
 
 
         # 5. Nút bấm Action / Chạm (PTT Key)
@@ -1319,7 +1299,7 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
         # 2. Đèn LED trạng thái
         menuconfig ENABLE_CUSTOM_LEDS
             bool "Đèn LED trạng thái (Status LED WS2812 / Single LED)"
-            default n
+            default y
             help
                 Cấu hình đèn LED trạng thái (WS2812 RGB, Single LED PWM, Circular LED Strip).
 
@@ -1343,7 +1323,7 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             config CUSTOM_LED_GPIO
                 int "Chân GPIO kết nối Đèn LED (Mặc định chân LED onboard)"
                 range -1 48
-                default -1
+                default 48
 
 
             config CUSTOM_LED_COUNT

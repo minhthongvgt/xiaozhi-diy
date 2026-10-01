@@ -433,9 +433,6 @@ void MqttProtocol::ParseServerHello(const cJSON* root) {
     const std::string udp_server = server->valuestring;
     const int udp_port = port->valueint;
 
-    // auto encryption = cJSON_GetObjectItem(udp, "encryption")->valuestring;
-    // ESP_LOGI(TAG, "UDP server: %s, port: %d, encryption: %s", udp_server_.c_str(), udp_port_,
-    // encryption);
     std::string aes_nonce;
     std::string aes_key;
     if (!DecodeHexString(nonce_item->valuestring, aes_nonce) ||

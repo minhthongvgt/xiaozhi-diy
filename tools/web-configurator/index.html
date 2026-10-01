@@ -605,7 +605,7 @@
                 <label class="form-checkbox"><input type="checkbox" id="display_mirror_x"><span>Lật trục X (Mirror X)</span></label>
                 <label class="form-checkbox"><input type="checkbox" id="display_mirror_y"><span>Lật trục Y (Mirror Y)</span></label>
                 <label class="form-checkbox"><input type="checkbox" id="display_swap_xy"><span>Đảo trục XY (Swap XY)</span></label>
-                <label class="form-checkbox"><input type="checkbox" id="display_invert" checked><span>Đảo màu (Invert Color)</span></label>
+                <label class="form-checkbox"><input type="checkbox" id="display_invert"><span>Đảo màu (Invert Color)</span></label>
               </div>
             </div>
           </div>
@@ -712,7 +712,7 @@
             <div class="form-item span-2">
               <div class="checkbox-stack">
                 <label class="form-checkbox">
-                  <input type="checkbox" id="wakeword_device_aec">
+                  <input type="checkbox" id="wakeword_device_aec" checked>
                   <span>Khử tiếng vọng trên thiết bị (Hardware AEC - Yêu cầu cấu hình I2S Ref Loopback)</span>
                 </label>
                 <label class="form-checkbox">
@@ -837,7 +837,7 @@
           <div class="form-grid">
             <!-- Nút Boot -->
             <div class="span-2 form-subheading"><span>Nút nhấn BOOT (GPIO0 hoặc GPIO tùy chọn)</span></div>
-            <div class="form-item"><label class="form-checkbox"><input type="checkbox" id="buttons_boot"><span>Bật nút BOOT</span></label></div>
+            <div class="form-item"><label class="form-checkbox"><input type="checkbox" id="buttons_boot" checked><span>Bật nút BOOT</span></label></div>
             <div class="form-item boot-fields" style="display:none">
               <label class="form-label" for="boot_gpio">Chân GPIO nút BOOT</label>
               <input type="number" class="form-control" id="boot_gpio" min="-1" max="48" value="0">
@@ -1020,7 +1020,7 @@
           </div>
           <div class="form-grid">
             <div class="form-item span-2">
-              <label class="form-checkbox"><input type="checkbox" id="led_enable"><span>Bật LED</span></label>
+              <label class="form-checkbox"><input type="checkbox" id="led_enable" checked><span>Bật LED</span></label>
             </div>
             <div class="form-item led-fields" style="display:none">
               <label class="form-label" for="led_type">Loại LED</label>
@@ -1033,7 +1033,7 @@
             </div>
             <div class="form-item led-fields" style="display:none">
               <label class="form-label" for="led_gpio">GPIO</label>
-              <input type="number" class="form-control" id="led_gpio" min="-1" max="48" value="-1">
+              <input type="number" class="form-control" id="led_gpio" min="-1" max="48" value="48">
             </div>
             <div class="form-item led-fields" style="display:none">
               <label class="form-label" for="led_count">Số lượng LED</label>
@@ -1454,8 +1454,6 @@
               <label class="form-label" for="sys_spiram_mode">Bộ nhớ PSRAM</label>
               <select class="form-control" id="sys_spiram_mode">
                 <option value="OCT" selected>8 MB (Octal SPI)</option>
-                <option value="QUAD">2 MB / 8 MB (Quad SPI)</option>
-                <option value="none">Không sử dụng PSRAM</option>
               </select>
               <span class="form-subtext">Octal PSRAM dùng chung chân GPIO 26-32</span>
             </div>

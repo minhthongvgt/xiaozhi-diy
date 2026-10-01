@@ -296,7 +296,7 @@ void CustomWakeWord::EncodeWakeWordData() {
             this_->wake_word_cv_.notify_all();
         }
         vTaskDelete(NULL);
-    }, "encode_wake_word", stack_size, this, 15, wake_word_encode_task_stack_, wake_word_encode_task_buffer_, 1);
+    }, "encode_wake_word", stack_size, this, 4, wake_word_encode_task_stack_, wake_word_encode_task_buffer_, 1);
 }
 
 bool CustomWakeWord::GetWakeWordOpus(std::vector<uint8_t>& opus) {

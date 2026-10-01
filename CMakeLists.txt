@@ -97,3 +97,12 @@ endfunction()
 set(PROJECT_VER "2.5.0")
 project(xiaozhi)
 
+# --- ESP-DSP GCC ICE Workaround ---
+# The xtensa-esp-elf-gcc compiler has a known bug causing a Segmentation fault
+# (internal compiler error during RTL pass: ira) when compiling dspi_conv_f32_ansi.c
+# We append -O1 to the esp-dsp component to bypass this compiler bug.
+idf_component_get_property(esp_dsp_lib espressif__esp-dsp COMPONENT_LIB)
+if(esp_dsp_lib)
+    message(STATUS "[Xiaozhi] Applying -O1 workaround to espressif__esp-dsp to avoid GCC ICE")
+    target_compile_options(${esp_dsp_lib} PRIVATE "-O1")
+endif()

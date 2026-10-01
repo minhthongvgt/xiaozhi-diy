@@ -233,8 +233,6 @@ static const ili9486_lcd_init_cmd_t vendor_specific_init_default[] = {
     /* Set Interface Pixel Format */
     {0x3A, (uint8_t []){0x55}, 1, 0},
 
-    // {0xB6, (uint8_t []){0x00, 0x22}, 2, 0},
-
      {0x36, (uint8_t []){0x48}, 1, 0}, 
 
      {0x11, NULL, 0, 120},// Sleep out

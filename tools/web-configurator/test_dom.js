@@ -54,7 +54,10 @@ tabs.forEach(tab => {
   assert(html.includes(`data-target="${tab}"`), `Tab [${tab}] có nút chuyển tab trên sidebar`);
 });
 
-// 3. Kiểm tra Modal cảnh báo chưa lưu, Project Modal và Toast Container
+assert(html.includes('id="project-status-bar"'), 'Thanh trạng thái dự án (project-status-bar) hiện diện');
+assert(html.includes('id="fs-status-dot"'), 'Đèn trạng thái dự án (fs-status-dot) hiện diện');
+assert(html.includes('id="fs-status-text"'), 'Nhãn trạng thái dự án (fs-status-text) hiện diện');
+assert(html.includes('id="btn-open-dir"'), 'Nút mở dự án (btn-open-dir) hiện diện');
 assert(html.includes('id="unsaved-modal"'), 'Modal xác nhận thay đổi chưa lưu (unsaved-modal) hiện diện');
 assert(html.includes('id="toast-container"'), 'Container thông báo nổi (toast-container) hiện diện');
 assert(html.includes('id="success-modal"'), 'Modal thông báo lưu thành công và lệnh nạp (success-modal) hiện diện');
@@ -63,6 +66,11 @@ assert(html.includes('id="input-project-root"'), 'Ô nhập đường dẫn dự
 assert(html.includes('id="btn-apply-project-root"'), 'Nút Áp dụng đường dẫn dự án (btn-apply-project-root) hiện diện');
 assert(html.includes('id="btn-reset-project-root"'), 'Nút Tự động nhận diện dự án (btn-reset-project-root) hiện diện');
 assert(html.includes('id="project-detected-list"'), 'Khung danh sách dự án tìm thấy (project-detected-list) hiện diện');
+
+const cssPath = path.resolve(__dirname, 'styles.css');
+const css = fs.readFileSync(cssPath, 'utf8');
+assert(css.includes('.modal-overlay.visible'), 'CSS hỗ trợ hiển thị modal qua class .modal-overlay.visible');
+assert(css.includes('.modal-overlay.active'), 'CSS hỗ trợ hiển thị modal qua class .modal-overlay.active');
 
 // 4. Kiểm tra không có đánh số cứng trong sidebar và tiêu đề H2
 const forbiddenNumbers = ['1. ', '2. ', '3. ', '4. ', '5. ', '6. ', '7. ', '8. ', '9. ', '10. '];
