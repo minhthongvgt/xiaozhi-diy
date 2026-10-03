@@ -1,46 +1,36 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
-
 #include "emoji_collection.h"
 #include "text_glyph.h"
-
 #ifndef CONFIG_USE_EMOTE_MESSAGE_STYLE
 #define HAVE_LVGL 1
 #include <lvgl.h>
 #endif
-
 #include <esp_log.h>
 #include <esp_pm.h>
 #include <esp_timer.h>
-
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <string>
 #include <vector>
-
 class LvglFont;
 class LvglImage;
 class DualDisplay;
-
 class Theme {
 public:
     Theme(const std::string& name) : name_(name) {}
     virtual ~Theme() = default;
-
     inline std::string name() const { return name_; }
     virtual std::shared_ptr<LvglFont> GetTextFont() const { return nullptr; }
-
 private:
     std::string name_;
 };
-
 class Display {
 public:
     Display();
     virtual ~Display();
-
     virtual void SetStatus(const char* status);
     virtual void ShowNotification(const char* notification, int duration_ms = 3000);
     virtual void ShowNotification(const std::string& notification, int duration_ms = 3000);
@@ -85,24 +75,19 @@ public:
         (void)quality;
         return false;
     }
-
     inline int width() const { return width_; }
     inline int height() const { return height_; }
     inline bool IsSetupUICalled() const { return setup_ui_called_; }
-
 protected:
     int width_ = 0;
     int height_ = 0;
-    bool setup_ui_called_ = false;  // Track if SetupUI() has been called
-
+    bool setup_ui_called_ = false;  
     Theme* current_theme_ = nullptr;
-
     friend class DisplayLockGuard;
     friend class DualDisplay;
     virtual bool Lock(int timeout_ms = 0) = 0;
     virtual void Unlock() = 0;
 };
-
 class DisplayLockGuard {
 public:
     explicit DisplayLockGuard(Display* display)
@@ -116,21 +101,16 @@ public:
             display_->Unlock();
         }
     }
-
     DisplayLockGuard(const DisplayLockGuard&) = delete;
     DisplayLockGuard& operator=(const DisplayLockGuard&) = delete;
-
     explicit operator bool() const { return locked_; }
-
 private:
     Display* display_;
     bool locked_;
 };
-
 class NoDisplay : public Display {
 private:
     virtual bool Lock(int timeout_ms = 0) override { return true; }
     virtual void Unlock() override {}
 };
-
 #endif

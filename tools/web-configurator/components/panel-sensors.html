@@ -1,0 +1,133 @@
+<section class="tab-panel" id="panel-sensors">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🌡️ Cảm biến Môi trường & Chuyển động</h2>
+              <span class="group-desc">Nhiệt độ, Độ ẩm, Khí CO2, Ánh sáng, Khoảng cách siêu âm, Chuyển động PIR</span>
+            </div>
+            <div class="tab-header-actions">
+              <span class="tab-status-pill saved" data-tab-status="panel-sensors">Đã lưu</span>
+              <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-sensors">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <span>Lưu mục này</span>
+              </button>
+            </div>
+          </div>
+          <div class="form-grid">
+            
+            <div class="span-2 form-subheading"><span>Nhiệt độ & Độ ẩm 1 dây (DHT11 / DHT22)</span></div>
+            <div class="form-item"><label class="form-checkbox"><input type="checkbox" id="sensor_dht"><span>Bật DHT11/22</span></label></div>
+            <div class="form-item sensor-dht-fields" style="display:none">
+              <label class="form-label" for="dht_gpio">DHT Data GPIO</label>
+              <input type="number" class="form-control" id="dht_gpio" min="-1" max="48" value="-1">
+            </div>
+
+            
+            <div class="span-2 form-subheading"><span>Nhiệt ẩm I2C (AHT20 / AHT21 / SHT30)</span></div>
+            <div class="form-item"><label class="form-checkbox"><input type="checkbox" id="sensor_temp"><span>Bật AHT20 I2C</span></label></div>
+            <div class="form-item sensor-temp-fields" style="display:none"><label class="form-checkbox"><input type="checkbox" id="sensor_aht20" checked><span>AHT20</span></label></div>
+            <div class="form-item sensor-temp-fields" style="display:none">
+              <label class="form-label" for="temp_sda">I2C SDA</label>
+              <input type="number" class="form-control" id="temp_sda" min="-1" max="48" value="-1">
+            </div>
+            <div class="form-item sensor-temp-fields" style="display:none">
+              <label class="form-label" for="temp_scl">I2C SCL</label>
+              <input type="number" class="form-control" id="temp_scl" min="-1" max="48" value="-1">
+            </div>
+
+            
+            <div class="span-2 form-subheading"><span>Áp suất khí quyển BMP280 / BME280 (I2C)</span></div>
+            <div class="form-item"><label class="form-checkbox"><input type="checkbox" id="sensor_bmp280"><span>Bật BMP280</span></label></div>
+            <div class="form-item sensor-bmp280-fields" style="display:none">
+              <label class="form-label" for="bmp280_sda">I2C SDA</label>
+              <input type="number" class="form-control" id="bmp280_sda" min="-1" max="48" value="-1">
+            </div>
+            <div class="form-item sensor-bmp280-fields" style="display:none">
+              <label class="form-label" for="bmp280_scl">I2C SCL</label>
+              <input type="number" class="form-control" id="bmp280_scl" min="-1" max="48" value="-1">
+            </div>
+
+            
+            <div class="span-2 form-subheading"><span>Cảm biến ánh sáng kỹ thuật số BH1750 (I2C)</span></div>
+            <div class="form-item"><label class="form-checkbox"><input type="checkbox" id="sensor_bh1750"><span>Bật BH1750</span></label></div>
+            <div class="form-item sensor-bh1750-fields" style="display:none">
+              <label class="form-label" for="bh1750_sda">I2C SDA</label>
+              <input type="number" class="form-control" id="bh1750_sda" min="-1" max="48" value="-1">
+            </div>
+            <div class="form-item sensor-bh1750-fields" style="display:none">
+              <label class="form-label" for="bh1750_scl">I2C SCL</label>
+              <input type="number" class="form-control" id="bh1750_scl" min="-1" max="48" value="-1">
+            </div>
+
+            
+            <div class="span-2 form-subheading"><span>Quang trở analog LDR (ADC1)</span></div>
+            <div class="form-item"><label class="form-checkbox"><input type="checkbox" id="sensor_ldr"><span>Bật LDR ADC</span></label></div>
+            <div class="form-item sensor-ldr-fields" style="display:none">
+              <label class="form-label" for="ldr_ch">Kênh ADC1</label>
+              <select class="form-control" id="ldr_ch">
+                <option value="0">CH0 (GPIO1)</option>
+                <option value="1" selected>CH1 (GPIO2)</option>
+                <option value="2">CH2 (GPIO3)</option>
+                <option value="3">CH3 (GPIO4)</option>
+              </select>
+            </div>
+
+            
+            <div class="span-2 form-subheading"><span>Khoảng cách siêu âm HC-SR04</span></div>
+            <div class="form-item span-2"><label class="form-checkbox"><input type="checkbox" id="sensor_hcsr04"><span>Bật HC-SR04</span></label></div>
+            <div class="form-item sensor-hcsr04-fields" style="display:none">
+              <label class="form-label" for="hcsr04_trig">TRIG GPIO</label>
+              <input type="number" class="form-control" id="hcsr04_trig" min="-1" max="48" value="-1">
+            </div>
+            <div class="form-item sensor-hcsr04-fields" style="display:none">
+              <label class="form-label" for="hcsr04_echo">ECHO GPIO</label>
+              <input type="number" class="form-control" id="hcsr04_echo" min="-1" max="48" value="-1">
+            </div>
+
+            
+            <div class="span-2 form-subheading"><span>Chuyển động người PIR (HC-SR501 / AM312)</span></div>
+            <div class="form-item"><label class="form-checkbox"><input type="checkbox" id="sensor_pir"><span>Bật PIR</span></label></div>
+            <div class="form-item sensor-pir-fields" style="display:none">
+              <label class="form-label" for="pir_gpio">PIR OUT GPIO</label>
+              <input type="number" class="form-control" id="pir_gpio" min="-1" max="48" value="-1">
+            </div>
+
+            
+            <div class="span-2 form-subheading"><span>Cảm biến CO2 Sensirion SCD40 / SCD41 (I2C)</span></div>
+            <div class="form-item"><label class="form-checkbox"><input type="checkbox" id="sensor_gas_co2"><span>Bật SCD4X CO2</span></label></div>
+            <div class="form-item sensor-gas_co2-fields" style="display:none"><label class="form-checkbox"><input type="checkbox" id="gas_scd4x" checked><span>SCD4x</span></label></div>
+            <div class="form-item sensor-gas_co2-fields" style="display:none">
+              <label class="form-label" for="gas_sda">I2C SDA</label>
+              <input type="number" class="form-control" id="gas_sda" min="-1" max="48" value="-1">
+            </div>
+            <div class="form-item sensor-gas_co2-fields" style="display:none">
+              <label class="form-label" for="gas_scl">I2C SCL</label>
+              <input type="number" class="form-control" id="gas_scl" min="-1" max="48" value="-1">
+            </div>
+
+            
+            <div class="span-2 form-subheading"><span>Cảm biến khói / khí gas analog (MQ-2 / MQ-135)</span></div>
+            <div class="form-item"><label class="form-checkbox"><input type="checkbox" id="sensor_gas_mq"><span>Bật MQ Gas</span></label></div>
+            <div class="form-item sensor-gas_mq-fields" style="display:none">
+              <label class="form-label" for="gas_mq_gpio">MQ Analog GPIO</label>
+              <input type="number" class="form-control" id="gas_mq_gpio" min="-1" max="48" value="-1">
+            </div>
+
+            
+            <div class="span-2 form-subheading"><span>Cảm biến rung SW-420</span></div>
+            <div class="form-item"><label class="form-checkbox"><input type="checkbox" id="sensor_vibration"><span>Bật SW-420</span></label></div>
+            <div class="form-item sensor-vibration-fields" style="display:none">
+              <label class="form-label" for="vibration_gpio">GPIO</label>
+              <input type="number" class="form-control" id="vibration_gpio" min="-1" max="48" value="-1">
+            </div>
+
+            
+            <div class="span-2 form-subheading"><span>Cảm biến ngọn lửa Flame Sensor</span></div>
+            <div class="form-item"><label class="form-checkbox"><input type="checkbox" id="sensor_flame"><span>Bật Flame Sensor</span></label></div>
+            <div class="form-item sensor-flame-fields" style="display:none">
+              <label class="form-label" for="flame_gpio">GPIO</label>
+              <input type="number" class="form-control" id="flame_gpio" min="-1" max="48" value="-1">
+            </div>
+          </div>
+        </div>
+      </section>

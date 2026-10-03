@@ -37,7 +37,17 @@ Assets::Assets() {
     InitializePartition();
 }
 
-Assets::~Assets() { UnApplyPartition(); }
+Assets::~Assets() {
+    UnApplyPartition();
+    if (models_list_ != nullptr) {
+        esp_srmodel_deinit(models_list_);
+        models_list_ = nullptr;
+    }
+    if (models_data_ != nullptr) {
+        heap_caps_free(models_data_);
+        models_data_ = nullptr;
+    }
+}
 
 bool Assets::FindPartition(Assets* assets) {
     // Canonical partition name is "model" — standardized across all CSV files and code
@@ -116,7 +126,20 @@ bool Assets::LoadSrmodelsFromIndex(Assets* assets, cJSON* root) {
                 esp_srmodel_deinit(assets->models_list_);
                 assets->models_list_ = nullptr;
             }
-            assets->models_list_ = srmodel_load(static_cast<uint8_t*>(ptr));
+            if (assets->models_data_ != nullptr) {
+                heap_caps_free(assets->models_data_);
+                assets->models_data_ = nullptr;
+            }
+
+            // Copy srmodels to PSRAM to guarantee 4-byte alignment required by esp-sr
+            assets->models_data_ = heap_caps_malloc(size, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
+            if (assets->models_data_ != nullptr) {
+                memcpy(assets->models_data_, ptr, size);
+                assets->models_list_ = srmodel_load(static_cast<uint8_t*>(assets->models_data_));
+            } else {
+                ESP_LOGE(TAG, "Failed to allocate memory for srmodels.bin");
+            }
+
             if (assets->models_list_ != nullptr) {
                 auto& app = Application::GetInstance();
                 app.GetAudioService().SetModelsList(assets->models_list_);

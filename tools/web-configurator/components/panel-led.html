@@ -1,0 +1,42 @@
+<section class="tab-panel" id="panel-led">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>💡 LED Trạng thái</h2>
+              <span class="group-desc">LED RGB WS2812, vòng LED tròn hoặc LED đơn GPIO</span>
+            </div>
+            <div class="tab-header-actions">
+              <span class="tab-status-pill saved" data-tab-status="panel-led">Đã lưu</span>
+              <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-led">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <span>Lưu mục này</span>
+              </button>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="led_enable" checked><span>Bật LED</span></label>
+            </div>
+            <div class="form-item led-fields" style="display:none">
+              <label class="form-label" for="led_type">Loại LED</label>
+              <select class="form-control" id="led_type">
+                <option value="CUSTOM_LED_WS2812" selected>WS2812 / NeoPixel (RGB)</option>
+                <option value="CUSTOM_LED_CIRCULAR_STRIP">Vòng tròn WS2812 Circular Strip</option>
+                <option value="CUSTOM_LED_GPIO_SINGLE">LED đơn thường (GPIO HIGH/LOW)</option>
+                <option value="CUSTOM_LED_PWM_BREATHING">LED đơn PWM (Hiệu ứng thở)</option>
+              </select>
+            </div>
+            <div class="form-item led-fields" style="display:none">
+              <label class="form-label" for="led_gpio">GPIO</label>
+              <input type="number" class="form-control" id="led_gpio" min="-1" max="48" value="48">
+            </div>
+            <div class="form-item led-fields" style="display:none">
+              <label class="form-label" for="led_count">Số lượng LED</label>
+              <input type="number" class="form-control" id="led_count" min="1" max="256" value="1">
+            </div>
+            <div class="form-item led-fields led-rainbow-field" style="display:none">
+              <label class="form-checkbox" style="margin-top:1.8rem"><input type="checkbox" id="led_rainbow" checked><span>Hiệu ứng cầu vồng khi đàm thoại</span></label>
+            </div>
+          </div>
+        </div>
+      </section>

@@ -1,11 +1,5 @@
 #include <stdio.h>
 #include "esp_lcd_jd9853.h"
-/*
- * SPDX-FileCopyrightText: 2022-2023 Espressif Systems (Shanghai) CO LTD
- *
- * SPDX-License-Identifier: Apache-2.0
- */
-
 #include <stdlib.h>
 #include <sys/cdefs.h>
 #include "freertos/FreeRTOS.h"
@@ -19,9 +13,7 @@
 #include "esp_log.h"
 #include "esp_check.h"
 #include "esp_idf_version.h"
-
 static const char *TAG = "JD9853";
-
 static esp_err_t panel_jd9853_del(esp_lcd_panel_t *panel);
 static esp_err_t panel_jd9853_reset(esp_lcd_panel_t *panel);
 static esp_err_t panel_jd9853_init(esp_lcd_panel_t *panel);
@@ -31,7 +23,6 @@ static esp_err_t panel_jd9853_mirror(esp_lcd_panel_t *panel, bool mirror_x, bool
 static esp_err_t panel_jd9853_swap_xy(esp_lcd_panel_t *panel, bool swap_axes);
 static esp_err_t panel_jd9853_set_gap(esp_lcd_panel_t *panel, int x_gap, int y_gap);
 static esp_err_t panel_jd9853_disp_on_off(esp_lcd_panel_t *panel, bool off);
-
 typedef struct
 {
     esp_lcd_panel_t base;
@@ -41,29 +32,25 @@ typedef struct
     int x_gap;
     int y_gap;
     uint8_t fb_bits_per_pixel;
-    uint8_t madctl_val; // save current value of LCD_CMD_MADCTL register
-    uint8_t colmod_val; // save current value of LCD_CMD_COLMOD register
+    uint8_t madctl_val; 
+    uint8_t colmod_val; 
     const jd9853_lcd_init_cmd_t *init_cmds;
     uint16_t init_cmds_size;
 } jd9853_panel_t;
-
 esp_err_t esp_lcd_new_panel_jd9853(const esp_lcd_panel_io_handle_t io, const esp_lcd_panel_dev_config_t *panel_dev_config, esp_lcd_panel_handle_t *ret_panel)
 {
     esp_err_t ret = ESP_OK;
     jd9853_panel_t *jd9853 = NULL;
     gpio_config_t io_conf = {0};
-
     ESP_GOTO_ON_FALSE(io && panel_dev_config && ret_panel, ESP_ERR_INVALID_ARG, err, TAG, "invalid argument");
     jd9853 = (jd9853_panel_t *)calloc(1, sizeof(jd9853_panel_t));
     ESP_GOTO_ON_FALSE(jd9853, ESP_ERR_NO_MEM, err, TAG, "no mem for jd9853 panel");
-
     if (panel_dev_config->reset_gpio_num >= 0)
     {
         io_conf.mode = GPIO_MODE_OUTPUT;
         io_conf.pin_bit_mask = 1ULL << panel_dev_config->reset_gpio_num;
         ESP_GOTO_ON_ERROR(gpio_config(&io_conf), err, TAG, "configure GPIO for RST line failed");
     }
-
 #if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
     switch (panel_dev_config->color_space)
     {
@@ -104,23 +91,20 @@ esp_err_t esp_lcd_new_panel_jd9853(const esp_lcd_panel_io_handle_t io, const esp
         break;
     }
 #endif
-
     switch (panel_dev_config->bits_per_pixel)
     {
-    case 16: // RGB565
+    case 16: 
         jd9853->colmod_val = 0x55;
         jd9853->fb_bits_per_pixel = 16;
         break;
-    case 18: // RGB666
+    case 18: 
         jd9853->colmod_val = 0x66;
-        // each color component (R/G/B) should occupy the 6 high bits of a byte, which means 3 full bytes are required for a pixel
         jd9853->fb_bits_per_pixel = 24;
         break;
     default:
         ESP_GOTO_ON_FALSE(false, ESP_ERR_NOT_SUPPORTED, err, TAG, "unsupported pixel width");
         break;
     }
-
     jd9853->io = io;
     jd9853->reset_gpio_num = panel_dev_config->reset_gpio_num;
     jd9853->reset_level = panel_dev_config->flags.reset_active_high;
@@ -144,12 +128,7 @@ esp_err_t esp_lcd_new_panel_jd9853(const esp_lcd_panel_io_handle_t io, const esp
 #endif
     *ret_panel = &(jd9853->base);
     ESP_LOGD(TAG, "new jd9853 panel @%p", jd9853);
-
-    // ESP_LOGI(TAG, "LCD panel create success, version: %d.%d.%d", ESP_LCD_jd9853_VER_MAJOR, ESP_LCD_jd9853_VER_MINOR,
-    //          ESP_LCD_jd9853_VER_PATCH);
-
     return ESP_OK;
-
 err:
     if (jd9853)
     {
@@ -161,11 +140,9 @@ err:
     }
     return ret;
 }
-
 static esp_err_t panel_jd9853_del(esp_lcd_panel_t *panel)
 {
     jd9853_panel_t *jd9853 = __containerof(panel, jd9853_panel_t, base);
-
     if (jd9853->reset_gpio_num >= 0)
     {
         gpio_reset_pin(jd9853->reset_gpio_num);
@@ -174,13 +151,10 @@ static esp_err_t panel_jd9853_del(esp_lcd_panel_t *panel)
     free(jd9853);
     return ESP_OK;
 }
-
 static esp_err_t panel_jd9853_reset(esp_lcd_panel_t *panel)
 {
     jd9853_panel_t *jd9853 = __containerof(panel, jd9853_panel_t, base);
     esp_lcd_panel_io_handle_t io = jd9853->io;
-
-    // perform hardware reset
     if (jd9853->reset_gpio_num >= 0)
     {
         gpio_set_level(jd9853->reset_gpio_num, jd9853->reset_level);
@@ -189,22 +163,18 @@ static esp_err_t panel_jd9853_reset(esp_lcd_panel_t *panel)
         vTaskDelay(pdMS_TO_TICKS(10));
     }
     else
-    { // perform software reset
+    { 
         ESP_RETURN_ON_ERROR(esp_lcd_panel_io_tx_param(io, LCD_CMD_SWRESET, NULL, 0), TAG, "send command failed");
-        vTaskDelay(pdMS_TO_TICKS(20)); // spec, wait at least 5ms before sending new command
+        vTaskDelay(pdMS_TO_TICKS(20)); 
     }
-
     return ESP_OK;
 }
-
 typedef struct
 {
     uint8_t cmd;
     uint8_t data[16];
-    uint8_t data_bytes; // Length of data in above data array; 0xFF = end of cmds.
+    uint8_t data_bytes; 
 } lcd_init_cmd_t;
-
-
 static const jd9853_lcd_init_cmd_t vendor_specific_init_default[] = {
     {0x11, (uint8_t []){ 0x00 }, 0, 120},
     {0xDF, (uint8_t[]){0x98, 0x53}, 2, 0},
@@ -215,8 +185,8 @@ static const jd9853_lcd_init_cmd_t vendor_specific_init_default[] = {
     {0xC0, (uint8_t[]){0x44, 0xA4}, 2, 0},
     {0xC1, (uint8_t[]){0x16}, 1, 0},
     {0xC3, (uint8_t[]){0x7D, 0x07, 0x14, 0x06, 0xCF, 0x71, 0x72, 0x77}, 8, 0},
-    {0xC4, (uint8_t[]){0x00, 0x00, 0xA0, 0x79, 0x0B, 0x0A, 0x16, 0x79, 0x0B, 0x0A, 0x16, 0x82}, 12, 0},                                                                                                                         // 00=60Hz 06=57Hz 08=51Hz, LN=320 Line
-    {0xC8, (uint8_t[]){0x3F, 0x32, 0x29, 0x29, 0x27, 0x2B, 0x27, 0x28, 0x28, 0x26, 0x25, 0x17, 0x12, 0x0D, 0x04, 0x00, 0x3F, 0x32, 0x29, 0x29, 0x27, 0x2B, 0x27, 0x28, 0x28, 0x26, 0x25, 0x17, 0x12, 0x0D, 0x04, 0x00}, 32, 0}, // SET_R_GAMMA
+    {0xC4, (uint8_t[]){0x00, 0x00, 0xA0, 0x79, 0x0B, 0x0A, 0x16, 0x79, 0x0B, 0x0A, 0x16, 0x82}, 12, 0},                                                                                                                         
+    {0xC8, (uint8_t[]){0x3F, 0x32, 0x29, 0x29, 0x27, 0x2B, 0x27, 0x28, 0x28, 0x26, 0x25, 0x17, 0x12, 0x0D, 0x04, 0x00, 0x3F, 0x32, 0x29, 0x29, 0x27, 0x2B, 0x27, 0x28, 0x28, 0x26, 0x25, 0x17, 0x12, 0x0D, 0x04, 0x00}, 32, 0}, 
     {0xD0, (uint8_t[]){0x04, 0x06, 0x6B, 0x0F, 0x00}, 5, 0},
     {0xD7, (uint8_t[]){0x00, 0x30}, 2, 0},
     {0xE6, (uint8_t[]){0x14}, 1, 0},
@@ -231,21 +201,18 @@ static const jd9853_lcd_init_cmd_t vendor_specific_init_default[] = {
     {0xE5, (uint8_t[]){0x01, 0x02, 0x00}, 3, 0},
     {0xDE, (uint8_t[]){0x00}, 1, 0},
     {0x35, (uint8_t[]){0x00}, 1, 0},
-    {0x3A, (uint8_t[]){0x05}, 1, 0},                   // 06=RGB666；05=RGB565
-    {0x2A, (uint8_t[]){0x00, 0x22, 0x00, 0xCD}, 4, 0}, // Start_X=34, End_X=205
-    {0x2B, (uint8_t[]){0x00, 0x00, 0x01, 0x3F}, 4, 0}, // Start_Y=0, End_Y=319
+    {0x3A, (uint8_t[]){0x05}, 1, 0},                   
+    {0x2A, (uint8_t[]){0x00, 0x22, 0x00, 0xCD}, 4, 0}, 
+    {0x2B, (uint8_t[]){0x00, 0x00, 0x01, 0x3F}, 4, 0}, 
     {0xDE, (uint8_t[]){0x02}, 1, 0},
     {0xE5, (uint8_t[]){0x00, 0x02, 0x00}, 3, 0},
     {0xDE, (uint8_t[]){0x00}, 1, 0},
     {0x29, (uint8_t []){ 0x00 }, 0, 0},
 };
-
 static esp_err_t panel_jd9853_init(esp_lcd_panel_t *panel)
 {
     jd9853_panel_t *jd9853 = __containerof(panel, jd9853_panel_t, base);
     esp_lcd_panel_io_handle_t io = jd9853->io;
-
-    // LCD goes into sleep mode and display will be turned off after power on reset, exit sleep mode first
     ESP_RETURN_ON_ERROR(esp_lcd_panel_io_tx_param(io, LCD_CMD_SLPOUT, NULL, 0), TAG, "send command failed");
     vTaskDelay(pdMS_TO_TICKS(100));
     ESP_RETURN_ON_ERROR(esp_lcd_panel_io_tx_param(io, LCD_CMD_MADCTL, (uint8_t[]){
@@ -258,7 +225,6 @@ static esp_err_t panel_jd9853_init(esp_lcd_panel_t *panel)
                                                                       },
                                                   1),
                         TAG, "send command failed");
-
     const jd9853_lcd_init_cmd_t *init_cmds = NULL;
     uint16_t init_cmds_size = 0;
     if (jd9853->init_cmds)
@@ -271,11 +237,9 @@ static esp_err_t panel_jd9853_init(esp_lcd_panel_t *panel)
         init_cmds = vendor_specific_init_default;
         init_cmds_size = sizeof(vendor_specific_init_default) / sizeof(jd9853_lcd_init_cmd_t);
     }
-
     bool is_cmd_overwritten = false;
     for (int i = 0; i < init_cmds_size; i++)
     {
-        // Check if the command has been used or conflicts with the internal
         switch (init_cmds[i].cmd)
         {
         case LCD_CMD_MADCTL:
@@ -290,32 +254,25 @@ static esp_err_t panel_jd9853_init(esp_lcd_panel_t *panel)
             is_cmd_overwritten = false;
             break;
         }
-
         if (is_cmd_overwritten)
         {
             ESP_LOGW(TAG, "The %02Xh command has been used and will be overwritten by external initialization sequence", init_cmds[i].cmd);
         }
-
         ESP_RETURN_ON_ERROR(esp_lcd_panel_io_tx_param(io, init_cmds[i].cmd, init_cmds[i].data, init_cmds[i].data_bytes), TAG, "send command failed");
         vTaskDelay(pdMS_TO_TICKS(init_cmds[i].delay_ms));
     }
     ESP_LOGD(TAG, "send init commands success");
-
     return ESP_OK;
 }
-
 static esp_err_t panel_jd9853_draw_bitmap(esp_lcd_panel_t *panel, int x_start, int y_start, int x_end, int y_end, const void *color_data)
 {
     jd9853_panel_t *jd9853 = __containerof(panel, jd9853_panel_t, base);
     assert((x_start < x_end) && (y_start < y_end) && "start position must be smaller than end position");
     esp_lcd_panel_io_handle_t io = jd9853->io;
-
     x_start += jd9853->x_gap;
     x_end += jd9853->x_gap;
     y_start += jd9853->y_gap;
     y_end += jd9853->y_gap;
-
-    // define an area of frame memory where MCU can access
     ESP_RETURN_ON_ERROR(esp_lcd_panel_io_tx_param(io, LCD_CMD_CASET, (uint8_t[]){
                                                                          (x_start >> 8) & 0xFF,
                                                                          x_start & 0xFF,
@@ -332,13 +289,10 @@ static esp_err_t panel_jd9853_draw_bitmap(esp_lcd_panel_t *panel, int x_start, i
                                                                      },
                                                   4),
                         TAG, "send command failed");
-    // transfer frame buffer
     size_t len = (x_end - x_start) * (y_end - y_start) * jd9853->fb_bits_per_pixel / 8;
     esp_lcd_panel_io_tx_color(io, LCD_CMD_RAMWR, color_data, len);
-
     return ESP_OK;
 }
-
 static esp_err_t panel_jd9853_invert_color(esp_lcd_panel_t *panel, bool invert_color_data)
 {
     jd9853_panel_t *jd9853 = __containerof(panel, jd9853_panel_t, base);
@@ -355,7 +309,6 @@ static esp_err_t panel_jd9853_invert_color(esp_lcd_panel_t *panel, bool invert_c
     ESP_RETURN_ON_ERROR(esp_lcd_panel_io_tx_param(io, command, NULL, 0), TAG, "send command failed");
     return ESP_OK;
 }
-
 static esp_err_t panel_jd9853_mirror(esp_lcd_panel_t *panel, bool mirror_x, bool mirror_y)
 {
     jd9853_panel_t *jd9853 = __containerof(panel, jd9853_panel_t, base);
@@ -379,7 +332,6 @@ static esp_err_t panel_jd9853_mirror(esp_lcd_panel_t *panel, bool mirror_x, bool
     ESP_RETURN_ON_ERROR(esp_lcd_panel_io_tx_param(io, LCD_CMD_MADCTL, (uint8_t[]){jd9853->madctl_val}, 1), TAG, "send command failed");
     return ESP_OK;
 }
-
 static esp_err_t panel_jd9853_swap_xy(esp_lcd_panel_t *panel, bool swap_axes)
 {
     jd9853_panel_t *jd9853 = __containerof(panel, jd9853_panel_t, base);
@@ -395,7 +347,6 @@ static esp_err_t panel_jd9853_swap_xy(esp_lcd_panel_t *panel, bool swap_axes)
     ESP_RETURN_ON_ERROR(esp_lcd_panel_io_tx_param(io, LCD_CMD_MADCTL, (uint8_t[]){jd9853->madctl_val}, 1), TAG, "send command failed");
     return ESP_OK;
 }
-
 static esp_err_t panel_jd9853_set_gap(esp_lcd_panel_t *panel, int x_gap, int y_gap)
 {
     jd9853_panel_t *jd9853 = __containerof(panel, jd9853_panel_t, base);
@@ -403,17 +354,14 @@ static esp_err_t panel_jd9853_set_gap(esp_lcd_panel_t *panel, int x_gap, int y_g
     jd9853->y_gap = y_gap;
     return ESP_OK;
 }
-
 static esp_err_t panel_jd9853_disp_on_off(esp_lcd_panel_t *panel, bool on_off)
 {
     jd9853_panel_t *jd9853 = __containerof(panel, jd9853_panel_t, base);
     esp_lcd_panel_io_handle_t io = jd9853->io;
     int command = 0;
-
 #if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
     on_off = !on_off;
 #endif
-
     if (on_off)
     {
         command = LCD_CMD_DISPON;

@@ -1,22 +1,16 @@
 #pragma once
-
 #include "display.h"
 #include "emoji_collection.h"
 #include "lvgl_font.h"
 #include "lvgl_image.h"
-
 #include <lvgl.h>
 #include <map>
 #include <memory>
 #include <string>
-
 class LvglTheme : public Theme {
 public:
     static lv_color_t ParseColor(const std::string& color);
-
     LvglTheme(const std::string& name);
-
-    // Properties
     inline lv_color_t background_color() const { return background_color_; }
     inline lv_color_t text_color() const { return text_color_; }
     inline lv_color_t chat_background_color() const { return chat_background_color_; }
@@ -34,7 +28,6 @@ public:
     inline std::shared_ptr<LvglFont> large_icon_font() const { return large_icon_font_; }
     inline std::shared_ptr<LvglFont> emoji_font() const { return emoji_font_; }
     inline int spacing(int scale) const { return spacing_ * scale; }
-
     inline void set_background_color(lv_color_t background) { background_color_ = background; }
     inline void set_text_color(lv_color_t text) { text_color_ = text; }
     inline void set_chat_background_color(lv_color_t chat_background) {
@@ -62,11 +55,8 @@ public:
         large_icon_font_ = large_icon_font;
     }
     inline void set_emoji_font(std::shared_ptr<LvglFont> emoji_font) { emoji_font_ = emoji_font; }
-
 private:
     int spacing_ = 2;
-
-    // Colors
     lv_color_t background_color_;
     lv_color_t text_color_;
     lv_color_t chat_background_color_;
@@ -76,33 +66,23 @@ private:
     lv_color_t system_text_color_;
     lv_color_t border_color_;
     lv_color_t low_battery_color_;
-
-    // Background image
     std::shared_ptr<LvglImage> background_image_ = nullptr;
-
-    // fonts
     std::shared_ptr<LvglFont> text_font_ = nullptr;
     std::shared_ptr<LvglFont> icon_font_ = nullptr;
     std::shared_ptr<LvglFont> large_icon_font_ = nullptr;
     std::shared_ptr<LvglFont> emoji_font_ = nullptr;
-
-    // Emoji collection
     std::shared_ptr<EmojiCollection> emoji_collection_ = nullptr;
 };
-
 class LvglThemeManager {
 public:
     static LvglThemeManager& GetInstance() {
         static LvglThemeManager instance;
         return instance;
     }
-
     void RegisterTheme(const std::string& theme_name, LvglTheme* theme);
     LvglTheme* GetTheme(const std::string& theme_name);
-
 private:
     LvglThemeManager();
     void InitializeDefaultThemes();
-
     std::map<std::string, LvglTheme*> themes_;
 };

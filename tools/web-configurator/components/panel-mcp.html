@@ -1,0 +1,47 @@
+<section class="tab-panel" id="panel-mcp">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🤖 Điều khiển MCP & Giao thức IoT (Model Context Protocol)</h2>
+              <span class="group-desc">Cho phép AI Xiaozhi gọi lệnh Function Calling để điều khiển ngoại vi và hệ thống</span>
+            </div>
+            <div class="tab-header-actions">
+              <span class="tab-status-pill saved" data-tab-status="panel-mcp">Đã lưu</span>
+              <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-mcp" title="Lưu thông tin mục này">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <span>Lưu mục này</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-item span-2">
+              <label class="form-checkbox">
+                <input type="checkbox" id="mcp_enable">
+                <span class="highlight-cyan font-semibold">Kích hoạt máy chủ MCP trên thiết bị (ENABLE_CUSTOM_MCP_SERVER)</span>
+              </label>
+            </div>
+
+            <div class="form-item span-2 mcp-fields" style="display:none;">
+              <div class="checkbox-stack">
+                <label class="form-checkbox">
+                  <input type="checkbox" id="mcp_lamp">
+                  <span>Điều khiển đèn bàn thông minh (Desk Lamp Tool)</span>
+                </label>
+                <div class="form-item lamp-gpio-field" style="display:none; margin-left: 1.5rem; margin-top: 0.5rem;">
+                  <label class="form-label" for="mcp_lamp_gpio">GPIO điều khiển đèn bàn</label>
+                  <input type="number" class="form-control" id="mcp_lamp_gpio" min="-1" max="48" value="-1">
+                </div>
+                <label class="form-checkbox">
+                  <input type="checkbox" id="mcp_sensor" checked>
+                  <span>Cung cấp công cụ đọc cảm biến môi trường cho AI (Sensor Tools)</span>
+                </label>
+                <label class="form-checkbox">
+                  <input type="checkbox" id="mcp_actuator" checked>
+                  <span>Cung cấp công cụ điều khiển động cơ/còi/relay cho AI (Actuator Tools)</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>

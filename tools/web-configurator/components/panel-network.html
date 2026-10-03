@@ -1,0 +1,154 @@
+<section class="tab-panel" id="panel-network">
+  
+  
+  <div class="config-group">
+    <div class="group-header" style="display: flex; justify-content: space-between; align-items: center;">
+      <div class="group-title">
+        <h3 style="margin: 0;" class="group-title">
+        <span class="group-icon">📶</span> Phương thức nạp mạng Wi-Fi
+      </h3>
+      </div>
+      <div class="tab-header-actions">
+        <span class="tab-status-pill saved" data-tab-status="panel-network">Đã lưu</span>
+        <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-network" title="Lưu thông tin mục này">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+          <span>Lưu mục này</span>
+        </button>
+      </div>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-col">
+        <select id="wifi_method" data-config-key="network.wifi_method">
+          <option value="USE_HOTSPOT_WIFI_PROVISIONING">Smart Config (Cấu hình qua điểm phát sóng ESP)</option>
+          <option value="USE_ESP_BLUFI_WIFI_PROVISIONING">ESP-BluFi (Cấu hình qua Bluetooth BLE)</option>
+        </select>
+        <div class="field-hint">Cách để người dùng nhập mật khẩu WiFi vào thiết bị khi lần đầu khởi động.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="config-group" style="display: none !important;">
+    <div class="group-header">
+      <h3 class="group-title">
+        <span class="group-icon">📡</span> Mạng Di động (4G / LTE / GSM)
+      </h3>
+      <label class="toggle-container">
+        <input type="checkbox" id="cellular_enable" data-config-key="network.cellular_enable">
+        <span class="toggle-slider"></span>
+        <span class="toggle-label">Bật 4G</span>
+      </label>
+    </div>
+    
+    <div id="grp_cellular_config" style="display: none; margin-top: 15px;">
+      <div class="form-row">
+        <div class="form-col">
+          <label>Loại Chip 4G / LTE</label>
+          <select id="cellular_module" data-config-key="network.cellular_module">
+            <option value="CUSTOM_4G_A7670">SIMCom A7670 / SIM7600 (4G CAT1)</option>
+            <option value="CUSTOM_4G_EC200">Quectel EC200 / EC20 (4G LTE)</option>
+            <option value="CUSTOM_4G_SIM800">SIM800L / SIM900 (2G M2M)</option>
+          </select>
+        </div>
+        <div class="form-col">
+          <label>APN Mạng</label>
+          <input type="text" id="cellular_apn" data-config-key="network.cellular_apn" placeholder="v-internet">
+          <div class="field-hint" style="font-size:10px;">VD: v-internet (Viettel), m-wap (MobiFone)...</div>
+        </div>
+      </div>
+      
+      <h4>Sơ đồ chân UART 4G</h4>
+      <div class="pin-grid">
+        <div class="pin-field">
+          <label>TX (Gửi)</label>
+          <input type="number" id="cellular_tx" data-config-key="network.cellular_tx" placeholder="17">
+        </div>
+        <div class="pin-field">
+          <label>RX (Nhận)</label>
+          <input type="number" id="cellular_rx" data-config-key="network.cellular_rx" placeholder="18">
+        </div>
+        <div class="pin-field">
+          <label>Baudrate</label>
+          <input type="number" id="cellular_baud" data-config-key="network.cellular_baud" placeholder="115200">
+        </div>
+      </div>
+
+      <h4 style="margin-top:15px;">Chân điều khiển nguồn (Optional)</h4>
+      <div class="pin-grid">
+        <div class="pin-field">
+          <label>PWRKEY</label>
+          <input type="number" id="cellular_pwrkey" data-config-key="network.cellular_pwrkey" placeholder="4">
+        </div>
+        <div class="pin-field">
+          <label>RST (Reset)</label>
+          <input type="number" id="cellular_rst" data-config-key="network.cellular_rst" placeholder="5">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="config-group">
+    <div class="group-header">
+      <h3 class="group-title">
+        <span class="group-icon">🔌</span> Cổng UART Mở rộng (Giao tiếp ngoài)
+      </h3>
+      <label class="toggle-container">
+        <input type="checkbox" id="uart_ext_enable" data-config-key="network.uart_ext_enable">
+        <span class="toggle-slider"></span>
+        <span class="toggle-label">Bật UART</span>
+      </label>
+    </div>
+    
+    <div id="grp_uart_ext" style="display: none; margin-top: 15px;">
+      <div class="field-hint" style="margin-bottom:10px;">Cho phép kết nối vi điều khiển khác (như Arduino) để truyền/nhận chuỗi lệnh với trợ lý.</div>
+      <div class="form-row">
+        <div class="form-col">
+          <label>Cổng Phần cứng</label>
+          <select id="uart_ext_port" data-config-key="network.uart_ext_port">
+            <option value="CUSTOM_UART_PORT_1">UART 1</option>
+            <option value="CUSTOM_UART_PORT_2">UART 2</option>
+          </select>
+        </div>
+      </div>
+      <div class="pin-grid">
+        <div class="pin-field"><label>TX Pin</label><input type="number" id="uart_ext_tx" data-config-key="network.uart_ext_tx"></div>
+        <div class="pin-field"><label>RX Pin</label><input type="number" id="uart_ext_rx" data-config-key="network.uart_ext_rx"></div>
+        <div class="pin-field"><label>Baudrate</label><input type="number" id="uart_ext_baud" data-config-key="network.uart_ext_baud" placeholder="115200"></div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="config-group">
+    <div class="group-header">
+      <h3 class="group-title">
+        <span class="group-icon">🤖</span> MCP Server (Model Context Protocol)
+      </h3>
+      <label class="toggle-container">
+        <input type="checkbox" id="network_mcp_enable" data-config-key="network.mcp_enable">
+        <span class="toggle-slider"></span>
+        <span class="toggle-label">Bật giao thức MCP</span>
+      </label>
+    </div>
+    <div class="field-hint" style="margin-top: 5px;">
+      <strong>Lưu ý:</strong> Khi được bật, trợ lý sẽ tự động quét và cấp quyền cho AI điều khiển các Ngoại vi, Relay, Cảm biến mà bạn cấu hình ở các <strong>Menu 1.4 đến 1.7</strong>. Bạn không cần khai báo chân phần cứng ở đây.
+    </div>
+  </div>
+
+  <script>
+    // Xử lý ẩn hiện
+    document.getElementById('cellular_enable')?.addEventListener('change', (e) => {
+      document.getElementById('grp_cellular_config').style.display = e.target.checked ? 'block' : 'none';
+    });
+
+    document.getElementById('uart_ext_enable')?.addEventListener('change', (e) => {
+      document.getElementById('grp_uart_ext').style.display = e.target.checked ? 'block' : 'none';
+    });
+
+    setTimeout(() => {
+      document.getElementById('cellular_enable')?.dispatchEvent(new Event('change'));
+      document.getElementById('uart_ext_enable')?.dispatchEvent(new Event('change'));
+    }, 100);
+  </script>
+</section>

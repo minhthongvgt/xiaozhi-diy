@@ -1,15 +1,8 @@
-/**
- * @file app_main.c
- * @brief Hardware Safety Gate and Subsystem Initialization Coordinator (ESP-IDF 6.1)
- */
-
 #include "esp_log.h"
 #include "esp_system.h"
 #include "esp_err.h"
 #include "nvs_flash.h"
 #include "esp_event.h"
-
-// Import hardware protection and driver modules
 #include "gpio_validator.h"
 #include "bus_manager.h"
 #include "boards/board_init.h"
@@ -20,12 +13,7 @@
 #include "drivers/actuator/actuator_init.h"
 #include "drivers/storage/storage_init.h"
 #include "protocols/mcp_device.h"
-
 static const char *TAG = "XIAOZHI_MAIN";
-
-/**
- * Khởi tạo NVS (Non-Volatile Storage)
- */
 static esp_err_t init_nvs(void)
 {
     esp_err_t ret = nvs_flash_init();
@@ -37,10 +25,6 @@ static esp_err_t init_nvs(void)
     ESP_ERROR_CHECK(ret);
     return ESP_OK;
 }
-
-/**
- * Khởi tạo Event Loop
- */
 static esp_err_t init_event_loop(void)
 {
     esp_err_t ret = esp_event_loop_create_default();
@@ -49,10 +33,6 @@ static esp_err_t init_event_loop(void)
     }
     return ESP_OK;
 }
-
-/**
- * Khởi tạo toàn bộ phân hệ phần cứng
- */
 esp_err_t app_main_hardware_init(void)
 {
     ESP_LOGI(TAG, "");
@@ -61,24 +41,18 @@ esp_err_t app_main_hardware_init(void)
     ESP_LOGI(TAG, "║        ESP32-S3-WROOM-1 N16R8 (16MB+8MB PSRAM)          ║");
     ESP_LOGI(TAG, "╚════════════════════════════════════════════════════════╝");
     ESP_LOGI(TAG, "");
-
-    // [1/7] NVS Init
     ESP_LOGI(TAG, "[1/7] 📦 Initializing NVS (Non-Volatile Storage)...");
     if (init_nvs() != ESP_OK) {
         ESP_LOGE(TAG, "❌ NVS initialization FAILED!");
         esp_restart();
     }
     ESP_LOGI(TAG, "     ✅ NVS initialized successfully");
-
-    // [2/7] Event Loop
     ESP_LOGI(TAG, "[2/7] 🔔 Initializing Event Loop...");
     if (init_event_loop() != ESP_OK) {
         ESP_LOGE(TAG, "❌ Event Loop initialization FAILED!");
         esp_restart();
     }
     ESP_LOGI(TAG, "     ✅ Event Loop initialized");
-
-    // [3/7] GPIO Safety Validator - BƯỚC QUAN TRỌNG NHẤT (Chặn GPIO 26-37)
     ESP_LOGI(TAG, "[3/7] 🛡️  Running GPIO Safety Validator...");
     if (gpio_validator_run() != ESP_OK) {
         ESP_LOGE(TAG, "🔴 ========== GPIO VALIDATION FAILED ==========");
@@ -89,65 +63,50 @@ esp_err_t app_main_hardware_init(void)
         return ESP_ERR_INVALID_STATE;
     }
     ESP_LOGI(TAG, "     ✅ GPIO Safety Validation PASSED ✓");
-
-    // [4/7] Bus Manager (I2C/SPI Arbitration)
     ESP_LOGI(TAG, "[4/7] 🚌 Initializing Bus Manager (I2C/SPI)...");
     if (bus_manager_init() != ESP_OK) {
         ESP_LOGE(TAG, "❌ Bus Manager initialization FAILED!");
         esp_restart();
     }
     ESP_LOGI(TAG, "     ✅ Bus Manager initialized");
-
-    // [5/7] Board Initialization
     ESP_LOGI(TAG, "[5/7] 🎛️  Initializing Board-Specific Configuration...");
     if (board_init() != ESP_OK) {
         ESP_LOGE(TAG, "❌ Board initialization FAILED!");
         esp_restart();
     }
     ESP_LOGI(TAG, "     ✅ Board initialized");
-
-    // [6/7] Peripheral Init (6 nhóm chính)
     ESP_LOGI(TAG, "[6/7] ⚙️  Initializing Peripherals...");
-
     if (input_init() != ESP_OK) {
         ESP_LOGW(TAG, "     ⚠️  Input devices init warning (non-critical)");
     } else {
         ESP_LOGI(TAG, "     ✅ Input devices initialized");
     }
-
     if (display_init() != ESP_OK) {
         ESP_LOGW(TAG, "     ⚠️  Display init warning (non-critical)");
     } else {
         ESP_LOGI(TAG, "     ✅ Display initialized");
     }
-
     if (audio_init() != ESP_OK) {
         ESP_LOGW(TAG, "     ⚠️  Audio init warning (non-critical)");
     } else {
         ESP_LOGI(TAG, "     ✅ Audio system initialized");
     }
-
     if (sensor_init() != ESP_OK) {
         ESP_LOGW(TAG, "     ⚠️  Sensor init warning (non-critical)");
     } else {
         ESP_LOGI(TAG, "     ✅ Sensors initialized");
     }
-
     if (actuator_init() != ESP_OK) {
         ESP_LOGW(TAG, "     ⚠️  Actuator init warning (non-critical)");
     } else {
         ESP_LOGI(TAG, "     ✅ Actuators initialized");
     }
-
     if (storage_init() != ESP_OK) {
         ESP_LOGW(TAG, "     ⚠️  Storage init warning (non-critical)");
     } else {
         ESP_LOGI(TAG, "     ✅ Storage initialized");
     }
-
     mcp_device_init();
-
-    // [7/7] Ready Message
     ESP_LOGI(TAG, "[7/7] 🎉 Hardware Subsystem Ready!");
     ESP_LOGI(TAG, "");
     ESP_LOGI(TAG, "╔════════════════════════════════════════════════════════╗");
@@ -156,6 +115,5 @@ esp_err_t app_main_hardware_init(void)
     ESP_LOGI(TAG, "║   Supported languages: Chinese, English, Vietnamese    ║");
     ESP_LOGI(TAG, "╚════════════════════════════════════════════════════════╝");
     ESP_LOGI(TAG, "");
-
     return ESP_OK;
 }

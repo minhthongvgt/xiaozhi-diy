@@ -1,0 +1,88 @@
+<section class="tab-panel" id="panel-buttons">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🔘 Phím bấm & Điều khiển</h2>
+              <span class="group-desc">Cấu hình nút nhấn (BOOT, Touch, Âm lượng), thanh trượt cảm ứng và núm xoay EC11</span>
+            </div>
+            <div class="tab-header-actions">
+              <span class="tab-status-pill saved" data-tab-status="panel-buttons">Đã lưu</span>
+              <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-buttons" title="Lưu thông tin mục này">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <span>Lưu mục này</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            
+            <div class="span-2 form-subheading"><span>Nút nhấn BOOT (GPIO0 hoặc GPIO tùy chọn)</span></div>
+            <div class="form-item"><label class="form-checkbox"><input type="checkbox" id="buttons_boot" checked><span>Bật nút BOOT</span></label></div>
+            <div class="form-item boot-fields" style="display:none">
+              <label class="form-label" for="boot_gpio">Chân GPIO nút BOOT</label>
+              <input type="number" class="form-control" id="boot_gpio" min="-1" max="48" value="0">
+            </div>
+
+            
+            <div class="span-2 form-subheading"><span>Nút cảm ứng chạm (Touch Sensor Pad / Button)</span></div>
+            <div class="form-item"><label class="form-checkbox"><input type="checkbox" id="buttons_touch"><span>Bật phím cảm ứng</span></label></div>
+            <div class="form-item touch-btn-fields" style="display:none">
+              <label class="form-label" for="touch_btn_gpio">Chân GPIO cảm ứng</label>
+              <input type="number" class="form-control" id="touch_btn_gpio" min="-1" max="48" value="-1">
+            </div>
+
+            
+            <div class="span-2 form-subheading"><span>Phím điều chỉnh âm lượng (Vol + / Vol -)</span></div>
+            <div class="form-item span-2"><label class="form-checkbox"><input type="checkbox" id="buttons_vol"><span>Bật phím âm lượng</span></label></div>
+            <div class="form-item vol-fields" style="display:none">
+              <label class="form-label" for="vol_up_gpio">GPIO Tăng âm lượng (Vol Up)</label>
+              <input type="number" class="form-control" id="vol_up_gpio" min="-1" max="48" value="-1">
+            </div>
+            <div class="form-item vol-fields" style="display:none">
+              <label class="form-label" for="vol_down_gpio">GPIO Giảm âm lượng (Vol Down)</label>
+              <input type="number" class="form-control" id="vol_down_gpio" min="-1" max="48" value="-1">
+            </div>
+
+            
+            <div class="span-2 form-subheading"><span>Thanh trượt cảm ứng điện dung (Touch Slider)</span></div>
+            <div class="form-item span-2"><label class="form-checkbox"><input type="checkbox" id="buttons_slider"><span>Bật Touch Slider</span></label></div>
+            <div class="form-item slider-fields" style="display:none">
+              <label class="form-label" for="slider_pad1">Slider Pad 1 GPIO</label>
+              <input type="number" class="form-control" id="slider_pad1" min="-1" max="48" value="-1">
+            </div>
+            <div class="form-item slider-fields" style="display:none">
+              <label class="form-label" for="slider_pad2">Slider Pad 2 GPIO</label>
+              <input type="number" class="form-control" id="slider_pad2" min="-1" max="48" value="-1">
+            </div>
+            <div class="form-item slider-fields" style="display:none">
+              <label class="form-label" for="slider_pad3">Slider Pad 3 GPIO</label>
+              <input type="number" class="form-control" id="slider_pad3" min="-1" max="48" value="-1">
+            </div>
+
+            
+            <div class="span-2 form-subheading"><span>Núm xoay mã hóa EC11 (Rotary Encoder)</span></div>
+            <div class="form-item span-2"><label class="form-checkbox"><input type="checkbox" id="buttons_rotary"><span>Bật EC11 Rotary Encoder</span></label></div>
+            <div class="form-item rotary-fields" style="display:none">
+              <label class="form-label" for="rotary_a">Pha A (Pin A)</label>
+              <input type="number" class="form-control" id="rotary_a" min="-1" max="48" value="-1">
+            </div>
+            <div class="form-item rotary-fields" style="display:none">
+              <label class="form-label" for="rotary_b">Pha B (Pin B)</label>
+              <input type="number" class="form-control" id="rotary_b" min="-1" max="48" value="-1">
+            </div>
+            <div class="form-item rotary-fields" style="display:none">
+              <label class="form-label" for="rotary_key">Nút nhấn trung tâm (Key Switch)</label>
+              <input type="number" class="form-control" id="rotary_key" min="-1" max="48" value="-1">
+            </div>
+
+            
+            <div class="span-2 form-subheading"><span>Giao tiếp cảm biến tự định nghĩa (User Custom Sensors)</span></div>
+            <div class="form-item span-2">
+              <label class="form-checkbox">
+                <input type="checkbox" id="user_custom_sensors">
+                <span>Kích hoạt cờ cảm biến tùy chỉnh người dùng (CONFIG_CUSTOM_ENABLE_USER_CUSTOM_SENSORS)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>

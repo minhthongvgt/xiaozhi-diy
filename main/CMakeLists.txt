@@ -99,10 +99,12 @@ list(APPEND SOURCES
     "drivers/actuator/actuator_init.c"
     "drivers/storage/storage_manager.c"
     "drivers/storage/storage_init.c"
+    "utils/config_utils.c"
     "protocols/mcp_device.c"
 )
 list(APPEND INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils
     ${CMAKE_CURRENT_SOURCE_DIR}/drivers/input
     ${CMAKE_CURRENT_SOURCE_DIR}/drivers/display
     ${CMAKE_CURRENT_SOURCE_DIR}/drivers/audio

@@ -11,15 +11,12 @@
 #include "esp_wifi.h"
 #include "freertos/task.h"
 #include "wifi_manager.h"
-
 #define BLUFI_DEVICE_NAME "Xiaozhi-Blufi"
-
 #ifdef CONFIG_BT_BLUEDROID_ENABLED
 #include "esp_bt_device.h"
 #include "esp_bt_main.h"
 #include "esp_gap_ble_api.h"
 #endif
-
 #ifdef CONFIG_BT_NIMBLE_ENABLED
 #include "console/console.h"
 #include "host/ble_hs.h"
@@ -32,20 +29,14 @@ extern void esp_blufi_gatt_svr_deinit(void);
 extern void esp_blufi_btc_init(void);
 extern void esp_blufi_btc_deinit(void);
 #endif
-
 extern "C" {
 void esp_blufi_adv_start(void);
-
 void esp_blufi_adv_stop(void);
-
 void esp_blufi_disconnect(void);
-
 void btc_blufi_report_error(esp_blufi_error_state_t state);
-
 #ifdef CONFIG_BT_BLUEDROID_ENABLED
 void esp_blufi_gap_event_handler(esp_gap_ble_cb_event_t event, esp_ble_gap_cb_param_t* param);
 #endif
-
 #ifdef CONFIG_BT_NIMBLE_ENABLED
 void esp_blufi_gatt_svr_register_cb(struct ble_gatt_register_ctxt* ctxt, void* arg);
 int esp_blufi_gatt_svr_init(void);
@@ -54,13 +45,10 @@ void esp_blufi_btc_init(void);
 void esp_blufi_btc_deinit(void);
 #endif
 }
-
 #include <wifi_station.h>
 #include "esp_crc.h"
 #include "ssid_manager.h"
-
 static const char* BLUFI_TAG = "BLUFI_CLASS";
-
 static wifi_mode_t GetWifiModeWithFallback(const WifiManager& wifi) {
     if (wifi.IsConfigMode()) {
         return WIFI_MODE_AP;
@@ -68,17 +56,14 @@ static wifi_mode_t GetWifiModeWithFallback(const WifiManager& wifi) {
     if (wifi.IsInitialized() && wifi.IsConnected()) {
         return WIFI_MODE_STA;
     }
-
     wifi_mode_t mode = WIFI_MODE_STA;
     esp_wifi_get_mode(&mode);
     return mode;
 }
-
 Blufi& Blufi::GetInstance() {
     static Blufi instance;
     return instance;
 }
-
 Blufi::Blufi()
     : m_sec(nullptr),
       m_ble_is_connected(false),
@@ -93,23 +78,18 @@ Blufi::Blufi()
     memset(m_sta_ssid, 0, sizeof(m_sta_ssid));
     memset(&m_sta_conn_info, 0, sizeof(m_sta_conn_info));
 }
-
 Blufi::~Blufi() {
     if (m_sec) {
         _security_deinit();
     }
 }
-
 esp_err_t Blufi::init() {
     esp_err_t ret = ESP_FAIL;
     inited_ = true;
     m_provisioned = false;
     m_deinited = false;
-
-    // Start WiFi scan early to have results ready when user connects
     auto& wifi_manager = WifiManager::GetInstance();
     if (!wifi_manager.IsInitialized() || !wifi_manager.IsConfigMode()) {
-        // start scan immediately
         start_wifi_scan();
     } else {
         ESP_LOGE(BLUFI_TAG,
@@ -117,7 +97,6 @@ esp_err_t Blufi::init() {
                  "be used simultaneously.");
         return ret;
     }
-
 #if CONFIG_BT_CONTROLLER_ENABLED || !CONFIG_BT_NIMBLE_ENABLED
     ret = _controller_init();
     if (ret) {
@@ -125,20 +104,16 @@ esp_err_t Blufi::init() {
         return ret;
     }
 #endif
-
     ret = _host_and_cb_init();
     if (ret) {
         ESP_LOGE(BLUFI_TAG, "BLUFI host and cb init failed: %s", esp_err_to_name(ret));
         return ret;
     }
-
     ESP_LOGI(BLUFI_TAG, "BLUFI VERSION %04x", esp_blufi_get_version());
     return ESP_OK;
 }
-
 esp_err_t Blufi::deinit() {
     esp_err_t ret = ESP_OK;
-
     if (inited_) {
         if (m_deinited) {
             return ESP_OK;
@@ -157,7 +132,6 @@ esp_err_t Blufi::deinit() {
     }
     return ret;
 }
-
 #ifdef CONFIG_BT_BLUEDROID_ENABLED
 esp_err_t Blufi::_host_init() {
     esp_err_t ret = esp_bluedroid_init();
@@ -173,12 +147,10 @@ esp_err_t Blufi::_host_init() {
     ESP_LOGI(BLUFI_TAG, "BD ADDR: " ESP_BD_ADDR_STR, ESP_BD_ADDR_HEX(esp_bt_dev_get_address()));
     return ESP_OK;
 }
-
 esp_err_t Blufi::_host_deinit() {
     esp_err_t ret = esp_blufi_profile_deinit();
     if (ret != ESP_OK)
         return ret;
-
     ret = esp_bluedroid_disable();
     if (ret) {
         ESP_LOGE(BLUFI_TAG, "%s disable bluedroid failed: %s", __func__, esp_err_to_name(ret));
@@ -191,7 +163,6 @@ esp_err_t Blufi::_host_deinit() {
     }
     return ESP_OK;
 }
-
 esp_err_t Blufi::_gap_register_callback() {
     esp_err_t rc = esp_ble_gap_register_callback(esp_blufi_gap_event_handler);
     if (rc) {
@@ -199,7 +170,6 @@ esp_err_t Blufi::_gap_register_callback() {
     }
     return esp_blufi_profile_init();
 }
-
 esp_err_t Blufi::_host_and_cb_init() {
     static esp_blufi_callbacks_t blufi_callbacks = {
         .event_cb = &_event_callback_trampoline,
@@ -208,7 +178,6 @@ esp_err_t Blufi::_host_and_cb_init() {
         .decrypt_func = &_decrypt_func_trampoline,
         .checksum_func = &_checksum_func_trampoline,
     };
-
     esp_err_t ret = _host_init();
     if (ret) {
         ESP_LOGE(BLUFI_TAG, "%s initialise host failed: %s", __func__, esp_err_to_name(ret));
@@ -226,40 +195,30 @@ esp_err_t Blufi::_host_and_cb_init() {
     }
     return ESP_OK;
 }
-#endif /* CONFIG_BT_BLUEDROID_ENABLED */
-
+#endif 
 #ifdef CONFIG_BT_NIMBLE_ENABLED
-// Stubs for NimBLE specific store functionality
 void ble_store_config_init();
-
 void Blufi::_nimble_on_reset(int reason) {
     ESP_LOGE(BLUFI_TAG, "NimBLE Resetting state; reason=%d", reason);
 }
-
 void Blufi::_nimble_on_sync() { esp_blufi_profile_init(); }
-
 void Blufi::_nimble_host_task(void* param) {
     ESP_LOGI(BLUFI_TAG, "BLE Host Task Started");
     nimble_port_run();
     nimble_port_freertos_deinit();
 }
-
 esp_err_t Blufi::_host_init() {
     ble_hs_cfg.reset_cb = _nimble_on_reset;
     ble_hs_cfg.sync_cb = _nimble_on_sync;
     ble_hs_cfg.gatts_register_cb = esp_blufi_gatt_svr_register_cb;
-
     ble_hs_cfg.sm_io_cap = 4;
 #ifdef CONFIG_EXAMPLE_BONDING
     ble_hs_cfg.sm_bonding = 1;
 #endif
-
     int rc = esp_blufi_gatt_svr_init();
     assert(rc == 0);
-
     ble_store_config_init();
     esp_blufi_btc_init();
-
     esp_err_t err = esp_nimble_enable(_nimble_host_task);
     if (err) {
         ESP_LOGE(BLUFI_TAG, "%s failed: %s", __func__, esp_err_to_name(err));
@@ -267,7 +226,6 @@ esp_err_t Blufi::_host_init() {
     }
     return ESP_OK;
 }
-
 esp_err_t Blufi::_host_deinit(void) {
     esp_err_t ret = nimble_port_stop();
     if (ret == ESP_OK) {
@@ -278,9 +236,7 @@ esp_err_t Blufi::_host_deinit(void) {
     esp_blufi_btc_deinit();
     return ret;
 }
-
 esp_err_t Blufi::_gap_register_callback(void) { return ESP_OK; }
-
 esp_err_t Blufi::_host_and_cb_init() {
     static esp_blufi_callbacks_t blufi_callbacks = {
         .event_cb = &_event_callback_trampoline,
@@ -289,14 +245,11 @@ esp_err_t Blufi::_host_and_cb_init() {
         .decrypt_func = &_decrypt_func_trampoline,
         .checksum_func = &_checksum_func_trampoline,
     };
-
     esp_err_t ret = esp_blufi_register_callbacks(&blufi_callbacks);
     if (ret) {
         ESP_LOGE(BLUFI_TAG, "%s blufi register failed, error code = %x", __func__, ret);
         return ret;
     }
-
-    // Host init must be called after registering callbacks for NimBLE
     ret = _host_init();
     if (ret) {
         ESP_LOGE(BLUFI_TAG, "%s initialise host failed: %s", __func__, esp_err_to_name(ret));
@@ -304,8 +257,7 @@ esp_err_t Blufi::_host_and_cb_init() {
     }
     return ESP_OK;
 }
-#endif /* CONFIG_BT_NIMBLE_ENABLED */
-
+#endif 
 #if CONFIG_BT_CONTROLLER_ENABLED || !CONFIG_BT_NIMBLE_ENABLED
 esp_err_t Blufi::_controller_init() {
     esp_bt_controller_config_t bt_cfg = BT_CONTROLLER_INIT_CONFIG_DEFAULT();
@@ -319,7 +271,6 @@ esp_err_t Blufi::_controller_init() {
         ESP_LOGE(BLUFI_TAG, "%s enable controller failed: %s", __func__, esp_err_to_name(ret));
         return ret;
     }
-
 #ifdef CONFIG_BT_NIMBLE_ENABLED
     ret = esp_nimble_init();
     if (ret) {
@@ -329,7 +280,6 @@ esp_err_t Blufi::_controller_init() {
 #endif
     return ESP_OK;
 }
-
 esp_err_t Blufi::_controller_deinit() {
     esp_err_t ret = esp_bt_controller_disable();
     if (ret) {
@@ -342,9 +292,7 @@ esp_err_t Blufi::_controller_deinit() {
     return ret;
 }
 #endif
-
 namespace {
-
 constexpr uint8_t kDhParamLength = 0x00;
 constexpr uint8_t kDhParamData = 0x01;
 constexpr size_t kBlufiIvSize = 16;
@@ -354,22 +302,17 @@ constexpr char kBlufiDecryptDomain[] = "blufi_dec";
 #if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(6, 0, 0)
 constexpr auto kBlufiHashError = ESP_BLUFI_CALC_SHA_256_ERROR;
 #else
-// IDF 5 does not expose a SHA-256-specific BluFi error code.
 constexpr auto kBlufiHashError = ESP_BLUFI_CALC_MD5_ERROR;
 #endif
-
-}  // namespace
-
+}  
 void Blufi::_security_init() {
     _security_deinit();
-
     psa_status_t status = psa_crypto_init();
     if (status != PSA_SUCCESS) {
         ESP_LOGE(BLUFI_TAG, "psa_crypto_init failed: %d", status);
         btc_blufi_report_error(ESP_BLUFI_INIT_SECURITY_ERROR);
         return;
     }
-
     m_sec = new BlufiSecurity();
     if (m_sec == nullptr) {
         ESP_LOGE(BLUFI_TAG, "Failed to allocate security context");
@@ -380,12 +323,10 @@ void Blufi::_security_init() {
     m_sec->enc_operation = psa_cipher_operation_init();
     m_sec->dec_operation = psa_cipher_operation_init();
 }
-
 void Blufi::_security_deinit() {
     if (m_sec == nullptr) {
         return;
     }
-
     psa_cipher_abort(&m_sec->enc_operation);
     psa_cipher_abort(&m_sec->dec_operation);
     if (m_sec->aes_key != PSA_KEY_ID_NULL) {
@@ -396,7 +337,6 @@ void Blufi::_security_deinit() {
     delete m_sec;
     m_sec = nullptr;
 }
-
 void Blufi::_dh_negotiate_data_handler(uint8_t* data, int len, uint8_t** output_data,
                                        int* output_len, bool* need_free) {
     if (m_sec == nullptr || data == nullptr || output_data == nullptr || output_len == nullptr ||
@@ -405,13 +345,11 @@ void Blufi::_dh_negotiate_data_handler(uint8_t* data, int len, uint8_t** output_
         btc_blufi_report_error(ESP_BLUFI_INIT_SECURITY_ERROR);
         return;
     }
-
     if (len < 3) {
         ESP_LOGE(BLUFI_TAG, "DH handler: data too short");
         btc_blufi_report_error(ESP_BLUFI_DATA_FORMAT_ERROR);
         return;
     }
-
     uint8_t type = data[0];
     switch (type) {
         case kDhParamLength:
@@ -422,7 +360,6 @@ void Blufi::_dh_negotiate_data_handler(uint8_t* data, int len, uint8_t** output_
                 btc_blufi_report_error(ESP_BLUFI_DH_PARAM_ERROR);
                 return;
             }
-
             free(m_sec->dh_param);
             m_sec->dh_param = nullptr;
             psa_cipher_abort(&m_sec->enc_operation);
@@ -433,7 +370,6 @@ void Blufi::_dh_negotiate_data_handler(uint8_t* data, int len, uint8_t** output_
                 psa_destroy_key(m_sec->aes_key);
                 m_sec->aes_key = PSA_KEY_ID_NULL;
             }
-
             m_sec->dh_param = (uint8_t*)malloc(m_sec->dh_param_len);
             if (m_sec->dh_param == nullptr) {
                 ESP_LOGE(BLUFI_TAG, "DH malloc failed");
@@ -454,9 +390,7 @@ void Blufi::_dh_negotiate_data_handler(uint8_t* data, int len, uint8_t** output_
                 btc_blufi_report_error(ESP_BLUFI_DH_PARAM_ERROR);
                 return;
             }
-
             memcpy(m_sec->dh_param, &data[1], m_sec->dh_param_len);
-
             const uint8_t* param = m_sec->dh_param;
             const uint8_t* const end = param + m_sec->dh_param_len;
             auto read_field = [&param, end](const uint8_t** value, size_t* value_len) -> bool {
@@ -472,7 +406,6 @@ void Blufi::_dh_negotiate_data_handler(uint8_t* data, int len, uint8_t** output_
                 param += *value_len;
                 return true;
             };
-
             const uint8_t* prime = nullptr;
             const uint8_t* generator = nullptr;
             const uint8_t* peer_public_key = nullptr;
@@ -485,9 +418,6 @@ void Blufi::_dh_negotiate_data_handler(uint8_t* data, int len, uint8_t** output_
                 btc_blufi_report_error(ESP_BLUFI_READ_PARAM_ERROR);
                 return;
             }
-
-            // PSA FFDH supports named RFC 7919 groups instead of caller-supplied P/G. The IDF 6
-            // BluFi protocol uses ffdhe3072; P and G remain in the packet for framing compatibility.
             constexpr size_t kDhKeyBits = 3072;
             constexpr size_t kDhKeyBytes = kDhKeyBits / 8;
             if (prime_len != kDhKeyBytes || peer_public_key_len != kDhKeyBytes ||
@@ -499,13 +429,11 @@ void Blufi::_dh_negotiate_data_handler(uint8_t* data, int len, uint8_t** output_
                 btc_blufi_report_error(ESP_BLUFI_DH_PARAM_ERROR);
                 return;
             }
-
             psa_key_attributes_t attributes = psa_key_attributes_init();
             psa_set_key_type(&attributes, PSA_KEY_TYPE_DH_KEY_PAIR(PSA_DH_FAMILY_RFC7919));
             psa_set_key_bits(&attributes, kDhKeyBits);
             psa_set_key_algorithm(&attributes, PSA_ALG_FFDH);
             psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_DERIVE);
-
             psa_key_id_t private_key = PSA_KEY_ID_NULL;
             psa_status_t status = psa_generate_key(&attributes, &private_key);
             psa_reset_key_attributes(&attributes);
@@ -514,7 +442,6 @@ void Blufi::_dh_negotiate_data_handler(uint8_t* data, int len, uint8_t** output_
                 btc_blufi_report_error(ESP_BLUFI_MAKE_PUBLIC_ERROR);
                 return;
             }
-
             size_t public_key_len = 0;
             status = psa_export_public_key(private_key, m_sec->self_public_key,
                                            sizeof(m_sec->self_public_key), &public_key_len);
@@ -525,7 +452,6 @@ void Blufi::_dh_negotiate_data_handler(uint8_t* data, int len, uint8_t** output_
                 btc_blufi_report_error(ESP_BLUFI_MAKE_PUBLIC_ERROR);
                 return;
             }
-
             status = psa_raw_key_agreement(PSA_ALG_FFDH, private_key, peer_public_key,
                                            peer_public_key_len, m_sec->share_key,
                                            sizeof(m_sec->share_key), &m_sec->share_len);
@@ -535,7 +461,6 @@ void Blufi::_dh_negotiate_data_handler(uint8_t* data, int len, uint8_t** output_
                 btc_blufi_report_error(ESP_BLUFI_ENCRYPT_ERROR);
                 return;
             }
-
             size_t hash_len = 0;
             status = psa_hash_compute(PSA_ALG_SHA_256, m_sec->share_key, m_sec->share_len,
                                       m_sec->psk, sizeof(m_sec->psk), &hash_len);
@@ -544,7 +469,6 @@ void Blufi::_dh_negotiate_data_handler(uint8_t* data, int len, uint8_t** output_
                 btc_blufi_report_error(kBlufiHashError);
                 return;
             }
-
             attributes = psa_key_attributes_init();
             psa_set_key_type(&attributes, PSA_KEY_TYPE_AES);
             psa_set_key_bits(&attributes, PSK_LEN * 8);
@@ -557,7 +481,6 @@ void Blufi::_dh_negotiate_data_handler(uint8_t* data, int len, uint8_t** output_
                 btc_blufi_report_error(ESP_BLUFI_ENCRYPT_ERROR);
                 return;
             }
-
             auto setup_cipher = [this](psa_cipher_operation_t* operation, const char* domain) {
                 uint8_t material[sizeof(kBlufiEncryptDomain) - 1 + SHARE_KEY_LEN];
                 memcpy(material, domain, sizeof(kBlufiEncryptDomain) - 1);
@@ -581,10 +504,8 @@ void Blufi::_dh_negotiate_data_handler(uint8_t* data, int len, uint8_t** output_
                 memset(hash, 0, sizeof(hash));
                 return status;
             };
-
             status = setup_cipher(&m_sec->enc_operation, kBlufiEncryptDomain);
             if (status == PSA_SUCCESS) {
-                // CTR decryption uses the same cipher primitive with an independent counter.
                 status = setup_cipher(&m_sec->dec_operation, kBlufiDecryptDomain);
             }
             if (status != PSA_SUCCESS) {
@@ -596,12 +517,10 @@ void Blufi::_dh_negotiate_data_handler(uint8_t* data, int len, uint8_t** output_
                 btc_blufi_report_error(ESP_BLUFI_ENCRYPT_ERROR);
                 return;
             }
-
             *output_data = m_sec->self_public_key;
             *output_len = public_key_len;
             *need_free = false;
             ESP_LOGI(BLUFI_TAG, "DH negotiation completed successfully");
-
             free(m_sec->dh_param);
             m_sec->dh_param = nullptr;
             m_sec->dh_param_len = 0;
@@ -612,7 +531,6 @@ void Blufi::_dh_negotiate_data_handler(uint8_t* data, int len, uint8_t** output_
             btc_blufi_report_error(ESP_BLUFI_DATA_FORMAT_ERROR);
     }
 }
-
 int Blufi::_aes_encrypt(uint8_t iv8, uint8_t* crypt_data, int crypt_len) {
     (void)iv8;
     if (!m_sec || m_sec->aes_key == PSA_KEY_ID_NULL || !crypt_data || crypt_len < 0) {
@@ -622,7 +540,6 @@ int Blufi::_aes_encrypt(uint8_t iv8, uint8_t* crypt_data, int crypt_len) {
     if (crypt_len == 0) {
         return 0;
     }
-
     std::vector<uint8_t> output(PSA_CIPHER_ENCRYPT_OUTPUT_SIZE(
         PSA_KEY_TYPE_AES, PSA_ALG_CTR, static_cast<size_t>(crypt_len)));
     size_t output_len = 0;
@@ -636,7 +553,6 @@ int Blufi::_aes_encrypt(uint8_t iv8, uint8_t* crypt_data, int crypt_len) {
     memcpy(crypt_data, output.data(), output_len);
     return static_cast<int>(output_len);
 }
-
 int Blufi::_aes_decrypt(uint8_t iv8, uint8_t* crypt_data, int crypt_len) {
     (void)iv8;
     if (!m_sec || m_sec->aes_key == PSA_KEY_ID_NULL || !crypt_data || crypt_len < 0) {
@@ -646,7 +562,6 @@ int Blufi::_aes_decrypt(uint8_t iv8, uint8_t* crypt_data, int crypt_len) {
     if (crypt_len == 0) {
         return 0;
     }
-
     std::vector<uint8_t> output(PSA_CIPHER_DECRYPT_OUTPUT_SIZE(
         PSA_KEY_TYPE_AES, PSA_ALG_CTR, static_cast<size_t>(crypt_len)));
     size_t output_len = 0;
@@ -660,41 +575,30 @@ int Blufi::_aes_decrypt(uint8_t iv8, uint8_t* crypt_data, int crypt_len) {
     memcpy(crypt_data, output.data(), output_len);
     return static_cast<int>(output_len);
 }
-
 uint16_t Blufi::_crc_checksum(uint8_t iv8, uint8_t* data, int len) {
     return esp_crc16_be(0, data, len);
 }
-
 int Blufi::_get_softap_conn_num() {
     auto& wifi = WifiManager::GetInstance();
     if (!wifi.IsInitialized() || !wifi.IsConfigMode()) {
         return 0;
     }
-
     wifi_sta_list_t sta_list{};
     if (esp_wifi_ap_get_sta_list(&sta_list) == ESP_OK) {
         return sta_list.num;
     }
     return 0;
 }
-
 bool Blufi::start_wifi_scan() {
     ESP_LOGI(BLUFI_TAG, "Starting dedicated WiFi scan");
-
-    // Already running: caller can rely on the in-flight scan and await its done event.
     if (m_scan_in_progress) {
         ESP_LOGW(BLUFI_TAG, "Scan already in progress, skipping");
         return true;
     }
-
     m_scan_in_progress = true;
-
-    // Get current WiFi mode
     wifi_mode_t current_mode;
     esp_err_t err = esp_wifi_get_mode(&current_mode);
-
     if (current_mode == WIFI_MODE_AP) {
-        // If in AP mode, temporarily switch to APSTA to allow scanning
         ESP_LOGI(BLUFI_TAG, "WiFi in AP mode");
         err = esp_wifi_set_mode(WIFI_MODE_STA);
         if (err != ESP_OK) {
@@ -702,7 +606,6 @@ bool Blufi::start_wifi_scan() {
             m_scan_in_progress = false;
             return false;
         }
-        // Need to restart WiFi for mode change to take effect
         err = esp_wifi_start();
         if (err != ESP_OK) {
             ESP_LOGE(BLUFI_TAG, "Failed to start WiFi after mode switch: %s", esp_err_to_name(err));
@@ -710,13 +613,10 @@ bool Blufi::start_wifi_scan() {
             return false;
         }
         esp_wifi_set_ps(WIFI_PS_NONE);
-        // Register scan event handler
         esp_event_handler_instance_t scan_event_instance;
         esp_event_handler_instance_register(WIFI_EVENT, ESP_EVENT_ANY_ID,
                                             &Blufi::_wifi_scan_event_handler, this,
                                             &scan_event_instance);
-
-        // Start scan
         err = esp_wifi_scan_start(NULL, false);
         if (err != ESP_OK) {
             ESP_LOGE(BLUFI_TAG, "Failed to start WiFi scan: %s", esp_err_to_name(err));
@@ -724,7 +624,6 @@ bool Blufi::start_wifi_scan() {
             return false;
         }
     } else if (current_mode == WIFI_MODE_STA || current_mode == WIFI_MODE_APSTA) {
-        // Ensure WiFi driver is started (may have been stopped during config mode transition)
         err = esp_wifi_start();
         if (err != ESP_OK && err != ESP_ERR_WIFI_STATE) {
             ESP_LOGE(BLUFI_TAG, "Failed to start WiFi before scan: %s", esp_err_to_name(err));
@@ -743,20 +642,16 @@ bool Blufi::start_wifi_scan() {
         m_scan_in_progress = false;
         return false;
     }
-
     ESP_LOGI(BLUFI_TAG, "WiFi scan started");
     return true;
 }
-
 void Blufi::_send_wifi_list() {
     if (m_ap_records.empty()) {
         ESP_LOGW(BLUFI_TAG, "No AP records available, sending WiFi scan fail");
         esp_blufi_send_error_info(ESP_BLUFI_WIFI_SCAN_FAIL);
         return;
     }
-
     ESP_LOGI(BLUFI_TAG, "Sending WiFi list with %d APs", m_ap_records.size());
-
     std::vector<esp_blufi_ap_record_t> blufi_ap_list;
     for (const auto& ap : m_ap_records) {
         esp_blufi_ap_record_t blufi_ap;
@@ -765,23 +660,17 @@ void Blufi::_send_wifi_list() {
         blufi_ap.rssi = ap.rssi;
         blufi_ap_list.push_back(blufi_ap);
     }
-
     esp_blufi_send_wifi_list(blufi_ap_list.size(), blufi_ap_list.data());
-
     m_ap_records.clear();
     start_wifi_scan();
 }
-
 void Blufi::_wifi_scan_event_handler(void* arg, esp_event_base_t event_base, int32_t event_id,
                                      void* event_data) {
     Blufi* self = static_cast<Blufi*>(arg);
-
     if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_SCAN_DONE) {
         ESP_LOGI(BLUFI_TAG, "WiFi scan done");
-
         uint16_t ap_num = 0;
         esp_wifi_scan_get_ap_num(&ap_num);
-
         if (ap_num == 0) {
             ESP_LOGW(BLUFI_TAG, "No APs found");
             self->m_ap_records.clear();
@@ -789,7 +678,6 @@ void Blufi::_wifi_scan_event_handler(void* arg, esp_event_base_t event_base, int
             if (self->m_scan_should_save_ssid) {
                 self->m_ap_records.resize(ap_num);
                 esp_wifi_scan_get_ap_records(&ap_num, self->m_ap_records.data());
-
                 ESP_LOGI(BLUFI_TAG, "Found %d APs", ap_num);
                 for (const auto& ap : self->m_ap_records) {
                     ESP_LOGI(BLUFI_TAG, "  SSID: %s, RSSI: %d, Authmode: %d", (char*)ap.ssid,
@@ -798,14 +686,12 @@ void Blufi::_wifi_scan_event_handler(void* arg, esp_event_base_t event_base, int
             }
         }
         self->m_scan_in_progress = false;
-        // Dispatch a pending GET_WIFI_LIST response if one is waiting on this scan.
         if (self->m_send_list_after_scan) {
             self->m_send_list_after_scan = false;
             self->_send_wifi_list();
         }
     }
 }
-
 void Blufi::_handle_event(esp_blufi_cb_event_t event, esp_blufi_cb_param_t* param) {
     switch (event) {
         case ESP_BLUFI_EVENT_INIT_FINISH:
@@ -869,10 +755,8 @@ void Blufi::_handle_event(esp_blufi_cb_event_t event, esp_blufi_cb_param_t* para
             ESP_LOGI(BLUFI_TAG, "BLUFI request wifi connect to AP via esp-wifi-connect");
             std::string ssid(reinterpret_cast<const char*>(m_sta_config.sta.ssid));
             std::string password(reinterpret_cast<const char*>(m_sta_config.sta.password));
-
             SsidManager::GetInstance().AddSsid(ssid, password);
             m_scan_should_save_ssid = false;
-
             m_sta_ssid_len = static_cast<int>(std::min(ssid.size(), sizeof(m_sta_ssid)));
             memcpy(m_sta_ssid, ssid.c_str(), m_sta_ssid_len);
             memset(m_sta_bssid, 0, sizeof(m_sta_bssid));
@@ -882,25 +766,19 @@ void Blufi::_handle_event(esp_blufi_cb_event_t event, esp_blufi_cb_param_t* para
             m_sta_conn_info = {};
             m_sta_conn_info.sta_ssid = m_sta_ssid;
             m_sta_conn_info.sta_ssid_len = m_sta_ssid_len;
-
             auto& wifi_manager = WifiManager::GetInstance();
-
             if (wifi_manager.IsInitialized()) {
                 if (wifi_manager.IsConfigMode()) {
                     wifi_manager.StopConfigAp();
                 }
                 wifi_manager.StopStation();
             }
-
             if (!wifi_manager.IsInitialized() && !wifi_manager.Initialize()) {
                 ESP_LOGE(BLUFI_TAG, "Failed to initialize WifiManager");
                 break;
             }
-
             vTaskDelay(pdMS_TO_TICKS(500));
-
             wifi_manager.StartStation();
-
             xTaskCreatePinnedToCore(
                 [](void* ctx) {
                     auto* self = static_cast<Blufi*>(ctx);
@@ -908,33 +786,27 @@ void Blufi::_handle_event(esp_blufi_cb_event_t event, esp_blufi_cb_param_t* para
                     constexpr int kConnectTimeoutMs = 10000;
                     constexpr TickType_t kDelayTick = pdMS_TO_TICKS(200);
                     int waited_ms = 0;
-
                     while (waited_ms < kConnectTimeoutMs && !wifi.IsConnected()) {
                         vTaskDelay(kDelayTick);
                         waited_ms += 200;
                     }
-
                     wifi_mode_t mode = GetWifiModeWithFallback(wifi);
                     const int softap_conn_num = _get_softap_conn_num();
-
                     if (wifi.IsConnected()) {
                         self->m_sta_is_connecting = false;
                         self->m_sta_connected = true;
                         self->m_sta_got_ip = true;
                         self->m_provisioned = true;
-
                         auto current_ssid = wifi.GetSsid();
                         if (!current_ssid.empty()) {
                             self->m_sta_ssid_len = static_cast<int>(
                                 std::min(current_ssid.size(), sizeof(self->m_sta_ssid)));
                             memcpy(self->m_sta_ssid, current_ssid.c_str(), self->m_sta_ssid_len);
                         }
-
                         wifi_ap_record_t ap_info{};
                         if (esp_wifi_sta_get_ap_info(&ap_info) == ESP_OK) {
                             memcpy(self->m_sta_bssid, ap_info.bssid, sizeof(self->m_sta_bssid));
                         }
-
                         esp_blufi_extra_info_t info = {};
                         memcpy(info.sta_bssid, self->m_sta_bssid, sizeof(self->m_sta_bssid));
                         info.sta_bssid_set = true;
@@ -943,7 +815,6 @@ void Blufi::_handle_event(esp_blufi_cb_event_t event, esp_blufi_cb_param_t* para
                         esp_blufi_send_wifi_conn_report(mode, ESP_BLUFI_STA_CONN_SUCCESS,
                                                         softap_conn_num, &info);
                         ESP_LOGI(BLUFI_TAG, "connected to WiFi");
-
                         if (self->m_ble_is_connected) {
                             esp_blufi_disconnect();
                         }
@@ -951,7 +822,6 @@ void Blufi::_handle_event(esp_blufi_cb_event_t event, esp_blufi_cb_param_t* para
                         self->m_sta_is_connecting = false;
                         self->m_sta_connected = false;
                         self->m_sta_got_ip = false;
-
                         esp_blufi_extra_info_t info = {};
                         info.sta_ssid = self->m_sta_ssid;
                         info.sta_ssid_len = self->m_sta_ssid_len;
@@ -977,18 +847,15 @@ void Blufi::_handle_event(esp_blufi_cb_event_t event, esp_blufi_cb_param_t* para
             auto& wifi = WifiManager::GetInstance();
             wifi_mode_t mode = GetWifiModeWithFallback(wifi);
             const int softap_conn_num = _get_softap_conn_num();
-
             if (wifi.IsInitialized() && wifi.IsConnected()) {
                 m_sta_connected = true;
                 m_sta_got_ip = true;
-
                 auto current_ssid = wifi.GetSsid();
                 if (!current_ssid.empty()) {
                     m_sta_ssid_len =
                         static_cast<int>(std::min(current_ssid.size(), sizeof(m_sta_ssid)));
                     memcpy(m_sta_ssid, current_ssid.c_str(), m_sta_ssid_len);
                 }
-
                 esp_blufi_extra_info_t info;
                 memset(&info, 0, sizeof(esp_blufi_extra_info_t));
                 memcpy(info.sta_bssid, m_sta_bssid, 6);
@@ -1025,23 +892,14 @@ void Blufi::_handle_event(esp_blufi_cb_event_t event, esp_blufi_cb_param_t* para
             break;
         case ESP_BLUFI_EVENT_GET_WIFI_LIST: {
             ESP_LOGI(BLUFI_TAG, "BLUFI get wifi list");
-            // Case 1: a scan is already in flight (init scan or refresh scan started by
-            // the previous _send_wifi_list()). Defer the response to its done handler
-            // instead of blocking the BluFi task.
             if (m_scan_in_progress) {
                 m_send_list_after_scan = true;
                 break;
             }
-            // Case 2: cache is populated. Respond immediately; _send_wifi_list() also
-            // kicks off an async refresh scan to keep the cache fresh.
             if (!m_ap_records.empty()) {
                 _send_wifi_list();
                 break;
             }
-            // Case 3: no cache (e.g. driver was stopped during a config-mode transition,
-            // init scan never completed). Trigger a real scan and dispatch from the
-            // scan-done handler. If the scan cannot start, return an error frame so the
-            // App exits its wait state instead of timing out.
             m_scan_should_save_ssid = true;
             m_send_list_after_scan = true;
             if (!start_wifi_scan()) {
@@ -1055,24 +913,19 @@ void Blufi::_handle_event(esp_blufi_cb_event_t event, esp_blufi_cb_param_t* para
             break;
     }
 }
-
 void Blufi::_event_callback_trampoline(esp_blufi_cb_event_t event, esp_blufi_cb_param_t* param) {
     GetInstance()._handle_event(event, param);
 }
-
 void Blufi::_negotiate_data_handler_trampoline(uint8_t* data, int len, uint8_t** output_data,
                                                int* output_len, bool* need_free) {
     GetInstance()._dh_negotiate_data_handler(data, len, output_data, output_len, need_free);
 }
-
 int Blufi::_encrypt_func_trampoline(uint8_t iv8, uint8_t* crypt_data, int crypt_len) {
     return GetInstance()._aes_encrypt(iv8, crypt_data, crypt_len);
 }
-
 int Blufi::_decrypt_func_trampoline(uint8_t iv8, uint8_t* crypt_data, int crypt_len) {
     return GetInstance()._aes_decrypt(iv8, crypt_data, crypt_len);
 }
-
 uint16_t Blufi::_checksum_func_trampoline(uint8_t iv8, uint8_t* data, int len) {
     return _crc_checksum(iv8, data, len);
 }

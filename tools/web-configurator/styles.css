@@ -1,7 +1,8 @@
-/* ==========================================================================
-   Xiaozhi-ESP32 Web Configurator - Modern Dark Theme Design System
-   Target: ESP32-S3-N16R8 Hardware & Peripheral Configuration
-   ========================================================================== */
+html {
+  font-size: 21px;
+}
+
+
 
 :root {
   --bg-main: #0B0F17;
@@ -64,7 +65,7 @@ body {
   letter-spacing: -0.01em;
 }
 
-/* Background Subtle Gradient */
+
 body::before {
   content: "";
   position: fixed;
@@ -79,7 +80,7 @@ body::before {
   z-index: -1;
 }
 
-/* Scrollbars */
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -95,7 +96,7 @@ body::before {
   background: #334155;
 }
 
-/* Header */
+
 .app-header {
   background: var(--bg-header);
   backdrop-filter: blur(12px);
@@ -124,7 +125,7 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--text-primary);
   box-shadow: var(--glow-cyan);
 }
 
@@ -162,7 +163,7 @@ body::before {
   color: var(--text-muted);
 }
 
-/* Action Toolbar */
+
 .action-toolbar {
   display: flex;
   align-items: center;
@@ -214,7 +215,7 @@ body::before {
   box-shadow: 0 0 8px var(--accent-rose);
 }
 
-/* Buttons */
+
 .btn {
   font-family: var(--font-sans);
   font-weight: 600;
@@ -233,7 +234,7 @@ body::before {
 
 .btn-primary {
   background: linear-gradient(135deg, #0284c7, #0284c7);
-  color: #fff;
+  color: var(--text-primary);
   border-color: #38bdf8;
 }
 .btn-primary:hover:not(:disabled) {
@@ -265,7 +266,7 @@ body::before {
   cursor: pointer;
 }
 .btn-icon:hover {
-  color: #fff;
+  color: var(--text-primary);
   border-color: var(--accent-cyan);
   background: var(--bg-card-hover);
 }
@@ -287,7 +288,7 @@ body::before {
   box-shadow: none !important;
 }
 
-/* Main Container */
+
 .app-container {
   display: flex;
   flex: 1;
@@ -298,9 +299,9 @@ body::before {
   gap: 1.5rem;
 }
 
-/* Sidebar & Navigation */
+
 .config-nav {
-  width: 260px;
+  width: 340px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -389,7 +390,7 @@ body::before {
 .unsaved-badge {
   display: none;
   margin-left: auto;
-  color: #f59e0b;
+  color: var(--accent-amber);
   font-size: 0.75rem;
   line-height: 1;
   background: rgba(245, 158, 11, 0.15);
@@ -423,7 +424,7 @@ body::before {
   margin: 4px 0;
 }
 
-/* Pin Matrix Card */
+
 .pin-summary-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -488,27 +489,27 @@ body::before {
   transform: scale(1.18);
   z-index: 10;
   border-color: #38bdf8;
-  color: #fff;
+  color: var(--text-primary);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
 }
 
 .pin-cell.locked {
   background: rgba(244, 63, 94, 0.18);
   border-color: rgba(244, 63, 94, 0.4);
-  color: #fda4af;
+  color: var(--accent-rose);
 }
 
 .pin-cell.used {
   background: rgba(56, 189, 248, 0.22);
   border-color: var(--accent-cyan);
-  color: #fff;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
 .pin-cell.conflict {
   background: var(--accent-rose);
-  border-color: #fff;
-  color: #fff;
+  border-color: var(--text-primary);
+  color: var(--text-primary);
   animation: pulse 1s infinite alternate;
 }
 
@@ -517,7 +518,7 @@ body::before {
   to { opacity: 1; box-shadow: var(--glow-rose); }
 }
 
-/* Content Area */
+
 .config-content {
   flex: 1;
   display: flex;
@@ -526,7 +527,7 @@ body::before {
   min-width: 0;
 }
 
-/* Conflict Alert Bar */
+
 .conflict-bar {
   display: none;
   background: rgba(244, 63, 94, 0.12);
@@ -553,11 +554,11 @@ body::before {
 
 .conflict-text {
   font-size: 0.84rem;
-  color: #fecdd3;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
-/* Tab Panels */
+
 .tab-panel {
   display: none !important;
 }
@@ -574,7 +575,7 @@ body::before {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Config Card Group */
+
 .config-group {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -612,13 +613,13 @@ body::before {
 
 .tab-status-pill.saved {
   background: rgba(16, 185, 129, 0.1);
-  color: #10b981;
+  color: var(--accent-emerald);
   border-color: rgba(16, 185, 129, 0.25);
 }
 
 .tab-status-pill.unsaved {
   background: rgba(245, 158, 11, 0.15);
-  color: #f59e0b;
+  color: var(--accent-amber);
   border-color: rgba(245, 158, 11, 0.35);
   box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
 }
@@ -645,7 +646,7 @@ body::before {
   box-shadow: 0 0 12px rgba(16, 185, 129, 0.35) !important;
 }
 
-/* Toast Container & Notification */
+
 .toast-container {
   position: fixed;
   bottom: 24px;
@@ -660,7 +661,7 @@ body::before {
 .toast-item {
   background: #1e293b;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #f1f5f9;
+  color: var(--text-primary);
   padding: 10px 16px;
   border-radius: 8px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
@@ -697,7 +698,7 @@ body::before {
 .group-title h2 {
   font-size: 1.05rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--text-primary);
   letter-spacing: -0.01em;
 }
 
@@ -721,13 +722,13 @@ body::before {
 
 .badge-emerald {
   background: rgba(16, 185, 129, 0.15);
-  color: #6ee7b7;
+  color: var(--accent-emerald);
   border-color: rgba(16, 185, 129, 0.25);
 }
 
 .badge-danger {
   background: rgba(244, 63, 94, 0.2);
-  color: #fda4af;
+  color: var(--accent-rose);
   border: 1px solid rgba(244, 63, 94, 0.3);
   font-size: 0.7rem;
   padding: 2px 6px;
@@ -735,7 +736,26 @@ body::before {
   font-weight: 700;
 }
 
-/* Form Controls */
+
+
+
+input[type="number"].form-control {
+  max-width: 100px;
+  text-align: center;
+  font-family: var(--font-mono);
+}
+
+input[type="text"].form-control,
+input[type="password"].form-control,
+select.form-control {
+  max-width: 320px;
+}
+
+
+.pin-field input[type="number"] {
+  max-width: 80px;
+}
+
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -754,7 +774,7 @@ body::before {
 .form-label {
   font-size: 0.8rem;
   font-weight: 500;
-  color: #cbd5e1;
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
@@ -788,7 +808,7 @@ select.form-control {
   line-height: 1.35;
 }
 
-/* Subheadings */
+
 .form-subheading {
   grid-column: span 2;
   font-size: 0.82rem;
@@ -801,7 +821,7 @@ select.form-control {
   align-items: center;
 }
 
-/* Checkboxes */
+
 .checkbox-row {
   display: flex;
   flex-wrap: wrap;
@@ -832,10 +852,10 @@ select.form-control {
   cursor: pointer;
 }
 .form-checkbox:hover {
-  color: #fff;
+  color: var(--text-primary);
 }
 
-/* Configured Items List */
+
 .configured-items-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -866,7 +886,7 @@ select.form-control {
 .item-name {
   font-size: 0.84rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .item-pins {
@@ -900,7 +920,7 @@ select.form-control {
   background: rgba(244, 63, 94, 0.15);
 }
 
-/* Empty State */
+
 .empty-state {
   padding: 2rem 1rem;
   text-align: center;
@@ -922,7 +942,7 @@ select.form-control {
   margin-top: 2px;
 }
 
-/* Hardware Specs Grid (Panel Flash) */
+
 .flash-card-container {
   border-color: rgba(16, 185, 129, 0.3);
   background: linear-gradient(180deg, rgba(16, 185, 129, 0.04) 0%, rgba(17, 24, 39, 0.95) 100%);
@@ -955,12 +975,12 @@ select.form-control {
 .spec-val {
   font-size: 1rem;
   font-weight: 700;
-  color: #6ee7b7;
+  color: var(--accent-emerald);
 }
 
 .spec-sub {
   font-size: 0.68rem;
-  color: #94a3b8;
+  color: var(--text-secondary);
   margin-top: 2px;
 }
 
@@ -983,11 +1003,11 @@ select.form-control {
 
 .rule-body {
   font-size: 0.78rem;
-  color: #fecdd3;
+  color: var(--text-primary);
   line-height: 1.45;
 }
 
-/* Modals */
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -1032,7 +1052,7 @@ select.form-control {
 .modal-title {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .modal-close {
@@ -1044,7 +1064,7 @@ select.form-control {
   line-height: 1;
 }
 .modal-close:hover {
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .modal-body {
@@ -1063,7 +1083,7 @@ select.form-control {
   background: rgba(0, 0, 0, 0.2);
 }
 
-/* Guide Box for Custom Assets / Documentation */
+
 .guide-box {
   background: rgba(56, 189, 248, 0.07);
   border: 1px solid rgba(56, 189, 248, 0.25);
@@ -1083,7 +1103,7 @@ select.form-control {
 
 .guide-content {
   font-size: 0.76rem;
-  color: #cbd5e1;
+  color: var(--text-primary);
   line-height: 1.5;
 }
 
@@ -1104,7 +1124,7 @@ select.form-control {
   font-size: 0.74rem;
 }
 
-/* Build Success Box */
+
 .build-cmd-box {
   background: #090d16;
   border: 1px solid #1e293b;
@@ -1132,12 +1152,12 @@ select.form-control {
   color: var(--accent-cyan);
 }
 
-/* Utility classes */
+
 .text-emerald { color: #34d399 !important; }
 .highlight-cyan { color: var(--accent-cyan); }
 .font-semibold { font-weight: 600; }
 
-/* Responsive adjustments */
+
 @media (max-width: 1024px) {
   .app-container {
     flex-direction: column;
@@ -1162,11 +1182,9 @@ select.form-control {
   }
 }
 
-/* ==========================================================================
-   Build & Flash Panel & Live Terminal Console Styles
-   ========================================================================== */
 
-/* Navigation indicator */
+
+
 .nav-link-build {
   position: relative;
 }
@@ -1201,7 +1219,7 @@ select.form-control {
   50% { opacity: 0.4; transform: scale(1.3); }
 }
 
-/* 3 Cards Grid */
+
 .build-cards-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1252,7 +1270,7 @@ select.form-control {
 .build-card-title {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .status-badge {
@@ -1266,7 +1284,7 @@ select.form-control {
 
 .status-badge.success {
   background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
+  color: var(--accent-emerald);
   border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
@@ -1344,7 +1362,7 @@ select.form-control {
   padding: 1px 6px;
   border-radius: 4px;
   background: rgba(245, 158, 11, 0.18);
-  color: #f59e0b;
+  color: var(--accent-amber);
   border: 1px solid rgba(245, 158, 11, 0.4);
 }
 
@@ -1395,7 +1413,7 @@ select.form-control {
 
 .idf-scan-path {
   font-family: var(--font-mono);
-  color: #f1f5f9;
+  color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1450,7 +1468,7 @@ select.form-control {
 
 .project-scan-path {
   font-family: var(--font-mono);
-  color: #f1f5f9;
+  color: var(--text-primary);
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
@@ -1467,7 +1485,7 @@ select.form-control {
 
 
 
-/* Action Toolbar */
+
 .build-action-bar {
   display: flex;
   flex-wrap: wrap;
@@ -1490,7 +1508,7 @@ select.form-control {
   border-color: #f43f5e;
 }
 
-/* Terminal Live Console */
+
 .terminal-container {
   background: #080c14;
   border: 1px solid #1e293b;
@@ -1579,7 +1597,7 @@ select.form-control {
   color: #64748b;
 }
 .terminal-body .term-success {
-  color: #34d399;
+  color: var(--accent-emerald);
   font-weight: 600;
 }
 .terminal-body .term-error {
@@ -1602,4 +1620,177 @@ select.form-control {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+
+  
+  .info-btn {
+    background: none;
+    border: none;
+    color: var(--accent-blue);
+    font-size: 16px;
+    cursor: pointer;
+    margin-left: 6px;
+    padding: 0;
+    line-height: 1;
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+  .info-btn:hover {
+    color: var(--accent-purple);
+    transform: scale(1.1);
+  }
+  
+  
+  .sys-dialog {
+    border: none;
+    border-radius: 12px;
+    background: var(--bg-card);
+    color: var(--text-main);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    padding: 0;
+    max-width: 450px;
+    width: 100%;
+  }
+  .sys-dialog::backdrop {
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(2px);
+  }
+  .sys-dialog .dialog-content {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .sys-dialog h3 {
+    margin: 0;
+    color: var(--accent-blue);
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sys-dialog p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-dim);
+  }
+  .sys-dialog button {
+    align-self: flex-end;
+    margin-top: 10px;
+  }
+
+
+
+
+
+
+.app-footer-large {
+  margin: 50px auto 40px auto;
+  padding: 40px 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 1380px;
+}
+
+
+
+
+
+.footer-large-content-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: stretch;
+  gap: 20px;
+  width: 100%;
+}
+
+.footer-item-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+  background: var(--bg-card);
+  padding: 30px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+}
+
+.donate-card {
+  background: rgba(56, 189, 248, 0.08);
+  border-color: rgba(56, 189, 248, 0.25);
+}
+
+.footer-link-large {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.footer-link-large:hover {
+  color: var(--text-primary);
+  transform: translateY(-5px);
+}
+
+
+
+.config-group input[type="text"],
+.config-group input[type="number"],
+.config-group input[type="password"],
+.config-group select {
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 7px 11px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.84rem;
+  height: 38px;
+  transition: all var(--transition-fast);
+  outline: none;
+}
+
+.config-group input[type="text"]:focus,
+.config-group input[type="number"]:focus,
+.config-group input[type="password"]:focus,
+.config-group select:focus {
+  border-color: var(--border-focus);
+  background: var(--bg-input-focus);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.15);
+}
+
+.pin-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.pin-field label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-primary); 
+  min-width: 60px;
+}
+
+
+.config-group input[type="number"] {
+  max-width: 100px;
+  text-align: center;
+  font-family: var(--font-mono);
+}
+
+.config-group input[type="text"],
+.config-group input[type="password"],
+.config-group select {
+  max-width: 320px;
+  width: 100%;
 }

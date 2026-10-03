@@ -1,0 +1,366 @@
+<section class="tab-panel" id="panel-peripherals">
+  
+  
+  <div class="config-group">
+    <div class="group-header">
+      <div class="group-title">
+        <h3 style="margin: 0;">
+          <span class="group-icon">🎛️</span> Nút bấm, Đèn, Còi & Ngoại vi (Buttons & Peripherals)
+        </h3>
+      </div>
+      <div class="tab-header-actions">
+        <span class="tab-status-pill saved" data-tab-status="panel-peripherals">Đã lưu</span>
+        <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-peripherals" title="Lưu thông tin mục này">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+          <span>Lưu mục này</span>
+        </button>
+      </div>
+    </div>
+    
+    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+      
+      
+      <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 15px; border-right: 1px solid var(--border-color); padding-right: 15px;">
+        <h4 style="margin: 0; padding: 0; font-size: 14px; color: var(--primary-color);">1. Nút bấm & Điều khiển (Buttons)</h4>
+        
+        <div class="form-row">
+          <div class="form-col" style="flex:1;">
+            <label class="toggle-container">
+              <input type="checkbox" id="buttons_boot" data-config-key="buttons.boot_enable">
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Nút BOOT (Bắt đầu thu âm)</span>
+            </label>
+            <div style="margin-top: 5px;">
+              <input type="number" id="boot_gpio" data-config-key="buttons.boot_gpio" class="form-control" style="width:100px; margin-bottom:5px;" placeholder="0">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-col" style="flex:1;">
+            <label class="toggle-container">
+              <input type="checkbox" data-config-key="buttons.touch_enable">
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Nút Cảm ứng (Touch Button)</span>
+            </label>
+            <div style="margin-top: 5px;">
+              <input type="number" data-config-key="buttons.touch_gpio" placeholder="GPIO">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-col" style="flex:1;">
+            <label class="toggle-container">
+              <input type="checkbox" data-config-key="buttons.vol_enable">
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Nút Âm lượng (+ / -)</span>
+            </label>
+            <div style="margin-top: 5px; display:flex; gap:5px;">
+              <input type="number" data-config-key="buttons.vol_up_gpio" placeholder="Tăng (+)">
+              <input type="number" data-config-key="buttons.vol_down_gpio" placeholder="Giảm (-)">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      
+      <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 15px;">
+        <h4 style="margin: 0; padding: 0; font-size: 14px; color: var(--primary-color);">2. Đèn, Còi & Chấp hành (Actuators)</h4>
+        
+        <div class="form-row">
+          <div class="form-col" style="flex:1;">
+            <label class="toggle-container">
+              <input type="checkbox" id="mcp_lamp" data-config-key="mcp.lamp">
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Đèn thông minh (Lamp/LED)</span>
+            </label>
+            <div style="margin-top: 5px;">
+              <input type="number" id="mcp_lamp_gpio" data-config-key="mcp.lamp_gpio" class="form-control" style="width:100px; margin-bottom:5px;" placeholder="GPIO">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-col" style="flex:1;">
+            <label class="toggle-container">
+              <input type="checkbox" data-config-key="motor.relay_enable">
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Rơ-le (Relay 220V)</span>
+            </label>
+            <div style="margin-top: 5px;">
+              <input type="number" data-config-key="motor.relay_gpio" placeholder="GPIO">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-col" style="flex:1;">
+            <label class="toggle-container">
+              <input type="checkbox" id="buzzer_enable" data-config-key="actuators.buzzer_enable">
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Còi bíp (Buzzer)</span>
+            </label>
+            <div style="margin-top: 5px;">
+              <input type="number" id="buzzer_gpio" data-config-key="actuators.buzzer_gpio" class="form-control" style="width:100px; margin-bottom:5px;" placeholder="GPIO">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-col" style="flex:1; display: flex; gap: 10px;">
+            <div style="flex:1;">
+              <label class="toggle-container">
+                <input type="checkbox" data-config-key="actuators.haptic_enable">
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">Rung (Haptic)</span>
+              </label>
+              <div style="margin-top: 5px;">
+                <input type="number" data-config-key="actuators.haptic_gpio" placeholder="GPIO">
+              </div>
+            </div>
+            
+            <div style="flex:1;">
+              <label class="toggle-container">
+                <input type="checkbox" data-config-key="actuators.servo_enable">
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">Servo 180 (PWM)</span>
+              </label>
+              <div style="margin-top: 5px;">
+                <input type="number" data-config-key="actuators.servo_gpio" placeholder="PWM GPIO">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="config-group">
+    <div class="group-header">
+      <h3 class="group-title">
+        <span class="group-icon">???</span> ??ng c? DC & Xe Robot
+      </h3>
+      <label class="toggle-container">
+        <input type="checkbox" id="dc_motor_enable" data-config-key="motor.dc_enable">
+        <span class="toggle-slider"></span>
+        <span class="toggle-label">B?t C?u H Motor</span>
+      </label>
+    </div>
+    
+    <div id="grp_motor_config" style="display: none; margin-top: 15px;">
+      <div class="form-row">
+        <div class="form-col">
+          <label>IC ?i?u khi?n C?u H</label>
+          <select data-config-key="motor.dc_driver">
+            <option value="CUSTOM_MOTOR_DRIVER_TB6612">TB6612FNG (Khuy?n d?ng)</option>
+            <option value="CUSTOM_MOTOR_DRIVER_L9110S">L9110S / HG7881</option>
+            <option value="CUSTOM_MOTOR_DRIVER_DRV8833">DRV8833</option>
+          </select>
+        </div>
+      </div>
+      <div class="pin-grid">
+        <div class="pin-field"><label>PWM A (T?c ?? Tr?i)</label><input type="number" data-config-key="motor.pwma"></div>
+        <div class="pin-field"><label>DIR A (H??ng Tr?i)</label><input type="number" data-config-key="motor.dira"></div>
+        <div class="pin-field"><label>PWM B (T?c ?? Ph?i)</label><input type="number" data-config-key="motor.pwmb"></div>
+        <div class="pin-field"><label>DIR B (H??ng Ph?i)</label><input type="number" data-config-key="motor.dirb"></div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="config-group">
+    <div class="group-header">
+      <h3 class="group-title">
+        <span class="group-icon">???</span> C?m bi?n M?i tr??ng (Environment Sensors)
+      </h3>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-col" style="flex:1;">
+        <label class="toggle-container"><input type="checkbox" id="dht_enable" data-config-key="sensors.dht_enable"><span class="toggle-slider"></span><span class="toggle-label">Nhi?t ?m DHT11/22</span></label>
+        <div style="margin-top: 5px; display:none;" id="grp_dht">
+          <input type="number" id="dht_gpio" data-config-key="sensors.dht_gpio" class="form-control" style="width:100px; margin-bottom:5px;" placeholder="Data GPIO">
+        </div>
+      </div>
+      
+      <div class="form-col" style="flex:1;">
+        <label class="toggle-container"><input type="checkbox" id="temp_enable" data-config-key="sensors.temp_enable"><span class="toggle-slider"></span><span class="toggle-label">Nhi?t ?m AHT20 (I2C)</span></label>
+        <div style="margin-top: 5px; display:none; flex-direction:column;" id="grp_temp">
+          <div style="display:flex; gap:5px; margin-bottom:5px;">
+            <input type="number" id="temp_sda" data-config-key="sensors.temp_sda" placeholder="SDA" class="form-control">
+            <input type="number" id="temp_scl" data-config-key="sensors.temp_scl" placeholder="SCL" class="form-control">
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-col" style="flex:1;">
+        <label class="toggle-container"><input type="checkbox" id="gas_enable" data-config-key="sensors.gas_co2"><span class="toggle-slider"></span><span class="toggle-label">Kh? CO2 SCD4x (I2C)</span></label>
+        <div style="margin-top: 5px; display:none; flex-direction:column;" id="grp_gas">
+          <div style="display:flex; gap:5px; margin-bottom:5px;">
+            <input type="number" id="gas_sda" data-config-key="sensors.gas_sda" placeholder="SDA" class="form-control">
+            <input type="number" id="gas_scl" data-config-key="sensors.gas_scl" placeholder="SCL" class="form-control">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row" style="margin-top:15px;">
+      <div class="form-col" style="flex:1;">
+        <label class="toggle-container"><input type="checkbox" id="bh1750_enable" data-config-key="sensors.bh1750"><span class="toggle-slider"></span><span class="toggle-label">?nh s?ng BH1750</span></label>
+        <div style="margin-top: 5px; display:none; flex-direction:column;" id="grp_bh1750">
+          <div style="display:flex; gap:5px; margin-bottom:5px;">
+            <input type="number" id="bh1750_sda" data-config-key="sensors.bh1750_sda" placeholder="SDA" class="form-control">
+            <input type="number" id="bh1750_scl" data-config-key="sensors.bh1750_scl" placeholder="SCL" class="form-control">
+          </div>
+        </div>
+      </div>
+      <div class="form-col" style="flex:1;">
+        <label class="toggle-container"><input type="checkbox" id="bmp280_enable" data-config-key="sensors.bmp280"><span class="toggle-slider"></span><span class="toggle-label">?p su?t BMP280</span></label>
+        <div style="margin-top: 5px; display:none; flex-direction:column;" id="grp_bmp280">
+          <div style="display:flex; gap:5px; margin-bottom:5px;">
+            <input type="number" id="bmp280_sda" data-config-key="sensors.bmp280_sda" placeholder="SDA" class="form-control">
+            <input type="number" id="bmp280_scl" data-config-key="sensors.bmp280_scl" placeholder="SCL" class="form-control">
+          </div>
+        </div>
+      </div>
+      <div class="form-col" style="flex:1;">
+        <label class="toggle-container"><input type="checkbox" id="ldr_enable" data-config-key="sensors.ldr"><span class="toggle-slider"></span><span class="toggle-label">?nh s?ng LDR (ADC)</span></label>
+        <div style="margin-top: 5px; display:none;" id="grp_ldr">
+          <input type="number" id="ldr_ch" data-config-key="sensors.ldr_ch" class="form-control" style="width:100px; margin-bottom:5px;" placeholder="Channel">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="config-group">
+    <div class="group-header">
+      <h3 class="group-title">
+        <span class="group-icon">??</span> C?m bi?n An ninh & Kho?ng c?ch (Security / Proximity)
+      </h3>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-col" style="flex:1;">
+        <label class="toggle-container"><input type="checkbox" data-config-key="sensors.hcsr04"><span class="toggle-slider"></span><span class="toggle-label">Si?u ?m HC-SR04</span></label>
+        <div style="margin-top: 5px; display:flex; gap:5px;">
+          <input type="number" data-config-key="sensors.hcsr04_trig" placeholder="Trig Pin">
+          <input type="number" data-config-key="sensors.hcsr04_echo" placeholder="Echo Pin">
+        </div>
+      </div>
+      
+      <div class="form-col" style="flex:1;">
+        <label class="toggle-container"><input type="checkbox" data-config-key="sensors.pir"><span class="toggle-slider"></span><span class="toggle-label">Chuy?n ??ng PIR</span></label>
+        <div style="margin-top: 5px;">
+          <input type="number" data-config-key="sensors.pir_gpio" placeholder="Out Pin">
+        </div>
+      </div>
+      
+      <div class="form-col" style="flex:1;">
+        <label class="toggle-container"><input type="checkbox" data-config-key="sensors.vibration"><span class="toggle-slider"></span><span class="toggle-label">Rung SW-420</span></label>
+        <div style="margin-top: 5px;">
+          <input type="number" data-config-key="sensors.vibration_gpio" placeholder="Out Pin">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function updateHiddenExtrasPair(btn) {
+      const list = btn.closest('.dynamic-list');
+      const rows = Array.from(list.querySelectorAll('.dynamic-pair-row'));
+      const hidden = list.querySelector('input[type="hidden"]');
+      if(hidden) {
+          hidden.value = rows.map(r => {
+             const inputs = r.querySelectorAll('input');
+             if (inputs.length >= 2 && inputs[0].value !== '' && inputs[1].value !== '') {
+                 let val = inputs[0].value + ':' + inputs[1].value;
+                 if (inputs.length >= 3 && inputs[2].value !== '') {
+                     val += '|' + inputs[2].value;
+                 }
+                 return val;
+             }
+             return null;
+          }).filter(v => v !== null).join(',');
+          hidden.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }
+    function addDynamicItemPair(btn, ph1, ph2) {
+      const listItems = btn.previousElementSibling;
+      const div = document.createElement('div');
+      div.className = 'dynamic-pair-row';
+      div.style = "display:flex; gap:5px; margin-bottom:5px;";
+      div.innerHTML = '<input type="number" class="dynamic-input form-control" placeholder="' + ph1 + '" style="flex:1;" oninput="updateHiddenExtrasPair(this)">' +
+                      '<input type="number" class="dynamic-input form-control" placeholder="' + ph2 + '" style="flex:1;" oninput="updateHiddenExtrasPair(this)">' +
+                      '<input type="text" class="dynamic-input form-control" placeholder="Nhãn (Tùy chọn)" style="flex:2;" oninput="updateHiddenExtrasPair(this)">' +
+                      '<button type="button" class="btn btn-sm" style="background:#ff4d4f; color:white; border:none; padding:0 8px; border-radius:4px; cursor:pointer;" onclick="var p=this.parentElement; p.parentElement.removeChild(p); updateHiddenExtrasPair(p.previousElementSibling || btn)">X</button>';
+      listItems.appendChild(div);
+    }
+    function updateHiddenExtras(btn) {
+      const list = btn.closest('.dynamic-list');
+      const rows = Array.from(list.querySelectorAll('.list-items > div'));
+      const hidden = list.querySelector('input[type="hidden"]');
+      if(hidden) {
+          hidden.value = rows.map(r => {
+             const inputs = r.querySelectorAll('input');
+             if (inputs.length >= 1 && inputs[0].value !== '') {
+                 let val = inputs[0].value;
+                 if (inputs.length >= 2 && inputs[1].value !== '') {
+                     val += '|' + inputs[1].value;
+                 }
+                 return val;
+             }
+             return null;
+          }).filter(v => v !== null).join(',');
+          hidden.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }
+    function addDynamicItem(btn, placeholder) {
+      const listItems = btn.previousElementSibling;
+      const div = document.createElement('div');
+      div.style = "display:flex; gap:5px; margin-bottom:5px;";
+      div.innerHTML = '<input type="number" class="dynamic-input form-control" placeholder="' + placeholder + '" style="flex:1;" oninput="updateHiddenExtras(this)">' +
+                      '<input type="text" class="dynamic-input form-control" placeholder="Nhãn (Tùy chọn)" style="flex:2;" oninput="updateHiddenExtras(this)">' +
+                      '<button type="button" class="btn btn-sm" style="background:#ff4d4f; color:white; border:none; padding:0 8px; border-radius:4px; cursor:pointer;" onclick="var p=this.parentElement; p.parentElement.removeChild(p); updateHiddenExtras(p.previousElementSibling || btn)">X</button>';
+      listItems.appendChild(div);
+    }
+  </script>
+
+  <script>
+    // ?n hi?n form n?ng cao
+    document.getElementById('dc_motor_enable')?.addEventListener('change', (e) => {
+      document.getElementById('grp_motor_config').style.display = e.target.checked ? 'block' : 'none';
+    });
+
+    document.getElementById('dht_enable')?.addEventListener('change', (e) => {
+      document.getElementById('grp_dht').style.display = e.target.checked ? 'block' : 'none';
+    });
+    document.getElementById('temp_enable')?.addEventListener('change', (e) => {
+      document.getElementById('grp_temp').style.display = e.target.checked ? 'flex' : 'none';
+    });
+    document.getElementById('gas_enable')?.addEventListener('change', (e) => {
+      document.getElementById('grp_gas').style.display = e.target.checked ? 'flex' : 'none';
+    });
+    document.getElementById('bh1750_enable')?.addEventListener('change', (e) => {
+      document.getElementById('grp_bh1750').style.display = e.target.checked ? 'flex' : 'none';
+    });
+    document.getElementById('bmp280_enable')?.addEventListener('change', (e) => {
+      document.getElementById('grp_bmp280').style.display = e.target.checked ? 'flex' : 'none';
+    });
+    document.getElementById('ldr_enable')?.addEventListener('change', (e) => {
+      document.getElementById('grp_ldr').style.display = e.target.checked ? 'block' : 'none';
+    });
+
+    setTimeout(() => {
+      document.getElementById('dc_motor_enable')?.dispatchEvent(new Event('change'));
+      document.getElementById('dht_enable')?.dispatchEvent(new Event('change'));
+      document.getElementById('temp_enable')?.dispatchEvent(new Event('change'));
+      document.getElementById('gas_enable')?.dispatchEvent(new Event('change'));
+      document.getElementById('bh1750_enable')?.dispatchEvent(new Event('change'));
+      document.getElementById('bmp280_enable')?.dispatchEvent(new Event('change'));
+      document.getElementById('ldr_enable')?.dispatchEvent(new Event('change'));
+    }, 100);
+  </script>
+</section>

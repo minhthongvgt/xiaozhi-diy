@@ -1,11 +1,8 @@
 #ifndef _SYSTEM_INFO_H_
 #define _SYSTEM_INFO_H_
-
 #include <string>
-
 #include <esp_err.h>
 #include <freertos/FreeRTOS.h>
-
 class SystemInfo {
 public:
     static size_t GetFlashSize();
@@ -19,5 +16,4 @@ public:
     static void PrintHeapStats();
     static void PrintPmLocks();
 };
-
-#endif // _SYSTEM_INFO_H_
+#endif 

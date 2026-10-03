@@ -1,0 +1,42 @@
+<section class="tab-panel" id="panel-actuators">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🔔 Servo / Buzzer / Haptic</h2>
+              <span class="group-desc">Động cơ Servo PWM, Còi chip và Mô-tơ rung xúc giác</span>
+            </div>
+            <div class="tab-header-actions">
+              <span class="tab-status-pill saved" data-tab-status="panel-actuators">Đã lưu</span>
+              <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-actuators">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <span>Lưu mục này</span>
+              </button>
+            </div>
+          </div>
+          <div class="form-grid">
+            
+            <div class="span-2 form-subheading"><span>Động cơ Servo (SG90 / MG996R)</span></div>
+            <div class="form-item"><label class="form-checkbox"><input type="checkbox" id="servo_enable"><span>Bật Servo PWM</span></label></div>
+            <div class="form-item servo-fields" style="display:none">
+              <label class="form-label" for="servo_gpio">Servo PWM GPIO</label>
+              <input type="number" class="form-control" id="servo_gpio" min="-1" max="48" value="-1">
+            </div>
+
+            
+            <div class="span-2 form-subheading"><span>Còi chip báo động (Buzzer)</span></div>
+            <div class="form-item"><label class="form-checkbox"><input type="checkbox" id="buzzer_enable"><span>Bật Còi báo</span></label></div>
+            <div class="form-item buzzer-fields" style="display:none">
+              <label class="form-label" for="buzzer_gpio">Buzzer GPIO</label>
+              <input type="number" class="form-control" id="buzzer_gpio" min="-1" max="48" value="-1">
+            </div>
+
+            
+            <div class="span-2 form-subheading"><span>Mô-tơ rung xúc giác (Haptic Motor)</span></div>
+            <div class="form-item"><label class="form-checkbox"><input type="checkbox" id="haptic_enable"><span>Bật Mô-tơ rung</span></label></div>
+            <div class="form-item haptic-fields" style="display:none">
+              <label class="form-label" for="haptic_gpio">Haptic GPIO</label>
+              <input type="number" class="form-control" id="haptic_gpio" min="-1" max="48" value="-1">
+            </div>
+          </div>
+        </div>
+      </section>

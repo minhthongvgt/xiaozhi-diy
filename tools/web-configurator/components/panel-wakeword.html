@@ -1,0 +1,67 @@
+<section class="tab-panel" id="panel-wakeword">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🎙️ Từ khóa Đánh thức & AI Giọng nói</h2>
+              <span class="group-desc">Cấu hình từ khóa gọi AI và thuật toán khử tiếng vọng</span>
+            </div>
+            <div class="tab-header-actions">
+              <span class="tab-status-pill saved" data-tab-status="panel-wakeword">Đã lưu</span>
+              <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-wakeword" title="Lưu thông tin mục này">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <span>Lưu mục này</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-item">
+              <label class="form-label" for="wakeword_type">Chế độ từ khóa đánh thức</label>
+              <select class="form-control" id="wakeword_type">
+                <option value="USE_AFE_WAKE_WORD" selected>WakeNet tích hợp AFE (Khuyến nghị cho S3-N16R8)</option>
+                <option value="USE_ESP_WAKE_WORD">WakeNet bản nhẹ (Tiết kiệm RAM)</option>
+                <option value="USE_CUSTOM_WAKE_WORD">Từ khóa tùy chỉnh (Custom Wake Word)</option>
+                <option value="WAKE_WORD_DISABLED">Tắt từ khóa (Chỉ nhấn nút để nói)</option>
+              </select>
+            </div>
+
+            <div class="form-item">
+              <label class="form-label" for="wakeword_threshold">Ngưỡng nhạy nhận diện (%)</label>
+              <input type="number" class="form-control" id="wakeword_threshold" min="1" max="99" value="20">
+            </div>
+
+            <div class="form-item wakeword-custom-fields" style="display:none;">
+              <label class="form-label" for="wakeword_word">Chuỗi từ khóa Pinyin</label>
+              <input type="text" class="form-control" id="wakeword_word" value="xiao tu dou">
+            </div>
+
+            <div class="form-item wakeword-custom-fields" style="display:none;">
+              <label class="form-label" for="wakeword_display">Tên hiển thị trên màn hình</label>
+              <input type="text" class="form-control" id="wakeword_display" value="小土豆">
+            </div>
+
+            <div class="span-2 form-subheading"><span>Xử lý âm thanh & Khử tiếng vọng (AEC)</span></div>
+
+            <div class="form-item span-2">
+              <div class="checkbox-stack">
+                <label class="form-checkbox">
+                  <input type="checkbox" id="wakeword_device_aec" checked>
+                  <span>Khử tiếng vọng trên thiết bị (Hardware AEC - Yêu cầu cấu hình I2S Ref Loopback)</span>
+                </label>
+                <label class="form-checkbox">
+                  <input type="checkbox" id="wakeword_server_aec">
+                  <span>Khử tiếng vọng trên máy chủ đám mây (Server AEC)</span>
+                </label>
+                <label class="form-checkbox">
+                  <input type="checkbox" id="wakeword_send_data" checked>
+                  <span>Gửi dữ liệu nhận diện từ khóa lên máy chủ</span>
+                </label>
+                <label class="form-checkbox">
+                  <input type="checkbox" id="wakeword_in_listen">
+                  <span>Tiếp tục nhận diện từ khóa khi đang trong phiên nghe (Listening Mode)</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>

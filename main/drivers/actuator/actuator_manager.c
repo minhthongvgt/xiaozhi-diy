@@ -1,31 +1,29 @@
-/**
- * @file actuator_manager.c
- * @brief Actuators Subsystem Manager Implementation (ESP-IDF 6.1)
- */
-
 #include "drivers/actuator/actuator_manager.h"
 #include "pin_config.h"
+#include "utils/config_utils.h"
 #include <esp_log.h>
 #include <sdkconfig.h>
 #include <driver/gpio.h>
 #include <driver/ledc.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
-
 #define TAG "ActuatorManager"
-
 #define SERVO_LEDC_MODE         LEDC_LOW_SPEED_MODE
 #define SERVO_LEDC_TIMER        LEDC_TIMER_2
 #define SERVO_LEDC_CHANNEL      LEDC_CHANNEL_2
 #define SERVO_LEDC_RES          LEDC_TIMER_14_BIT
 #define SERVO_LEDC_FREQ_HZ      50
-
 #define DEFAULT_SERVO_MIN_US    500
 #define DEFAULT_SERVO_MAX_US    2500
-
 static gpio_num_t s_relay_pin = (gpio_num_t)-1;
 static bool s_relay_state = false;
 static gpio_num_t s_buzzer_pin = (gpio_num_t)-1;
+#define MAX_EXTRA_LAMPS 4
+static extra_gpio_config_t s_extra_lamps[MAX_EXTRA_LAMPS];
+static int s_num_extra_lamps = 0;
+#define MAX_EXTRA_BUZZERS 4
+static extra_gpio_config_t s_extra_buzzers[MAX_EXTRA_BUZZERS];
+static int s_num_extra_buzzers = 0;
 static gpio_num_t s_haptic_pin = (gpio_num_t)-1;
 static gpio_num_t s_servo_pin = (gpio_num_t)-1;
 static uint8_t s_servo_angle = 90;
@@ -33,29 +31,34 @@ static uint16_t s_servo_min_us = DEFAULT_SERVO_MIN_US;
 static uint16_t s_servo_max_us = DEFAULT_SERVO_MAX_US;
 static bool s_servo_initialized = false;
 static bool s_servo_attached = false;
-
 static gpio_num_t s_motor_pwma = (gpio_num_t)-1;
 static gpio_num_t s_motor_dira = (gpio_num_t)-1;
 static gpio_num_t s_motor_pwmb = (gpio_num_t)-1;
 static gpio_num_t s_motor_dirb = (gpio_num_t)-1;
-
 static inline uint32_t servo_pulse_us_to_duty(uint32_t pulse_us)
 {
-    // 14-bit duty at 50Hz (20,000 us): duty = (pulse_us * 16384 + 10000) / 20000
     return (uint32_t)((pulse_us * 16384ULL + 10000) / 20000);
 }
-
 void actuator_set_relay(bool state)
 {
+    bool valid = false;
     if (GPIO_IS_VALID_GPIO(s_relay_pin)) {
         s_relay_state = state;
         gpio_set_level(s_relay_pin, state ? 1 : 0);
-        ESP_LOGI(TAG, "Relay state changed to: %s", state ? "ON" : "OFF");
+        valid = true;
+    }
+    for (int i = 0; i < s_num_extra_lamps; i++) {
+        if (GPIO_IS_VALID_GPIO(s_extra_lamps[i].pin1)) {
+            gpio_set_level(s_extra_lamps[i].pin1, state ? 1 : 0);
+            valid = true;
+        }
+    }
+    if (valid) {
+        ESP_LOGI(TAG, "Relay/Lamp state changed to: %s", state ? "ON" : "OFF");
     } else {
-        ESP_LOGW(TAG, "Relay hardware not configured/invalid pin (%d), action ignored", (int)s_relay_pin);
+        ESP_LOGW(TAG, "Relay hardware not configured/invalid pin, action ignored");
     }
 }
-
 bool actuator_get_relay(void)
 {
     if (!GPIO_IS_VALID_GPIO(s_relay_pin)) {
@@ -63,7 +66,6 @@ bool actuator_get_relay(void)
     }
     return s_relay_state;
 }
-
 void actuator_set_servo_pulse_range(uint16_t min_us, uint16_t max_us)
 {
     if (min_us < 200) min_us = 200;
@@ -76,11 +78,9 @@ void actuator_set_servo_pulse_range(uint16_t min_us, uint16_t max_us)
         actuator_set_servo_angle(s_servo_angle);
     }
 }
-
 void actuator_set_servo_angle(uint8_t angle_deg)
 {
     if (angle_deg > 180) angle_deg = 180;
-
     if (s_servo_initialized && GPIO_IS_VALID_GPIO(s_servo_pin)) {
         s_servo_angle = angle_deg;
         uint32_t pulse_us = s_servo_min_us + ((uint32_t)angle_deg * (s_servo_max_us - s_servo_min_us) + 90) / 180;
@@ -100,7 +100,6 @@ void actuator_set_servo_angle(uint8_t angle_deg)
         ESP_LOGW(TAG, "Servo hardware uninitialized or invalid pin (%d), action ignored", (int)s_servo_pin);
     }
 }
-
 uint8_t actuator_get_servo_angle(void)
 {
     if (!s_servo_initialized || !GPIO_IS_VALID_GPIO(s_servo_pin)) {
@@ -108,7 +107,6 @@ uint8_t actuator_get_servo_angle(void)
     }
     return s_servo_angle;
 }
-
 void actuator_servo_detach(void)
 {
     if (s_servo_initialized && GPIO_IS_VALID_GPIO(s_servo_pin)) {
@@ -120,19 +118,15 @@ void actuator_servo_detach(void)
         ESP_LOGI(TAG, "Servo PWM detached (duty set to 0, holding torque released)");
     }
 }
-
 bool actuator_is_servo_attached(void)
 {
     return s_servo_attached;
 }
-
 void actuator_set_dc_motor(int motor_id, int speed_pct)
 {
     if (speed_pct > 100) speed_pct = 100;
     if (speed_pct < -100) speed_pct = -100;
-
     ESP_LOGI(TAG, "Setting Motor %d to %d%% speed", motor_id, speed_pct);
-
     if (motor_id == 1 && GPIO_IS_VALID_GPIO(s_motor_pwma) && GPIO_IS_VALID_GPIO(s_motor_dira)) {
         gpio_set_level(s_motor_dira, (speed_pct >= 0) ? 1 : 0);
         gpio_set_level(s_motor_pwma, (speed_pct != 0) ? 1 : 0);
@@ -141,19 +135,32 @@ void actuator_set_dc_motor(int motor_id, int speed_pct)
         gpio_set_level(s_motor_pwmb, (speed_pct != 0) ? 1 : 0);
     }
 }
-
 void actuator_beep(uint32_t freq_hz, uint32_t duration_ms)
 {
+    bool valid = false;
     if (GPIO_IS_VALID_GPIO(s_buzzer_pin)) {
         gpio_set_level(s_buzzer_pin, 1);
+        valid = true;
+    }
+    for (int i = 0; i < s_num_extra_buzzers; i++) {
+        if (GPIO_IS_VALID_GPIO(s_extra_buzzers[i].pin1)) {
+            gpio_set_level(s_extra_buzzers[i].pin1, 1);
+            valid = true;
+        }
+    }
+    if (valid) {
         vTaskDelay(pdMS_TO_TICKS(duration_ms > 0 ? duration_ms : 100));
-        gpio_set_level(s_buzzer_pin, 0);
+        if (GPIO_IS_VALID_GPIO(s_buzzer_pin)) gpio_set_level(s_buzzer_pin, 0);
+        for (int i = 0; i < s_num_extra_buzzers; i++) {
+            if (GPIO_IS_VALID_GPIO(s_extra_buzzers[i].pin1)) {
+                gpio_set_level(s_extra_buzzers[i].pin1, 0);
+            }
+        }
         ESP_LOGI(TAG, "Buzzer beep executed (%lu Hz, %lu ms)", (unsigned long)freq_hz, (unsigned long)duration_ms);
     } else {
-        ESP_LOGW(TAG, "Buzzer hardware not configured/invalid pin (%d), action ignored", (int)s_buzzer_pin);
+        ESP_LOGW(TAG, "Buzzer hardware not configured/invalid pin, action ignored");
     }
 }
-
 void actuator_vibrate(uint32_t duration_ms)
 {
     if (GPIO_IS_VALID_GPIO(s_haptic_pin)) {
@@ -165,7 +172,6 @@ void actuator_vibrate(uint32_t duration_ms)
         ESP_LOGW(TAG, "Haptic hardware not configured/invalid pin (%d), action ignored", (int)s_haptic_pin);
     }
 }
-
 static void __attribute__((unused)) init_output_pin(gpio_num_t pin, const char *name)
 {
     if (!GPIO_IS_VALID_GPIO(pin)) return;
@@ -184,11 +190,9 @@ static void __attribute__((unused)) init_output_pin(gpio_num_t pin, const char *
     gpio_set_level(pin, 0);
     ESP_LOGI(TAG, "Configured actuator output '%s' on GPIO %d", name, pin);
 }
-
 esp_err_t actuator_manager_init(void)
 {
     ESP_LOGI(TAG, "Initializing Actuators Subsystem (Relay, Servo, DC Motor, Buzzer)...");
-
 #if defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE)
 #if defined(CONFIG_CUSTOM_PERIPH_RELAY_GPIO) && (CONFIG_CUSTOM_PERIPH_RELAY_GPIO >= 0)
     s_relay_pin = (gpio_num_t)CONFIG_CUSTOM_PERIPH_RELAY_GPIO;
@@ -201,7 +205,6 @@ esp_err_t actuator_manager_init(void)
         init_output_pin(s_relay_pin, "Relay 220V");
     }
 #endif
-
 #if defined(CONFIG_ENABLE_BUZZER)
 #if defined(CONFIG_BUZZER_PIN) && (CONFIG_BUZZER_PIN >= 0)
     s_buzzer_pin = (gpio_num_t)CONFIG_BUZZER_PIN;
@@ -212,7 +215,22 @@ esp_err_t actuator_manager_init(void)
         init_output_pin(s_buzzer_pin, "Buzzer Alarm");
     }
 #endif
-
+#if defined(CONFIG_BUZZER_EXTRA_PINS)
+    s_num_extra_buzzers = parse_extra_gpios(CONFIG_BUZZER_EXTRA_PINS, s_extra_buzzers, MAX_EXTRA_BUZZERS);
+    for (int i = 0; i < s_num_extra_buzzers; i++) {
+        if (GPIO_IS_VALID_GPIO(s_extra_buzzers[i].pin1)) {
+            init_output_pin(s_extra_buzzers[i].pin1, s_extra_buzzers[i].label[0] ? s_extra_buzzers[i].label : "Extra Buzzer");
+        }
+    }
+#endif
+#if defined(CONFIG_CUSTOM_MCP_TOOL_LAMP_EXTRA_GPIOS)
+    s_num_extra_lamps = parse_extra_gpios(CONFIG_CUSTOM_MCP_TOOL_LAMP_EXTRA_GPIOS, s_extra_lamps, MAX_EXTRA_LAMPS);
+    for (int i = 0; i < s_num_extra_lamps; i++) {
+        if (GPIO_IS_VALID_GPIO(s_extra_lamps[i].pin1)) {
+            init_output_pin(s_extra_lamps[i].pin1, s_extra_lamps[i].label[0] ? s_extra_lamps[i].label : "Extra Lamp");
+        }
+    }
+#endif
 #if defined(CONFIG_ENABLE_HAPTIC_MOTOR)
 #if defined(CONFIG_HAPTIC_PIN) && (CONFIG_HAPTIC_PIN >= 0)
     s_haptic_pin = (gpio_num_t)CONFIG_HAPTIC_PIN;
@@ -223,7 +241,6 @@ esp_err_t actuator_manager_init(void)
         init_output_pin(s_haptic_pin, "Haptic Vibration Motor");
     }
 #endif
-
 #if defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG)
 #if defined(CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO) && (CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO >= 0)
     s_servo_pin = (gpio_num_t)CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO;
@@ -233,7 +250,6 @@ esp_err_t actuator_manager_init(void)
     s_servo_pin = (gpio_num_t)-1;
 #endif
     if (GPIO_IS_VALID_GPIO(s_servo_pin)) {
-        // Configure LEDC Timer for Servo PWM (50Hz) on LEDC_TIMER_2 (avoids conflict with Timer 0 display and Timer 1 gpio_led)
         ledc_timer_config_t ledc_timer = {
             .speed_mode       = SERVO_LEDC_MODE,
             .timer_num        = SERVO_LEDC_TIMER,
@@ -248,7 +264,6 @@ esp_err_t actuator_manager_init(void)
         } else {
             uint32_t pulse_us = s_servo_min_us + ((uint32_t)s_servo_angle * (s_servo_max_us - s_servo_min_us) + 90) / 180;
             uint32_t init_duty = servo_pulse_us_to_duty(pulse_us);
-
             ledc_channel_config_t ledc_channel = {
                 .speed_mode     = SERVO_LEDC_MODE,
                 .channel        = SERVO_LEDC_CHANNEL,
@@ -271,7 +286,6 @@ esp_err_t actuator_manager_init(void)
         }
     }
 #endif
-
 #if defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE)
 #if defined(CONFIG_CUSTOM_PERIPH_MOTOR_PWMA_PIN) && (CONFIG_CUSTOM_PERIPH_MOTOR_PWMA_PIN >= 0)
     s_motor_pwma = (gpio_num_t)CONFIG_CUSTOM_PERIPH_MOTOR_PWMA_PIN;
@@ -293,7 +307,6 @@ esp_err_t actuator_manager_init(void)
 #else
     s_motor_dirb = (gpio_num_t)-1;
 #endif
-
     if (GPIO_IS_VALID_GPIO(s_motor_pwma)) init_output_pin(s_motor_pwma, "Motor DC PWMA");
     if (GPIO_IS_VALID_GPIO(s_motor_dira)) init_output_pin(s_motor_dira, "Motor DC DIRA");
     if (GPIO_IS_VALID_GPIO(s_motor_pwmb)) init_output_pin(s_motor_pwmb, "Motor DC PWMB");
@@ -301,7 +314,6 @@ esp_err_t actuator_manager_init(void)
     ESP_LOGI(TAG, "DC Motor H-Bridge Driver configured (PWMA: %d, DIRA: %d, PWMB: %d, DIRB: %d)",
              s_motor_pwma, s_motor_dira, s_motor_pwmb, s_motor_dirb);
 #endif
-
     ESP_LOGI(TAG, "Actuators Subsystem initialized successfully.");
     return ESP_OK;
 }

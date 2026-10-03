@@ -1,11 +1,8 @@
 #ifndef ML307_BOARD_H
 #define ML307_BOARD_H
-
 #include <memory>
 #include <at_modem.h>
 #include "board.h"
-
-
 class Ml307Board : public Board {
 protected:
     std::unique_ptr<AtModem> modem_;
@@ -13,16 +10,10 @@ protected:
     gpio_num_t rx_pin_;
     gpio_num_t dtr_pin_;
     NetworkEventCallback network_event_callback_;
-
     virtual std::string GetBoardJson() override;
-
-    // Internal helper to trigger network event callback
     void OnNetworkEvent(NetworkEvent event, const std::string& data = "");
-    
-    // Network initialization task (runs in FreeRTOS task)
     static void NetworkTaskEntry(void* arg);
     void NetworkTask();
-
 public:
     Ml307Board(gpio_num_t tx_pin, gpio_num_t rx_pin, gpio_num_t dtr_pin = (gpio_num_t)-1);
     virtual std::string GetBoardType() override;
@@ -34,5 +25,4 @@ public:
     virtual AudioCodec* GetAudioCodec() override { return nullptr; }
     virtual std::string GetDeviceStatusJson() override;
 };
-
-#endif // ML307_BOARD_H
+#endif 

@@ -1,14 +1,7 @@
-/**
- * @file gpio_validator.c
- * @brief ESP32-S3 N16R8 Hardware GPIO Safety Validator Implementation
- */
-
 #include "gpio_validator.h"
 #include <sdkconfig.h>
 #include <esp_log.h>
-
 #define TAG "GPIO_Validator"
-
 typedef enum pin_bus_type_t {
     BUS_TYPE_EXCLUSIVE = 0,
     BUS_TYPE_I2C_SDA,
@@ -16,26 +9,22 @@ typedef enum pin_bus_type_t {
     BUS_TYPE_I2S_BCLK,
     BUS_TYPE_I2S_WS,
 } pin_bus_type_t;
-
 typedef struct configured_pin_t {
     int pin;
     const char *name;
     pin_bus_type_t bus_type;
     bool is_active;
 } configured_pin_t;
-
 bool gpio_is_pin_safe(gpio_num_t pin, const char* periph_name)
 {
     if (pin < 0) {
-        return true; // NC (-1) is not connected, always safe
+        return true; 
     }
-
     if (!GPIO_IS_VALID_GPIO(pin)) {
         ESP_LOGE(TAG, "[CRITICAL] Peripheral '%s' assigned to invalid GPIO %d!",
                  periph_name ? periph_name : "Unknown", (int)pin);
         return false;
     }
-
 #if defined(CONFIG_BOARD_TYPE_ESP32_S3_N16R8_CUSTOM) || defined(CONFIG_IDF_TARGET_ESP32S3)
     if (ESP32S3_N16R8_IS_RESERVED_PIN(pin)) {
         ESP_LOGE(TAG, "[CRITICAL] Peripheral '%s' assigned to GPIO %d which is in forbidden Octal PSRAM/Flash range [26..37]!",
@@ -43,8 +32,6 @@ bool gpio_is_pin_safe(gpio_num_t pin, const char* periph_name)
         return false;
     }
 #endif
-
-    // Check strapping / USB pins and warn
     if (pin == 19 || pin == 20) {
         ESP_LOGW(TAG, "[WARNING] Peripheral '%s' assigned to GPIO %d (USB D+/D-). USB CDC/JTAG debugging will be impaired.",
                  periph_name ? periph_name : "Unknown", (int)pin);
@@ -52,16 +39,12 @@ bool gpio_is_pin_safe(gpio_num_t pin, const char* periph_name)
         ESP_LOGW(TAG, "[NOTICE] Peripheral '%s' assigned to GPIO 0 (BOOT Strapping Pin).",
                  periph_name ? periph_name : "Unknown");
     }
-
     return true;
 }
-
 esp_err_t gpio_safety_validate(void)
 {
     ESP_LOGI(TAG, "Starting Hardware Safety Validation for ESP32-S3 N16R8...");
-
     configured_pin_t pins[] = {
-        // 1. Display pins
 #if defined(CONFIG_ENABLE_CUSTOM_DISPLAY)
 #if defined(CONFIG_CUSTOM_DISPLAY_PIN_MOSI)
         { CONFIG_CUSTOM_DISPLAY_PIN_MOSI, "Display SPI MOSI", BUS_TYPE_EXCLUSIVE, true },
@@ -88,8 +71,6 @@ esp_err_t gpio_safety_validate(void)
         { CONFIG_CUSTOM_DISPLAY_UART_RX_PIN, "Display UART RX", BUS_TYPE_EXCLUSIVE, true },
 #endif
 #endif
-
-        // 2. Audio Speaker
 #if defined(CONFIG_ENABLE_CUSTOM_SPEAKER)
 #if defined(CONFIG_CUSTOM_AUDIO_SPK_GPIO_BCLK)
         { CONFIG_CUSTOM_AUDIO_SPK_GPIO_BCLK, "Audio Speaker I2S BCLK", BUS_TYPE_I2S_BCLK, true },
@@ -101,8 +82,6 @@ esp_err_t gpio_safety_validate(void)
         { CONFIG_CUSTOM_AUDIO_SPK_GPIO_DOUT, "Audio Speaker I2S DOUT", BUS_TYPE_EXCLUSIVE, true },
 #endif
 #endif
-
-        // 3. Audio Microphone
 #if defined(CONFIG_ENABLE_CUSTOM_MIC)
 #if defined(CONFIG_CUSTOM_AUDIO_MIC_GPIO_SCK)
         { CONFIG_CUSTOM_AUDIO_MIC_GPIO_SCK, "Audio Mic I2S SCK",
@@ -120,16 +99,12 @@ esp_err_t gpio_safety_validate(void)
         { CONFIG_CUSTOM_AUDIO_MIC_GPIO_DIN, "Audio Mic I2S DIN", BUS_TYPE_EXCLUSIVE, true },
 #endif
 #endif
-
-        // 4. I2C Bus Master
 #if defined(CONFIG_CUSTOM_SENSOR_I2C_SDA)
         { CONFIG_CUSTOM_SENSOR_I2C_SDA, "I2C SDA Bus", BUS_TYPE_I2C_SDA, true },
 #endif
 #if defined(CONFIG_CUSTOM_SENSOR_I2C_SCL)
         { CONFIG_CUSTOM_SENSOR_I2C_SCL, "I2C SCL Bus", BUS_TYPE_I2C_SCL, true },
 #endif
-
-        // 5. Buttons
 #if defined(CONFIG_CUSTOM_ENABLE_BUTTON_BOOT) && defined(CONFIG_CUSTOM_BUTTON_BOOT_GPIO)
         { CONFIG_CUSTOM_BUTTON_BOOT_GPIO, "Button Boot", BUS_TYPE_EXCLUSIVE, true },
 #endif
@@ -144,8 +119,6 @@ esp_err_t gpio_safety_validate(void)
         { CONFIG_CUSTOM_BUTTON_VOL_DOWN_GPIO, "Button Volume DOWN", BUS_TYPE_EXCLUSIVE, true },
 #endif
 #endif
-
-        // 6. LEDs
 #if defined(CONFIG_ENABLE_CUSTOM_LEDS)
 #if defined(CONFIG_CUSTOM_LED_GPIO)
         { CONFIG_CUSTOM_LED_GPIO, "LED WS2812 RGB", BUS_TYPE_EXCLUSIVE, true },
@@ -163,7 +136,6 @@ esp_err_t gpio_safety_validate(void)
 #if defined(CONFIG_ENABLE_HAPTIC_MOTOR) && defined(CONFIG_HAPTIC_PIN)
         { CONFIG_HAPTIC_PIN, "Haptic Vibration Motor", BUS_TYPE_EXCLUSIVE, true },
 #endif
-        // --- AUTO-GENERATED MISSING PINS ---
 #if defined(CONFIG_CUSTOM_AUDIO_MIC_CODEC_I2C_SCL)
         { CONFIG_CUSTOM_AUDIO_MIC_CODEC_I2C_SCL, "CUSTOM_AUDIO_MIC_CODEC_I2C_SCL", BUS_TYPE_I2C_SCL, true },
 #endif
@@ -476,13 +448,9 @@ esp_err_t gpio_safety_validate(void)
 #if defined(CONFIG_CUSTOM_UART_PIN_TX)
         { CONFIG_CUSTOM_UART_PIN_TX, "CUSTOM_UART_PIN_TX", BUS_TYPE_EXCLUSIVE, true },
 #endif
-
     };
-
     size_t count = sizeof(pins) / sizeof(pins[0]);
     bool has_error = false;
-
-    // Step 1: Check forbidden ranges
     for (size_t i = 0; i < count; i++) {
         if (!pins[i].is_active || pins[i].pin < 0) {
             continue;
@@ -491,16 +459,11 @@ esp_err_t gpio_safety_validate(void)
             has_error = true;
         }
     }
-
-    // Step 2: Check duplicate conflicts
     for (size_t i = 0; i < count; i++) {
         if (!pins[i].is_active || pins[i].pin < 0) continue;
-
         for (size_t j = i + 1; j < count; j++) {
             if (!pins[j].is_active || pins[j].pin < 0) continue;
-
             if (pins[i].pin == pins[j].pin) {
-                // Check if this sharing is allowed
                 bool allowed = false;
                 if (pins[i].bus_type == BUS_TYPE_I2C_SDA && pins[j].bus_type == BUS_TYPE_I2C_SDA) {
                     allowed = true;
@@ -511,7 +474,6 @@ esp_err_t gpio_safety_validate(void)
                 } else if (pins[i].bus_type == BUS_TYPE_I2S_WS && pins[j].bus_type == BUS_TYPE_I2S_WS) {
                     allowed = true;
                 }
-
                 if (!allowed) {
                     ESP_LOGE(TAG, "[PIN CONFLICT] GPIO %d is concurrently claimed by '%s' and '%s'!",
                              pins[i].pin, pins[i].name, pins[j].name);
@@ -520,21 +482,17 @@ esp_err_t gpio_safety_validate(void)
             }
         }
     }
-
     if (has_error) {
         ESP_LOGE(TAG, "Hardware Safety Validation FAILED! System boot aborted.");
         return ESP_ERR_INVALID_STATE;
     }
-
     ESP_LOGI(TAG, "Hardware Safety Validation PASSED: All assigned GPIOs are safe and collision-free.");
     return ESP_OK;
 }
-
 esp_err_t gpio_validator_run(void)
 {
     return gpio_safety_validate();
 }
-
 const char* gpio_validator_get_error_log(void)
 {
     return "Check your menuconfig or board pinout. Pins in range 26..37 or duplicate pin assignments detected.";

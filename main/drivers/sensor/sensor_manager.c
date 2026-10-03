@@ -1,8 +1,3 @@
-/**
- * @file sensor_manager.c
- * @brief Sensors Subsystem Manager Implementation (ESP-IDF 6.1)
- */
-
 #include "drivers/sensor/sensor_manager.h"
 #include "drivers/sensor/vl6180x.h"
 #include "drivers/sensor/dht.h"
@@ -19,9 +14,7 @@
 #include <driver/gpio.h>
 #include <esp_adc/adc_oneshot.h>
 #include <string.h>
-
 #define TAG "SensorManager"
-
 static adc_oneshot_unit_handle_t s_adc1_handle = NULL;
 static vl6180x_handle_t s_vl6180x_dev = NULL;
 static mq_sensor_handle_t s_mq_dev = NULL;
@@ -39,12 +32,9 @@ static gpio_num_t s_flame_pin = (gpio_num_t)-1;
 static gpio_num_t s_chrg_pin = (gpio_num_t)-1;
 static gpio_num_t s_hcsr04_trig = (gpio_num_t)-1;
 static gpio_num_t s_hcsr04_echo = (gpio_num_t)-1;
-
 esp_err_t sensor_manager_init(void)
 {
     ESP_LOGI(TAG, "Initializing Sensors Subsystem...");
-
-    // 1. Initialize ADC1 Oneshot Unit for Analog Sensors (Gas MQ, LDR)
     adc_oneshot_unit_init_cfg_t init_config1 = {
         .unit_id = ADC_UNIT_1,
         .ulp_mode = ADC_ULP_MODE_DISABLE,
@@ -52,7 +42,6 @@ esp_err_t sensor_manager_init(void)
     esp_err_t ret = adc_oneshot_new_unit(&init_config1, &s_adc1_handle);
     if (ret == ESP_OK) {
         ESP_LOGI(TAG, "ADC1 Oneshot Unit initialized successfully for analog sensors.");
-        // Configure ADC1 channel 1 for LDR analog light sensor (GPIO 2)
         adc_oneshot_chan_cfg_t chan_cfg = {
             .atten = ADC_ATTEN_DB_12,
             .bitwidth = ADC_BITWIDTH_DEFAULT,
@@ -66,8 +55,6 @@ esp_err_t sensor_manager_init(void)
                  esp_err_to_name(ret));
         s_adc1_handle = NULL;
     }
-
-    // 2. Configure Analog Gas Sensor MQ-2 / MQ-135 if enabled in Kconfig
 #if defined(CONFIG_CUSTOM_ENABLE_SENSOR_GAS_ANALOG_MQ)
 #if defined(CONFIG_CUSTOM_SENSOR_MQ_ANALOG_PIN) && (CONFIG_CUSTOM_SENSOR_MQ_ANALOG_PIN >= 0)
     s_mq_pin = (gpio_num_t)CONFIG_CUSTOM_SENSOR_MQ_ANALOG_PIN;
@@ -93,8 +80,6 @@ esp_err_t sensor_manager_init(void)
     s_mq_pin = (gpio_num_t)-1;
     s_mq_dev = NULL;
 #endif
-
-    // 3. Configure Digital Sensors (DHT11/22, PIR, Vibration, Flame, TP4056)
 #if defined(CONFIG_CUSTOM_ENABLE_SENSOR_DHT11_22)
 #if defined(CONFIG_CUSTOM_SENSOR_DHT_GPIO) && (CONFIG_CUSTOM_SENSOR_DHT_GPIO >= 0)
     s_dht_pin = (gpio_num_t)CONFIG_CUSTOM_SENSOR_DHT_GPIO;
@@ -106,7 +91,6 @@ esp_err_t sensor_manager_init(void)
         ESP_LOGI(TAG, "DHT11/22 Temperature & Humidity Sensor configured on user GPIO %d", s_dht_pin);
     }
 #endif
-
 #if defined(CONFIG_CUSTOM_ENABLE_SENSOR_PIR)
 #if defined(CONFIG_CUSTOM_SENSOR_PIR_GPIO) && (CONFIG_CUSTOM_SENSOR_PIR_GPIO >= 0)
     s_pir_pin = (gpio_num_t)CONFIG_CUSTOM_SENSOR_PIR_GPIO;
@@ -125,7 +109,6 @@ esp_err_t sensor_manager_init(void)
         ESP_LOGI(TAG, "PIR Motion Sensor configured on GPIO %d", s_pir_pin);
     }
 #endif
-
 #if defined(CONFIG_CUSTOM_ENABLE_SENSOR_VIBRATION_SW420)
 #if defined(CONFIG_CUSTOM_SENSOR_VIBRATION_PIN) && (CONFIG_CUSTOM_SENSOR_VIBRATION_PIN >= 0)
     s_vib_pin = (gpio_num_t)CONFIG_CUSTOM_SENSOR_VIBRATION_PIN;
@@ -144,7 +127,6 @@ esp_err_t sensor_manager_init(void)
         ESP_LOGI(TAG, "SW-420 Vibration Sensor configured on GPIO %d", s_vib_pin);
     }
 #endif
-
 #if defined(CONFIG_CUSTOM_ENABLE_SENSOR_FLAME)
 #if defined(CONFIG_CUSTOM_SENSOR_FLAME_PIN) && (CONFIG_CUSTOM_SENSOR_FLAME_PIN >= 0)
     s_flame_pin = (gpio_num_t)CONFIG_CUSTOM_SENSOR_FLAME_PIN;
@@ -163,7 +145,6 @@ esp_err_t sensor_manager_init(void)
         ESP_LOGI(TAG, "Flame Sensor configured on GPIO %d", s_flame_pin);
     }
 #endif
-
 #if defined(CONFIG_CUSTOM_ENABLE_PERIPH_BATTERY_CHARGING_DETECT)
 #if defined(CONFIG_CUSTOM_PERIPH_BATTERY_CHRG_PIN) && (CONFIG_CUSTOM_PERIPH_BATTERY_CHRG_PIN >= 0)
     s_chrg_pin = (gpio_num_t)CONFIG_CUSTOM_PERIPH_BATTERY_CHRG_PIN;
@@ -182,7 +163,6 @@ esp_err_t sensor_manager_init(void)
         ESP_LOGI(TAG, "Battery Charging Monitor configured on GPIO %d", s_chrg_pin);
     }
 #endif
-
 #if defined(CONFIG_CUSTOM_ENABLE_SENSOR_HCSR04)
 #if defined(CONFIG_CUSTOM_SENSOR_HCSR04_TRIG_GPIO) && (CONFIG_CUSTOM_SENSOR_HCSR04_TRIG_GPIO >= 0)
     s_hcsr04_trig = (gpio_num_t)CONFIG_CUSTOM_SENSOR_HCSR04_TRIG_GPIO;
@@ -194,30 +174,24 @@ esp_err_t sensor_manager_init(void)
         hcsr04_init(s_hcsr04_trig, s_hcsr04_echo, &s_hcsr04_dev);
     }
 #endif
-
-    // Report I2C bus readiness for lazy-init I2C sensors (BMP280, AHT20, BH1750, SCD40, INA219, VL6180X)
     i2c_master_bus_handle_t i2c_check = bus_manager_get_i2c_bus();
     if (i2c_check != NULL) {
         ESP_LOGI(TAG, "I2C Bus is available — I2C sensors will be probed on first read.");
     } else {
         ESP_LOGW(TAG, "I2C Bus not yet registered by board — I2C sensors will probe when bus is ready.");
     }
-
     ESP_LOGI(TAG, "Sensors Subsystem initialized successfully.");
     return ESP_OK;
 }
-
 static vl6180x_handle_t get_vl6180x_dev(void)
 {
     if (s_vl6180x_dev != NULL) {
         return s_vl6180x_dev;
     }
-
     i2c_master_bus_handle_t i2c_bus = bus_manager_get_i2c_bus();
     if (i2c_bus == NULL) {
         return NULL;
     }
-
     vl6180x_config_t cfg = {
         .i2c_bus = i2c_bus,
         .i2c_addr = 0x29,
@@ -225,7 +199,6 @@ static vl6180x_handle_t get_vl6180x_dev(void)
         .gpio1_pin = (gpio_num_t)-1,
         .scaling = 1,
     };
-
     esp_err_t ret = vl6180x_init(&cfg, &s_vl6180x_dev);
     if (ret == ESP_OK) {
         ESP_LOGI(TAG, "VL6180X Laser ToF Sensor initialized via shared I2C bus.");
@@ -235,7 +208,6 @@ static vl6180x_handle_t get_vl6180x_dev(void)
     }
     return s_vl6180x_dev;
 }
-
 void sensor_set_dht_pin(gpio_num_t pin)
 {
     s_dht_pin = pin;
@@ -246,23 +218,17 @@ void sensor_set_dht_pin(gpio_num_t pin)
         ESP_LOGI(TAG, "DHT11/22 Sensor disabled");
     }
 }
-
 gpio_num_t sensor_get_dht_pin(void)
 {
     return s_dht_pin;
 }
-
 esp_err_t sensor_read_environment(sensor_environment_t *out_env)
 {
     if (!out_env) return ESP_ERR_INVALID_ARG;
     memset(out_env, 0, sizeof(sensor_environment_t));
-
-    // valid starts as false; ONLY set to true when genuine hardware sensor data is read
     out_env->valid = false;
     bool has_real_data = false;
     i2c_master_bus_handle_t i2c_bus = bus_manager_get_i2c_bus();
-
-    // 0a. Try reading Temperature & Humidity from AHT20 / AHT21 (I2C)
     if (i2c_bus != NULL) {
         if (s_aht20_dev == NULL) {
             aht20_init(i2c_bus, &s_aht20_dev);
@@ -278,8 +244,6 @@ esp_err_t sensor_read_environment(sensor_environment_t *out_env)
             }
         }
     }
-
-    // 0b. Read real-time Temperature & Humidity from DHT11 / DHT22 on user-selected GPIO (fallback)
     if (out_env->temperature_c == 0.0f && GPIO_IS_VALID_GPIO(s_dht_pin)) {
         float dht_temp = 0.0f;
         float dht_hum = 0.0f;
@@ -290,8 +254,6 @@ esp_err_t sensor_read_environment(sensor_environment_t *out_env)
             ESP_LOGD(TAG, "DHT read OK on GPIO %d: Temp=%.1f C, Hum=%.1f%%", s_dht_pin, dht_temp, dht_hum);
         }
     }
-
-    // 1. Read Barometric Pressure & Temp from Bosch BMP280 / BME280 (I2C)
     if (i2c_bus != NULL) {
         if (s_bmp280_dev == NULL) {
             bmp280_init(i2c_bus, &s_bmp280_dev);
@@ -309,8 +271,6 @@ esp_err_t sensor_read_environment(sensor_environment_t *out_env)
             }
         }
     }
-
-    // 2. Read Ambient Light (Lux): First try digital BH1750 (I2C)
     bool lux_read_ok = false;
     if (i2c_bus != NULL) {
         if (s_bh1750_dev == NULL) {
@@ -326,8 +286,6 @@ esp_err_t sensor_read_environment(sensor_environment_t *out_env)
             }
         }
     }
-
-    // Try reading Ambient Light Sensor (ALS) from VL6180X if BH1750 was not available
     if (!lux_read_ok) {
         vl6180x_handle_t tof = get_vl6180x_dev();
         if (tof != NULL) {
@@ -339,8 +297,6 @@ esp_err_t sensor_read_environment(sensor_environment_t *out_env)
             }
         }
     }
-
-    // Read analog light sensor (LDR) if ADC1 is active and no digital lux sensor succeeded
     if (!lux_read_ok && s_adc1_handle) {
         int raw_val = 0;
         if (adc_oneshot_read(s_adc1_handle, ADC_CHANNEL_1, &raw_val) == ESP_OK) {
@@ -350,8 +306,6 @@ esp_err_t sensor_read_environment(sensor_environment_t *out_env)
             }
         }
     }
-
-    // 3. Try reading Sensirion SCD40 / SCD41 CO2 Sensor if available on I2C bus
     if (i2c_bus != NULL) {
         if (s_scd4x_dev == NULL) {
             scd4x_init(i2c_bus, &s_scd4x_dev);
@@ -371,22 +325,17 @@ esp_err_t sensor_read_environment(sensor_environment_t *out_env)
             }
         }
     }
-
     out_env->valid = has_real_data;
     if (!has_real_data) {
         ESP_LOGD(TAG, "No real environmental sensor data available.");
     }
     return ESP_OK;
 }
-
 esp_err_t sensor_read_distance(sensor_distance_t *out_dist)
 {
     if (!out_dist) return ESP_ERR_INVALID_ARG;
     memset(out_dist, 0, sizeof(sensor_distance_t));
-
     out_dist->valid = false;
-
-    // 1. Read real-time distance from VL6180X Laser ToF Sensor
     vl6180x_handle_t tof = get_vl6180x_dev();
     if (tof != NULL) {
         float real_dist_mm = 0.0f;
@@ -397,8 +346,6 @@ esp_err_t sensor_read_distance(sensor_distance_t *out_dist)
             ESP_LOGD(TAG, "VL6180X distance read failed");
         }
     }
-
-    // 2. Read real-time distance from HC-SR04 Ultrasonic Sensor
     if (s_hcsr04_dev != NULL) {
         float real_dist_cm = 0.0f;
         if (hcsr04_read_distance(s_hcsr04_dev, &real_dist_cm) == ESP_OK) {
@@ -407,35 +354,25 @@ esp_err_t sensor_read_distance(sensor_distance_t *out_dist)
             ESP_LOGD(TAG, "HC-SR04 read OK: Dist=%.1f cm", real_dist_cm);
         }
     }
-
     return ESP_OK;
 }
-
 esp_err_t sensor_read_security(sensor_security_t *out_sec)
 {
     if (!out_sec) return ESP_ERR_INVALID_ARG;
     memset(out_sec, 0, sizeof(sensor_security_t));
-
     bool has_real_data = false;
-
-    // Read digital inputs (PIR, vibration, flame)
     if (GPIO_IS_VALID_GPIO(s_pir_pin)) {
         out_sec->motion_detected = (gpio_get_level(s_pir_pin) == 1);
         has_real_data = true;
     }
     if (GPIO_IS_VALID_GPIO(s_vib_pin)) {
-        // SW-420 normally-closed: no vibration=LOW, vibration=HIGH (pull-up)
         out_sec->vibration_detected = (gpio_get_level(s_vib_pin) == 1);
         has_real_data = true;
     }
     if (GPIO_IS_VALID_GPIO(s_flame_pin)) {
-        out_sec->flame_detected = (gpio_get_level(s_flame_pin) == 0); // Active low
+        out_sec->flame_detected = (gpio_get_level(s_flame_pin) == 0); 
         has_real_data = true;
     }
-
-    // Read Analog Gas Sensor (MQ-2 / MQ-135)
-    // Only real data from validated, physically connected hardware is accepted.
-    // If disabled or disconnected, gas_level_ppm = 0.0, alert = false.
     out_sec->gas_level_ppm = 0.0f;
     out_sec->gas_leak_alert = false;
     if (s_mq_dev != NULL) {
@@ -449,30 +386,21 @@ esp_err_t sensor_read_security(sensor_security_t *out_sec)
             ESP_LOGD(TAG, "MQ Gas real reading: %.1f PPM (%.1f mV), Alert=%d",
                      real_ppm, real_mv, out_sec->gas_leak_alert);
         } else {
-            // Disconnected or reading floating noise — do not treat as real data
             ESP_LOGD(TAG, "MQ Gas sensor not detected or disconnected: %s", esp_err_to_name(mq_ret));
         }
     }
-
     out_sec->valid = has_real_data;
     return ESP_OK;
 }
-
 esp_err_t sensor_read_power(sensor_power_t *out_pwr)
 {
     if (!out_pwr) return ESP_ERR_INVALID_ARG;
     memset(out_pwr, 0, sizeof(sensor_power_t));
-
-    // No hardcoded fake values — all fields remain 0 until real hardware provides data
     out_pwr->valid = false;
-
-    // 1. Read charging status from TP4056 CHRG GPIO (active low = charging)
     if (GPIO_IS_VALID_GPIO(s_chrg_pin)) {
         out_pwr->is_charging = (gpio_get_level(s_chrg_pin) == 0);
         out_pwr->valid = true;
     }
-
-    // 2. Read Voltage, Current and Power from Texas Instruments INA219 / INA226 (I2C)
     i2c_master_bus_handle_t i2c_bus = bus_manager_get_i2c_bus();
     if (i2c_bus != NULL) {
         if (s_ina219_dev == NULL) {
@@ -492,22 +420,17 @@ esp_err_t sensor_read_power(sensor_power_t *out_pwr)
             }
         }
     }
-
     return ESP_OK;
 }
-
 esp_err_t sensor_manager_read_all(sensor_data_t *out_data)
 {
     if (!out_data) return ESP_ERR_INVALID_ARG;
-
     sensor_environment_t env;
     sensor_security_t sec;
     sensor_power_t pwr;
-
     sensor_read_environment(&env);
     sensor_read_security(&sec);
     sensor_read_power(&pwr);
-
     out_data->temperature_c = env.temperature_c;
     out_data->humidity_pct = env.humidity_pct;
     out_data->light_lux = env.light_lux;
@@ -516,10 +439,8 @@ esp_err_t sensor_manager_read_all(sensor_data_t *out_data)
     out_data->motion_detected = sec.motion_detected;
     out_data->vibration_detected = sec.vibration_detected;
     out_data->flame_detected = sec.flame_detected;
-
     return ESP_OK;
 }
-
 void sensor_set_mq_pin(gpio_num_t pin)
 {
     if (s_mq_dev != NULL) {
@@ -545,12 +466,10 @@ void sensor_set_mq_pin(gpio_num_t pin)
         ESP_LOGI(TAG, "MQ Gas sensor disabled");
     }
 }
-
 gpio_num_t sensor_get_mq_pin(void)
 {
     return s_mq_pin;
 }
-
 void sensor_set_hcsr04_pins(gpio_num_t trig_pin, gpio_num_t echo_pin)
 {
     if (s_hcsr04_dev != NULL) {

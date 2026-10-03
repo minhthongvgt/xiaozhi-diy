@@ -1,19 +1,15 @@
 #ifndef _OTA_H
 #define _OTA_H
-
 #include <functional>
 #include <string>
 #include <vector>
-
 #include <esp_err.h>
 #include "board.h"
 #include "network_error.h"
-
 class Ota {
 public:
     Ota();
     ~Ota();
-
     NetworkResult<> CheckVersion();
     esp_err_t Activate();
     bool HasActivationChallenge() { return has_activation_challenge_; }
@@ -25,14 +21,12 @@ public:
     bool StartUpgrade(std::function<void(int progress, size_t speed)> callback);
     static bool Upgrade(const std::string& firmware_url, std::function<void(int progress, size_t speed)> callback);
     void MarkCurrentVersionValid();
-
     const std::string& GetFirmwareVersion() const { return firmware_version_; }
     const std::string& GetCurrentVersion() const { return current_version_; }
     const std::string& GetFirmwareUrl() const { return firmware_url_; }
     const std::string& GetActivationMessage() const { return activation_message_; }
     const std::string& GetActivationCode() const { return activation_code_; }
     std::string GetCheckVersionUrl();
-
 private:
     std::string activation_message_;
     std::string activation_code_;
@@ -49,12 +43,10 @@ private:
     std::string activation_challenge_;
     std::string serial_number_;
     int activation_timeout_ms_ = 30000;
-
     std::function<void(int progress, size_t speed)> upgrade_callback_;
     std::vector<int> ParseVersion(const std::string& version);
     bool IsNewVersionAvailable(const std::string& currentVersion, const std::string& newVersion);
     std::string GetActivationPayload();
     std::unique_ptr<Http> SetupHttp();
 };
-
-#endif // _OTA_H
+#endif 

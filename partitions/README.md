@@ -7,7 +7,7 @@ Bảng phân vùng chuẩn hóa cho ESP32-S3 N16R8 (16MB Flash).
 > **Tên phân vùng chuẩn (canonical name): `model`**
 >
 > Tên `model` được sử dụng **nhất quán** trong toàn bộ dự án:
-> - Bảng phân vùng CSV (`partitions.csv`, `partitions/v2/16m.csv`)
+> - Bảng phân vùng CSV (`partitions.csv`, `partitions/16m.csv`)
 > - ESP-SR API: `esp_srmodel_init("model")`
 > - Assets loader: `esp_partition_find_first(... "model")`
 > - CMakeLists.txt: `partition_table_get_partition_info("model")`

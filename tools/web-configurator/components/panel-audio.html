@@ -1,0 +1,179 @@
+<section class="tab-panel" id="panel-audio">
+  
+  
+  <div class="config-group">
+    <div class="group-header" style="display: flex; justify-content: space-between; align-items: center;">
+      <div class="group-title">
+        <h3 style="margin: 0;" class="group-title">
+        <span class="group-icon">🔄</span> Chế độ Audio I2S (I2S Mode)
+      </h3>
+      </div>
+      <div class="tab-header-actions">
+        <span class="tab-status-pill saved" data-tab-status="panel-audio">Đã lưu</span>
+        <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-audio" title="Lưu thông tin mục này">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+          <span>Lưu mục này</span>
+        </button>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-col">
+        <select id="audio_i2s_mode" data-config-key="audio.i2s_mode">
+          <option value="CUSTOM_AUDIO_I2S_SIMPLEX">I2S Simplex (Một chiều: Loa và Mic độc lập)</option>
+          <option value="CUSTOM_AUDIO_I2S_DUPLEX">I2S Duplex (Hai chiều: Chung Clock cho cả Loa & Mic)</option>
+        </select>
+        <div class="field-hint">
+          <strong>Lưu ý quan trọng:</strong> Nếu chọn Duplex, Loa và Micro bắt buộc phải dùng chung chân BCLK (Clock) và LRCK/WS (Word Select). Phù hợp cho chip kết hợp như ES8311.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="config-group">
+    <div class="group-header">
+      <h3 class="group-title">
+        <span class="group-icon">🔊</span> Loa đầu ra (Speaker / DAC)
+      </h3>
+      <label class="toggle-container">
+        <input type="checkbox" id="speaker_enable" data-config-key="speaker.enable">
+        <span class="toggle-slider"></span>
+        <span class="toggle-label">Bật Loa</span>
+      </label>
+    </div>
+    
+    <div id="grp_speaker_config" style="display: none; margin-top: 15px;">
+      <div class="form-row">
+        <div class="form-col">
+          <label>Chip Loa / Audio DAC</label>
+          <select id="speaker_type" data-config-key="speaker.type">
+            <optgroup label="I2S Đơn giản (Mặc định)">
+              <option value="CUSTOM_AUDIO_DAC_MAX98357A">MAX98357A / CJMCU-1334 (I2S DAC)</option>
+            </optgroup>
+            <optgroup label="Codec Chuyên dụng (Cần I2C)">
+              <option value="CUSTOM_AUDIO_SPK_CODEC_ES8311">ES8311 (I2S + I2C config)</option>
+              <option value="CUSTOM_AUDIO_SPK_CODEC_ES8388">ES8388 (I2S + I2C config)</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+      
+      <div class="pin-grid">
+        <div class="pin-field">
+          <label>DOUT / DIN</label>
+          <input type="number" data-config-key="speaker.pin_dout" placeholder="42">
+          <div class="field-hint" style="font-size:10px;">Dữ liệu âm thanh</div>
+        </div>
+        <div class="pin-field">
+          <label>BCLK (SCK)</label>
+          <input type="number" data-config-key="speaker.pin_bclk" placeholder="41">
+          <div class="field-hint" style="font-size:10px;">Bit Clock</div>
+        </div>
+        <div class="pin-field">
+          <label>LRCK (WS)</label>
+          <input type="number" data-config-key="speaker.pin_lrck" placeholder="40">
+          <div class="field-hint" style="font-size:10px;">Word Select</div>
+        </div>
+      </div>
+
+      
+      <div id="grp_speaker_i2c" style="display: none; background: rgba(59, 130, 246, 0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.2); margin-top: 10px;">
+        <h4 style="font-size: 13px; color: var(--accent-blue); margin-top: 0; margin-bottom: 8px;">Cấu hình I2C cho Audio Codec</h4>
+        <div class="pin-grid">
+          <div class="pin-field"><label>I2C SDA</label><input type="number" data-config-key="speaker.codec_sda"></div>
+          <div class="pin-field"><label>I2C SCL</label><input type="number" data-config-key="speaker.codec_scl"></div>
+        </div>
+        <div class="field-hint">Chân I2C dùng để lập trình và cài đặt thanh ghi bên trong IC DAC (như chỉnh âm lượng, cấu hình kênh). Dữ liệu âm thanh vẫn chạy qua I2S.</div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="config-group">
+    <div class="group-header">
+      <h3 class="group-title">
+        <span class="group-icon">🎙️</span> Micro thu âm (Microphone / ADC)
+      </h3>
+      <label class="toggle-container">
+        <input type="checkbox" id="mic_enable" data-config-key="mic.enable">
+        <span class="toggle-slider"></span>
+        <span class="toggle-label">Bật Mic</span>
+      </label>
+    </div>
+    
+    <div id="grp_mic_config" style="display: none; margin-top: 15px;">
+      <div class="form-row">
+        <div class="form-col">
+          <label>Chip Microphone</label>
+          <select id="mic_type" data-config-key="mic.type">
+            <optgroup label="I2S Đơn giản (Mặc định)">
+              <option value="CUSTOM_AUDIO_MIC_INMP441">INMP441 / ICS43434 (I2S ADC)</option>
+            </optgroup>
+            <optgroup label="Codec Chuyên dụng (Cần I2C)">
+              <option value="CUSTOM_AUDIO_MIC_CODEC_ES8311">ES8311 (I2S + I2C config)</option>
+              <option value="CUSTOM_AUDIO_MIC_CODEC_ES8388">ES8388 (I2S + I2C config)</option>
+              <option value="CUSTOM_AUDIO_MIC_CODEC_BOX">ES7210 (4 Mic Array - I2S + I2C)</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+      
+      <div class="pin-grid">
+        <div class="pin-field">
+          <label>DIN (SD)</label>
+          <input type="number" data-config-key="mic.pin_din" placeholder="39">
+          <div class="field-hint" style="font-size:10px;">Dữ liệu thu âm</div>
+        </div>
+        <div class="pin-field">
+          <label>SCK (BCLK)</label>
+          <input type="number" data-config-key="mic.pin_sck" placeholder="41">
+          <div class="field-hint" style="font-size:10px;">Bit Clock</div>
+        </div>
+        <div class="pin-field">
+          <label>WS (LRCK)</label>
+          <input type="number" data-config-key="mic.pin_ws" placeholder="40">
+          <div class="field-hint" style="font-size:10px;">Word Select</div>
+        </div>
+      </div>
+
+      
+      <div id="grp_mic_i2c" style="display: none; background: rgba(16, 185, 129, 0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2); margin-top: 10px;">
+        <h4 style="font-size: 13px; color: var(--accent-emerald); margin-top: 0; margin-bottom: 8px;">Cấu hình I2C cho Micro Codec</h4>
+        <div class="pin-grid">
+          <div class="pin-field"><label>I2C SDA</label><input type="number" data-config-key="mic.codec_sda"></div>
+          <div class="pin-field"><label>I2C SCL</label><input type="number" data-config-key="mic.codec_scl"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Logic ẩn hiện toàn bộ khối Loa và Mic
+    document.getElementById('speaker_enable')?.addEventListener('change', (e) => {
+      document.getElementById('grp_speaker_config').style.display = e.target.checked ? 'block' : 'none';
+    });
+    
+    document.getElementById('mic_enable')?.addEventListener('change', (e) => {
+      document.getElementById('grp_mic_config').style.display = e.target.checked ? 'block' : 'none';
+    });
+
+    // Logic ẩn hiện khung I2C khi chọn Codec chuyên dụng
+    document.getElementById('speaker_type')?.addEventListener('change', (e) => {
+      const isCodec = ['CUSTOM_AUDIO_SPK_CODEC_ES8311', 'CUSTOM_AUDIO_SPK_CODEC_ES8388'].includes(e.target.value);
+      document.getElementById('grp_speaker_i2c').style.display = isCodec ? 'block' : 'none';
+    });
+
+    document.getElementById('mic_type')?.addEventListener('change', (e) => {
+      const isCodec = ['CUSTOM_AUDIO_MIC_CODEC_ES8311', 'CUSTOM_AUDIO_MIC_CODEC_ES8388', 'CUSTOM_AUDIO_MIC_CODEC_BOX'].includes(e.target.value);
+      document.getElementById('grp_mic_i2c').style.display = isCodec ? 'block' : 'none';
+    });
+
+    // Kích hoạt event ảo
+    setTimeout(() => {
+      document.getElementById('speaker_enable')?.dispatchEvent(new Event('change'));
+      document.getElementById('mic_enable')?.dispatchEvent(new Event('change'));
+      document.getElementById('speaker_type')?.dispatchEvent(new Event('change'));
+      document.getElementById('mic_type')?.dispatchEvent(new Event('change'));
+    }, 100);
+  </script>
+</section>

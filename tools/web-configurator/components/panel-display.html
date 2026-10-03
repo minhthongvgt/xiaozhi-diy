@@ -1,0 +1,260 @@
+<section class="tab-panel" id="panel-display">
+  
+  <div class="config-group">
+    <div class="group-header" style="display: flex; justify-content: space-between; align-items: center;">
+      <div class="group-title">
+        <h3 style="margin: 0;" class="group-title">
+      <span class="group-icon">🎨</span> Giao diện UI & Flash Assets
+    </h3>
+      </div>
+      <div class="tab-header-actions">
+        <span class="tab-status-pill saved" data-tab-status="panel-display">Đã lưu</span>
+        <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-display" title="Lưu thông tin mục này">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+          <span>Lưu mục này</span>
+        </button>
+      </div>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-col">
+        <label for="general_display_style">Kiểu hiển thị tin nhắn</label>
+        <select id="general_display_style" data-config-key="general.display_style">
+          <option value="USE_DEFAULT_MESSAGE_STYLE">Mặc định (Chữ chạy ngang)</option>
+          <option value="USE_WECHAT_MESSAGE_STYLE">WeChat (Bong bóng chat)</option>
+          <option value="USE_EMOTE_MESSAGE_STYLE">Emote (Biểu cảm khuôn mặt emoji)</option>
+        </select>
+        <div class="field-hint">Chỉ áp dụng nếu có màn hình hiển thị.</div>
+      </div>
+      
+      <div class="form-col" id="grp_multiline_chat">
+        <label class="toggle-container" style="margin-top:25px;">
+          <input type="checkbox" id="general_multiline" data-config-key="general.multiline_chat">
+          <span class="toggle-slider"></span>
+          <span class="toggle-label">Hiển thị nhiều dòng (Chữ cuộn trang)</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-col">
+        <label for="general_flash_assets">Tài nguyên đồ họa (Flash Assets)</label>
+        <select id="general_flash_assets" data-config-key="general.flash_assets">
+          <option value="FLASH_DEFAULT_ASSETS">Tích hợp sẵn (Default, 1MB)</option>
+          <option value="FLASH_CUSTOM_ASSETS">Tùy chỉnh (Ghi từ file assets.bin ngoài)</option>
+          <option value="FLASH_EXPRESSION_ASSETS">Emote Assets (Biểu cảm động)</option>
+          <option value="FLASH_NONE_ASSETS">Không dùng tài nguyên (Giảm dung lượng firmware)</option>
+        </select>
+      </div>
+      
+      <div class="form-col" id="grp_custom_assets" style="display: none;">
+        <label for="general_custom_assets">URL / File đường dẫn assets.bin</label>
+        <input type="text" id="general_custom_assets" data-config-key="general.custom_assets_file">
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="config-group">
+    <div class="group-header">
+      <h3 class="group-title">
+        <span class="group-icon">🖥️</span> Màn hình Hiển thị (Display Chip)
+      </h3>
+      <label class="toggle-container">
+        <input type="checkbox" id="display_enable" data-config-key="display.enable">
+        <span class="toggle-slider"></span>
+        <span class="toggle-label">Bật màn hình</span>
+      </label>
+    </div>
+    
+    <div id="grp_display_config" style="display: none; margin-top: 15px;">
+      <div class="form-row">
+        <div class="form-col">
+          <label for="display_type">Chip Màn hình (Driver)</label>
+          <select id="display_type" data-config-key="display.type">
+            <optgroup label="SPI Displays">
+              <option value="CUSTOM_DISPLAY_ST7789">ST7789 (1.3" / 1.54" / 2.4" SPI)</option>
+              <option value="CUSTOM_DISPLAY_ST7735">ST7735 (0.96" / 1.44" / 1.8" SPI)</option>
+              <option value="CUSTOM_DISPLAY_ST7796">ST7796 (3.5" / 4.0" SPI)</option>
+              <option value="CUSTOM_DISPLAY_ILI9341">ILI9341 (2.4" / 2.8" / 3.2" SPI)</option>
+              <option value="CUSTOM_DISPLAY_ILI9486">ILI9486 / ILI9488 (3.5" SPI)</option>
+              <option value="CUSTOM_DISPLAY_GC9A01">GC9A01 (1.28" Tròn SPI)</option>
+              <option value="CUSTOM_DISPLAY_GC9107">GC9107 (SPI)</option>
+              <option value="CUSTOM_DISPLAY_NV3023">NV3023 (SPI)</option>
+              <option value="CUSTOM_DISPLAY_JD9853">JD9853 (SPI)</option>
+            </optgroup>
+            <optgroup label="I2C OLED">
+              <option value="CUSTOM_DISPLAY_OLED_SSD1306">SSD1306 / SSD1315 (0.96" I2C)</option>
+              <option value="CUSTOM_DISPLAY_OLED_SH1106">SH1106 (1.3" I2C)</option>
+            </optgroup>
+            <optgroup label="Cao cấp & Thông minh">
+              <option value="CUSTOM_DISPLAY_QSPI_AMOLED">Màn hình AMOLED (QSPI)</option>
+              <option value="CUSTOM_DISPLAY_EPAPER_SSD1681">E-Paper (SSD1681 SPI)</option>
+              <option value="CUSTOM_DISPLAY_ST7701">ST7701 (RGB565 Song song)</option>
+              <option value="CUSTOM_DISPLAY_UART">Màn hình UART (Nextion / TJC / DWIN)</option>
+              <option value="CUSTOM_DISPLAY_USER_CUSTOM">Trình điều khiển tự viết (User Custom)</option>
+            </optgroup>
+          </select>
+        </div>
+        
+        <div class="form-col form-row" style="margin-bottom:0;">
+          <div class="form-col" style="flex:1;">
+            <label>Chiều ngang (X)</label>
+            <input type="number" id="display_width" data-config-key="display.width" placeholder="240">
+          </div>
+          <div class="form-col" style="flex:1;">
+            <label>Chiều dọc (Y)</label>
+            <input type="number" id="display_height" data-config-key="display.height" placeholder="320">
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="form-row">
+        <label class="toggle-container"><input type="checkbox" id="display_mirror_x" data-config-key="display.mirror_x"><span class="toggle-slider"></span><span class="toggle-label">Lật ngang (Mirror X)</span></label>
+        <label class="toggle-container"><input type="checkbox" id="display_mirror_y" data-config-key="display.mirror_y"><span class="toggle-slider"></span><span class="toggle-label">Lật dọc (Mirror Y)</span></label>
+        <label class="toggle-container"><input type="checkbox" id="display_swap_xy" data-config-key="display.swap_xy"><span class="toggle-slider"></span><span class="toggle-label">Đảo trục (Swap XY)</span></label>
+        <label class="toggle-container"><input type="checkbox" id="display_invert" data-config-key="display.invert_color"><span class="toggle-slider"></span><span class="toggle-label">Đảo màu (Invert)</span></label>
+      </div>
+
+      <div class="form-row">
+        <div class="form-col" style="flex:1;"><label>Offset X</label><input type="number" id="display_offset_x" data-config-key="display.offset_x"></div>
+        <div class="form-col" style="flex:1;"><label>Offset Y</label><input type="number" id="display_offset_y" data-config-key="display.offset_y"></div>
+      </div>
+
+      
+      <div id="grp_display_spi" class="chip-pin-group">
+        <h4>Sơ đồ chân SPI LCD</h4>
+        <div class="pin-grid">
+          <div class="pin-field"><label>MOSI</label><input type="number" data-config-key="display.pin_mosi" placeholder="11"></div>
+          <div class="pin-field"><label>CLK</label><input type="number" data-config-key="display.pin_clk" placeholder="12"></div>
+          <div class="pin-field"><label>CS</label><input type="number" data-config-key="display.pin_cs" placeholder="10"></div>
+          <div class="pin-field"><label>DC (RS)</label><input type="number" data-config-key="display.pin_dc" placeholder="9"></div>
+        </div>
+        <div class="form-row" style="margin-top:10px;">
+          <label class="toggle-container"><input type="checkbox" data-config-key="display.use_rst" id="display_use_rst"><span class="toggle-slider"></span><span class="toggle-label">Dùng chân RST</span></label>
+          <input type="number" data-config-key="display.pin_rst" id="display_rst" placeholder="GPIO RST">
+          
+          <label class="toggle-container" style="margin-left:20px;"><input type="checkbox" data-config-key="display.use_blk" id="display_use_blk"><span class="toggle-slider"></span><span class="toggle-label">Dùng chân Backlight</span></label>
+          <input type="number" data-config-key="display.pin_blk" id="display_blk" placeholder="GPIO BLK">
+        </div>
+      </div>
+
+      
+      <div id="grp_display_i2c" class="chip-pin-group" style="display:none;">
+        <h4>Sơ đồ chân I2C OLED</h4>
+        <div class="pin-grid">
+          <div class="pin-field"><label>SDA</label><input type="number" data-config-key="display.pin_i2c_sda" placeholder="11"></div>
+          <div class="pin-field"><label>SCL</label><input type="number" data-config-key="display.pin_i2c_scl" placeholder="12"></div>
+        </div>
+      </div>
+
+      
+      <div id="grp_display_uart" class="chip-pin-group" style="display:none; background:#222; border-color:#444;">
+        <h4>Cấu hình Màn hình UART (Nextion/TJC)</h4>
+        <div class="form-row">
+          <div class="form-col"><label>Baudrate</label><input type="number" data-config-key="display.uart_baud" placeholder="115200"></div>
+          <div class="form-col"><label>Giao thức</label>
+            <select data-config-key="display.uart_proto">
+              <option value="CUSTOM_DISPLAY_UART_PROTO_NEXTION">Nextion / TJC (FSM)</option>
+              <option value="CUSTOM_DISPLAY_UART_PROTO_DWIN">DWIN (DGUS)</option>
+            </select>
+          </div>
+        </div>
+        <div class="pin-grid">
+          <div class="pin-field"><label>UART TX</label><input type="number" data-config-key="display.uart_tx" placeholder="43"></div>
+          <div class="pin-field"><label>UART RX</label><input type="number" data-config-key="display.uart_rx" placeholder="44"></div>
+          <div class="pin-field"><label>UART Port</label><input type="number" data-config-key="display.uart_port" placeholder="1"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  
+  <div class="config-group">
+    <div class="group-header">
+      <h3 class="group-title">
+        <span class="group-icon">📺</span> Màn hình Phụ trợ (Secondary UART Display)
+      </h3>
+      <label class="toggle-container">
+        <input type="checkbox" id="display_uart_secondary" data-config-key="display.uart_secondary">
+        <span class="toggle-slider"></span>
+        <span class="toggle-label">Bật màn phụ</span>
+      </label>
+    </div>
+    <div class="field-hint" style="margin-bottom:10px;">Dùng khi bạn đã có màn hình SPI nhưng vẫn muốn xuất giao diện ra một màn UART khác đồng thời.</div>
+  </div>
+
+  
+  <div class="config-group">
+    <div class="group-header">
+      <h3 class="group-title">
+        <span class="group-icon">👆</span> Cảm ứng (Touch Panel)
+      </h3>
+      <label class="toggle-container">
+        <input type="checkbox" id="touch_enable" data-config-key="touch.enable">
+        <span class="toggle-slider"></span>
+        <span class="toggle-label">Bật cảm ứng</span>
+      </label>
+    </div>
+    
+    <div id="grp_touch_config" style="display: none; margin-top: 15px;">
+      <div class="form-row">
+        <div class="form-col">
+          <label>Chip Cảm ứng</label>
+          <select id="touch_type" data-config-key="touch.type">
+            <option value="CUSTOM_TOUCH_CST816S">CST816S / CST816T (I2C)</option>
+            <option value="CUSTOM_TOUCH_GT911">GT911 (I2C)</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="pin-grid">
+        <div class="pin-field"><label>SDA / MOSI</label><input type="number" data-config-key="touch.pin_sda"></div>
+        <div class="pin-field"><label>SCL / CLK</label><input type="number" data-config-key="touch.pin_scl"></div>
+        <div class="pin-field"><label>INT / CS</label><input type="number" data-config-key="touch.pin_int"></div>
+        <div class="pin-field"><label>RST</label><input type="number" data-config-key="touch.pin_rst"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Logic ẩn/hiện trường
+    document.getElementById('general_display_style')?.addEventListener('change', (e) => {
+      document.getElementById('grp_multiline_chat').style.display = (e.target.value === 'USE_DEFAULT_MESSAGE_STYLE') ? 'block' : 'none';
+    });
+
+    document.getElementById('general_flash_assets')?.addEventListener('change', (e) => {
+      document.getElementById('grp_custom_assets').style.display = (e.target.value === 'FLASH_CUSTOM_ASSETS') ? 'block' : 'none';
+    });
+
+    document.getElementById('display_enable')?.addEventListener('change', (e) => {
+      document.getElementById('grp_display_config').style.display = e.target.checked ? 'block' : 'none';
+    });
+    
+    document.getElementById('touch_enable')?.addEventListener('change', (e) => {
+      document.getElementById('grp_touch_config').style.display = e.target.checked ? 'block' : 'none';
+    });
+
+    document.getElementById('display_type')?.addEventListener('change', (e) => {
+      const type = e.target.value;
+      const isOled = type.includes('OLED');
+      const isUart = type === 'CUSTOM_DISPLAY_UART';
+      const isSpi = !isOled && !isUart && !type.includes('AMOLED') && !type.includes('EPAPER') && !type.includes('ST7701');
+
+      document.getElementById('grp_display_spi').style.display = isSpi ? 'block' : 'none';
+      document.getElementById('grp_display_i2c').style.display = isOled ? 'block' : 'none';
+      document.getElementById('grp_display_uart').style.display = isUart ? 'block' : 'none';
+    });
+
+    // Kích hoạt event giả lập ban đầu để render đúng state
+    setTimeout(() => {
+      document.getElementById('general_display_style')?.dispatchEvent(new Event('change'));
+      document.getElementById('general_flash_assets')?.dispatchEvent(new Event('change'));
+      document.getElementById('display_enable')?.dispatchEvent(new Event('change'));
+      document.getElementById('touch_enable')?.dispatchEvent(new Event('change'));
+      document.getElementById('display_type')?.dispatchEvent(new Event('change'));
+    }, 100);
+  </script>
+</section>

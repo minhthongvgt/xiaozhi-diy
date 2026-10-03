@@ -1,0 +1,89 @@
+<section class="tab-panel" id="panel-camera">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>📷 Camera</h2>
+              <span class="group-desc">Cảm biến hình ảnh DVP / UVC USB (OV2640 / OV5640)</span>
+            </div>
+            <div class="tab-header-actions">
+              <span class="tab-status-pill saved" data-tab-status="panel-camera">Đã lưu</span>
+              <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-camera">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <span>Lưu mục này</span>
+              </button>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="camera_enable"><span>Bật Camera</span></label>
+            </div>
+            <div class="form-item span-2 cam-fields" style="display:none">
+              <label class="form-label" for="camera_sensor">Loại cảm biến Camera</label>
+              <select class="form-control" id="camera_sensor">
+                <option value="CUSTOM_CAMERA_OV2640" selected>OV2640 (DVP 2MP)</option>
+                <option value="CUSTOM_CAMERA_OV3660">OV3660 (DVP 3MP)</option>
+                <option value="CUSTOM_CAMERA_OV5640">OV5640 (DVP 5MP)</option>
+                <option value="CUSTOM_CAMERA_GC0308">GC0308</option>
+                <option value="CUSTOM_CAMERA_SC031GS">SC031GS (Global Shutter)</option>
+                <option value="CUSTOM_CAMERA_USB_UVC">USB UVC Camera</option>
+              </select>
+            </div>
+
+            
+            <div class="form-item cam-fields cam-dvp-fields" style="display:none">
+              <label class="form-label" for="cam_xclk">XCLK</label>
+              <input type="number" class="form-control" id="cam_xclk" min="-1" max="48" value="-1">
+            </div>
+            <div class="form-item cam-fields cam-dvp-fields" style="display:none">
+              <label class="form-label" for="cam_pclk">PCLK</label>
+              <input type="number" class="form-control" id="cam_pclk" min="-1" max="48" value="-1">
+            </div>
+            <div class="form-item cam-fields cam-dvp-fields" style="display:none">
+              <label class="form-label" for="cam_vsync">VSYNC</label>
+              <input type="number" class="form-control" id="cam_vsync" min="-1" max="48" value="-1">
+            </div>
+            <div class="form-item cam-fields cam-dvp-fields" style="display:none">
+              <label class="form-label" for="cam_href">HREF</label>
+              <input type="number" class="form-control" id="cam_href" min="-1" max="48" value="-1">
+            </div>
+
+            
+            <div class="form-item cam-fields cam-dvp-fields" style="display:none">
+              <label class="form-label" for="cam_siod">SCCB SIOD (SDA)</label>
+              <input type="number" class="form-control" id="cam_siod" min="-1" max="48" value="-1">
+            </div>
+            <div class="form-item cam-fields cam-dvp-fields" style="display:none">
+              <label class="form-label" for="cam_sioc">SCCB SIOC (SCL)</label>
+              <input type="number" class="form-control" id="cam_sioc" min="-1" max="48" value="-1">
+            </div>
+
+            
+            <div class="form-item cam-fields cam-dvp-fields" style="display:none">
+              <label class="form-checkbox"><input type="checkbox" id="cam_use_reset"><span>Dùng chân RESET</span></label>
+              <input type="number" class="form-control" id="cam_reset" min="-1" max="48" value="-1" style="margin-top:6px">
+            </div>
+            <div class="form-item cam-fields cam-dvp-fields" style="display:none">
+              <label class="form-checkbox"><input type="checkbox" id="cam_use_pwdn"><span>Dùng chân PWDN</span></label>
+              <input type="number" class="form-control" id="cam_pwdn" min="-1" max="48" value="-1" style="margin-top:6px">
+            </div>
+
+            
+            <div class="span-2 form-subheading cam-fields cam-dvp-fields" style="display:none"><span>Dữ liệu DVP 8-bit (D0 – D7)</span></div>
+            <div class="form-item cam-fields cam-dvp-fields" style="display:none"><label class="form-label" for="cam_d0">D0</label><input type="number" class="form-control" id="cam_d0" min="-1" max="48" value="-1"></div>
+            <div class="form-item cam-fields cam-dvp-fields" style="display:none"><label class="form-label" for="cam_d1">D1</label><input type="number" class="form-control" id="cam_d1" min="-1" max="48" value="-1"></div>
+            <div class="form-item cam-fields cam-dvp-fields" style="display:none"><label class="form-label" for="cam_d2">D2</label><input type="number" class="form-control" id="cam_d2" min="-1" max="48" value="-1"></div>
+            <div class="form-item cam-fields cam-dvp-fields" style="display:none"><label class="form-label" for="cam_d3">D3</label><input type="number" class="form-control" id="cam_d3" min="-1" max="48" value="-1"></div>
+            <div class="form-item cam-fields cam-dvp-fields" style="display:none"><label class="form-label" for="cam_d4">D4</label><input type="number" class="form-control" id="cam_d4" min="-1" max="48" value="-1"></div>
+            <div class="form-item cam-fields cam-dvp-fields" style="display:none"><label class="form-label" for="cam_d5">D5</label><input type="number" class="form-control" id="cam_d5" min="-1" max="48" value="-1"></div>
+            <div class="form-item cam-fields cam-dvp-fields" style="display:none"><label class="form-label" for="cam_d6">D6</label><input type="number" class="form-control" id="cam_d6" min="-1" max="48" value="-1"></div>
+            <div class="form-item cam-fields cam-dvp-fields" style="display:none"><label class="form-label" for="cam_d7">D7</label><input type="number" class="form-control" id="cam_d7" min="-1" max="48" value="-1"></div>
+
+            <div class="form-item span-2 cam-fields" style="display:none">
+              <div class="checkbox-row">
+                <label class="form-checkbox"><input type="checkbox" id="cam_hmirror"><span>Lật gương ngang (H-Mirror)</span></label>
+                <label class="form-checkbox"><input type="checkbox" id="cam_vflip"><span>Lật dọc (V-Flip)</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>

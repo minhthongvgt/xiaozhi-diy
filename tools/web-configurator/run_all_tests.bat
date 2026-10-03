@@ -2,25 +2,25 @@
 setlocal EnableExtensions
 cd /d "%~dp0"
 echo ========================================================
-echo   RUNNING ALL WEB CONFIGURATOR TESTS (130 TESTS)
+echo   RUNNING ALL WEB CONFIGURATOR TESTS
 echo ========================================================
 echo.
+
+node test_modules.mjs
+if errorlevel 1 goto error
+
+python test_sdkconfig_io.py
+if errorlevel 1 goto error
 
 node test_dom.js
 if errorlevel 1 goto error
 
-node test_runner.js
-if errorlevel 1 goto error
-
-node test_integration.js
-if errorlevel 1 goto error
-
-node test_kconfig_parity.js
+node test_project_integration.mjs
 if errorlevel 1 goto error
 
 echo.
 echo ========================================================
-echo   [SUCCESS] ALL 130 TESTS PASSED (100% KCONFIG PARITY)!
+echo   [SUCCESS] ALL TESTS PASSED (100% KCONFIG PARITY)!
 echo ========================================================
 exit /b 0
 

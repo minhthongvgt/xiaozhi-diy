@@ -1028,6 +1028,10 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 bool "Công cụ MCP: Điều khiển Đèn thông minh / Relay bật tắt qua AI"
                 default y
 
+            config CUSTOM_MCP_TOOL_LAMP_EXTRA_GPIOS
+                string "C?c ch?n GPIO ??n (Lamp) th?m (c?ch nhau d?u ph?y)"
+                default ""
+
             config CUSTOM_MCP_TOOL_LAMP_GPIO
                 int "Chân GPIO điều khiển Đèn / Relay thông minh"
                 depends on CUSTOM_MCP_TOOL_LAMP
@@ -1058,6 +1062,11 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             depends on CUSTOM_ENABLE_BUTTON_BOOT
             range -1 48
                 default 0
+
+        config CUSTOM_BUTTON_BOOT_EXTRA_GPIOS
+            string "C?c ch?n GPIO n?t Boot th?m (c?ch nhau d?u ph?y)"
+            depends on CUSTOM_ENABLE_BUTTON_BOOT
+            default ""
 
 
         # 5. Nút bấm Action / Chạm (PTT Key)
@@ -1326,7 +1335,11 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 default 48
 
 
-            config CUSTOM_LED_COUNT
+            config CUSTOM_LED_EXTRA_GPIOS
+            string "C?c ch?n GPIO LED th?m (c?ch nhau d?u ph?y)"
+            default ""
+
+        config CUSTOM_LED_COUNT
                 int "Số lượng mắt LED trên dải/vòng (Hỗ trợ tối đa 1024 mắt LED)"
                 range 1 1024
                 default 1
@@ -1366,6 +1379,10 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 Kích hoạt âm báo Buzzer trên chân GPIO 41.
 
         if ENABLE_BUZZER
+            config BUZZER_EXTRA_PINS
+                string "C?c ch?n GPIO C?i th?m (c?ch nhau d?u ph?y)"
+                default ""
+
             config BUZZER_PIN
                 int "Chân GPIO Buzzer"
                 range -1 48
@@ -1393,6 +1410,11 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             default n
             help
                 Cảm biến nhiệt độ và độ ẩm giao tiếp 1-Wire.
+
+        config CUSTOM_SENSOR_DHT_EXTRA_GPIOS
+            string "C?c ch?n GPIO DHT th?m (c?ch nhau d?u ph?y)"
+            depends on CUSTOM_ENABLE_SENSOR_DHT11_22
+            default ""
 
         config CUSTOM_SENSOR_DHT_GPIO
             int "Chân dữ liệu 1-Wire cảm biến DHT GPIO"

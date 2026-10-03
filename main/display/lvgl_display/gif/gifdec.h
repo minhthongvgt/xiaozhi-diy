@@ -1,19 +1,14 @@
 #ifndef GIFDEC_H
 #define GIFDEC_H
-
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 #include <lvgl.h>
-
 #include <stdint.h>
-
 typedef struct _gd_Palette {
     int size;
     uint8_t colors[0x100 * 3];
 } gd_Palette;
-
 typedef struct _gd_GCE {
     uint16_t delay;
     uint8_t tindex;
@@ -21,9 +16,6 @@ typedef struct _gd_GCE {
     int input;
     int transparency;
 } gd_GCE;
-
-
-
 typedef struct _gd_GIF {
     lv_fs_file_t fd;
     const char * data;
@@ -50,19 +42,13 @@ typedef struct _gd_GIF {
     uint8_t *lzw_cache;
 #endif
 } gd_GIF;
-
 gd_GIF * gd_open_gif_file(const char * fname);
-
 gd_GIF * gd_open_gif_data(const void * data);
-
 void gd_render_frame(gd_GIF * gif, uint8_t * buffer);
-
 int gd_get_frame(gd_GIF * gif);
 void gd_rewind(gd_GIF * gif);
 void gd_close_gif(gd_GIF * gif);
-
 #ifdef __cplusplus
-} /* extern "C" */
+} 
 #endif
-
-#endif /* GIFDEC_H */
+#endif 

@@ -46,6 +46,11 @@
 #include "boards/common/user_driver_registry.h"
 
 #include <esp_log.h>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <memory>
+#include <cstdlib>
 #include <driver/i2c_master.h>
 #include <driver/spi_common.h>
 #include <driver/uart.h>
@@ -159,6 +164,24 @@ private:
     Display* display_ = nullptr;
     Backlight* backlight_ = nullptr;
     Button boot_button_;
+    std::vector<std::unique_ptr<Button>> extra_boot_buttons_;
+    
+    std::vector<int> ParseIntList(const char* str) {
+        std::vector<int> res;
+        if (!str || !*str) return res;
+        std::stringstream ss(str);
+        std::string token;
+        while (std::getline(ss, token, ',')) {
+            if (token.empty()) continue;
+            char* endptr = nullptr;
+            long val = std::strtol(token.c_str(), &endptr, 10);
+            if (endptr != token.c_str() && val >= 0) {
+                res.push_back(static_cast<int>(val));
+            }
+        }
+        return res;
+    }
+
     Button touch_button_;
     Button volume_up_button_;
     Button volume_down_button_;
@@ -867,6 +890,29 @@ private:
                 Application::GetInstance().StopListening();
             });
         }
+        std::vector<int> extra_boot = ParseIntList(BOOT_BUTTON_EXTRA_GPIOS);
+        for (int p : extra_boot) {
+            gpio_num_t pin = (gpio_num_t)p;
+            if (GPIO_IS_VALID_GPIO(pin)) {
+                auto btn = std::make_unique<Button>(pin);
+                btn->OnClick([this]() {
+                    auto& app = Application::GetInstance();
+                    if (app.GetDeviceState() == kDeviceStateStarting) {
+                        EnterWifiConfigMode();
+                        return;
+                    }
+                    app.ToggleChatState();
+                });
+                btn->OnPressDown([this]() {
+                    Application::GetInstance().StartListening();
+                });
+                btn->OnPressUp([this]() {
+                    Application::GetInstance().StopListening();
+                });
+                extra_boot_buttons_.push_back(std::move(btn));
+            }
+        }
+
 
         if (GPIO_IS_VALID_GPIO(VOLUME_UP_BUTTON_GPIO)) {
             volume_up_button_.OnClick([this]() {
@@ -1040,10 +1086,21 @@ private:
     defined(CONFIG_ENABLE_BUZZER) || defined(CONFIG_ENABLE_HAPTIC_MOTOR) || \
     defined(CONFIG_CUSTOM_ENABLE_BUTTON_BOOT) || defined(CONFIG_CUSTOM_ENABLE_BUTTON_TOUCH)
 #if defined(CONFIG_CUSTOM_MCP_TOOL_LAMP) || defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE)
+
         if (GPIO_IS_VALID_GPIO(LAMP_GPIO)) {
             static LampController lamp __attribute__((unused)) (LAMP_GPIO);
             ESP_LOGI(TAG, "MCP Lamp Controller registered on GPIO %d", LAMP_GPIO);
         }
+        std::vector<int> extra_lamps = ParseIntList(LAMP_EXTRA_GPIOS);
+        static std::vector<std::unique_ptr<LampController>> extra_lamp_instances_;
+        for (int p : extra_lamps) {
+            gpio_num_t pin = (gpio_num_t)p;
+            if (GPIO_IS_VALID_GPIO(pin)) {
+                extra_lamp_instances_.push_back(std::make_unique<LampController>(pin));
+                ESP_LOGI(TAG, "Extra MCP Lamp Controller registered on GPIO %d", pin);
+            }
+        }
+
 #endif
 #if defined(CONFIG_CUSTOM_MCP_TOOL_SENSOR) || defined(CONFIG_ENABLE_CUSTOM_SENSORS)
         static SensorController sensor_ctrl __attribute__((unused));

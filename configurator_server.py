@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+
 """
 Xiaozhi-ESP32 Web Configurator Local Bridge Server
 Architecture: Web UI <-> sdkconfig.defaults  (= menuconfig output)
@@ -18,9 +18,14 @@ import glob
 import re
 import string
 from http.server import HTTPServer, BaseHTTPRequestHandler
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse, parse_qs, unquote
 
-# ── UTF-8 on Windows ─────────────────────────────────────────────────────────
+_HERE = os.path.dirname(os.path.abspath(__file__))
+for _d in (_HERE, os.path.join(_HERE, "web-configurator"), os.path.join(_HERE, "tools", "web-configurator")):
+    if os.path.isfile(os.path.join(_d, "sdkconfig_io.py")) and _d not in sys.path:
+        sys.path.insert(0, _d)
+import sdkconfig_io
+
 os.environ["PYTHONUTF8"] = "1"
 os.environ["PYTHONIOENCODING"] = "utf-8"
 if hasattr(sys.stdout, "reconfigure"):
@@ -28,7 +33,6 @@ if hasattr(sys.stdout, "reconfigure"):
 if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8")
 
-# ── Project & Web Directory Resolution Engine ─────────────────────────────────
 
 def is_valid_xiaozhi_project(path: str) -> bool:
     """Kiểm tra một thư mục có phải là thư mục gốc của dự án Xiaozhi ESP-IDF hợp lệ không."""
@@ -232,7 +236,7 @@ class ProjectContext:
         return True, self.root
 
     def _update_paths(self):
-        self.sdkconfig_defaults = os.path.join(self.root, "sdkconfig.defaults")
+        self.sdkconfig_defaults = os.path.join(self.root, "sdkconfig.defaults.esp32s3")
         self.sdkconfig = os.path.join(self.root, "sdkconfig")
         self.idf_config_file = os.path.join(self.web_dir, ".idf_config.json")
         self.project_config_file = os.path.join(self.web_dir, ".project_config.json")
@@ -248,7 +252,6 @@ class ProjectContext:
             build_job_manager.project_root = self.root
 
 
-# Khởi tạo ngữ cảnh dự án tự động
 project_ctx = ProjectContext()
 PROJECT_ROOT          = project_ctx.root
 SDKCONFIG_DEFAULTS    = project_ctx.sdkconfig_defaults
@@ -257,7 +260,6 @@ WEB_DIR               = project_ctx.web_dir
 IDF_CONFIG_FILE       = project_ctx.idf_config_file
 DEFAULT_PORT          = 8080
 
-# CONFIG_ prefixes that belong to the Web UI (used for sdkconfig sync)
 UI_PREFIXES = (
     "CONFIG_BOARD_TYPE_",
     "CONFIG_ENABLE_CUSTOM_",
@@ -299,25 +301,22 @@ UI_PREFIXES = (
     "CONFIG_ESP32S3_INSTRUCTION_CACHE_",
     "CONFIG_ESP32S3_DATA_CACHE_",
     "CONFIG_ESP_MAIN_TASK_STACK_SIZE",
+    "CONFIG_ESP_SYSTEM_EVENT_TASK_STACK_SIZE",
     "CONFIG_TOUCH_SUPPRESS_DEPRECATE_WARN",
     "CONFIG_PARTITION_TABLE_",
 )
 
 
-# ── sdkconfig helpers ─────────────────────────────────────────────────────────
 
 def read_active_config():
     """
-    Ưu tiên đọc từ sdkconfig (nơi idf.py menuconfig lưu),
-    nếu chưa có thì đọc sdkconfig.defaults.
+    Cấu hình HIỆU LỰC đúng thứ tự ESP-IDF:
+    sdkconfig.defaults < sdkconfig.defaults.esp32s3 < sdkconfig (file idf.py sinh ra).
     """
-    if os.path.isfile(SDKCONFIG):
-        with open(SDKCONFIG, "r", encoding="utf-8") as f:
-            return {"source": "sdkconfig", "content": f.read()}
-    if os.path.isfile(SDKCONFIG_DEFAULTS):
-        with open(SDKCONFIG_DEFAULTS, "r", encoding="utf-8") as f:
-            return {"source": "sdkconfig.defaults", "content": f.read()}
-    return {"source": "none", "content": ""}
+    content = sdkconfig_io.load_effective_text(PROJECT_ROOT)
+    has = lambda n: os.path.isfile(os.path.join(PROJECT_ROOT, n))
+    layers = [n for n in ("sdkconfig.defaults", sdkconfig_io.DEFAULTS_FILE, "sdkconfig") if has(n)]
+    return {"source": " + ".join(layers) or "none", "content": content if layers else ""}
 
 
 def read_sdkconfig_defaults():
@@ -365,7 +364,7 @@ def sync_sdkconfig(entries: dict, lines: list = None):
             key = stripped.split("=", 1)[0].strip()
 
         if key and any(key.startswith(p) for p in UI_PREFIXES):
-            continue  # sẽ được thay bằng entries bên dưới
+            continue  
         kept.append(line)
 
     kept.append("\n# --- Cấu hình từ Web Configurator ---\n")
@@ -396,7 +395,6 @@ def parse_lines_to_dict(lines: list) -> dict:
     return result
 
 
-# ── Project info ──────────────────────────────────────────────────────────────
 
 def detect_project_info():
     return {
@@ -412,38 +410,38 @@ def detect_project_info():
     }
 
 
-# ── Save handler ──────────────────────────────────────────────────────────────
 
 def save_configuration(payload: dict) -> dict:
     """
     Nhận { "sdkconfig_lines": ["CONFIG_FOO=y", ...] }
-    Ghi ra sdkconfig.defaults, đồng bộ vào sdkconfig (tự sinh mới nếu chưa có).
+      - cập nhật TẠI CHỖ sdkconfig.defaults.esp32s3 (giữ các dòng ngoài UI, không trùng key)
+      - nếu đã set-target và có sdkconfig: cập nhật luôn sdkconfig để build dùng ngay
+      - KHÔNG tự tạo sdkconfig giả: để `idf.py set-target esp32s3` / reconfigure sinh file chuẩn
+      - từ chối nếu dự án đang ở target khác esp32s3
     """
     lines = payload.get("sdkconfig_lines")
-    if not lines:
-        return {"success": False, "error": "Thiếu sdkconfig_lines trong payload"}
-
+    if not lines or not isinstance(lines, list) or not all(isinstance(x, str) for x in lines):
+        return {"success": False, "error": "Thiếu hoặc sai định dạng sdkconfig_lines trong payload"}
     try:
-        created_new_sdkconfig = not os.path.isfile(SDKCONFIG)
-        write_sdkconfig_defaults(lines)
-        entries = parse_lines_to_dict(lines)
-        sync_sdkconfig(entries, lines)
-        msg = f"Đã ghi {len(lines)} dòng vào sdkconfig.defaults"
-        if created_new_sdkconfig:
-            msg += " và tự động khởi tạo tệp sdkconfig mới"
-        else:
-            msg += " và đồng bộ vào sdkconfig"
-        return {
-            "success": True,
-            "message": msg,
-        }
+        res = sdkconfig_io.save_config(PROJECT_ROOT, lines)
+    except ValueError as e:
+        return {"success": False, "error": str(e)}
     except Exception as e:
         return {"success": False, "error": str(e)}
 
+    d, s = res["defaults"], res["sdkconfig"]
+    msg = f"Đã ghi {sdkconfig_io.DEFAULTS_FILE} (đổi {d['changed']}, thêm {d['added']})"
+    if s is not None:
+        msg += " và đồng bộ vào sdkconfig"
+    if res.get("needs_reconfigure"):
+        msg += ". Chạy 'idf.py reconfigure' (hoặc build) để IDF chuẩn hoá sdkconfig"
+    elif res.get("note"):
+        msg += ". " + res["note"]
+    return {"success": True, "message": msg, "needs_reconfigure": res.get("needs_reconfigure", False),
+            "target": res["target"]}
 
-# ── ESP-IDF & Toolchain Detection ──────────────────────────────────────────
 
-# ── ESP-IDF & Toolchain Multi-Tier Detection ────────────────────────────────
+
 
 def extract_idf_version(idf_dir: str) -> str:
     """Trích xuất phiên bản ESP-IDF từ esp_idf_version.h hoặc version.txt."""
@@ -487,12 +485,10 @@ def resolve_idf_path(raw_path: str):
     if not os.path.isdir(clean):
         return None, f"Thư mục không tồn tại: {clean}"
 
-    # Kiểm tra trực tiếp tại clean/tools/idf.py
     if os.path.isfile(os.path.join(clean, "tools", "idf.py")):
         ver = extract_idf_version(clean)
         return clean, ver
 
-    # Kiểm tra thư mục con cấp 1 (ví dụ C:\idf\esp-idf hoặc C:\idf\v6.1\esp-idf)
     sub = glob.glob(os.path.join(clean, "*", "tools", "idf.py"))
     if sub:
         found_root = os.path.dirname(os.path.dirname(sub[0]))
@@ -570,18 +566,15 @@ def scan_all_idf_installations():
                 "source": source
             })
 
-    # 1. Custom config
     custom = get_custom_idf_config()
     if custom:
         add_candidate(custom["idf_path"], "Tùy chỉnh cá nhân (Saved Custom)")
 
-    # 2. Environment variables
     for env_k in ["IDF_PATH", "ESP_IDF", "ESPRESSIF_IDF"]:
         val = os.environ.get(env_k)
         if val:
             add_candidate(val, f"Biến môi trường ({env_k})")
 
-    # 3. Manifests from Espressif installer (.espressif/idf-env.json, espidf.json)
     user_prof = os.environ.get("USERPROFILE", "")
     manifest_candidates = [
         os.path.join(user_prof, ".espressif", "idf-env.json"),
@@ -602,7 +595,6 @@ def scan_all_idf_installations():
             except Exception:
                 pass
 
-    # 4. Multi-drive pattern scan
     drives = [f"{d}:\\" for d in string.ascii_uppercase if os.path.exists(f"{d}:\\")]
     for drv in drives:
         patterns = [
@@ -625,7 +617,6 @@ def scan_all_idf_installations():
             for matched in glob.glob(pat):
                 add_candidate(matched, f"Quét ổ đĩa ({drv})")
 
-    # 5. User profile scan
     if user_prof:
         u_patterns = [
             os.path.join(user_prof, "esp", "esp-idf"),
@@ -639,7 +630,6 @@ def scan_all_idf_installations():
             for matched in glob.glob(pat):
                 add_candidate(matched, "Thư mục người dùng (User Profile)")
 
-    # 6. Shallow search on top-level folders on drives
     for drv in drives:
         try:
             for entry in os.scandir(drv):
@@ -659,7 +649,6 @@ def find_profile_script_and_python(idf_path: str):
     profile_candidates = []
     py_candidates = []
 
-    # 1. Tra cứu biến môi trường IDF_TOOLS_PATH nếu có
     idf_tools_env = os.environ.get("IDF_TOOLS_PATH")
     if idf_tools_env and os.path.isdir(idf_tools_env):
         profile_candidates.extend(glob.glob(os.path.join(idf_tools_env, "tools", "Microsoft.*.PowerShell_profile.ps1")))
@@ -667,26 +656,22 @@ def find_profile_script_and_python(idf_path: str):
         py_candidates.extend(glob.glob(os.path.join(idf_tools_env, "tools", "python", "*", "venv", "Scripts", "python.exe")))
         py_candidates.extend(glob.glob(os.path.join(idf_tools_env, "python_env", "*", "Scripts", "python.exe")))
 
-    # 2. Quét thư mục Espressif trên tất cả các ổ đĩa máy tính
     drives = [f"{d}:\\" for d in string.ascii_uppercase if os.path.exists(f"{d}:\\")]
     for drv in drives:
         profile_candidates.extend(glob.glob(os.path.join(drv, "Espressif", "tools", "Microsoft.*.PowerShell_profile.ps1")))
         profile_candidates.extend(glob.glob(os.path.join(drv, "Espressif", "Microsoft.*.PowerShell_profile.ps1")))
         py_candidates.extend(glob.glob(os.path.join(drv, "Espressif", "tools", "python", "*", "venv", "Scripts", "python.exe")))
         
-        # Thêm quét cho thư mục C:\idf theo yêu cầu
         profile_candidates.extend(glob.glob(os.path.join(drv, "idf", "tools", "Microsoft.*.PowerShell_profile.ps1")))
         profile_candidates.extend(glob.glob(os.path.join(drv, "idf", "Microsoft.*.PowerShell_profile.ps1")))
         py_candidates.extend(glob.glob(os.path.join(drv, "idf", "tools", "python", "*", "venv", "Scripts", "python.exe")))
 
-    # 3. Quét tương đối từ thư mục idf_path
     if idf_path:
         profile_candidates.extend(glob.glob(os.path.join(idf_path, "..", "tools", "Microsoft.*.PowerShell_profile.ps1")))
         profile_candidates.extend(glob.glob(os.path.join(idf_path, "..", "..", "tools", "Microsoft.*.PowerShell_profile.ps1")))
         py_candidates.extend(glob.glob(os.path.join(idf_path, ".venv", "Scripts", "python.exe")))
         py_candidates.extend(glob.glob(os.path.join(idf_path, "..", "python", "*", "venv", "Scripts", "python.exe")))
 
-    # 4. Quét thư mục người dùng (%USERPROFILE%\.espressif)
     user_prof = os.environ.get("USERPROFILE", "")
     if user_prof:
         profile_candidates.extend(glob.glob(os.path.join(user_prof, ".espressif", "tools", "Microsoft.*.PowerShell_profile.ps1")))
@@ -737,30 +722,8 @@ def detect_idf():
 
 
 def detect_target():
-    """Tự động nhận diện target vi điều khiển đã được thiết lập (set-target) chưa."""
-    # 1. Kiểm tra trong build/project_description.json (chính xác nhất từ bản build trước)
-    desc_path = os.path.join(PROJECT_ROOT, "build", "project_description.json")
-    if os.path.isfile(desc_path):
-        try:
-            with open(desc_path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                target = data.get("target")
-                if target:
-                    return {"target": target, "is_set": True, "source": "project_description.json"}
-        except Exception:
-            pass
-
-    # 2. Kiểm tra trong sdkconfig hoặc sdkconfig.defaults
-    for cfg_name in ["sdkconfig", "sdkconfig.defaults"]:
-        cfg_path = os.path.join(PROJECT_ROOT, cfg_name)
-        if os.path.isfile(cfg_path):
-            with open(cfg_path, "r", encoding="utf-8", errors="ignore") as f:
-                for line in f:
-                    if line.startswith("CONFIG_IDF_TARGET="):
-                        val = line.split("=", 1)[1].strip().strip('"')
-                        return {"target": val, "is_set": True, "source": cfg_name}
-
-    return {"target": None, "is_set": False, "source": "none"}
+    """Nhận diện target thật sự đã set-target (sdkconfig > build/CMakeCache.txt > sdkconfig.defaults)."""
+    return sdkconfig_io.detect_target(PROJECT_ROOT)
 
 
 def detect_com_ports():
@@ -781,7 +744,6 @@ def detect_com_ports():
             except Exception:
                 pass
 
-    # Dự phòng qua PowerShell GetPortNames
     try:
         ps_cmd = 'powershell -NoProfile -Command "[System.IO.Ports.SerialPort]::GetPortNames()"'
         out = subprocess.check_output(ps_cmd, shell=True, stderr=subprocess.DEVNULL, timeout=4).decode("utf-8")
@@ -795,7 +757,6 @@ def detect_com_ports():
     return ports
 
 
-# ── Build & Flash Job Manager ──────────────────────────────────────────────
 
 class BuildJobManager:
     """Quản lý thực thi các tác vụ Build & Flash trong tiến trình nền không gây đơ server."""
@@ -805,7 +766,7 @@ class BuildJobManager:
         self.lock = threading.Lock()
         self.process = None
         self.thread = None
-        self.state = "idle"  # idle, running, success, failed, cancelled
+        self.state = "idle"  
         self.current_action = None
         self.logs = []
         self.exit_code = None
@@ -846,7 +807,6 @@ class BuildJobManager:
                 return {"success": False, "error": "Không có tiến trình đang chạy"}
             pid = self.process.pid
 
-        # Dừng toàn bộ cây tiến trình trên Windows
         try:
             subprocess.run(f"taskkill /F /T /PID {pid}", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         except Exception:
@@ -928,15 +888,39 @@ class BuildJobManager:
 build_job_manager = BuildJobManager(PROJECT_ROOT)
 
 
-# ── HTTP Handler ──────────────────────────────────────────────────────────────
+ALLOWED_TARGETS = {"esp32", "esp32s2", "esp32s3", "esp32c2", "esp32c3", "esp32c5", "esp32c6",
+                   "esp32c61", "esp32h2", "esp32p4", "linux"}
+_PORT_RE = re.compile(r"^(COM\d{1,3}|/dev/[A-Za-z0-9._/-]{1,40}|socket://[A-Za-z0-9.:_-]{1,60})$")
+_BAUD_RE = re.compile(r"^\d{4,7}$")
+
+
+def safe_port(v):
+    v = (v or "").strip()
+    return v if (not v or _PORT_RE.match(v)) else None
+
+
+def safe_baud(v):
+    v = str(v or "").strip()
+    return v if (not v or _BAUD_RE.match(v)) else None
+
+
+def origin_allowed(origin):
+    if not origin:
+        return True                      
+    return re.match(r"^http://(localhost|127\.0\.0\.1)(:\d+)?$", origin) is not None
+
+
 
 class ConfiguratorHandler(BaseHTTPRequestHandler):
 
-    def log_message(self, fmt, *args):  # tắt log mặc định
+    def log_message(self, fmt, *args):  
         pass
 
     def end_headers(self):
-        self.send_header("Access-Control-Allow-Origin", "*")
+        origin = self.headers.get("Origin", "")
+        if origin and origin_allowed(origin):
+            self.send_header("Access-Control-Allow-Origin", origin)
+            self.send_header("Vary", "Origin")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
         self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
@@ -999,6 +983,8 @@ class ConfiguratorHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         path = urlparse(self.path).path
+        if not origin_allowed(self.headers.get("Origin", "")):
+            return self._json({"success": False, "error": "Origin không được phép"}, 403)
         if path in ("/api/save", "/api/save-tab"):
             length = int(self.headers.get("Content-Length", 0))
             body = self.rfile.read(length).decode("utf-8")
@@ -1068,8 +1054,10 @@ class ConfiguratorHandler(BaseHTTPRequestHandler):
                 data = json.loads(body)
             except Exception:
                 data = {}
-            port = data.get("port", "").strip()
-            baud = data.get("baud", "460800").strip()
+            port = safe_port(data.get("port", ""))
+            baud = safe_baud(data.get("baud", "460800"))
+            if port is None or baud is None:
+                return self._json({"success": False, "error": "Cổng COM hoặc baud không hợp lệ"}, 400)
             port_arg = f"-p {port}" if port else ""
             baud_arg = f"-b {baud}" if baud else ""
             cmd = f"idf.py {port_arg} {baud_arg} flash".strip()
@@ -1083,8 +1071,10 @@ class ConfiguratorHandler(BaseHTTPRequestHandler):
                 data = json.loads(body)
             except Exception:
                 data = {}
-            port = data.get("port", "").strip()
-            baud = data.get("baud", "460800").strip()
+            port = safe_port(data.get("port", ""))
+            baud = safe_baud(data.get("baud", "460800"))
+            if port is None or baud is None:
+                return self._json({"success": False, "error": "Cổng COM hoặc baud không hợp lệ"}, 400)
             port_arg = f"-p {port}" if port else ""
             baud_arg = f"-b {baud}" if baud else ""
             cmd = f"idf.py {port_arg} {baud_arg} build flash".strip()
@@ -1098,7 +1088,9 @@ class ConfiguratorHandler(BaseHTTPRequestHandler):
                 data = json.loads(body)
             except Exception:
                 data = {}
-            target = data.get("target", "esp32s3").strip()
+            target = str(data.get("target", "esp32s3")).strip()
+            if target not in ALLOWED_TARGETS:
+                return self._json({"success": False, "error": f"Target '{target}' không hợp lệ"}, 400)
             cmd = f"idf.py set-target {target}"
             result = build_job_manager.start_job("set-target", cmd, profile_script, idf_path)
             return self._json(result, 200 if result["success"] else 400)
@@ -1118,7 +1110,6 @@ class ConfiguratorHandler(BaseHTTPRequestHandler):
         self.send_response(404)
         self.end_headers()
 
-    # ── helpers ──
 
     def _json(self, data, status=200):
         body = json.dumps(data, ensure_ascii=False).encode("utf-8")
@@ -1130,12 +1121,13 @@ class ConfiguratorHandler(BaseHTTPRequestHandler):
     def _resolve(self, path):
         if path in ("/", "/index.html", "/configurator.html"):
             return os.path.join(project_ctx.web_dir, "index.html")
+        path = unquote(path)
         if path.startswith("/tools/web-configurator/"):
-            return os.path.join(project_ctx.web_dir, path[len("/tools/web-configurator/"):])
-        for base in (project_ctx.web_dir, project_ctx.root):
-            c = os.path.join(base, path.lstrip("/"))
-            if os.path.isfile(c):
-                return c
+            path = path[len("/tools/web-configurator/"):]
+        base = os.path.realpath(project_ctx.web_dir)
+        c = os.path.realpath(os.path.join(base, path.lstrip("/\\")))
+        if (c == base or c.startswith(base + os.sep)) and os.path.isfile(c):
+            return c
         return None
 
     def _serve_file(self, path):
@@ -1151,7 +1143,6 @@ class ConfiguratorHandler(BaseHTTPRequestHandler):
             self.wfile.write(f.read())
 
 
-# ── Bootstrap ─────────────────────────────────────────────────────────────────
 
 def run_server(port=DEFAULT_PORT, project_path=None, web_dir_path=None):
     if project_path:
@@ -1164,7 +1155,7 @@ def run_server(port=DEFAULT_PORT, project_path=None, web_dir_path=None):
     httpd = None
     for p in [port] + list(range(8080, 8100)) + [0]:
         try:
-            httpd = HTTPServer(("", p), ConfiguratorHandler)
+            httpd = HTTPServer(("127.0.0.1", p), ConfiguratorHandler)
             port = httpd.server_port
             break
         except OSError:
@@ -1181,7 +1172,7 @@ def run_server(port=DEFAULT_PORT, project_path=None, web_dir_path=None):
     print(f"[*] Web UI  : {project_ctx.web_dir}")
     print(f"[*] Nguồn   : {project_ctx.source}")
     print(f"[*] URL     : http://localhost:{port}/")
-    print(f"[*] Output  : sdkconfig.defaults  (= menuconfig)")
+    print(f"[*] Output  : {sdkconfig_io.DEFAULTS_FILE} + sdkconfig (nếu đã set-target)")
     print(f"[*] Ctrl+C  để dừng")
     print("=" * 65)
 

@@ -1,0 +1,55 @@
+<section class="tab-panel" id="panel-motor">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>⚙️ Relay & Động cơ DC (Motor)</h2>
+              <span class="group-desc">Relay đóng/ngắt thiết bị và Mạch cầu H điều khiển động cơ DC</span>
+            </div>
+            <div class="tab-header-actions">
+              <span class="tab-status-pill saved" data-tab-status="panel-motor">Đã lưu</span>
+              <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-motor">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <span>Lưu mục này</span>
+              </button>
+            </div>
+          </div>
+          <div class="form-grid">
+            
+            <div class="span-2 form-subheading"><span>Rơ-le đóng/ngắt (Relay Switch)</span></div>
+            <div class="form-item"><label class="form-checkbox"><input type="checkbox" id="relay_enable"><span>Bật Relay</span></label></div>
+            <div class="form-item relay-fields" style="display:none">
+              <label class="form-label" for="relay_gpio">Relay Control GPIO</label>
+              <input type="number" class="form-control" id="relay_gpio" min="-1" max="48" value="-1">
+            </div>
+
+            
+            <div class="span-2 form-subheading"><span>Động cơ DC Mạch cầu H (TB6612 / L298N / DRV8833)</span></div>
+            <div class="form-item span-2"><label class="form-checkbox"><input type="checkbox" id="motor_dc_enable"><span>Bật Động cơ DC</span></label></div>
+            <div class="form-item span-2 motor-fields" style="display:none">
+              <label class="form-label" for="motor_driver">Chip Driver Mạch cầu H</label>
+              <select class="form-control" id="motor_driver">
+                <option value="CUSTOM_MOTOR_DRIVER_TB6612" selected>TB6612FNG (MOSFET hiệu suất cao - Khuyên dùng)</option>
+                <option value="CUSTOM_MOTOR_DRIVER_DRV8833">DRV8833</option>
+                <option value="CUSTOM_MOTOR_DRIVER_L298N">L298N</option>
+                <option value="CUSTOM_MOTOR_DRIVER_L9110S">L9110S (Mini)</option>
+              </select>
+            </div>
+            <div class="form-item motor-fields" style="display:none">
+              <label class="form-label" for="motor_pwma">Kênh A: PWMA (Tốc độ)</label>
+              <input type="number" class="form-control" id="motor_pwma" min="-1" max="48" value="-1">
+            </div>
+            <div class="form-item motor-fields" style="display:none">
+              <label class="form-label" for="motor_dira">Kênh A: DIRA (Chiều quay)</label>
+              <input type="number" class="form-control" id="motor_dira" min="-1" max="48" value="-1">
+            </div>
+            <div class="form-item motor-fields" style="display:none">
+              <label class="form-label" for="motor_pwmb">Kênh B: PWMB (Tốc độ)</label>
+              <input type="number" class="form-control" id="motor_pwmb" min="-1" max="48" value="-1">
+            </div>
+            <div class="form-item motor-fields" style="display:none">
+              <label class="form-label" for="motor_dirb">Kênh B: DIRB (Chiều quay)</label>
+              <input type="number" class="form-control" id="motor_dirb" min="-1" max="48" value="-1">
+            </div>
+          </div>
+        </div>
+      </section>

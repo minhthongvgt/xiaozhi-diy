@@ -1,0 +1,194 @@
+
+
+<section class="tab-panel" id="panel-system">
+  
+  <div class="config-group">
+    <div class="group-header">
+      <div class="group-header" style="display: flex; justify-content: space-between; align-items: center;">
+      <div class="group-title">
+        <h3 style="margin: 0;" class="group-title">
+        <span class="group-icon">💾</span> Bộ nhớ đệm PSRAM
+      </h3>
+      </div>
+      <div class="tab-header-actions">
+        <span class="tab-status-pill saved" data-tab-status="panel-system">Đã lưu</span>
+        <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-system" title="Lưu thông tin mục này">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+          <span>Lưu mục này</span>
+        </button>
+      </div>
+    </div>
+      <label class="toggle-container">
+        <input type="checkbox" data-config-key="system.spiram" id="sys_spiram">
+        <span class="toggle-slider"></span>
+        <span class="toggle-label">Bật PSRAM</span>
+      </label>
+      <button class="info-btn" data-info-title="Bộ nhớ đệm PSRAM" data-info-desc="PSRAM là RAM mở rộng bên ngoài chip ESP32-S3. Bắt buộc phải bật để chạy Mô hình AI cục bộ (Wake Word / Audio Processor). Chip ESP32-S3 dòng N16R8 sẽ có sẵn 8MB PSRAM (Octal).">-ℹ️-</button>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-col">
+        <label>
+          Giao thức RAM (Mode)
+          <button class="info-btn" data-info-title="Giao thức RAM (Mode)" data-info-desc="QIO (Quad I/O - 4 dây) dùng cho các chip thường. OCT (Octal - 8 dây) dùng cho các dòng chip có hậu tố R8 (VD: N16R8, N8R8). Chọn sai có thể khiến chip bị Crash hoặc treo Boot.">-ℹ️-</button>
+        </label>
+        <select data-config-key="system.spiram_mode" id="sys_spiram_mode">
+          <option value="QIO">Quad PSRAM (QIO - 4 lines)</option>
+          <option value="OCT">Octal PSRAM (OCT - 8 lines)</option>
+        </select>
+      </div>
+      
+      <div class="form-col">
+        <label>
+          Tốc độ RAM (Speed)
+          <button class="info-btn" data-info-title="Tốc độ RAM" data-info-desc="Tốc độ xung nhịp giao tiếp với PSRAM. Mặc định 80MHz hoặc 120MHz cho Octal PSRAM. Tốc độ càng cao xử lý Audio càng nhanh nhưng tốn điện hơn.">-ℹ️-</button>
+        </label>
+        <select data-config-key="system.spiram_speed" id="sys_spiram_speed">
+          <option value="40M">40 MHz</option>
+          <option value="80M">80 MHz (Mặc định)</option>
+          <option value="120M">120 MHz (Chỉ dòng Octal)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="config-group">
+    <h3 class="group-title">
+      <span class="group-icon">💽</span> Bộ nhớ lưu trữ Flash
+    </h3>
+    
+    <div class="form-row">
+      <div class="form-col">
+        <label>
+          Dung lượng Flash
+          <button class="info-btn" data-info-title="Dung lượng Flash" data-info-desc="Dung lượng ổ cứng ROM của chip (4MB, 8MB, 16MB). ESP32-S3-N16R8 là 16MB. Bắt buộc chọn đúng với phiên bản chip phần cứng.">-ℹ️-</button>
+        </label>
+        <select data-config-key="system.flash_size" id="sys_flash_size">
+          <option value="4MB">4 MB</option>
+          <option value="8MB">8 MB</option>
+          <option value="16MB">16 MB (N16R8)</option>
+          <option value="32MB">32 MB (N32R8)</option>
+        </select>
+      </div>
+      
+      <div class="form-col">
+        <label>
+          Bảng phân vùng (Partition Table)
+          <button class="info-btn" data-info-title="Bảng phân vùng" data-info-desc="Bảng phân chia không gian ổ cứng cho Bootloader, App, OTA và Data (SPIFFS/NVS). Phải chọn bảng phù hợp với Dung lượng Flash đã cấu hình bên trái.">-ℹ️-</button>
+        </label>
+        <select data-config-key="system.partition_table" id="sys_partition_table">
+          <option value="partitions/16m.csv">16MB Cấu hình chuẩn (Có OTA + SPIFFS)</option>
+          <option value="partitions/8m.csv">8MB Cấu hình chuẩn</option>
+          <option value="partitions/4m.csv">4MB Cấu hình cơ bản</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-col">
+        <label>
+          Giao thức Flash (Mode)
+          <button class="info-btn" data-info-title="Giao thức Flash" data-info-desc="Phương thức giao tiếp với ROM. QIO (Quad I/O) là phổ biến nhất và cân bằng nhất. DIO, QOUT dùng cho các chip cũ hơn.">-ℹ️-</button>
+        </label>
+        <select data-config-key="system.flash_mode" id="sys_flash_mode">
+          <option value="QIO">QIO (Quad I/O - Khuyên dùng)</option>
+          <option value="QOUT">QOUT (Quad Output)</option>
+          <option value="DIO">DIO (Dual I/O)</option>
+          <option value="DOUT">DOUT (Dual Output)</option>
+        </select>
+      </div>
+      
+      <div class="form-col">
+        <label>
+          Tốc độ Flash (Speed)
+          <button class="info-btn" data-info-title="Tốc độ Flash" data-info-desc="Tần số lấy mẫu dữ liệu từ ROM. Nên để 80MHz. Các chip cao cấp hỗ trợ 120MHz.">-ℹ️-</button>
+        </label>
+        <select data-config-key="system.flash_freq" id="sys_flash_freq">
+          <option value="40M">40 MHz</option>
+          <option value="80M">80 MHz (Khuyên dùng)</option>
+          <option value="120M">120 MHz</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="config-group">
+    <h3 class="group-title">
+      <span class="group-icon">🧠</span> Vi xử lý & Hoạt động
+    </h3>
+    
+    <div class="form-row">
+      <div class="form-col">
+        <label>
+          Tần số CPU (CPU Clock)
+          <button class="info-btn" data-info-title="Tần số CPU" data-info-desc="Tốc độ xử lý của vi điều khiển. Với các tác vụ AI và Audio phức tạp, khuyến cáo luôn đặt ở mức tối đa 240MHz. Giảm xuống 160MHz chỉ khi cần tiết kiệm pin vô cùng ngặt nghèo.">-ℹ️-</button>
+        </label>
+        <select data-config-key="system.cpu_freq" id="sys_cpu_freq">
+          <option value="240">240 MHz (Hiệu suất tối đa)</option>
+          <option value="160">160 MHz (Tiết kiệm pin)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  
+  <dialog id="system-info-dialog" class="sys-dialog">
+    <div class="dialog-content">
+      <h3 id="sys-dialog-title">ℹ️ Thông tin</h3>
+      <p id="sys-dialog-desc">Mô tả chi tiết</p>
+      <button id="sys-dialog-close" class="btn btn-outline" style="width: 100px;">Đã hiểu</button>
+    </div>
+  </dialog>
+
+  <script>
+    // Xử lý Popup Info
+    const dialog = document.getElementById('system-info-dialog');
+    const dialogTitle = document.getElementById('sys-dialog-title');
+    const dialogDesc = document.getElementById('sys-dialog-desc');
+    const closeBtn = document.getElementById('sys-dialog-close');
+    
+    if(dialog && closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        dialog.close();
+      });
+      
+      // Đóng dialog khi click ra ngoài
+      dialog.addEventListener('click', (e) => {
+        const dialogDimensions = dialog.getBoundingClientRect();
+        if (
+          e.clientX < dialogDimensions.left ||
+          e.clientX > dialogDimensions.right ||
+          e.clientY < dialogDimensions.top ||
+          e.clientY > dialogDimensions.bottom
+        ) {
+          dialog.close();
+        }
+      });
+    }
+
+    // Gắn sự kiện click cho tất cả nút info
+    document.querySelectorAll('#panel-system .info-btn').forEach(btn => {
+      // Thay đổi text "i" thuần túy
+      btn.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      `;
+      
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const title = btn.getAttribute('data-info-title');
+        const desc = btn.getAttribute('data-info-desc');
+        
+        dialogTitle.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          ${title}
+        `;
+        dialogDesc.innerText = desc;
+        dialog.showModal();
+      });
+    });
+  </script>
+</section>

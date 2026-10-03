@@ -1,31 +1,22 @@
-/**
- * @file i2c_priority.c
- * @brief Shared I2C SDA/SCL pin priority resolution for esp32s3-n16r8-custom
- */
-
 #include "i2c_priority.h"
 #include "config.h"
 #include <sdkconfig.h>
-
 void board_resolve_i2c_pins(gpio_num_t *sda_pin, gpio_num_t *scl_pin)
 {
     gpio_num_t sda = (gpio_num_t)-1;
     gpio_num_t scl = (gpio_num_t)-1;
-
 #if defined(CONFIG_ENABLE_CUSTOM_DISPLAY) && (defined(CONFIG_CUSTOM_DISPLAY_OLED_SSD1306) || defined(CONFIG_CUSTOM_DISPLAY_OLED_SH1106))
     if (GPIO_IS_VALID_GPIO(DISPLAY_I2C_SDA_PIN) && GPIO_IS_VALID_GPIO(DISPLAY_I2C_SCL_PIN)) {
         sda = DISPLAY_I2C_SDA_PIN;
         scl = DISPLAY_I2C_SCL_PIN;
     }
 #endif
-
 #if defined(CONFIG_ENABLE_CUSTOM_TOUCH) && !defined(CONFIG_CUSTOM_TOUCH_NONE)
     if (!GPIO_IS_VALID_GPIO(sda) && GPIO_IS_VALID_GPIO(TOUCH_I2C_SDA_PIN) && GPIO_IS_VALID_GPIO(TOUCH_I2C_SCL_PIN)) {
         sda = TOUCH_I2C_SDA_PIN;
         scl = TOUCH_I2C_SCL_PIN;
     }
 #endif
-
 #if (defined(CONFIG_ENABLE_CUSTOM_AUDIO) || defined(CONFIG_ENABLE_CUSTOM_SPEAKER) || defined(CONFIG_ENABLE_CUSTOM_MIC)) && \
     (defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8311) || defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8388) || \
      defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8374) || defined(CONFIG_CUSTOM_AUDIO_SPK_CODEC_ES8389) || \
@@ -38,91 +29,78 @@ void board_resolve_i2c_pins(gpio_num_t *sda_pin, gpio_num_t *scl_pin)
         scl = AUDIO_CODEC_I2C_SCL_PIN;
     }
 #endif
-
 #if defined(CONFIG_CUSTOM_ENABLE_SENSOR_BMP280)
     if (!GPIO_IS_VALID_GPIO(sda) && GPIO_IS_VALID_GPIO(SENSOR_BMP280_I2C_SDA) && GPIO_IS_VALID_GPIO(SENSOR_BMP280_I2C_SCL)) {
         sda = SENSOR_BMP280_I2C_SDA;
         scl = SENSOR_BMP280_I2C_SCL;
     }
 #endif
-
 #if defined(CONFIG_CUSTOM_ENABLE_SENSOR_BH1750)
     if (!GPIO_IS_VALID_GPIO(sda) && GPIO_IS_VALID_GPIO(SENSOR_BH1750_I2C_SDA) && GPIO_IS_VALID_GPIO(SENSOR_BH1750_I2C_SCL)) {
         sda = SENSOR_BH1750_I2C_SDA;
         scl = SENSOR_BH1750_I2C_SCL;
     }
 #endif
-
 #if defined(CONFIG_CUSTOM_ENABLE_BATTERY_MONITOR) && defined(CONFIG_CUSTOM_BATTERY_MONITOR_BQ27220)
     if (!GPIO_IS_VALID_GPIO(sda) && GPIO_IS_VALID_GPIO(BATTERY_BQ27220_I2C_SDA) && GPIO_IS_VALID_GPIO(BATTERY_BQ27220_I2C_SCL)) {
         sda = BATTERY_BQ27220_I2C_SDA;
         scl = BATTERY_BQ27220_I2C_SCL;
     }
 #endif
-
 #if defined(CONFIG_CUSTOM_ENABLE_SENSOR_GAS_CO2)
     if (!GPIO_IS_VALID_GPIO(sda) && GPIO_IS_VALID_GPIO(SENSOR_GAS_I2C_SDA) && GPIO_IS_VALID_GPIO(SENSOR_GAS_I2C_SCL)) {
         sda = SENSOR_GAS_I2C_SDA;
         scl = SENSOR_GAS_I2C_SCL;
     }
 #endif
-
 #if defined(CONFIG_CUSTOM_ENABLE_SENSOR_APDS9960)
     if (!GPIO_IS_VALID_GPIO(sda) && GPIO_IS_VALID_GPIO(SENSOR_APDS9960_I2C_SDA) && GPIO_IS_VALID_GPIO(SENSOR_APDS9960_I2C_SCL)) {
         sda = SENSOR_APDS9960_I2C_SDA;
         scl = SENSOR_APDS9960_I2C_SCL;
     }
 #endif
-
 #if defined(CONFIG_CUSTOM_ENABLE_SENSOR_VL53LX)
     if (!GPIO_IS_VALID_GPIO(sda) && GPIO_IS_VALID_GPIO(SENSOR_VL53LX_I2C_SDA) && GPIO_IS_VALID_GPIO(SENSOR_VL53LX_I2C_SCL)) {
         sda = SENSOR_VL53LX_I2C_SDA;
         scl = SENSOR_VL53LX_I2C_SCL;
     }
 #endif
-
 #if defined(CONFIG_CUSTOM_ENABLE_PERIPH_NFC_PN532)
     if (!GPIO_IS_VALID_GPIO(sda) && GPIO_IS_VALID_GPIO(PERIPH_NFC_I2C_SDA) && GPIO_IS_VALID_GPIO(PERIPH_NFC_I2C_SCL)) {
         sda = PERIPH_NFC_I2C_SDA;
         scl = PERIPH_NFC_I2C_SCL;
     }
 #endif
-
 #if defined(CONFIG_CUSTOM_ENABLE_PERIPH_RTC)
     if (!GPIO_IS_VALID_GPIO(sda) && GPIO_IS_VALID_GPIO(PERIPH_RTC_I2C_SDA) && GPIO_IS_VALID_GPIO(PERIPH_RTC_I2C_SCL)) {
         sda = PERIPH_RTC_I2C_SDA;
         scl = PERIPH_RTC_I2C_SCL;
     }
 #endif
-
 #if defined(CONFIG_CUSTOM_ENABLE_SENSOR_INA2XX)
     if (!GPIO_IS_VALID_GPIO(sda) && GPIO_IS_VALID_GPIO(SENSOR_INA2XX_I2C_SDA) && GPIO_IS_VALID_GPIO(SENSOR_INA2XX_I2C_SCL)) {
         sda = SENSOR_INA2XX_I2C_SDA;
         scl = SENSOR_INA2XX_I2C_SCL;
     }
 #endif
-
 #if defined(CONFIG_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC)
     if (!GPIO_IS_VALID_GPIO(sda) && GPIO_IS_VALID_GPIO(LED_IC_I2C_SDA) && GPIO_IS_VALID_GPIO(LED_IC_I2C_SCL)) {
         sda = LED_IC_I2C_SDA;
         scl = LED_IC_I2C_SCL;
     }
 #endif
-
 #if defined(CONFIG_CUSTOM_ENABLE_PERIPH_TOUCH_SCREEN)
     if (!GPIO_IS_VALID_GPIO(sda) && GPIO_IS_VALID_GPIO(PERIPH_TOUCH_I2C_SDA) && GPIO_IS_VALID_GPIO(PERIPH_TOUCH_I2C_SCL)) {
         sda = PERIPH_TOUCH_I2C_SDA;
         scl = PERIPH_TOUCH_I2C_SCL;
     }
 #endif
-
 #if defined(CONFIG_CUSTOM_ENABLE_PERIPH_PCA9685)
     if (!GPIO_IS_VALID_GPIO(sda) && GPIO_IS_VALID_GPIO(PERIPH_PCA9685_I2C_SDA) && GPIO_IS_VALID_GPIO(PERIPH_PCA9685_I2C_SCL)) {
         sda = PERIPH_PCA9685_I2C_SDA;
         scl = PERIPH_PCA9685_I2C_SCL;
     }
 #endif
-
     *sda_pin = sda;
     *scl_pin = scl;
 }

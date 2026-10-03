@@ -1,0 +1,124 @@
+<section class="tab-panel active" id="panel-assistant">
+  <div class="config-group">
+    <div class="group-header" style="display: flex; justify-content: space-between; align-items: center;">
+      <div class="group-title">
+        <h3 style="margin: 0;" class="group-title">
+      <span class="group-icon">🌐</span> Cấu hình Trợ lý chung
+    </h3>
+      </div>
+      <div class="tab-header-actions">
+        <span class="tab-status-pill saved" data-tab-status="panel-assistant">Đã lưu</span>
+        <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-assistant" title="Lưu thông tin mục này">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+          <span>Lưu mục này</span>
+        </button>
+      </div>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-col">
+        <label for="general_language">Ngôn ngữ mặc định (Language)</label>
+        <select id="general_language" data-config-key="general.language">
+          <option value="LANGUAGE_VI_VN">Tiếng Việt (VI_VN)</option>
+          <option value="LANGUAGE_EN_US">English (EN_US)</option>
+          <option value="LANGUAGE_ZH_CN">Tiếng Trung (ZH_CN)</option>
+          <option value="LANGUAGE_JA_JP">Tiếng Nhật (JA_JP)</option>
+          <option value="LANGUAGE_KO_KR">Tiếng Hàn (KO_KR)</option>
+        </select>
+        <div class="field-hint">Chọn ngôn ngữ mặc định của thiết bị.</div>
+      </div>
+      
+      <div class="form-col">
+        <label for="general_ota_url">Đường dẫn cập nhật (OTA URL)</label>
+        <input type="text" id="general_ota_url" data-config-key="general.ota_url" placeholder="https://api.tenclass.net/xiaozhi/ota/">
+        <div class="field-hint">URL máy chủ để tải Firmware mới nhất.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="config-group">
+    <h3 class="group-title">
+      <span class="group-icon">🎙️</span> Cấu hình Từ khóa Đánh thức (Wake Word)
+    </h3>
+    
+    <div class="form-row">
+      <div class="form-col">
+        <label for="wakeword_type">Loại Wake Word</label>
+        <select id="wakeword_type" data-config-key="wakeword.type">
+          <option value="USE_AFE_WAKE_WORD">ESP-AFE Wake Word (Khuyên dùng, hỗ trợ AEC)</option>
+          <option value="USE_CUSTOM_WAKE_WORD">Từ khóa tùy chỉnh (Multinet Model)</option>
+          <option value="WAKE_WORD_DISABLED">Tắt (Không sử dụng Wake Word)</option>
+        </select>
+        <div class="field-hint">Chế độ AFE bắt buộc phải dùng chip ESP32-S3 có PSRAM.</div>
+      </div>
+    </div>
+
+    
+    <div class="form-row conditional-group" id="grp-custom-wakeword" style="display: none;">
+      <div class="form-col">
+        <label for="wakeword_custom_word">Từ khóa tùy chỉnh (Pinyin)</label>
+        <input type="text" id="wakeword_custom_word" data-config-key="wakeword.custom_word" placeholder="xiao tu dou">
+        <div class="field-hint">Sử dụng Pinyin cho tiếng Trung, cách nhau bằng dấu cách.</div>
+      </div>
+      <div class="form-col">
+        <label for="wakeword_custom_display">Hiển thị Từ khóa</label>
+        <input type="text" id="wakeword_custom_display" data-config-key="wakeword.custom_display" placeholder="小土豆">
+        <div class="field-hint">Từ hiển thị khi nhận diện thành công.</div>
+      </div>
+      <div class="form-col">
+        <label for="wakeword_threshold">Độ nhạy (%)</label>
+        <input type="number" id="wakeword_threshold" data-config-key="wakeword.threshold" min="1" max="99" placeholder="20">
+        <div class="field-hint">Từ 1-99, càng nhỏ càng nhạy (mặc định 20).</div>
+      </div>
+    </div>
+    
+    <div class="form-row">
+      <label class="toggle-container">
+        <input type="checkbox" id="wakeword_in_listen" data-config-key="wakeword.detection_in_listening">
+        <span class="toggle-slider"></span>
+        <span class="toggle-label">Bật ngắt lời trợ lý (Detection in Listening Mode)</span>
+      </label>
+      <div class="field-hint" style="margin-top:4px; margin-left:50px;">Cho phép gọi Wake Word khi trợ lý đang phát âm thanh để ngắt lời.</div>
+    </div>
+
+    <div class="form-row">
+      <label class="toggle-container">
+        <input type="checkbox" id="wakeword_send_data" data-config-key="wakeword.send_data">
+        <span class="toggle-slider"></span>
+        <span class="toggle-label">Gửi dữ liệu Wake Word cho Server (Send Data)</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="config-group">
+    <h3 class="group-title">
+      <span class="group-icon">🎛️</span> Bộ xử lý Âm thanh (AEC)
+    </h3>
+    
+    <div class="form-row">
+      <label class="toggle-container">
+        <input type="checkbox" id="wakeword_device_aec" data-config-key="wakeword.device_aec">
+        <span class="toggle-slider"></span>
+        <span class="toggle-label">Khử tiếng vọng trên thiết bị (Device AEC)</span>
+      </label>
+      <div class="field-hint" style="margin-top:4px; margin-left:50px;">Giúp mic không thu lại tiếng loa. Yêu cầu ESP32-S3 + PSRAM.</div>
+    </div>
+
+    <div class="form-row">
+      <label class="toggle-container">
+        <input type="checkbox" id="wakeword_server_aec" data-config-key="wakeword.server_aec">
+        <span class="toggle-slider"></span>
+        <span class="toggle-label">Khử tiếng vọng trên Máy chủ (Server AEC)</span>
+      </label>
+    </div>
+  </div>
+
+  <script>
+    // Logic ẩn/hiện trường khi chọn Custom Wakeword
+    document.getElementById('wakeword_type')?.addEventListener('change', (e) => {
+      const isCustom = e.target.value === 'USE_CUSTOM_WAKE_WORD';
+      const grp = document.getElementById('grp-custom-wakeword');
+      if (grp) grp.style.display = isCustom ? 'flex' : 'none';
+    });
+  </script>
+</section>

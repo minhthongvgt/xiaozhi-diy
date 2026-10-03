@@ -18,62 +18,35 @@ Dự án cung cấp bộ cấu hình phần cứng trực quan trên nền Web c
 - **Cách 2**: Nhấp đúp vào `tools/web-configurator/start_configurator.bat`.
 - **Cách 3**: Mở tệp `configurator.html` hoặc `tools/web-configurator/index.html` trực tiếp trên trình duyệt (Google Chrome / Edge).
 
-### 1.2 Danh mục Cấu hình Chuẩn theo Hệ thống Menuconfig (Đã Tối Ưu, Không Đánh Số)
+### 1.2 Danh mục Cấu hình Chuẩn theo Hệ thống Menuconfig
+
+Sidebar hiện có 8 tab (mỗi tab là một component trong `tools/web-configurator/components/`, nạp động qua `js/main.js`):
+
+| Tab (data-target) | Nhóm | Nội dung chính |
+| :--- | :--- | :--- |
+| `panel-assistant` | 1. Xiaozhi Assistant | Ngôn ngữ, OTA URL, Wake Word, AEC |
+| `panel-display` | 1. Xiaozhi Assistant | Màn hình, cảm ứng, giao diện |
+| `panel-audio` | 1. Xiaozhi Assistant | Loa, Micro, chế độ I2S |
+| `panel-network` | 1. Xiaozhi Assistant | Wi-Fi provisioning, 4G/LTE, UART mở rộng, MCP |
+| `panel-peripherals` | 1. Xiaozhi Assistant | Nút bấm, đèn, còi, relay, servo, motor DC, cảm biến |
+| `panel-system` | 2. ESP-IDF Cốt lõi | CPU, Flash, PSRAM, bảng phân vùng |
+| `panel-build` | 2. ESP-IDF Cốt lõi | Build, flash, log, chọn ESP-IDF, cổng COM |
+| `panel-power` | 2. ESP-IDF Cốt lõi | Pin ADC, INA219/INA226, TP4056 |
+
+Phần mô tả chi tiết bên dưới liệt kê tính năng theo nhóm chức năng (một nhóm có thể nằm trong tab khác tên cũ):
 Giao diện được căn chỉnh theo tỉ lệ công thái học hiện đại (Sidebar 260px, Khung trung tâm 1380px, Font Outfit + JetBrains Mono), đã **loại bỏ hoàn toàn đánh số thứ tự** giúp danh mục luôn tinh gọn, tích hợp cơ chế **Tự Động Nhận Diện Cấu Hình (Auto-Detect)**, **Lưu theo từng Tab (Per-Tab Save)** và **Bộ theo dõi thay đổi thông minh (Dirty Tracking)**:
 - Nút lưu được bố trí ở góc trên bên phải của **từng danh mục**. Khi người dùng ở danh mục nào sẽ lưu thông tin cho danh mục đó.
 - Hệ thống tự động kiểm tra thay đổi: hiển thị nhãn `● Chưa lưu` trên thanh điều hướng và chỉ nhắc nhở người dùng khi có sự thay đổi chưa được lưu trước khi chuyển tab.
 - **Quy chuẩn Giao diện**: Toàn bộ phong cách giao diện và biểu cảm AI được quy chuẩn tập trung tại **Flash Assets**, loại bỏ hoàn toàn tùy chọn trùng lặp tại danh mục màn hình.
 
-- 🌐 **Cơ bản & Ngôn ngữ (General - Quy chuẩn Giao diện)**:
-  - URL máy chủ cập nhật OTA, ngôn ngữ đàm thoại chính (Tiếng Việt, English, 中文).
-  - **Gói tài nguyên biểu cảm & Giao diện (Flash Assets - Quy chuẩn duy nhất)**: Gói biểu cảm mặc định, Biểu cảm cơ bản, hoặc **Giao diện tùy chỉnh từ Server Xiaozhi (.bin)**.
-  - *Hướng dẫn vị trí file giao diện tùy chỉnh*: Đặt file `assets.bin` (hoặc tên tùy chỉnh) ngay tại **thư mục gốc dự án** (`assets.bin`). Trình biên dịch ESP-IDF sẽ tự động nạp nhị phân vào phân vùng flash `assets` (địa chỉ `0x800000`).
-- 🔊 **Âm thanh: Loa & Micro (I2S Audio - Phân tách 2 phần độc lập)**:
-  - **Phần 1 - Loa / DAC / Amply**: Chọn Driver (MAX98357A, PCM5102A, NS4168, ES8311, ES8388); chân I2S BCLK, WS/LRCK, DOUT; chân bật/tắt Amply công suất (PA).
-  - **Phần 2 - Micro thu âm**: Chọn Driver (INMP441, ICS-43434, MSM261S, ES8311 ADC, ES7210); chân I2S SCK, WS, DIN; chân I2C SDA/SCL cho chip Codec nếu sử dụng.
-  - Tần số lấy mẫu mặc định 16000 Hz chuẩn AI Voice (OPUS codec).
-- 🖥️ **Màn hình & Cảm ứng (Display & Touch - Phần cứng hiển thị)**:
-  - **Đa dạng chuẩn màn hình hỗ trợ 100%**:
-    - **SPI LCD**: Sitronix ST7789, ST7796, ST7735/ST7735S (mini), Ilitek ILI9341, ILI9486/ILI9488, GalaxyCore GC9A01 (tròn), GC9107, NewVision NV3023/NV3030B, Jadard JD9853.
-    - **I2C OLED**: Solomon SSD1306 (128x64/32), Sino Wealth SH1106.
-    - **Mực điện tử E-Paper SPI**: Solomon SSD1681 (hỗ trợ chân BUSY ngắt phần cứng).
-    - **Màn hình RGB song song**: Sitronix ST7701 (3-wire SPI + RGB 16-bit DMA).
-    - **AMOLED QSPI siêu nét**: Sino Wealth SH8601, Chipone CO5300, Solomon SPD2010 (4-data lines QSPI).
-    - **Màn hình rời UART HMI**: Nextion, TJC, DWIN DGUS, JSON Streaming, Raw Text (hỗ trợ chạy song song 2 màn hình).
-    - **Chế độ Headless / Custom**: Không dùng màn hình (Audio Only) hoặc Driver tự viết qua User Hook.
-  - **Driver Chip Cảm ứng (Touch)**: Hỗ trợ Không dùng cảm ứng (None), CST816S, GT911, FT6236 (cấu hình chân I2C SDA, SCL, ngắt INT, reset RST).
-  - Đảo màu màn hình (Invert Color), xoay góc (Swap XY, Mirror X/Y), độ lệch cửa sổ (Offset X/Y) và sóng âm thoại động.
-- 🎙️ **Từ khóa & Giọng nói (WakeNet)**: WakeNet tích hợp AFE khử vọng hoặc bản nhẹ; độ nhạy nhận diện; chuỗi Pinyin từ khóa; khử tiếng vọng trên máy chủ (Server AEC).
-- 📶 **Cấp Wi-Fi & Mạng (Network)**: Cấp Wi-Fi qua Web Hotspot SoftAP (`Xiaozhi-XXXX`) hoặc Bluetooth BLE BluFi; Mạng mở rộng Modem 4G LTE (Quectel ML307, EC801E) hoặc Ethernet W5500.
-- 🤖 **Điều khiển MCP & IoT (AI Tool Calling)**:
-  - Kích hoạt máy chủ MCP trên thiết bị (`CONFIG_ENABLE_CUSTOM_MCP_SERVER`), cho phép AI Xiaozhi điều khiển thiết bị qua hàm Tool Calling.
-  - *Triệt tiêu xung đột chân*: Tab MCP quản lý tính năng phần mềm AI (Bật/tắt MCP, quyền điều khiển ngoại vi, đọc trạng thái phần cứng, khởi động lại hệ thống, chuyển đổi giao diện). **Toàn bộ chân phần cứng Relay / Đèn bàn được quản lý duy nhất tại Tab Ngoại vi**, loại bỏ hoàn toàn lỗi xung đột chân chéo.
-- 🔘 **Phím bấm & Điều khiển**: Nhấn **"+ Thêm phím bấm"** để mở hộp thoại cấu hình: Phím BOOT (GPIO 0), Touch Button, WAKE Button, Volume Up / Down, Chiết áp xoay vô cực EC11.
-- 🔌 **Ngoại vi & Cảm biến (Quét từ `main/drivers`)**: Nhấn **"+ Thêm linh kiện"** để chọn: LED trạng thái, Rơ-le/Đèn bàn (`LAMP_GPIO`), Còi Buzzer, Động cơ Haptic, Servo PWM, Cầu H Động cơ DC TB6612, Laser ToF VL6180X, Cảm biến nhiệt độ DHT11/22, Khí áp, Siêu âm HC-SR04, Rung, Lửa, Quản lý sạc TP4056, Pin ADC.
-- 📡 **Giao tiếp & Thẻ nhớ**: Nhấn **"+ Thêm kết nối"** để cấu hình: Thẻ nhớ MicroSD qua SPI (CS, MOSI, MISO, SCLK), Cổng UART mở rộng, I2C Bus dùng chung.
-- ⚡ **Phần cứng ESP32-S3-N16R8 (Thông số phần cứng)**:
-  - Bảng thông số phần cứng trực quan: Flash 16MB (QIO 80MHz), PSRAM 8MB (Octal 80MHz), CPU 240MHz, Phân vùng `16m.csv` (Dual OTA 4.5MB x 2 + Assets 2MB + Storage 4.8MB).
-  - Khóa cứng an toàn dải **GPIO 26–32** chống xung đột bus Octal Flash/PSRAM.
-- 📂 **Tự động nhận diện Thư mục Gốc Dự án & Web Configurator ở bất kỳ đâu**:
-  - **Thuật toán dò tìm thư mục dự án đa tầng**: Tự động nhận diện thư mục gốc chứa mã nguồn Xiaozhi dựa trên kiểm tra hợp lệ (`CMakeLists.txt`, `main/`, `sdkconfig.defaults`, `Kconfig.projbuild`) từ nhiều nguồn: tham số CLI (`--project`), biến môi trường (`XIAOZHI_PROJECT_ROOT`), vị trí tệp kịch bản (`configurator_server.py`), thư mục làm việc hiện tại (`CWD`), hoặc tự động quét cấu trúc cây thư mục trên các ổ đĩa.
-  - **Tự động xác định thư mục Web UI**: Tự động định vị thư mục chứa `index.html`, `app.js`, `styles.css` dù `configurator_server.py` được đặt tại thư mục gốc, trong `tools/web-configurator/`, hay thư mục độc lập bất kỳ.
-  - **Quản lý & Chuyển đổi thư mục dự án trực tiếp trên Web UI**: Hộp thoại **"Quản lý Thư mục Dự án Xiaozhi"** (nhấn vào thanh trạng thái hoặc nút **"Thư Mục Dự Án"**) cho phép xem thư mục đang kết nối, tự động quét và liệt kê tất cả các bản Xiaozhi trên máy tính, hoặc nhập đường dẫn tùy ý để chuyển ngữ cảnh làm việc ngay lập tức mà không cần khởi động lại máy chủ.
-- 🚀 **Biên dịch & Nạp (Build & Flash - Tích hợp trực tiếp trên Web)**:
-  - **Dò tìm đa tầng & Nhận diện mọi thư mục ESP-IDF**:
-    - **Tầng 1 (Manifest Espressif)**: Đọc `%USERPROFILE%\.espressif\idf-env.json` và `espidf.json` để nhận diện tức thì mọi phiên bản ESP-IDF đã cài.
-    - **Tầng 2 (Biến môi trường)**: Đọc `IDF_PATH`, `ESP_IDF`, `ESPRESSIF_IDF`.
-    - **Tầng 3 (Quét toàn bộ ổ đĩa máy tính C:\, D:\, E:\...)**: Tự động phát hiện các thư mục cài đặt đa dạng như `C:\idf\`, `C:\esp-idf\`, `D:\idf\`, `D:\esp-idf\`, thư mục công cụ Espressif trên các ổ đĩa, v.v. thông qua nút **"🔍 Quét ổ đĩa"**.
-    - **Tầng 4 (Tùy chỉnh thủ công & Ghi nhớ)**: Hỗ trợ nhập trực tiếp bất kỳ thư mục nào qua ô **"⚙️ Tùy chỉnh / Dò tìm IDF"**, tự động kiểm tra `tools/idf.py`, trích xuất phiên bản chuẩn từ `esp_idf_version.h` và lưu bền vững vào `.idf_config.json`.
-    - **Tầng 5 (Thực thi chuẩn xác)**: Tự động truyền `$env:IDF_PATH = '{custom_path}'` vào PowerShell để đảm bảo quá trình build/flash chạy chính xác theo bộ cài đã chọn.
-  - **Tự động nhận diện Target Chip**: Kiểm tra xem dự án đã được thiết lập `esp32s3` hay chưa (`project_description.json` / `sdkconfig`). Cung cấp nút bấm nhanh **"Thiết lập Target (esp32s3)"** trực tiếp trên Web.
-  - **Tự động quét cổng COM (Serial Ports)**: Liệt kê các cổng COM kết nối trên PC (nhận diện rõ loại chip nạp như `USB-Enhanced-SERIAL CH343`), tự động chọn cổng và hỗ trợ tùy chỉnh tốc độ nạp (Baudrate: 460800, 921600, 115200, 2000000).
-  - **Điều khiển Build & Flash đa năng**:
-    - 🔨 **Biên dịch (Build)**: Thực thi `idf.py build` không đồng bộ trong nền.
-    - ⚡ **Nạp Chip (Flash)**: Thực thi `idf.py -p COMx -b [baud] flash`.
-    - 🚀 **Biên dịch & Nạp ngay (Build & Flash)**: Tự động lưu cấu hình, biên dịch và nạp chip tức thì chỉ với 1 click.
-    - 🧹 **Clean Build**: Dọn dẹp thư mục build sạch sẽ khi cần cấu hình lại.
-    - 🛑 **Dừng tiến trình (Cancel)**: Hủy ngay lập tức tiến trình build/flash đang chạy bằng cơ chế ngắt cây tiến trình (`taskkill /F /T`).
-  - **Cửa sổ dòng lệnh Terminal trực tiếp (Live Console Output)**: Stream toàn bộ output log thời gian thực với font monospace `JetBrains Mono`, tô màu thông minh (lỗi đỏ, cảnh báo vàng, thành công xanh, lệnh xanh ngọc), hỗ trợ tự động cuộn (Auto-scroll), sao chép và xóa log.
+- 🤖 **1. Xiaozhi Assistant - Trợ lý (panel-assistant)**: Ngôn ngữ đàm thoại (Tiếng Việt, English, 中文), URL máy chủ OTA, từ khóa Wake Word (WakeNet/Pinyin/Độ nhạy), và tính năng khử tiếng vọng (AEC).
+- 🖥️ **2. Xiaozhi Assistant - Màn hình (panel-display)**: Hỗ trợ đa dạng chuẩn màn hình SPI/I2C/RGB/QSPI/UART HMI, cảm ứng (Touch), xoay/đảo màu, sóng âm thoại động. Quản lý Gói tài nguyên biểu cảm & Giao diện từ Server.
+- 🔊 **3. Xiaozhi Assistant - Âm thanh (panel-audio)**: Cấu hình Loa (DAC/Amply như MAX98357A, ES8311, v.v.) và Micro thu âm (INMP441, ES7210, v.v.). Hỗ trợ I2S 16000Hz chuẩn AI Voice.
+- 📶 **4. Xiaozhi Assistant - Mạng & Điều khiển (panel-network)**: Cấu hình cấp Wi-Fi (SoftAP/BluFi), Modem 4G LTE, UART mở rộng, và máy chủ MCP cho AI Tool Calling.
+- 🔌 **5. Xiaozhi Assistant - Ngoại vi & Cảm biến (panel-peripherals)**: Quản lý thiết bị ngoại vi như Nút bấm, Đèn (Lamp/Relay), Còi (Buzzer), Động cơ Haptic/Servo/DC, và các loại cảm biến (Nhiệt độ, Khoảng cách, Khí áp).
+- ⚡ **6. ESP-IDF Cốt lõi - Hệ thống (panel-system)**: Cấu hình xung nhịp CPU, bộ nhớ Flash/PSRAM (khóa cứng bảo vệ chân 26-32) và thiết lập bảng phân vùng tĩnh.
+- 🚀 **7. ESP-IDF Cốt lõi - Biên dịch (panel-build)**: Tích hợp công cụ biên dịch tự động, flash firmware, live console, tự dò tìm và quét cài đặt ESP-IDF, cũng như tự động nhận diện Target Chip.
+- 🔋 **8. ESP-IDF Cốt lõi - Nguồn điện (panel-power)**: Quản lý năng lượng qua IC chuyên dụng như INA219, INA226, đo điện áp ADC và IC sạc TP4056.
 
 ---
 
@@ -111,7 +84,7 @@ Web Configurator hiện tại hoạt động hoàn toàn đồng nhất 100% the
 2. **Cơ chế Choice hai chiều (Choice Flag + Derived Value)**: Sinh đồng thời cả cờ chọn (`CONFIG_CHOICE_X=y`) và giá trị tương ứng (ví dụ: `CONFIG_CUSTOM_DISPLAY_UART_BAUDRATE_115200=y` đi kèm `CONFIG_CUSTOM_DISPLAY_UART_BAUDRATE=115200`), giúp khi mở lệnh `idf.py menuconfig` không bao giờ bị nhảy mất cấu hình hoặc reset về mặc định.
 3. **Kích hoạt tự động phụ thuộc chéo (`select`)**: Ví dụ chọn Wi-Fi BluFi sẽ tự động kích hoạt Bluetooth stack (`BT_ENABLED`, `BT_BLE_42_FEATURES_SUPPORTED`, `BT_BLE_BLUFI_ENABLE`).
 4. **Đồng bộ hóa 2 chiều (Bidirectional Sync)**: Web Configurator ưu tiên đọc từ `sdkconfig` (nơi `menuconfig` lưu) khi khởi động, giúp mọi thay đổi bạn thực hiện bằng lệnh `idf.py menuconfig` trên terminal hiển thị tức thì trên giao diện Web.
-5. **Bộ kiểm thử toàn diện (142 Tests Passed)**: Chạy `tools/web-configurator/run_all_tests.bat` để xác minh tự động toàn bộ 142 kịch bản kiểm thử (DOM 16 panels, Logic xung đột GPIO, Tích hợp ESP-IDF, Kconfig Parity, Build & Flash).
+5. **Bộ kiểm thử toàn diện (118 test, 6 tệp)**: Chạy `tools/web-configurator/run_all_tests.bat`: `test_modules.mjs` (19, module thật `js/`), `test_sdkconfig_io.py` (12), `test_dom.js` (28, 8 panel), `test_runner.js` (23), `test_integration.js` (16), `test_kconfig_parity.js` (20).
 
 Yêu cầu cài ESP-IDF 6.1 cho ESP32-S3 bằng Windows installer, gồm Python environment và compiler/toolchain. Bạn có thể biên dịch trực tiếp từ **Web Configurator** (Tab *Biên dịch & Nạp*) hoặc chạy dòng lệnh từ thư mục gốc:
 

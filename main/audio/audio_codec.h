@@ -1,44 +1,32 @@
 #ifndef _AUDIO_CODEC_H
 #define _AUDIO_CODEC_H
-
 #include <freertos/FreeRTOS.h>
 #include <freertos/event_groups.h>
 #include <driver/i2s_std.h>
 #include <esp_idf_version.h>
 #include <esp_timer.h>
-
 #include <vector>
 #include <string>
 #include <functional>
-
 #include "board.h"
-
 #define AUDIO_CODEC_DMA_DESC_NUM 8
 #define AUDIO_CODEC_DMA_FRAME_NUM 480
-
-// ESP-IDF 6 removed i2s_port_t and changed i2s_chan_config_t::id to an integer.
-// Keep numeric I2S controller IDs usable on targets where IDF 5 does not expose
-// every value through the target-specific i2s_port_t enum (for example ESP32-C3).
 #if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(6, 0, 0)
 #define XIAOZHI_I2S_PORT(port) (port)
 #else
 #define XIAOZHI_I2S_PORT(port) static_cast<i2s_port_t>(port)
 #endif
-
 class AudioCodec {
 public:
     AudioCodec();
     virtual ~AudioCodec();
-    
     virtual void SetOutputVolume(int volume);
     virtual void SetInputGain(float gain);
     virtual void EnableInput(bool enable);
     virtual void EnableOutput(bool enable);
-
     virtual void OutputData(std::vector<int16_t>& data);
     virtual bool InputData(std::vector<int16_t>& data);
     virtual void Start();
-
     inline bool duplex() const { return duplex_; }
     inline bool input_reference() const { return input_reference_; }
     inline int input_sample_rate() const { return input_sample_rate_; }
@@ -49,11 +37,9 @@ public:
     inline float input_gain() const { return input_gain_; }
     inline bool input_enabled() const { return input_enabled_; }
     inline bool output_enabled() const { return output_enabled_; }
-
 protected:
     i2s_chan_handle_t tx_handle_ = nullptr;
     i2s_chan_handle_t rx_handle_ = nullptr;
-
     bool duplex_ = false;
     bool input_reference_ = false;
     bool input_enabled_ = false;
@@ -64,13 +50,10 @@ protected:
     int output_channels_ = 1;
     int output_volume_ = 70;
     float input_gain_ = 0.0;
-
     esp_timer_handle_t volume_save_timer_ = nullptr;
     static void VolumeSaveTimerCallback(void* arg);
     void SaveVolumeToNvs();
-
     virtual int Read(int16_t* dest, int samples) = 0;
     virtual int Write(const int16_t* data, int samples) = 0;
 };
-
-#endif // _AUDIO_CODEC_H
+#endif 
