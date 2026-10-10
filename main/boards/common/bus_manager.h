@@ -11,6 +11,7 @@ extern "C" {
 #endif
 esp_err_t bus_manager_init_i2c(gpio_num_t sda_pin, gpio_num_t scl_pin, uint32_t clk_speed_hz);
 i2c_master_bus_handle_t bus_manager_get_i2c_bus(void);
+void bus_manager_get_i2c_pins(gpio_num_t *sda_pin, gpio_num_t *scl_pin);
 void bus_manager_set_i2c_bus(i2c_master_bus_handle_t bus);
 esp_err_t bus_manager_add_i2c_device(const i2c_device_config_t *dev_cfg, i2c_master_dev_handle_t *dev_handle);
 bool bus_manager_i2c_lock(TickType_t wait_ticks);

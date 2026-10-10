@@ -3,6 +3,13 @@
 #include "drivers/periph/pn532.h"
 #include "drivers/periph/pca9685.h"
 #include "drivers/periph/led_ic.h"
+#include "drivers/periph/rc522.h"
+#include "drivers/periph/qmi8658.h"
+#include "drivers/periph/sy6970.h"
+#include "drivers/periph/periph_i2c.h"
+#include "drivers/periph/w5500_eth.h"
+#include "esp_io_expander.h"
+#include "esp_io_expander_tca9554.h"
 #include <esp_log.h>
 #include <sdkconfig.h>
 #include <sys/time.h>
@@ -13,12 +20,23 @@
 #define TAG "PeriphController"
 
 namespace {
+constexpr gpio_num_t kNoPin = static_cast<gpio_num_t>(-1);
+gpio_num_t PinFromConfig(int value) {
+    return value >= 0 ? static_cast<gpio_num_t>(value) : kNoPin;
+}
+}
+
+namespace {
 constexpr int kMinValidYear = 124;
 [[maybe_unused]] constexpr int64_t kRtcWriteIntervalUs = 6LL * 3600 * 1000 * 1000;
 rtc_ext_handle_t s_rtc = nullptr;
 [[maybe_unused]] pn532_handle_t s_nfc = nullptr;
 [[maybe_unused]] pca9685_handle_t s_pwm = nullptr;
 [[maybe_unused]] led_ic_handle_t s_led_ic = nullptr;
+[[maybe_unused]] rc522_handle_t s_rc522 = nullptr;
+[[maybe_unused]] qmi8658_handle_t s_imu = nullptr;
+[[maybe_unused]] esp_io_expander_handle_t s_expander = nullptr;
+[[maybe_unused]] sy6970_handle_t s_pmic = nullptr;
 
 [[maybe_unused]] nlohmann::json ErrorJson(const char* message, esp_err_t err) {
     nlohmann::json j;
@@ -40,6 +58,11 @@ rtc_ext_handle_t s_rtc = nullptr;
 }
 
 PeripheralController::PeripheralController(i2c_master_bus_handle_t i2c_bus) {
+    InitRc522();
+    InitImu();
+    InitExpander();
+    InitPmic();
+    InitEthernet();
     if (i2c_bus == nullptr) {
         ESP_LOGW(TAG, "I2C bus unavailable, I2C peripherals (RTC/NFC/PWM/LED IC) skipped");
         return;
@@ -311,4 +334,256 @@ void PeripheralController::InitLedIc(i2c_master_bus_handle_t i2c_bus) {
 #else
     (void)i2c_bus;
 #endif
+}
+
+void PeripheralController::InitRc522() {
+#if defined(CONFIG_CUSTOM_PERIPH_RC522_SPI_CS)
+    const gpio_num_t rc_sck = PinFromConfig(CONFIG_CUSTOM_PERIPH_RC522_SPI_SCK);
+    const gpio_num_t rc_mosi = PinFromConfig(CONFIG_CUSTOM_PERIPH_RC522_SPI_MOSI);
+    const gpio_num_t rc_miso = PinFromConfig(CONFIG_CUSTOM_PERIPH_RC522_SPI_MISO);
+    const gpio_num_t rc_cs = PinFromConfig(CONFIG_CUSTOM_PERIPH_RC522_SPI_CS);
+    const gpio_num_t rc_rst = PinFromConfig(CONFIG_CUSTOM_PERIPH_RC522_RST_PIN);
+#else
+    const gpio_num_t rc_sck = kNoPin;
+    const gpio_num_t rc_mosi = kNoPin;
+    const gpio_num_t rc_miso = kNoPin;
+    const gpio_num_t rc_cs = kNoPin;
+    const gpio_num_t rc_rst = kNoPin;
+#endif
+    if (!GPIO_IS_VALID_GPIO(rc_cs)) {
+        return;
+    }
+    rc522_config_t cfg = {
+        .host = SPI2_HOST,
+        .sck_pin = rc_sck,
+        .mosi_pin = rc_mosi,
+        .miso_pin = rc_miso,
+        .cs_pin = rc_cs,
+        .rst_pin = rc_rst,
+        .spi_clock_hz = 4000000,
+    };
+    if (rc522_init(&cfg, &s_rc522) != ESP_OK) {
+        ESP_LOGW(TAG, "RC522 RFID reader configured but not responding");
+        return;
+    }
+    auto& mcp_server = McpServer::GetInstance();
+    mcp_server.AddTool("self.rc522.read_card",
+                       "Wait for an RFID card (MIFARE Classic, NTAG, Ultralight, or other ISO14443A card) held in front of "
+                       "the RC522 reader and return its UID. Ask the user to tap the card before calling. 'found' is false "
+                       "if no card was read before the timeout.",
+                       PropertyList({Property("timeout_ms", kPropertyTypeInteger, 5000, 500, 15000)}),
+                       [](const PropertyList& properties) -> ReturnValue {
+        int timeout_ms = properties["timeout_ms"].value<int>();
+        rc522_card_t card = {};
+        esp_err_t ret = rc522_read_card(s_rc522, static_cast<uint32_t>(timeout_ms), &card);
+        nlohmann::json j;
+        j["found"] = (ret == ESP_OK);
+        if (ret == ESP_OK) {
+            char buf[8];
+            j["uid"] = ToHex(card.uid, card.uid_len);
+            j["uid_length"] = card.uid_len;
+            snprintf(buf, sizeof(buf), "%02X", card.sak);
+            j["sak"] = buf;
+            j["card_type"] = rc522_card_type_name(card.sak);
+        }
+        return j;
+    });
+    ESP_LOGI(TAG, "RC522 RFID reader MCP tool registered");
+}
+
+void PeripheralController::InitImu() {
+#if defined(CONFIG_CUSTOM_IMU_I2C_SDA)
+    const gpio_num_t imu_sda = PinFromConfig(CONFIG_CUSTOM_IMU_I2C_SDA);
+    const gpio_num_t imu_scl = PinFromConfig(CONFIG_CUSTOM_IMU_I2C_SCL);
+#else
+    const gpio_num_t imu_sda = kNoPin;
+    const gpio_num_t imu_scl = kNoPin;
+#endif
+    if (!GPIO_IS_VALID_GPIO(imu_sda) || !GPIO_IS_VALID_GPIO(imu_scl)) {
+        return;
+    }
+    i2c_master_bus_handle_t bus = periph_i2c_get_bus(imu_sda, imu_scl);
+    if (bus == nullptr || qmi8658_init(bus, &s_imu) != ESP_OK) {
+        ESP_LOGW(TAG, "IMU configured but QMI8658 not found");
+        return;
+    }
+    auto& mcp_server = McpServer::GetInstance();
+    mcp_server.AddTool("self.imu.get_motion",
+                       "Read the motion sensor (QMI8658 accelerometer and gyroscope): acceleration in g for x/y/z, angular "
+                       "rate in degrees per second, chip temperature in Celsius, and tilt pitch/roll in degrees derived from "
+                       "gravity. Use it to tell whether the device is tilted, lying flat, or being moved. 'valid' is false "
+                       "when the sensor could not be read.",
+                       PropertyList(), [](const PropertyList& properties) -> ReturnValue {
+        qmi8658_sample_t s = {};
+        esp_err_t ret = qmi8658_read(s_imu, &s);
+        nlohmann::json j;
+        j["valid"] = (ret == ESP_OK);
+        if (ret == ESP_OK) {
+            j["accel_g"] = {s.accel_g[0], s.accel_g[1], s.accel_g[2]};
+            j["gyro_dps"] = {s.gyro_dps[0], s.gyro_dps[1], s.gyro_dps[2]};
+            j["temperature_c"] = s.temperature_c;
+            j["pitch_deg"] = s.pitch_deg;
+            j["roll_deg"] = s.roll_deg;
+        }
+        return j;
+    });
+    ESP_LOGI(TAG, "IMU MCP tool registered");
+}
+
+void PeripheralController::InitExpander() {
+#if defined(CONFIG_CUSTOM_EXPANDER_I2C_SDA)
+    const gpio_num_t exp_sda = PinFromConfig(CONFIG_CUSTOM_EXPANDER_I2C_SDA);
+    const gpio_num_t exp_scl = PinFromConfig(CONFIG_CUSTOM_EXPANDER_I2C_SCL);
+#else
+    const gpio_num_t exp_sda = kNoPin;
+    const gpio_num_t exp_scl = kNoPin;
+#endif
+    if (!GPIO_IS_VALID_GPIO(exp_sda) || !GPIO_IS_VALID_GPIO(exp_scl)) {
+        return;
+    }
+    i2c_master_bus_handle_t bus = periph_i2c_get_bus(exp_sda, exp_scl);
+    if (bus == nullptr ||
+        esp_io_expander_new_i2c_tca9554(bus, ESP_IO_EXPANDER_I2C_TCA9554_ADDRESS_000, &s_expander) != ESP_OK) {
+        ESP_LOGW(TAG, "IO expander configured but TCA9554 not found");
+        return;
+    }
+    auto& mcp_server = McpServer::GetInstance();
+    mcp_server.AddTool("self.expander.set_pin",
+                       "Set the output level (0 = low, 1 = high) of one pin (0-7) of the TCA9554 I/O expander, which "
+                       "provides extra GPIO for relays, LEDs or enables. Only use it when the user asks to switch an "
+                       "expander pin.",
+                       PropertyList({Property("pin", kPropertyTypeInteger, 0, 0, 7),
+                                     Property("level", kPropertyTypeInteger, 0, 0, 1)}),
+                       [](const PropertyList& properties) -> ReturnValue {
+        int pin = properties["pin"].value<int>();
+        int level = properties["level"].value<int>();
+        uint32_t mask = 1u << pin;
+        esp_err_t ret = esp_io_expander_set_dir(s_expander, mask, IO_EXPANDER_OUTPUT);
+        if (ret == ESP_OK) {
+            ret = esp_io_expander_set_level(s_expander, mask, static_cast<uint8_t>(level));
+        }
+        if (ret != ESP_OK) {
+            return ErrorJson("Failed to set expander pin", ret);
+        }
+        return true;
+    });
+    mcp_server.AddTool("self.expander.get_pin",
+                       "Read the level (0 or 1) of one pin (0-7) of the TCA9554 I/O expander.",
+                       PropertyList({Property("pin", kPropertyTypeInteger, 0, 0, 7)}),
+                       [](const PropertyList& properties) -> ReturnValue {
+        int pin = properties["pin"].value<int>();
+        uint32_t mask = 1u << pin;
+        esp_err_t ret = esp_io_expander_set_dir(s_expander, mask, IO_EXPANDER_INPUT);
+        uint32_t levels = 0;
+        if (ret == ESP_OK) {
+            ret = esp_io_expander_get_level(s_expander, mask, &levels);
+        }
+        if (ret != ESP_OK) {
+            return ErrorJson("Failed to read expander pin", ret);
+        }
+        nlohmann::json j;
+        j["pin"] = pin;
+        j["level"] = (levels & mask) ? 1 : 0;
+        return j;
+    });
+    ESP_LOGI(TAG, "TCA9554 IO expander MCP tools registered");
+}
+
+void PeripheralController::InitPmic() {
+#if defined(CONFIG_CUSTOM_PMIC_I2C_SDA)
+    const gpio_num_t pmic_sda = PinFromConfig(CONFIG_CUSTOM_PMIC_I2C_SDA);
+    const gpio_num_t pmic_scl = PinFromConfig(CONFIG_CUSTOM_PMIC_I2C_SCL);
+#else
+    const gpio_num_t pmic_sda = kNoPin;
+    const gpio_num_t pmic_scl = kNoPin;
+#endif
+    if (!GPIO_IS_VALID_GPIO(pmic_sda) || !GPIO_IS_VALID_GPIO(pmic_scl)) {
+        return;
+    }
+    i2c_master_bus_handle_t bus = periph_i2c_get_bus(pmic_sda, pmic_scl);
+    if (bus == nullptr || sy6970_init(bus, &s_pmic) != ESP_OK) {
+        ESP_LOGW(TAG, "PMIC configured but SY6970 charger not found");
+        return;
+    }
+    auto& mcp_server = McpServer::GetInstance();
+    mcp_server.AddTool("self.pmic.get_status",
+                       "Read the power management chip (SY6970 charger): whether the battery is charging, whether external "
+                       "power is present, whether charging is complete, the battery voltage in millivolts and an estimated "
+                       "battery percentage. Power-off is intentionally not exposed.",
+                       PropertyList(), [](const PropertyList& properties) -> ReturnValue {
+        sy6970_status_t st = {};
+        esp_err_t ret = sy6970_read_status(s_pmic, &st);
+        if (ret != ESP_OK) {
+            return ErrorJson("Failed to read PMIC", ret);
+        }
+        nlohmann::json j;
+        j["is_charging"] = st.charging;
+        j["power_good"] = st.power_good;
+        j["charge_done"] = st.charge_done;
+        j["battery_voltage_mv"] = st.battery_mv;
+        j["battery_percentage"] = st.battery_pct;
+        return j;
+    });
+    ESP_LOGI(TAG, "PMIC SY6970 MCP tool registered");
+}
+
+void PeripheralController::InitEthernet() {
+#if defined(CONFIG_CUSTOM_ETH_SPI_SCK_PIN) && defined(CONFIG_CUSTOM_ETH_SPI_CS_PIN)
+    const gpio_num_t eth_sck = PinFromConfig(CONFIG_CUSTOM_ETH_SPI_SCK_PIN);
+    const gpio_num_t eth_mosi = PinFromConfig(CONFIG_CUSTOM_ETH_SPI_MOSI_PIN);
+    const gpio_num_t eth_miso = PinFromConfig(CONFIG_CUSTOM_ETH_SPI_MISO_PIN);
+    const gpio_num_t eth_cs = PinFromConfig(CONFIG_CUSTOM_ETH_SPI_CS_PIN);
+    const gpio_num_t eth_int = PinFromConfig(CONFIG_CUSTOM_ETH_SPI_INT_PIN);
+    const gpio_num_t eth_rst = PinFromConfig(CONFIG_CUSTOM_ETH_SPI_RST_PIN);
+#else
+    const gpio_num_t eth_sck = kNoPin;
+    const gpio_num_t eth_mosi = kNoPin;
+    const gpio_num_t eth_miso = kNoPin;
+    const gpio_num_t eth_cs = kNoPin;
+    const gpio_num_t eth_int = kNoPin;
+    const gpio_num_t eth_rst = kNoPin;
+#endif
+    if (!GPIO_IS_VALID_GPIO(eth_sck) || !GPIO_IS_VALID_GPIO(eth_mosi) || !GPIO_IS_VALID_GPIO(eth_miso) ||
+        !GPIO_IS_VALID_GPIO(eth_cs)) {
+        return;
+    }
+    w5500_eth_config_t cfg = {
+        .host = SPI3_HOST,
+        .sck_pin = eth_sck,
+        .mosi_pin = eth_mosi,
+        .miso_pin = eth_miso,
+        .cs_pin = eth_cs,
+        .int_pin = eth_int,
+        .rst_pin = eth_rst,
+        .spi_clock_hz = 20 * 1000 * 1000,
+    };
+    if (w5500_eth_init(&cfg) != ESP_OK) {
+        ESP_LOGW(TAG, "W5500 Ethernet configured but failed to start (check wiring and CS pin)");
+        return;
+    }
+    auto& mcp_server = McpServer::GetInstance();
+    mcp_server.AddTool("self.ethernet.get_status",
+                       "Get the wired Ethernet (W5500) status: whether the cable link is up, whether an IP address was "
+                       "assigned, and the IP, netmask and gateway addresses.",
+                       PropertyList(), [](const PropertyList& properties) -> ReturnValue {
+        w5500_eth_status_t st = {};
+        esp_err_t ret = w5500_eth_get_status(&st);
+        if (ret != ESP_OK) {
+            return ErrorJson("Ethernet not initialized", ret);
+        }
+        auto ip_text = [](uint32_t addr) {
+            char buf[16];
+            snprintf(buf, sizeof(buf), "%u.%u.%u.%u", (unsigned)(addr & 0xFF), (unsigned)((addr >> 8) & 0xFF),
+                     (unsigned)((addr >> 16) & 0xFF), (unsigned)((addr >> 24) & 0xFF));
+            return std::string(buf);
+        };
+        nlohmann::json j;
+        j["link_up"] = st.link_up;
+        j["got_ip"] = st.got_ip;
+        j["ip"] = st.got_ip ? ip_text(st.ip) : "";
+        j["netmask"] = st.got_ip ? ip_text(st.netmask) : "";
+        j["gateway"] = st.got_ip ? ip_text(st.gateway) : "";
+        return j;
+    });
+    ESP_LOGI(TAG, "W5500 Ethernet MCP tool registered");
 }

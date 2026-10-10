@@ -415,6 +415,9 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_PERIPH_RC522_SPI_MISO` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân dữ liệu SPI MISO module RFID RC522 | -1 |
 | `CONFIG_CUSTOM_PERIPH_RC522_SPI_CS` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân chọn chip SPI CS module RFID RC522 | -1 |
 | `CONFIG_CUSTOM_PERIPH_RC522_RST_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân reset RST module RFID RC522 | -1 |
+| `CONFIG_CUSTOM_ETH_SPI_SCK_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân SCK SPI module Ethernet (W5500) | -1 |
+| `CONFIG_CUSTOM_ETH_SPI_MOSI_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân MOSI SPI module Ethernet (W5500) | -1 |
+| `CONFIG_CUSTOM_ETH_SPI_MISO_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân MISO SPI module Ethernet (W5500) | -1 |
 | `CONFIG_CUSTOM_ETH_SPI_CS_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân chọn chip SPI CS module Ethernet (W5500) | -1 |
 | `CONFIG_CUSTOM_ETH_SPI_INT_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân ngắt INT module Ethernet | -1 |
 | `CONFIG_CUSTOM_ETH_SPI_RST_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân reset RST module Ethernet | -1 |

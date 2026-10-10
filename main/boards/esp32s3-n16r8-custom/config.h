@@ -806,6 +806,81 @@
 #else
 #define RC522_RST_PIN ((gpio_num_t)-1)
 #endif
+#if defined(CONFIG_CUSTOM_PMIC_I2C_SDA) && (CONFIG_CUSTOM_PMIC_I2C_SDA >= 0)
+#define PMIC_I2C_SDA_PIN ((gpio_num_t)CONFIG_CUSTOM_PMIC_I2C_SDA)
+#else
+#define PMIC_I2C_SDA_PIN ((gpio_num_t)-1)
+#endif
+#if defined(CONFIG_CUSTOM_PMIC_I2C_SCL) && (CONFIG_CUSTOM_PMIC_I2C_SCL >= 0)
+#define PMIC_I2C_SCL_PIN ((gpio_num_t)CONFIG_CUSTOM_PMIC_I2C_SCL)
+#else
+#define PMIC_I2C_SCL_PIN ((gpio_num_t)-1)
+#endif
+#if defined(CONFIG_CUSTOM_PMIC_INT_PIN) && (CONFIG_CUSTOM_PMIC_INT_PIN >= 0)
+#define PMIC_INT_PIN ((gpio_num_t)CONFIG_CUSTOM_PMIC_INT_PIN)
+#else
+#define PMIC_INT_PIN ((gpio_num_t)-1)
+#endif
+#if defined(CONFIG_CUSTOM_IMU_I2C_SDA) && (CONFIG_CUSTOM_IMU_I2C_SDA >= 0)
+#define IMU_I2C_SDA_PIN ((gpio_num_t)CONFIG_CUSTOM_IMU_I2C_SDA)
+#else
+#define IMU_I2C_SDA_PIN ((gpio_num_t)-1)
+#endif
+#if defined(CONFIG_CUSTOM_IMU_I2C_SCL) && (CONFIG_CUSTOM_IMU_I2C_SCL >= 0)
+#define IMU_I2C_SCL_PIN ((gpio_num_t)CONFIG_CUSTOM_IMU_I2C_SCL)
+#else
+#define IMU_I2C_SCL_PIN ((gpio_num_t)-1)
+#endif
+#if defined(CONFIG_CUSTOM_EXPANDER_I2C_SDA) && (CONFIG_CUSTOM_EXPANDER_I2C_SDA >= 0)
+#define EXPANDER_I2C_SDA_PIN ((gpio_num_t)CONFIG_CUSTOM_EXPANDER_I2C_SDA)
+#else
+#define EXPANDER_I2C_SDA_PIN ((gpio_num_t)-1)
+#endif
+#if defined(CONFIG_CUSTOM_EXPANDER_I2C_SCL) && (CONFIG_CUSTOM_EXPANDER_I2C_SCL >= 0)
+#define EXPANDER_I2C_SCL_PIN ((gpio_num_t)CONFIG_CUSTOM_EXPANDER_I2C_SCL)
+#else
+#define EXPANDER_I2C_SCL_PIN ((gpio_num_t)-1)
+#endif
+#if defined(CONFIG_CUSTOM_EXPANDER_INT_PIN) && (CONFIG_CUSTOM_EXPANDER_INT_PIN >= 0)
+#define EXPANDER_INT_PIN ((gpio_num_t)CONFIG_CUSTOM_EXPANDER_INT_PIN)
+#else
+#define EXPANDER_INT_PIN ((gpio_num_t)-1)
+#endif
+#if defined(CONFIG_CUSTOM_EXPANDER_RST_PIN) && (CONFIG_CUSTOM_EXPANDER_RST_PIN >= 0)
+#define EXPANDER_RST_PIN ((gpio_num_t)CONFIG_CUSTOM_EXPANDER_RST_PIN)
+#else
+#define EXPANDER_RST_PIN ((gpio_num_t)-1)
+#endif
+#if defined(CONFIG_CUSTOM_ETH_SPI_SCK_PIN) && (CONFIG_CUSTOM_ETH_SPI_SCK_PIN >= 0)
+#define ETH_SPI_SCK_PIN ((gpio_num_t)CONFIG_CUSTOM_ETH_SPI_SCK_PIN)
+#else
+#define ETH_SPI_SCK_PIN ((gpio_num_t)-1)
+#endif
+#if defined(CONFIG_CUSTOM_ETH_SPI_MOSI_PIN) && (CONFIG_CUSTOM_ETH_SPI_MOSI_PIN >= 0)
+#define ETH_SPI_MOSI_PIN ((gpio_num_t)CONFIG_CUSTOM_ETH_SPI_MOSI_PIN)
+#else
+#define ETH_SPI_MOSI_PIN ((gpio_num_t)-1)
+#endif
+#if defined(CONFIG_CUSTOM_ETH_SPI_MISO_PIN) && (CONFIG_CUSTOM_ETH_SPI_MISO_PIN >= 0)
+#define ETH_SPI_MISO_PIN ((gpio_num_t)CONFIG_CUSTOM_ETH_SPI_MISO_PIN)
+#else
+#define ETH_SPI_MISO_PIN ((gpio_num_t)-1)
+#endif
+#if defined(CONFIG_CUSTOM_ETH_SPI_CS_PIN) && (CONFIG_CUSTOM_ETH_SPI_CS_PIN >= 0)
+#define ETH_SPI_CS_PIN ((gpio_num_t)CONFIG_CUSTOM_ETH_SPI_CS_PIN)
+#else
+#define ETH_SPI_CS_PIN ((gpio_num_t)-1)
+#endif
+#if defined(CONFIG_CUSTOM_ETH_SPI_INT_PIN) && (CONFIG_CUSTOM_ETH_SPI_INT_PIN >= 0)
+#define ETH_SPI_INT_PIN ((gpio_num_t)CONFIG_CUSTOM_ETH_SPI_INT_PIN)
+#else
+#define ETH_SPI_INT_PIN ((gpio_num_t)-1)
+#endif
+#if defined(CONFIG_CUSTOM_ETH_SPI_RST_PIN) && (CONFIG_CUSTOM_ETH_SPI_RST_PIN >= 0)
+#define ETH_SPI_RST_PIN ((gpio_num_t)CONFIG_CUSTOM_ETH_SPI_RST_PIN)
+#else
+#define ETH_SPI_RST_PIN ((gpio_num_t)-1)
+#endif
 #ifdef CONFIG_CUSTOM_PERIPH_BATTERY_CHRG_PIN
 #define BATTERY_CHRG_PIN ((gpio_num_t)CONFIG_CUSTOM_PERIPH_BATTERY_CHRG_PIN)
 #else

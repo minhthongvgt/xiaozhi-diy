@@ -11774,8 +11774,95 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_ETH_SPI_CS_PIN",
+   "name": "CUSTOM_ETH_SPI_SCK_PIN",
    "order": 430,
+   "type": "int",
+   "prompt": "Chân SCK SPI module Ethernet (W5500)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom)"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": "IDF_TARGET_ESP32S3",
+   "default": [
+    [
+     "-1",
+     "y"
+    ]
+   ],
+   "range": [
+    [
+     "-1",
+     "48",
+     "y"
+    ]
+   ],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_ETH_SPI_MOSI_PIN",
+   "order": 431,
+   "type": "int",
+   "prompt": "Chân MOSI SPI module Ethernet (W5500)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom)"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": "IDF_TARGET_ESP32S3",
+   "default": [
+    [
+     "-1",
+     "y"
+    ]
+   ],
+   "range": [
+    [
+     "-1",
+     "48",
+     "y"
+    ]
+   ],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_ETH_SPI_MISO_PIN",
+   "order": 432,
+   "type": "int",
+   "prompt": "Chân MISO SPI module Ethernet (W5500)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom)"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": "IDF_TARGET_ESP32S3",
+   "default": [
+    [
+     "-1",
+     "y"
+    ]
+   ],
+   "range": [
+    [
+     "-1",
+     "48",
+     "y"
+    ]
+   ],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_ETH_SPI_CS_PIN",
+   "order": 433,
    "type": "int",
    "prompt": "Chân chọn chip SPI CS module Ethernet (W5500)",
    "menu": [
@@ -11804,7 +11891,7 @@
   },
   {
    "name": "CUSTOM_ETH_SPI_INT_PIN",
-   "order": 431,
+   "order": 434,
    "type": "int",
    "prompt": "Chân ngắt INT module Ethernet",
    "menu": [
@@ -11833,7 +11920,7 @@
   },
   {
    "name": "CUSTOM_ETH_SPI_RST_PIN",
-   "order": 432,
+   "order": 435,
    "type": "int",
    "prompt": "Chân reset RST module Ethernet",
    "menu": [
@@ -11862,7 +11949,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_IR_REMOTE",
-   "order": 433,
+   "order": 436,
    "type": "bool",
    "prompt": "Module truyền nhận hồng ngoại điều khiển từ xa (IR Remote) - CHƯA HỖ TRỢ, chưa có driver",
    "menu": [
@@ -11885,7 +11972,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_IR_TX_PIN",
-   "order": 434,
+   "order": 437,
    "type": "int",
    "prompt": "Chân phát hồng ngoại IR TX (38kHz)",
    "menu": [
@@ -11918,7 +12005,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_IR_RX_PIN",
-   "order": 435,
+   "order": 438,
    "type": "int",
    "prompt": "Chân thu hồng ngoại IR RX (VS1838B)",
    "menu": [
@@ -11951,7 +12038,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_TWAI_TX_PIN",
-   "order": 436,
+   "order": 439,
    "type": "int",
    "prompt": "Chân phát mạng CAN / TWAI TX",
    "menu": [
@@ -11980,7 +12067,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_TWAI_RX_PIN",
-   "order": 437,
+   "order": 440,
    "type": "int",
    "prompt": "Chân nhận mạng CAN / TWAI RX",
    "menu": [
@@ -12009,7 +12096,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE",
-   "order": 438,
+   "order": 441,
    "type": "bool",
    "prompt": "Module truyền thông dữ liệu mạng di động 4G LTE (A7670 / SIM7600) - CHƯA HỖ TRỢ, chưa có driver",
    "menu": [
@@ -12032,7 +12119,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_4G_PWRKEY_PIN",
-   "order": 439,
+   "order": 442,
    "type": "int",
    "prompt": "Chân bật nguồn PWRKEY module 4G",
    "menu": [
@@ -12065,7 +12152,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_4G_UART_TX_PIN",
-   "order": 440,
+   "order": 443,
    "type": "int",
    "prompt": "Chân truyền UART TX kết nối module 4G",
    "menu": [
@@ -12098,7 +12185,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_4G_UART_RX_PIN",
-   "order": 441,
+   "order": 444,
    "type": "int",
    "prompt": "Chân nhận UART RX kết nối module 4G",
    "menu": [
@@ -12131,7 +12218,7 @@
   },
   {
    "name": "ENABLE_CUSTOM_SENSORS",
-   "order": 442,
+   "order": 445,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -12154,7 +12241,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_MONITOR_NONE",
-   "order": 443,
+   "order": 446,
    "type": "bool",
    "prompt": "",
    "menu": [

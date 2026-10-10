@@ -19,6 +19,11 @@
 #include <esp_adc/adc_oneshot.h>
 #include <string.h>
 #define TAG "SensorManager"
+#if defined(CONFIG_CUSTOM_SENSOR_LDR_ADC_CHANNEL)
+#define LDR_ADC_CHANNEL ((adc_channel_t)CONFIG_CUSTOM_SENSOR_LDR_ADC_CHANNEL)
+#else
+#define LDR_ADC_CHANNEL ADC_CHANNEL_1
+#endif
 static adc_oneshot_unit_handle_t s_adc1_handle = NULL;
 static vl6180x_handle_t s_vl6180x_dev = NULL;
 static mq_sensor_handle_t s_mq_dev = NULL;
@@ -56,7 +61,7 @@ esp_err_t sensor_manager_init(void)
             .atten = ADC_ATTEN_DB_12,
             .bitwidth = ADC_BITWIDTH_DEFAULT,
         };
-        esp_err_t ch_ret = adc_oneshot_config_channel(s_adc1_handle, ADC_CHANNEL_1, &chan_cfg);
+        esp_err_t ch_ret = adc_oneshot_config_channel(s_adc1_handle, LDR_ADC_CHANNEL, &chan_cfg);
         if (ch_ret != ESP_OK) {
             ESP_LOGW(TAG, "ADC1 CH1 (LDR) config failed: %s", esp_err_to_name(ch_ret));
         }
@@ -405,7 +410,7 @@ esp_err_t sensor_read_environment(sensor_environment_t *out_env)
     }
     if (!lux_read_ok && s_adc1_handle) {
         int raw_val = 0;
-        if (adc_oneshot_read(s_adc1_handle, ADC_CHANNEL_1, &raw_val) == ESP_OK) {
+        if (adc_oneshot_read(s_adc1_handle, LDR_ADC_CHANNEL, &raw_val) == ESP_OK) {
             if (raw_val > 50 && raw_val < 4050) {
                 out_env->light_lux = (float)raw_val * (1000.0f / 4095.0f);
                 has_real_data = true;

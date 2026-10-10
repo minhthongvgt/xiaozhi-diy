@@ -2171,6 +2171,21 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             range -1 48
             default -1
 
+        config CUSTOM_ETH_SPI_SCK_PIN
+            int "Chân SCK SPI module Ethernet (W5500)"
+            range -1 48
+            default -1
+
+        config CUSTOM_ETH_SPI_MOSI_PIN
+            int "Chân MOSI SPI module Ethernet (W5500)"
+            range -1 48
+            default -1
+
+        config CUSTOM_ETH_SPI_MISO_PIN
+            int "Chân MISO SPI module Ethernet (W5500)"
+            range -1 48
+            default -1
+
         config CUSTOM_ETH_SPI_CS_PIN
             int "Chân chọn chip SPI CS module Ethernet (W5500)"
             range -1 48

@@ -3,6 +3,8 @@
 #include <sdkconfig.h>
 #define TAG "BusManager"
 static i2c_master_bus_handle_t s_i2c_bus = NULL;
+static gpio_num_t s_i2c_sda = (gpio_num_t)-1;
+static gpio_num_t s_i2c_scl = (gpio_num_t)-1;
 static SemaphoreHandle_t s_i2c_mutex = NULL;
 static SemaphoreHandle_t s_spi2_mutex = NULL;
 static bool s_spi2_initialized = false;
@@ -42,6 +44,8 @@ esp_err_t bus_manager_init_i2c(gpio_num_t sda_pin, gpio_num_t scl_pin, uint32_t 
         ESP_LOGE(TAG, "Failed to initialize I2C Master Bus: %s", esp_err_to_name(ret));
         return ret;
     }
+    s_i2c_sda = sda_pin;
+    s_i2c_scl = scl_pin;
     ESP_LOGI(TAG, "I2C Master Bus initialized successfully on SDA: %d, SCL: %d, Speed: %lu Hz",
              (int)sda_pin, (int)scl_pin, (unsigned long)clk_speed_hz);
     return ESP_OK;
@@ -49,6 +53,12 @@ esp_err_t bus_manager_init_i2c(gpio_num_t sda_pin, gpio_num_t scl_pin, uint32_t 
 i2c_master_bus_handle_t bus_manager_get_i2c_bus(void)
 {
     return s_i2c_bus;
+}
+
+void bus_manager_get_i2c_pins(gpio_num_t *sda_pin, gpio_num_t *scl_pin)
+{
+    if (sda_pin) *sda_pin = s_i2c_sda;
+    if (scl_pin) *scl_pin = s_i2c_scl;
 }
 void bus_manager_set_i2c_bus(i2c_master_bus_handle_t bus)
 {

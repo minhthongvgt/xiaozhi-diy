@@ -12,6 +12,11 @@ private:
     void InitNfc(i2c_master_bus_handle_t i2c_bus);
     void InitPwm(i2c_master_bus_handle_t i2c_bus);
     void InitLedIc(i2c_master_bus_handle_t i2c_bus);
+    void InitRc522();
+    void InitImu();
+    void InitExpander();
+    void InitPmic();
+    void InitEthernet();
     static void RtcSyncTimerCallback(void* arg);
     void SyncRtcFromSystem(bool force);
     esp_timer_handle_t rtc_sync_timer_ = nullptr;

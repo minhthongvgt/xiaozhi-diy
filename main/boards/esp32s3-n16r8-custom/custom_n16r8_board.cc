@@ -1232,7 +1232,9 @@ private:
 #endif
 #endif
 #if defined(CONFIG_CUSTOM_ENABLE_PERIPH_RTC) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_NFC_PN532) || \
-    defined(CONFIG_CUSTOM_ENABLE_PERIPH_PCA9685) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC)
+    defined(CONFIG_CUSTOM_ENABLE_PERIPH_PCA9685) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC) || \
+    defined(CONFIG_CUSTOM_PERIPH_RC522_SPI_SCK) || defined(CONFIG_CUSTOM_IMU_I2C_SDA) || \
+    defined(CONFIG_CUSTOM_PMIC_I2C_SDA) || defined(CONFIG_CUSTOM_EXPANDER_I2C_SDA)
         InitializeI2c();
         static PeripheralController periph_ctrl __attribute__((unused)) (i2c_bus_);
 #endif
