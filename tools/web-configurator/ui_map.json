@@ -1,0 +1,377 @@
+{
+ "_comment": "Bố cục panel Web Configurator theo cây menuconfig. Sửa file này rồi chạy: python scripts/gen_webui_panels.py",
+ "panels": [
+  {
+   "id": "panel-assistant",
+   "sections": [
+    {
+     "menu": [
+      "Xiaozhi Assistant"
+     ],
+     "exact": true,
+     "icon": "🌐"
+    },
+    {
+     "menu": [
+      "Xiaozhi Assistant",
+      "Từ khóa đánh thức (Wake Word)"
+     ],
+     "icon": "🎙️"
+    },
+    {
+     "menu": [
+      "Xiaozhi Assistant",
+      "Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC)"
+     ],
+     "icon": "🎛️"
+    }
+   ]
+  },
+  {
+   "id": "panel-display",
+   "sections": [
+    {
+     "menu": [
+      "Xiaozhi Assistant",
+      "Giao diện hiển thị & Gói tài nguyên (Display Style & Assets)"
+     ],
+     "icon": "🎨"
+    },
+    {
+     "menu": [
+      "Xiaozhi Assistant",
+      "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+      "1. Màn hình & Cảm ứng (Display & Touch)"
+     ],
+     "icon": "🖥️"
+    }
+   ]
+  },
+  {
+   "id": "panel-audio",
+   "sections": [
+    {
+     "menu": [
+      "Xiaozhi Assistant",
+      "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+      "2. Âm thanh: Loa & Micro (Audio: Speaker & Microphone)"
+     ],
+     "icon": "🔊"
+    }
+   ]
+  },
+  {
+   "id": "panel-network",
+   "sections": [
+    {
+     "menu": [
+      "Xiaozhi Assistant",
+      "WiFi Configuration Method"
+     ],
+     "icon": "📶"
+    },
+    {
+     "menu": [
+      "Xiaozhi Assistant",
+      "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+      "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)"
+     ],
+     "icon": "🔌"
+    }
+   ]
+  },
+  {
+   "id": "panel-peripherals",
+   "sections": [
+    {
+     "menu": [
+      "Xiaozhi Assistant",
+      "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+      "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+      "4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs)"
+     ],
+     "icon": "🕹️"
+    },
+    {
+     "menu": [
+      "Xiaozhi Assistant",
+      "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+      "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+      "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)"
+     ],
+     "icon": "📷"
+    },
+    {
+     "menu": [
+      "Xiaozhi Assistant",
+      "Camera Configuration"
+     ],
+     "icon": "🎞️"
+    },
+    {
+     "menu": [
+      "Xiaozhi Assistant",
+      "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+      "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+      "4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics)"
+     ],
+     "icon": "🔔"
+    },
+    {
+     "menu": [
+      "Xiaozhi Assistant",
+      "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+      "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+      "4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow)"
+     ],
+     "icon": "🌡️"
+    },
+    {
+     "menu": [
+      "Xiaozhi Assistant",
+      "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+      "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+      "4.5. Không Gian, Khoảng Cách & An Ninh (Space, Distance & Security)"
+     ],
+     "icon": "📡"
+    },
+    {
+     "menu": [
+      "Xiaozhi Assistant",
+      "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+      "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+      "4.6. Động Cơ, Robot & Cơ Cấu Chấp Hành (Motors, Robotics & Actuators)"
+     ],
+     "icon": "⚙️"
+    }
+   ]
+  },
+  {
+   "id": "panel-power",
+   "sections": [
+    {
+     "menu": [
+      "Xiaozhi Assistant",
+      "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+      "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+      "4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom)"
+     ],
+     "icon": "🔋"
+    }
+   ]
+  }
+ ],
+ "fields": {
+  "general_language": "choice:CHOICE_LANGUAGE_ZH_CN",
+  "general_ota_url": "OTA_URL",
+  "general_flash_assets": "choice:FLASH_ASSET_CHOICE",
+  "general_custom_assets": "CUSTOM_ASSETS_FILE",
+  "general_display_style": "choice:DISPLAY_STYLE",
+  "general_multiline": "USE_MULTILINE_CHAT_MESSAGE",
+  "ui_accent": "choice:CUSTOM_UI_COLOR_ACCENT",
+  "ui_voice_wave": "CUSTOM_UI_VOICE_WAVE_ENABLE",
+  "ui_auto_scale": "CUSTOM_UI_AUTO_SCALE",
+  "ui_round_safe": "CUSTOM_UI_ROUND_SCREEN_SAFE_AREA",
+  "ui_weather_enable": "CUSTOM_UI_WEATHER_ENABLE",
+  "ui_weather_city": "CUSTOM_UI_WEATHER_CITY",
+  "display_enable": "ENABLE_CUSTOM_DISPLAY",
+  "display_type": "choice:CUSTOM_DISPLAY_TYPE",
+  "display_width": "CUSTOM_DISPLAY_WIDTH",
+  "display_height": "CUSTOM_DISPLAY_HEIGHT",
+  "display_mosi": "CUSTOM_DISPLAY_PIN_MOSI",
+  "display_clk": "CUSTOM_DISPLAY_PIN_CLK",
+  "display_cs": "CUSTOM_DISPLAY_PIN_CS",
+  "display_dc": "CUSTOM_DISPLAY_PIN_DC",
+  "display_use_rst": "CUSTOM_DISPLAY_USE_RST",
+  "display_rst": "CUSTOM_DISPLAY_PIN_RST",
+  "display_use_blk": "CUSTOM_DISPLAY_USE_BLK",
+  "display_blk": "CUSTOM_DISPLAY_PIN_BLK",
+  "display_i2c_sda": "CUSTOM_DISPLAY_PIN_I2C_SDA",
+  "display_i2c_scl": "CUSTOM_DISPLAY_PIN_I2C_SCL",
+  "display_offset_x": "CUSTOM_DISPLAY_OFFSET_X",
+  "display_offset_y": "CUSTOM_DISPLAY_OFFSET_Y",
+  "display_mirror_x": "CUSTOM_DISPLAY_MIRROR_X",
+  "display_mirror_y": "CUSTOM_DISPLAY_MIRROR_Y",
+  "display_swap_xy": "CUSTOM_DISPLAY_SWAP_XY",
+  "display_invert": "CUSTOM_DISPLAY_INVERT_COLOR",
+  "display_amoled_chip": "choice:CUSTOM_DISPLAY_AMOLED_CHIP",
+  "display_qspi_cs": "CUSTOM_DISPLAY_QSPI_CS",
+  "display_qspi_clk": "CUSTOM_DISPLAY_QSPI_CLK",
+  "display_qspi_d0": "CUSTOM_DISPLAY_QSPI_D0",
+  "display_qspi_d1": "CUSTOM_DISPLAY_QSPI_D1",
+  "display_qspi_d2": "CUSTOM_DISPLAY_QSPI_D2",
+  "display_qspi_d3": "CUSTOM_DISPLAY_QSPI_D3",
+  "display_qspi_rst": "CUSTOM_DISPLAY_QSPI_RST",
+  "display_epaper_busy": "CUSTOM_DISPLAY_EPAPER_PIN_BUSY",
+  "display_rgb_pclk": "CUSTOM_DISPLAY_RGB_PCLK",
+  "display_rgb_de": "CUSTOM_DISPLAY_RGB_DE",
+  "display_rgb_vsync": "CUSTOM_DISPLAY_RGB_VSYNC",
+  "display_rgb_hsync": "CUSTOM_DISPLAY_RGB_HSYNC",
+  "display_rgb_d0": "CUSTOM_DISPLAY_RGB_D0",
+  "display_rgb_d1": "CUSTOM_DISPLAY_RGB_D1",
+  "display_rgb_d2": "CUSTOM_DISPLAY_RGB_D2",
+  "display_rgb_d3": "CUSTOM_DISPLAY_RGB_D3",
+  "display_rgb_d4": "CUSTOM_DISPLAY_RGB_D4",
+  "display_rgb_d5": "CUSTOM_DISPLAY_RGB_D5",
+  "display_rgb_d6": "CUSTOM_DISPLAY_RGB_D6",
+  "display_rgb_d7": "CUSTOM_DISPLAY_RGB_D7",
+  "display_rgb_d8": "CUSTOM_DISPLAY_RGB_D8",
+  "display_rgb_d9": "CUSTOM_DISPLAY_RGB_D9",
+  "display_rgb_d10": "CUSTOM_DISPLAY_RGB_D10",
+  "display_rgb_d11": "CUSTOM_DISPLAY_RGB_D11",
+  "display_rgb_d12": "CUSTOM_DISPLAY_RGB_D12",
+  "display_rgb_d13": "CUSTOM_DISPLAY_RGB_D13",
+  "display_rgb_d14": "CUSTOM_DISPLAY_RGB_D14",
+  "display_rgb_d15": "CUSTOM_DISPLAY_RGB_D15",
+  "display_uart_secondary": "ENABLE_CUSTOM_SECONDARY_UART_DISPLAY",
+  "display_uart_port": "CUSTOM_DISPLAY_UART_PORT",
+  "display_uart_tx": "CUSTOM_DISPLAY_UART_TX_PIN",
+  "display_uart_rx": "CUSTOM_DISPLAY_UART_RX_PIN",
+  "display_uart_baud": "choice:CUSTOM_DISPLAY_UART_BAUDRATE_CHOICE",
+  "display_uart_proto": "choice:CUSTOM_DISPLAY_UART_PROTOCOL",
+  "touch_enable": "ENABLE_CUSTOM_TOUCH",
+  "touch_type": "choice:CUSTOM_TOUCH_TYPE",
+  "touch_sda": "CUSTOM_TOUCH_PIN_SDA",
+  "touch_scl": "CUSTOM_TOUCH_PIN_SCL",
+  "touch_int": "CUSTOM_TOUCH_PIN_INT",
+  "touch_rst": "CUSTOM_TOUCH_PIN_RST",
+  "speaker_enable": "ENABLE_CUSTOM_SPEAKER",
+  "speaker_type": "choice:CUSTOM_AUDIO_SPEAKER_TYPE",
+  "spk_dout": "CUSTOM_AUDIO_SPK_GPIO_DOUT",
+  "spk_bclk": "CUSTOM_AUDIO_SPK_GPIO_BCLK",
+  "spk_lrck": "CUSTOM_AUDIO_SPK_GPIO_LRCK",
+  "spk_codec_sda": "CUSTOM_AUDIO_SPK_CODEC_I2C_SDA",
+  "spk_codec_scl": "CUSTOM_AUDIO_SPK_CODEC_I2C_SCL",
+  "mic_enable": "ENABLE_CUSTOM_MIC",
+  "mic_type": "choice:CUSTOM_AUDIO_MIC_TYPE",
+  "mic_din": "CUSTOM_AUDIO_MIC_GPIO_DIN",
+  "mic_sck": "CUSTOM_AUDIO_MIC_GPIO_SCK",
+  "mic_ws": "CUSTOM_AUDIO_MIC_GPIO_WS",
+  "mic_codec_sda": "CUSTOM_AUDIO_MIC_CODEC_I2C_SDA",
+  "mic_codec_scl": "CUSTOM_AUDIO_MIC_CODEC_I2C_SCL",
+  "audio_i2s_mode": "choice:CUSTOM_AUDIO_I2S_MODE",
+  "wakeword_type": "choice:WAKE_WORD_TYPE",
+  "wakeword_word": "CUSTOM_WAKE_WORD",
+  "wakeword_display": "CUSTOM_WAKE_WORD_DISPLAY",
+  "wakeword_threshold": "CUSTOM_WAKE_WORD_THRESHOLD",
+  "wakeword_aec_mode": "choice:AUDIO_PROCESSOR_AEC",
+  "wakeword_send_data": "SEND_WAKE_WORD_DATA",
+  "wakeword_in_listen": "WAKE_WORD_DETECTION_IN_LISTENING",
+  "wifi_method": "pseudo:USE_HOTSPOT_WIFI_PROVISIONING,USE_ESP_BLUFI_WIFI_PROVISIONING",
+  "buttons_boot": "CUSTOM_ENABLE_BUTTON_BOOT",
+  "boot_gpio": "CUSTOM_BUTTON_BOOT_GPIO",
+  "buttons_touch": "CUSTOM_ENABLE_BUTTON_TOUCH",
+  "touch_btn_gpio": "CUSTOM_BUTTON_TOUCH_GPIO",
+  "buttons_vol": "CUSTOM_ENABLE_BUTTON_VOLUME",
+  "vol_up_gpio": "CUSTOM_BUTTON_VOL_UP_GPIO",
+  "vol_down_gpio": "CUSTOM_BUTTON_VOL_DOWN_GPIO",
+  "buttons_slider": "CUSTOM_ENABLE_TOUCH_SLIDER",
+  "slider_pad1": "CUSTOM_TOUCH_SLIDER_PAD1_GPIO",
+  "slider_pad2": "CUSTOM_TOUCH_SLIDER_PAD2_GPIO",
+  "slider_pad3": "CUSTOM_TOUCH_SLIDER_PAD3_GPIO",
+  "buttons_rotary": "CUSTOM_ENABLE_PERIPH_ROTARY_ENCODER",
+  "rotary_a": "CUSTOM_PERIPH_ENCODER_PHASE_A",
+  "rotary_b": "CUSTOM_PERIPH_ENCODER_PHASE_B",
+  "rotary_key": "CUSTOM_PERIPH_ENCODER_KEY_PIN",
+  "user_custom_sensors": "CUSTOM_ENABLE_USER_CUSTOM_SENSORS",
+  "camera_enable": "ENABLE_CUSTOM_CAMERA",
+  "camera_sensor": "choice:CUSTOM_CAMERA_SENSOR_TYPE",
+  "cam_xclk": "CUSTOM_CAM_PIN_XCLK",
+  "cam_pclk": "CUSTOM_CAM_PIN_PCLK",
+  "cam_vsync": "CUSTOM_CAM_PIN_VSYNC",
+  "cam_href": "CUSTOM_CAM_PIN_HREF",
+  "cam_siod": "CUSTOM_CAM_PIN_SIOD",
+  "cam_sioc": "CUSTOM_CAM_PIN_SIOC",
+  "cam_use_reset": "CUSTOM_CAM_USE_RESET",
+  "cam_reset": "CUSTOM_CAM_PIN_RESET",
+  "cam_use_pwdn": "CUSTOM_CAM_USE_PWDN",
+  "cam_pwdn": "CUSTOM_CAM_PIN_PWDN",
+  "cam_d0": "CUSTOM_CAM_PIN_D0",
+  "cam_d1": "CUSTOM_CAM_PIN_D1",
+  "cam_d2": "CUSTOM_CAM_PIN_D2",
+  "cam_d3": "CUSTOM_CAM_PIN_D3",
+  "cam_d4": "CUSTOM_CAM_PIN_D4",
+  "cam_d5": "CUSTOM_CAM_PIN_D5",
+  "cam_d6": "CUSTOM_CAM_PIN_D6",
+  "cam_d7": "CUSTOM_CAM_PIN_D7",
+  "cam_hmirror": "CUSTOM_CAM_HMIRROR",
+  "cam_vflip": "CUSTOM_CAM_VFLIP",
+  "led_enable": "ENABLE_CUSTOM_LEDS",
+  "led_type": "choice:CUSTOM_LED_TYPE",
+  "led_gpio": "CUSTOM_LED_GPIO",
+  "led_count": "CUSTOM_LED_COUNT",
+  "led_rainbow": "CUSTOM_LED_FAST_RAINBOW_EFFECT",
+  "mcp_enable": "ENABLE_CUSTOM_MCP_SERVER",
+  "mcp_lamp": "CUSTOM_MCP_TOOL_LAMP",
+  "mcp_lamp_gpio": "CUSTOM_MCP_TOOL_LAMP_GPIO",
+  "mcp_sensor": "CUSTOM_MCP_TOOL_SENSOR",
+  "mcp_actuator": "CUSTOM_MCP_TOOL_ACTUATOR",
+  "uart_enable": "ENABLE_CUSTOM_UART",
+  "uart_port": "choice:CUSTOM_UART_PORT_NUM",
+  "uart_tx": "CUSTOM_UART_PIN_TX",
+  "uart_rx": "CUSTOM_UART_PIN_RX",
+  "uart_baud": "CUSTOM_UART_BAUDRATE",
+  "uart_flow": "CUSTOM_UART_USE_FLOW_CONTROL",
+  "uart_rts": "CUSTOM_UART_PIN_RTS",
+  "uart_cts": "CUSTOM_UART_PIN_CTS",
+  "servo_enable": "CUSTOM_ENABLE_SERVO_DOG",
+  "servo_gpio": "CUSTOM_SERVO_DOG_PWM_GPIO",
+  "buzzer_enable": "ENABLE_BUZZER",
+  "buzzer_gpio": "BUZZER_PIN",
+  "haptic_enable": "ENABLE_HAPTIC_MOTOR",
+  "haptic_gpio": "HAPTIC_PIN",
+  "relay_enable": "CUSTOM_PERIPH_RELAY_ENABLE",
+  "relay_gpio": "CUSTOM_PERIPH_RELAY_GPIO",
+  "motor_dc_enable": "CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE",
+  "motor_driver": "choice:CUSTOM_MOTOR_DC_DRIVER_TYPE",
+  "motor_pwma": "CUSTOM_PERIPH_MOTOR_PWMA_PIN",
+  "motor_dira": "CUSTOM_PERIPH_MOTOR_DIRA_PIN",
+  "motor_pwmb": "CUSTOM_PERIPH_MOTOR_PWMB_PIN",
+  "motor_dirb": "CUSTOM_PERIPH_MOTOR_DIRB_PIN",
+  "sensor_dht": "CUSTOM_ENABLE_SENSOR_DHT11_22",
+  "dht_gpio": "CUSTOM_SENSOR_DHT_GPIO",
+  "sensor_temp": "CUSTOM_ENABLE_SENSOR_I2C_TEMP_HUMID",
+  "sensor_aht20": "CUSTOM_ENABLE_SENSOR_AHT20",
+  "temp_sda": "CUSTOM_SENSOR_I2C_SDA",
+  "temp_scl": "CUSTOM_SENSOR_I2C_SCL",
+  "sensor_bmp280": "CUSTOM_ENABLE_SENSOR_BMP280",
+  "bmp280_sda": "CUSTOM_SENSOR_BMP280_I2C_SDA",
+  "bmp280_scl": "CUSTOM_SENSOR_BMP280_I2C_SCL",
+  "sensor_bh1750": "CUSTOM_ENABLE_SENSOR_BH1750",
+  "bh1750_sda": "CUSTOM_SENSOR_BH1750_I2C_SDA",
+  "bh1750_scl": "CUSTOM_SENSOR_BH1750_I2C_SCL",
+  "sensor_ldr": "CUSTOM_ENABLE_SENSOR_LDR",
+  "ldr_ch": "CUSTOM_SENSOR_LDR_ADC_CHANNEL",
+  "sensor_gas_co2": "CUSTOM_ENABLE_SENSOR_GAS_CO2",
+  "gas_scd4x": "CUSTOM_SENSOR_GAS_SCD4X",
+  "gas_sda": "CUSTOM_SENSOR_GAS_I2C_SDA",
+  "gas_scl": "CUSTOM_SENSOR_GAS_I2C_SCL",
+  "sensor_gas_mq": "CUSTOM_ENABLE_SENSOR_GAS_ANALOG_MQ",
+  "gas_mq_gpio": "CUSTOM_SENSOR_MQ_ANALOG_PIN",
+  "sensor_hcsr04": "CUSTOM_ENABLE_SENSOR_HCSR04",
+  "hcsr04_trig": "CUSTOM_SENSOR_HCSR04_TRIG_GPIO",
+  "hcsr04_echo": "CUSTOM_SENSOR_HCSR04_ECHO_GPIO",
+  "sensor_pir": "CUSTOM_ENABLE_SENSOR_PIR",
+  "pir_gpio": "CUSTOM_SENSOR_PIR_GPIO",
+  "sensor_vibration": "CUSTOM_ENABLE_SENSOR_VIBRATION_SW420",
+  "vibration_gpio": "CUSTOM_SENSOR_VIBRATION_PIN",
+  "sensor_flame": "CUSTOM_ENABLE_SENSOR_FLAME",
+  "flame_gpio": "CUSTOM_SENSOR_FLAME_PIN",
+  "battery_enable": "CUSTOM_ENABLE_BATTERY_MONITOR",
+  "battery_adc": "CUSTOM_BATTERY_MONITOR_ADC",
+  "battery_ch": "CUSTOM_BATTERY_ADC_CHANNEL",
+  "battery_r1": "CUSTOM_BATTERY_DIVIDER_R1",
+  "battery_r2": "CUSTOM_BATTERY_DIVIDER_R2",
+  "ina2xx_enable": "CUSTOM_ENABLE_SENSOR_INA2XX",
+  "ina219": "CUSTOM_SENSOR_INA219",
+  "ina_sda": "CUSTOM_SENSOR_INA2XX_I2C_SDA",
+  "ina_scl": "CUSTOM_SENSOR_INA2XX_I2C_SCL",
+  "tp4056_enable": "CUSTOM_ENABLE_PERIPH_BATTERY_CHARGING_DETECT",
+  "tp4056_gpio": "CUSTOM_PERIPH_BATTERY_CHRG_PIN",
+  "wakeword_audio_processor": "USE_AUDIO_PROCESSOR"
+ },
+ "exclude": [
+  "BOARD_TYPE"
+ ],
+ "_exclude_reason": "BOARD_TYPE: Web Configurator chỉ sinh cấu hình cho ESP32-S3 N16R8 (2 board còn lại cần target ESP32-P4)."
+}

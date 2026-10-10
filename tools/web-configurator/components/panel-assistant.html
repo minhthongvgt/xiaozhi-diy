@@ -1,0 +1,149 @@
+<section class="tab-panel" id="panel-assistant">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🌐 Xiaozhi Assistant</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant</span>
+            </div>
+          <div class="tab-header-actions">
+            <span class="tab-status-pill saved" data-tab-status="panel-assistant">Đã lưu</span>
+            <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-assistant" title="Lưu thông tin mục này">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+              <span>Lưu mục này</span>
+            </button>
+          </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-item">
+              <label class="form-label" for="general_ota_url">Default OTA URL</label>
+              <input type="text" class="form-control" id="general_ota_url">
+              <div class="form-hint">The application will access this URL to check for new firmwares and server address.</div>
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="general_language">Default Language</label>
+              <select class="form-control" id="general_language">
+                <option value="LANGUAGE_ZH_CN">Chinese</option>
+                <option value="LANGUAGE_ZH_TW">Chinese Traditional</option>
+                <option value="LANGUAGE_EN_US">English</option>
+                <option value="LANGUAGE_JA_JP">Japanese</option>
+                <option value="LANGUAGE_KO_KR">Korean</option>
+                <option value="LANGUAGE_VI_VN">Vietnamese</option>
+                <option value="LANGUAGE_TH_TH">Thai</option>
+                <option value="LANGUAGE_DE_DE">German</option>
+                <option value="LANGUAGE_FR_FR">French</option>
+                <option value="LANGUAGE_ES_ES">Spanish</option>
+                <option value="LANGUAGE_IT_IT">Italian</option>
+                <option value="LANGUAGE_RU_RU">Russian</option>
+                <option value="LANGUAGE_AR_SA">Arabic</option>
+                <option value="LANGUAGE_HI_IN">Hindi</option>
+                <option value="LANGUAGE_MR_IN">Marathi</option>
+                <option value="LANGUAGE_PT_PT">Portuguese</option>
+                <option value="LANGUAGE_PT_BR">Portuguese (Brazil)</option>
+                <option value="LANGUAGE_PL_PL">Polish</option>
+                <option value="LANGUAGE_CS_CZ">Czech</option>
+                <option value="LANGUAGE_FI_FI">Finnish</option>
+                <option value="LANGUAGE_TR_TR">Turkish</option>
+                <option value="LANGUAGE_ID_ID">Indonesian</option>
+                <option value="LANGUAGE_UK_UA">Ukrainian</option>
+                <option value="LANGUAGE_RO_RO">Romanian</option>
+                <option value="LANGUAGE_BG_BG">Bulgarian</option>
+                <option value="LANGUAGE_CA_ES">Catalan</option>
+                <option value="LANGUAGE_DA_DK">Danish</option>
+                <option value="LANGUAGE_EL_GR">Greek</option>
+                <option value="LANGUAGE_FA_IR">Persian</option>
+                <option value="LANGUAGE_FIL_PH">Filipino</option>
+                <option value="LANGUAGE_HE_IL">Hebrew</option>
+                <option value="LANGUAGE_HR_HR">Croatian</option>
+                <option value="LANGUAGE_HU_HU">Hungarian</option>
+                <option value="LANGUAGE_MS_MY">Malay</option>
+                <option value="LANGUAGE_NB_NO">Norwegian</option>
+                <option value="LANGUAGE_NL_NL">Dutch</option>
+                <option value="LANGUAGE_SK_SK">Slovak</option>
+                <option value="LANGUAGE_SL_SI">Slovenian</option>
+                <option value="LANGUAGE_SV_SE">Swedish</option>
+                <option value="LANGUAGE_SR_RS">Serbian</option>
+              </select>
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="kc_USE_AUDIO_DEBUGGER"><span>Enable Audio Debugger</span></label>
+              <div class="form-hint">Enable audio debugger, send audio data through UDP to the host machine</div>
+            </div>
+            <div class="form-item" data-show-if="kc_USE_AUDIO_DEBUGGER">
+              <label class="form-label" for="kc_AUDIO_DEBUG_UDP_SERVER">Audio Debug UDP Server Address</label>
+              <input type="text" class="form-control" id="kc_AUDIO_DEBUG_UDP_SERVER">
+              <div class="form-hint">UDP server address, format: IP:PORT, used to receive audio debugging data</div>
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="kc_RECEIVE_CUSTOM_MESSAGE"><span>Enable Custom Message Reception</span></label>
+              <div class="form-hint">Enable custom message reception, allow the device to receive custom messages from the server (preferably through the MQTT protocol)</div>
+            </div>
+          </div>
+        </div>
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🎙️ Từ khóa đánh thức (Wake Word)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → Từ khóa đánh thức (Wake Word)</span>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-item">
+              <label class="form-label" for="wakeword_type">Wake Word Implementation Type</label>
+              <select class="form-control" id="wakeword_type">
+                <option value="WAKE_WORD_DISABLED">Disabled</option>
+                <option value="USE_AFE_WAKE_WORD">Wakenet model with AFE</option>
+                <option value="USE_CUSTOM_WAKE_WORD">Multinet model (Custom Wake Word)</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="wakeword_type=USE_CUSTOM_WAKE_WORD">
+              <label class="form-label" for="wakeword_word">Custom Wake Word</label>
+              <input type="text" class="form-control" id="wakeword_word">
+              <div class="form-hint">Custom Wake Word, use pinyin for Chinese, separated by spaces</div>
+            </div>
+            <div class="form-item" data-show-if="wakeword_type=USE_CUSTOM_WAKE_WORD">
+              <label class="form-label" for="wakeword_display">Custom Wake Word Display</label>
+              <input type="text" class="form-control" id="wakeword_display">
+              <div class="form-hint">Greeting sent to the server after wake word detection</div>
+            </div>
+            <div class="form-item" data-show-if="wakeword_type=USE_CUSTOM_WAKE_WORD">
+              <label class="form-label" for="wakeword_threshold">Custom Wake Word Threshold (%)</label>
+              <input type="number" class="form-control" id="wakeword_threshold" min="1" max="99">
+              <div class="form-hint">Custom Wake Word Threshold, range 1-99, the smaller the more sensitive, default 20</div>
+            </div>
+            <div class="form-item span-2" data-show-if="wakeword_type=USE_AFE_WAKE_WORD|USE_CUSTOM_WAKE_WORD">
+              <label class="form-checkbox"><input type="checkbox" id="wakeword_send_data"><span>Send Wake Word Data</span></label>
+              <div class="form-hint">Send wake word data to the server as the first message of the conversation and wait for response</div>
+            </div>
+            <div class="form-item span-2" data-show-if="wakeword_type=USE_AFE_WAKE_WORD|USE_CUSTOM_WAKE_WORD">
+              <label class="form-checkbox"><input type="checkbox" id="wakeword_in_listen"><span>Enable Wake Word Detection in Listening Mode</span></label>
+              <div class="form-hint">Enable wake word detection while in listening mode.</div>
+            </div>
+          </div>
+        </div>
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🎛️ Bộ xử lý âm thanh &amp; Khử tiếng vọng (AFE Audio Processing &amp; AEC)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → Bộ xử lý âm thanh &amp; Khử tiếng vọng (AFE Audio Processing &amp; AEC)</span>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-item span-2" data-show-if="sys_spiram">
+              <label class="form-checkbox"><input type="checkbox" id="wakeword_audio_processor"><span>Enable AFE Audio Processing</span></label>
+              <div class="form-hint">Enable the shared AFE uplink path with AEC and VAD.</div>
+            </div>
+            <div class="form-item" data-show-if="wakeword_audio_processor">
+              <label class="form-label" for="wakeword_aec_mode">AEC Mode</label>
+              <select class="form-control" id="wakeword_aec_mode">
+                <option value="USE_DEVICE_AEC">Enable Device-Side AEC</option>
+                <option value="USE_SERVER_AEC">Enable Server-Side AEC (Unstable)</option>
+                <option value="USE_NO_AEC">Disable AEC</option>
+              </select>
+            </div>
+            <div class="form-item span-2" data-show-if="wakeword_aec_mode=USE_DEVICE_AEC">
+              <label class="form-checkbox"><input type="checkbox" id="kc_USE_SOFTWARE_AEC_REFERENCE"><span>Software AEC Reference (codecs without hardware loopback)</span></label>
+              <div class="form-hint">Dùng chính tín hiệu đang phát ra loa làm kênh tham chiếu AEC cho các mạch không có đường loopback phần cứng (I2S rời như INMP441 + MAX98357, micro PDM, ES8311, ES8374, ES8389, ES8388/Box khi chưa b...</div>
+            </div>
+          </div>
+        </div>
+</section>

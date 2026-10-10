@@ -1,0 +1,12 @@
+{
+  "name": "xiaozhi-web-configurator",
+  "private": true,
+  "type": "module",
+  "description": "Web Configurator cho xiaozhi-v2 (ESP32-S3). Chỉ dùng để chạy kiểm thử; trang web không cần build.",
+  "scripts": {
+    "test": "run_all_tests.bat"
+  },
+  "devDependencies": {
+    "jsdom": "24.1.3"
+  }
+}

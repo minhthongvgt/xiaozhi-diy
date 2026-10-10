@@ -1,0 +1,396 @@
+<section class="tab-panel" id="panel-display">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🎨 Giao diện hiển thị &amp; Gói tài nguyên (Display Style &amp; Assets)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → Giao diện hiển thị &amp; Gói tài nguyên (Display Style &amp; Assets)</span>
+            </div>
+          <div class="tab-header-actions">
+            <span class="tab-status-pill saved" data-tab-status="panel-display">Đã lưu</span>
+            <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-display" title="Lưu thông tin mục này">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+              <span>Lưu mục này</span>
+            </button>
+          </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-item">
+              <label class="form-label" for="general_display_style">Select display style</label>
+              <select class="form-control" id="general_display_style">
+                <option value="USE_DEFAULT_MESSAGE_STYLE">Mặc định (Chữ chạy ngang)</option>
+                <option value="USE_WECHAT_MESSAGE_STYLE">WeChat (Bong bóng chat)</option>
+                <option value="USE_EMOTE_MESSAGE_STYLE">Emote (Biểu cảm khuôn mặt emoji)</option>
+                <option value="CUSTOM_UI_STYLE_CHAT_BUBBLE">Adaptive: Chat Bubble (Bong bóng hội thoại)</option>
+                <option value="CUSTOM_UI_STYLE_CLASSIC_AVATAR">Adaptive: Classic Avatar (Hình đại diện AI cổ điển)</option>
+                <option value="CUSTOM_UI_STYLE_CYBER_TERMINAL">Adaptive: Cyber Terminal (Giao diện dòng lệnh hacker)</option>
+                <option value="CUSTOM_UI_STYLE_MINIMAL_ZEN">Adaptive: Minimal Zen (Tối giản thanh lịch)</option>
+                <option value="CUSTOM_UI_STYLE_SMART_DASHBOARD">Adaptive: Smart Dashboard (Bảng điều khiển thông minh)</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="general_display_style=CUSTOM_UI_STYLE_CHAT_BUBBLE|CUSTOM_UI_STYLE_CLASSIC_AVATAR|CUSTOM_UI_STYLE_CYBER_TERMINAL|CUSTOM_UI_STYLE_MINIMAL_ZEN|CUSTOM_UI_STYLE_SMART_DASHBOARD">
+              <label class="form-label" for="ui_accent">Màu sắc chủ đạo Giao diện (UI Accent Color)</label>
+              <select class="form-control" id="ui_accent">
+                <option value="CUSTOM_UI_ACCENT_CYBER_BLUE">Cyber Blue (Xanh dương đậm)</option>
+                <option value="CUSTOM_UI_ACCENT_EMERALD">Emerald Green (Xanh lục bảo)</option>
+                <option value="CUSTOM_UI_ACCENT_PURPLE">Cyber Purple (Tím neon)</option>
+                <option value="CUSTOM_UI_ACCENT_AMBER">Warm Amber (Vàng hổ phách)</option>
+                <option value="CUSTOM_UI_ACCENT_MONO">Monochrome (Đơn sắc trắng đen)</option>
+              </select>
+            </div>
+            <div class="form-item span-2" data-show-if="general_display_style=CUSTOM_UI_STYLE_CHAT_BUBBLE|CUSTOM_UI_STYLE_CLASSIC_AVATAR|CUSTOM_UI_STYLE_CYBER_TERMINAL|CUSTOM_UI_STYLE_MINIMAL_ZEN|CUSTOM_UI_STYLE_SMART_DASHBOARD">
+              <label class="form-checkbox"><input type="checkbox" id="ui_auto_scale"><span>Tự động căn chỉnh kích thước UI theo độ phân giải màn hình</span></label>
+            </div>
+            <div class="form-item span-2" data-show-if="general_display_style=CUSTOM_UI_STYLE_CHAT_BUBBLE|CUSTOM_UI_STYLE_CLASSIC_AVATAR|CUSTOM_UI_STYLE_CYBER_TERMINAL|CUSTOM_UI_STYLE_MINIMAL_ZEN|CUSTOM_UI_STYLE_SMART_DASHBOARD">
+              <label class="form-checkbox"><input type="checkbox" id="ui_round_safe"><span>Vùng hiển thị an toàn cho màn hình tròn (Round Screen Safe Area)</span></label>
+            </div>
+            <div class="form-item span-2" data-show-if="general_display_style=CUSTOM_UI_STYLE_CHAT_BUBBLE|CUSTOM_UI_STYLE_CLASSIC_AVATAR|CUSTOM_UI_STYLE_CYBER_TERMINAL|CUSTOM_UI_STYLE_MINIMAL_ZEN|CUSTOM_UI_STYLE_SMART_DASHBOARD">
+              <label class="form-checkbox"><input type="checkbox" id="ui_voice_wave"><span>Hiển thị sóng âm thanh động khi đàm thoại (Voice Waveform)</span></label>
+            </div>
+            <div class="form-item span-2" data-show-if="general_display_style=CUSTOM_UI_STYLE_CHAT_BUBBLE|CUSTOM_UI_STYLE_CLASSIC_AVATAR|CUSTOM_UI_STYLE_CYBER_TERMINAL|CUSTOM_UI_STYLE_MINIMAL_ZEN|CUSTOM_UI_STYLE_SMART_DASHBOARD">
+              <label class="form-checkbox"><input type="checkbox" id="ui_weather_enable"><span>Hiển thị thời tiết trên màn hình (Weather Widget)</span></label>
+            </div>
+            <div class="form-item" data-show-if="ui_weather_enable">
+              <label class="form-label" for="ui_weather_city">Thành phố lấy dữ liệu thời tiết</label>
+              <input type="text" class="form-control" id="ui_weather_city">
+            </div>
+            <div class="form-item span-2" data-show-if="general_display_style=USE_DEFAULT_MESSAGE_STYLE">
+              <label class="form-checkbox"><input type="checkbox" id="general_multiline"><span>Use multiline chat message display (default mode only)</span></label>
+              <div class="form-hint">When enabled, the chat message area in the default display mode shows multiple wrapped lines that grow upward from the bottom of the screen, with auto-adaptive height.</div>
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="general_flash_assets">Tùy Chọn Flash Tệp Tài Nguyên (Flash Assets Option)</label>
+              <select class="form-control" id="general_flash_assets">
+                <option value="FLASH_DEFAULT_ASSETS">Flash tài nguyên mặc định (Default Built-in Assets)</option>
+                <option value="FLASH_CUSTOM_ASSETS">Flash tài nguyên tùy chỉnh từ URL hoặc tệp cục bộ (Custom Assets)</option>
+                <option value="FLASH_EXPRESSION_ASSETS">Flash tài nguyên biểu cảm AI Voice (Emote Expression Assets)</option>
+                <option value="FLASH_NONE_ASSETS">Không nạp phân vùng tài nguyên (No Assets Flashing)</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="general_flash_assets=FLASH_CUSTOM_ASSETS">
+              <label class="form-label" for="general_custom_assets">Đường dẫn tệp hoặc URL tài nguyên tùy chỉnh (Custom Assets File / URL)</label>
+              <input type="text" class="form-control" id="general_custom_assets">
+              <div class="form-hint">Nhập đường dẫn tệp assets.bin trên máy tính hoặc URL để nạp trực tiếp vào phân vùng assets.</div>
+            </div>
+          </div>
+        </div>
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🖥️ 1. Màn hình &amp; Cảm ứng (Display &amp; Touch)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8) → 1. Màn hình &amp; Cảm ứng (Display &amp; Touch)</span>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-item span-2 form-item-master">
+              <label class="form-checkbox"><input type="checkbox" id="display_enable"><span><strong>Màn hình hiển thị (Display Panel)</strong></span></label>
+              <div class="form-hint">Bật/tắt trình điều khiển màn hình (SPI LCD, OLED I2C, QSPI AMOLED).</div>
+            </div>
+            <div class="form-item" data-show-if="display_enable">
+              <label class="form-label" for="display_type">Loại Bộ Điều Khiển Màn Hình (Display Controller)</label>
+              <select class="form-control" id="display_type">
+                <option value="CUSTOM_DISPLAY_ST7789">Sitronix ST7789 (240x320, 240x240, 170x320 SPI)</option>
+                <option value="CUSTOM_DISPLAY_ST7796">Sitronix ST7796 (320x480 SPI)</option>
+                <option value="CUSTOM_DISPLAY_ST7735">Sitronix ST7735 / ST7735S (128x128, 128x160 SPI mini)</option>
+                <option value="CUSTOM_DISPLAY_ST7701">Sitronix ST7701 (480x480 RGB song song)</option>
+                <option value="CUSTOM_DISPLAY_ILI9341">Ilitek ILI9341 (240x320 SPI)</option>
+                <option value="CUSTOM_DISPLAY_ILI9486">Ilitek ILI9486 / ILI9488 (320x480 SPI)</option>
+                <option value="CUSTOM_DISPLAY_GC9A01">GalaxyCore GC9A01 (240x240 Màn hình tròn SPI)</option>
+                <option value="CUSTOM_DISPLAY_GC9107">GalaxyCore GC9107 (128x128 SPI)</option>
+                <option value="CUSTOM_DISPLAY_NV3023">NewVision NV3030B (240x280 SPI)</option>
+                <option value="CUSTOM_DISPLAY_JD9853">Jadard JD9853 (172x320 SPI)</option>
+                <option value="CUSTOM_DISPLAY_OLED_SSD1306">Solomon OLED SSD1306 (128x64 / 128x32 I2C)</option>
+                <option value="CUSTOM_DISPLAY_OLED_SH1106">Sino Wealth OLED SH1106 (128x64 I2C)</option>
+                <option value="CUSTOM_DISPLAY_QSPI_AMOLED">AMOLED QSPI (SH8601 368x448 / CO5300 466x466 / SPD2010 412x412)</option>
+                <option value="CUSTOM_DISPLAY_EPAPER_SSD1681">Solomon SSD1681 (200x200 Mực điện tử E-Paper SPI)</option>
+                <option value="CUSTOM_DISPLAY_UART">Màn hình rời UART HMI (Nextion / TJC / DWIN / Serial Display)</option>
+                <option value="CUSTOM_DISPLAY_USER_CUSTOM">Driver Màn hình tùy chỉnh (Custom User Display Hook)</option>
+                <option value="CUSTOM_DISPLAY_NONE">Không sử dụng màn hình (Audio Only / Headless)</option>
+              </select>
+            </div>
+            <div class="form-item span-2 form-item-master" data-show-if="display_enable">
+              <label class="form-checkbox"><input type="checkbox" id="display_uart_secondary"><span><strong>Màn hình rời UART mở rộng / Chạy song song 2 màn hình (Secondary UART Display)</strong></span></label>
+              <div class="form-hint">Bật/tắt trình điều khiển màn hình rời giao tiếp qua UART (Nextion / TJC / DWIN / Serial HMI).</div>
+            </div>
+            <div class="span-2 form-subheading"><span>Cấu hình Màn hình rời UART (Nextion / TJC / DWIN)</span></div>
+            <div class="form-item" data-show-if="display_uart_secondary&amp;display_enable||display_enable&amp;display_type=CUSTOM_DISPLAY_UART">
+              <label class="form-label" for="display_uart_port">Cổng UART phần cứng (1: UART1, 2: UART2)</label>
+              <input type="number" class="form-control" id="display_uart_port" min="1" max="2">
+              <div class="form-hint">Chọn cổng UART để giao tiếp với màn hình rời.</div>
+            </div>
+            <div class="form-item" data-show-if="display_uart_secondary&amp;display_enable||display_enable&amp;display_type=CUSTOM_DISPLAY_UART">
+              <label class="form-label" for="display_uart_tx">Chân TX kết nối chân RX của Màn hình</label>
+              <input type="number" class="form-control" id="display_uart_tx" min="-1" max="48">
+              <div class="form-hint">Chân truyền dữ liệu từ ESP32-S3 sang màn hình rời.</div>
+            </div>
+            <div class="form-item" data-show-if="display_uart_secondary&amp;display_enable||display_enable&amp;display_type=CUSTOM_DISPLAY_UART">
+              <label class="form-label" for="display_uart_rx">Chân RX kết nối chân TX của Màn hình</label>
+              <input type="number" class="form-control" id="display_uart_rx" min="-1" max="48">
+              <div class="form-hint">Chân nhận dữ liệu từ màn hình rời (ví dụ nhận sự kiện cảm ứng/chạm nút).</div>
+            </div>
+            <div class="form-item" data-show-if="display_uart_secondary&amp;display_enable||display_enable&amp;display_type=CUSTOM_DISPLAY_UART">
+              <label class="form-label" for="display_uart_baud">Tốc độ truyền dữ liệu (Baudrate)</label>
+              <select class="form-control" id="display_uart_baud">
+                <option value="9600">9600 bps (Nextion mặc định khi xuất xưởng)</option>
+                <option value="19200">19200 bps</option>
+                <option value="38400">38400 bps</option>
+                <option value="57600">57600 bps</option>
+                <option value="115200">115200 bps (Khuyên dùng)</option>
+                <option value="230400">230400 bps</option>
+                <option value="460800">460800 bps</option>
+                <option value="921600">921600 bps (Tốc độ cao)</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="display_uart_secondary&amp;display_enable||display_enable&amp;display_type=CUSTOM_DISPLAY_UART">
+              <label class="form-label" for="display_uart_proto">Giao thức truyền thông màn hình (Protocol)</label>
+              <select class="form-control" id="display_uart_proto">
+                <option value="CUSTOM_DISPLAY_UART_PROTO_NEXTION">Nextion / TJC HMI (Lệnh kết thúc 0xFF 0xFF 0xFF)</option>
+                <option value="CUSTOM_DISPLAY_UART_PROTO_JSON">JSON Streaming (Chuỗi JSON kèm ký tự xuống dòng n)</option>
+                <option value="CUSTOM_DISPLAY_UART_PROTO_RAW_TEXT">Raw Text / ASCII (STATUS:..., EMOTION:..., CHAT:...)</option>
+                <option value="CUSTOM_DISPLAY_UART_PROTO_DWIN">DWIN DGUS (Khung truyền nhị phân 0x5A 0xA5)</option>
+              </select>
+            </div>
+            <div class="span-2 form-subheading"><span>Màn hình hiển thị (Display Panel)</span></div>
+            <div class="form-item" data-show-if="display_enable">
+              <label class="form-label" for="display_width">Độ phân giải ngang (Width Pixels)</label>
+              <input type="number" class="form-control" id="display_width" min="1" max="1024">
+              <div class="form-hint">Tự đổi theo driver được chọn.</div>
+            </div>
+            <div class="form-item" data-show-if="display_enable">
+              <label class="form-label" for="display_height">Độ phân giải dọc (Height Pixels)</label>
+              <input type="number" class="form-control" id="display_height" min="1" max="1024">
+              <div class="form-hint">Tự đổi theo driver được chọn.</div>
+            </div>
+            <div class="form-item" data-show-if="display_type!=CUSTOM_DISPLAY_OLED_SSD1306&amp;display_type!=CUSTOM_DISPLAY_OLED_SH1106&amp;display_type!=CUSTOM_DISPLAY_QSPI_AMOLED&amp;display_type!=CUSTOM_DISPLAY_UART&amp;display_type!=CUSTOM_DISPLAY_NONE&amp;display_enable">
+              <label class="form-label" for="display_mosi">Chân dữ liệu SPI MOSI (SDA)</label>
+              <input type="number" class="form-control" id="display_mosi" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_type!=CUSTOM_DISPLAY_OLED_SSD1306&amp;display_type!=CUSTOM_DISPLAY_OLED_SH1106&amp;display_type!=CUSTOM_DISPLAY_QSPI_AMOLED&amp;display_type!=CUSTOM_DISPLAY_UART&amp;display_type!=CUSTOM_DISPLAY_NONE&amp;display_enable">
+              <label class="form-label" for="display_clk">Chân xung nhịp SPI CLK (SCL)</label>
+              <input type="number" class="form-control" id="display_clk" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable">
+              <label class="form-label" for="display_cs">Chân chọn chip SPI CS (-1 nếu không dùng)</label>
+              <input type="number" class="form-control" id="display_cs" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable">
+              <label class="form-label" for="display_dc">Chân lệnh/dữ liệu SPI DC</label>
+              <input type="number" class="form-control" id="display_dc" min="-1" max="48">
+            </div>
+            <div class="form-item span-2" data-show-if="display_enable">
+              <label class="form-checkbox"><input type="checkbox" id="display_use_rst"><span>Sử dụng chân Reset màn hình (RST)</span></label>
+            </div>
+            <div class="form-item" data-show-if="display_use_rst&amp;display_enable">
+              <label class="form-label" for="display_rst">Chân Reset màn hình RST GPIO</label>
+              <input type="number" class="form-control" id="display_rst" min="-1" max="48">
+            </div>
+            <div class="form-item span-2" data-show-if="display_enable">
+              <label class="form-checkbox"><input type="checkbox" id="display_use_blk"><span>Điều khiển đèn nền màn hình (Backlight BLK)</span></label>
+            </div>
+            <div class="form-item" data-show-if="display_use_blk&amp;display_enable">
+              <label class="form-label" for="display_blk">Chân đèn nền BLK GPIO</label>
+              <input type="number" class="form-control" id="display_blk" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_OLED_SSD1306|CUSTOM_DISPLAY_OLED_SH1106">
+              <label class="form-label" for="display_i2c_sda">Chân OLED I2C SDA</label>
+              <input type="number" class="form-control" id="display_i2c_sda" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_OLED_SSD1306|CUSTOM_DISPLAY_OLED_SH1106">
+              <label class="form-label" for="display_i2c_scl">Chân OLED I2C SCL</label>
+              <input type="number" class="form-control" id="display_i2c_scl" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_QSPI_AMOLED">
+              <label class="form-label" for="display_amoled_chip">Chip điều khiển AMOLED QSPI (AMOLED Controller IC)</label>
+              <select class="form-control" id="display_amoled_chip">
+                <option value="CUSTOM_DISPLAY_AMOLED_SH8601">Sino Wealth SH8601</option>
+                <option value="CUSTOM_DISPLAY_AMOLED_CO5300">Chipone CO5300</option>
+                <option value="CUSTOM_DISPLAY_AMOLED_SPD2010">Solomon SPD2010</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_QSPI_AMOLED">
+              <label class="form-label" for="display_qspi_cs">Chân AMOLED QSPI CS</label>
+              <input type="number" class="form-control" id="display_qspi_cs" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_QSPI_AMOLED">
+              <label class="form-label" for="display_qspi_clk">Chân AMOLED QSPI CLK</label>
+              <input type="number" class="form-control" id="display_qspi_clk" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_QSPI_AMOLED">
+              <label class="form-label" for="display_qspi_d0">Chân AMOLED QSPI D0</label>
+              <input type="number" class="form-control" id="display_qspi_d0" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_QSPI_AMOLED">
+              <label class="form-label" for="display_qspi_d1">Chân AMOLED QSPI D1</label>
+              <input type="number" class="form-control" id="display_qspi_d1" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_QSPI_AMOLED">
+              <label class="form-label" for="display_qspi_d2">Chân AMOLED QSPI D2</label>
+              <input type="number" class="form-control" id="display_qspi_d2" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_QSPI_AMOLED">
+              <label class="form-label" for="display_qspi_d3">Chân AMOLED QSPI D3</label>
+              <input type="number" class="form-control" id="display_qspi_d3" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_QSPI_AMOLED">
+              <label class="form-label" for="display_qspi_rst">Chân AMOLED QSPI Reset</label>
+              <input type="number" class="form-control" id="display_qspi_rst" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_EPAPER_SSD1681">
+              <label class="form-label" for="display_epaper_busy">Chân E-Paper BUSY</label>
+              <input type="number" class="form-control" id="display_epaper_busy" min="-1" max="48">
+              <div class="form-hint">Chân BUSY của tấm E-Paper SSD1681 (bắt buộc).</div>
+            </div>
+            <div class="span-2 form-subheading"><span>Chân giao tiếp RGB song song ST7701 (RGB565 16-bit)</span></div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_ST7701">
+              <label class="form-label" for="display_rgb_pclk">Chân RGB PCLK</label>
+              <input type="number" class="form-control" id="display_rgb_pclk" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_ST7701">
+              <label class="form-label" for="display_rgb_de">Chân RGB DE (Data Enable)</label>
+              <input type="number" class="form-control" id="display_rgb_de" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_ST7701">
+              <label class="form-label" for="display_rgb_vsync">Chân RGB VSYNC</label>
+              <input type="number" class="form-control" id="display_rgb_vsync" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_ST7701">
+              <label class="form-label" for="display_rgb_hsync">Chân RGB HSYNC</label>
+              <input type="number" class="form-control" id="display_rgb_hsync" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_ST7701">
+              <label class="form-label" for="display_rgb_d0">Chân RGB DATA0 (B0)</label>
+              <input type="number" class="form-control" id="display_rgb_d0" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_ST7701">
+              <label class="form-label" for="display_rgb_d1">Chân RGB DATA1 (B1)</label>
+              <input type="number" class="form-control" id="display_rgb_d1" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_ST7701">
+              <label class="form-label" for="display_rgb_d2">Chân RGB DATA2 (B2)</label>
+              <input type="number" class="form-control" id="display_rgb_d2" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_ST7701">
+              <label class="form-label" for="display_rgb_d3">Chân RGB DATA3 (B3)</label>
+              <input type="number" class="form-control" id="display_rgb_d3" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_ST7701">
+              <label class="form-label" for="display_rgb_d4">Chân RGB DATA4 (B4)</label>
+              <input type="number" class="form-control" id="display_rgb_d4" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_ST7701">
+              <label class="form-label" for="display_rgb_d5">Chân RGB DATA5 (G0)</label>
+              <input type="number" class="form-control" id="display_rgb_d5" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_ST7701">
+              <label class="form-label" for="display_rgb_d6">Chân RGB DATA6 (G1)</label>
+              <input type="number" class="form-control" id="display_rgb_d6" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_ST7701">
+              <label class="form-label" for="display_rgb_d7">Chân RGB DATA7 (G2)</label>
+              <input type="number" class="form-control" id="display_rgb_d7" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_ST7701">
+              <label class="form-label" for="display_rgb_d8">Chân RGB DATA8 (G3)</label>
+              <input type="number" class="form-control" id="display_rgb_d8" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_ST7701">
+              <label class="form-label" for="display_rgb_d9">Chân RGB DATA9 (G4)</label>
+              <input type="number" class="form-control" id="display_rgb_d9" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_ST7701">
+              <label class="form-label" for="display_rgb_d10">Chân RGB DATA10 (G5)</label>
+              <input type="number" class="form-control" id="display_rgb_d10" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_ST7701">
+              <label class="form-label" for="display_rgb_d11">Chân RGB DATA11 (R0)</label>
+              <input type="number" class="form-control" id="display_rgb_d11" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_ST7701">
+              <label class="form-label" for="display_rgb_d12">Chân RGB DATA12 (R1)</label>
+              <input type="number" class="form-control" id="display_rgb_d12" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_ST7701">
+              <label class="form-label" for="display_rgb_d13">Chân RGB DATA13 (R2)</label>
+              <input type="number" class="form-control" id="display_rgb_d13" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_ST7701">
+              <label class="form-label" for="display_rgb_d14">Chân RGB DATA14 (R3)</label>
+              <input type="number" class="form-control" id="display_rgb_d14" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="display_enable&amp;display_type=CUSTOM_DISPLAY_ST7701">
+              <label class="form-label" for="display_rgb_d15">Chân RGB DATA15 (R4)</label>
+              <input type="number" class="form-control" id="display_rgb_d15" min="-1" max="48">
+            </div>
+            <div class="span-2 form-subheading"><span>Màn hình hiển thị (Display Panel)</span></div>
+            <div class="form-item" data-show-if="display_enable">
+              <label class="form-label" for="display_offset_x">Dịch tọa độ X (Offset X Pixels)</label>
+              <input type="number" class="form-control" id="display_offset_x" min="-100" max="500">
+            </div>
+            <div class="form-item" data-show-if="display_enable">
+              <label class="form-label" for="display_offset_y">Dịch tọa độ Y (Offset Y Pixels)</label>
+              <input type="number" class="form-control" id="display_offset_y" min="-100" max="500">
+            </div>
+            <div class="form-item span-2" data-show-if="display_enable">
+              <label class="form-checkbox"><input type="checkbox" id="display_mirror_x"><span>Đảo chiều gương trục X (Mirror X)</span></label>
+            </div>
+            <div class="form-item span-2" data-show-if="display_enable">
+              <label class="form-checkbox"><input type="checkbox" id="display_mirror_y"><span>Đảo chiều gương trục Y (Mirror Y)</span></label>
+            </div>
+            <div class="form-item span-2" data-show-if="display_enable">
+              <label class="form-checkbox"><input type="checkbox" id="display_swap_xy"><span>Hoán đổi tọa độ X-Y (X/Y Axes Swapped)</span></label>
+            </div>
+            <div class="form-item span-2" data-show-if="display_enable">
+              <label class="form-checkbox"><input type="checkbox" id="display_invert"><span>Đảo ngược màu sắc hiển thị (Invert Color)</span></label>
+              <div class="form-hint">Mặc định tắt.</div>
+            </div>
+            <div class="form-item span-2 form-item-master">
+              <label class="form-checkbox"><input type="checkbox" id="touch_enable"><span><strong>Màn hình cảm ứng (Touch Screen Panel)</strong></span></label>
+              <div class="form-hint">Bật/tắt IC cảm ứng điện dung qua giao tiếp I2C.</div>
+            </div>
+            <div class="form-item" data-show-if="touch_enable">
+              <label class="form-label" for="touch_type">Loại IC Cảm Ứng (Touch Controller)</label>
+              <select class="form-control" id="touch_type">
+                <option value="CUSTOM_TOUCH_CST816S">Hynitron CST816S / CST9217 (I2C)</option>
+                <option value="CUSTOM_TOUCH_GT911">Goodix GT911 / GT1151 (I2C)</option>
+                <option value="CUSTOM_TOUCH_FT5X06">FocalTech FT5x06 / FT6336 (I2C)</option>
+                <option value="CUSTOM_TOUCH_USER_CUSTOM">Driver Cảm ứng tùy chỉnh (Custom User Touch Hook)</option>
+                <option value="CUSTOM_TOUCH_NONE">Không sử dụng cảm ứng</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="touch_enable">
+              <label class="form-label" for="touch_sda">Chân cảm ứng I2C SDA</label>
+              <input type="number" class="form-control" id="touch_sda" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="touch_enable">
+              <label class="form-label" for="touch_scl">Chân cảm ứng I2C SCL</label>
+              <input type="number" class="form-control" id="touch_scl" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="touch_enable">
+              <label class="form-label" for="touch_int">Chân ngắt cảm ứng INT GPIO</label>
+              <input type="number" class="form-control" id="touch_int" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="touch_enable">
+              <label class="form-label" for="touch_rst">Chân reset cảm ứng RST GPIO (-1 nếu không nối)</label>
+              <input type="number" class="form-control" id="touch_rst" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_ENABLE_PERIPH_TOUCH_SCREEN"><span>Mở rộng giao tiếp màn cảm ứng ngoại vi (Peripheral Touch Screen Controller)</span></label>
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_TOUCH_SCREEN">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_TOUCH_I2C_SDA">Chân ngoại vi cảm ứng I2C SDA</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_TOUCH_I2C_SDA" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_TOUCH_SCREEN">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_TOUCH_I2C_SCL">Chân ngoại vi cảm ứng I2C SCL</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_TOUCH_I2C_SCL" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_TOUCH_SCREEN">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_TOUCH_INT_PIN">Chân ngoại vi cảm ứng ngắt INT</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_TOUCH_INT_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_TOUCH_SCREEN">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_TOUCH_RST_PIN">Chân ngoại vi cảm ứng reset RST</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_TOUCH_RST_PIN" min="-1" max="48">
+            </div>
+          </div>
+        </div>
+</section>

@@ -1,0 +1,253 @@
+<section class="tab-panel" id="panel-power">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🔋 4.7. Nguồn Điện, Bộ Nhớ &amp; Viễn Thông (Power, Storage &amp; Telecom)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8) → 4. Thiết bị ngoại vi &amp; 7 Nhóm Phần Cứng (Hardware Builder) → 4.7. Nguồn Điện, Bộ Nhớ &amp; Viễn Thông (Power, Storage &amp; Telecom)</span>
+            </div>
+          <div class="tab-header-actions">
+            <span class="tab-status-pill saved" data-tab-status="panel-power">Đã lưu</span>
+            <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-power" title="Lưu thông tin mục này">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+              <span>Lưu mục này</span>
+            </button>
+          </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="battery_enable"><span>Mạch đo dung lượng Pin (Battery Level Monitor)</span></label>
+              <div class="form-hint">Kích hoạt mạch đo phần trăm pin qua bộ chia áp ADC hoặc IC đo pin I2C.</div>
+            </div>
+            <div class="form-item span-2" data-show-if="battery_enable">
+              <label class="form-checkbox"><input type="checkbox" id="battery_adc"><span>Đo qua ADC nội bộ (Bộ chia điện trở Voltage Divider)</span></label>
+            </div>
+            <div class="form-item" data-show-if="battery_adc&amp;battery_enable">
+              <label class="form-label" for="battery_ch">Kênh ADC1 đo pin (Kênh 0 ứng với chân GPIO 1)</label>
+              <input type="number" class="form-control" id="battery_ch" min="0" max="9">
+            </div>
+            <div class="form-item" data-show-if="battery_adc&amp;battery_enable">
+              <label class="form-label" for="battery_r1">Điện trở nhánh trên R1 cầu phân áp (kOhm)</label>
+              <input type="number" class="form-control" id="battery_r1" min="1" max="1000">
+            </div>
+            <div class="form-item" data-show-if="battery_adc&amp;battery_enable">
+              <label class="form-label" for="battery_r2">Điện trở nhánh dưới R2 cầu phân áp (kOhm)</label>
+              <input type="number" class="form-control" id="battery_r2" min="1" max="1000">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="ina2xx_enable"><span>Module đo điện áp, dòng điện &amp; công suất tiêu thụ (TI INA219 / INA226 I2C)</span></label>
+              <div class="form-hint">Đo chính xác điện áp bus, dòng sạc mA và công suất mW tiêu thụ của thiết bị.</div>
+            </div>
+            <div class="form-item span-2" data-show-if="ina2xx_enable">
+              <label class="form-checkbox"><input type="checkbox" id="ina219"><span>Texas Instruments INA219 (Điện áp tối đa 26V, độ phân giải 12-bit)</span></label>
+            </div>
+            <div class="form-item" data-show-if="ina2xx_enable">
+              <label class="form-label" for="ina_sda">Chân I2C SDA module đo dòng INA</label>
+              <input type="number" class="form-control" id="ina_sda" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="ina2xx_enable">
+              <label class="form-label" for="ina_scl">Chân I2C SCL module đo dòng INA</label>
+              <input type="number" class="form-control" id="ina_scl" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="tp4056_enable"><span>Giám sát trạng thái sạc pin (TP4056 CHRG / STDBY Pin)</span></label>
+              <div class="form-hint">Đọc chân báo sạc của IC sạc pin Lithium TP4056 để hiển thị biểu tượng sạc trên màn hình.</div>
+            </div>
+            <div class="form-item" data-show-if="tp4056_enable">
+              <label class="form-label" for="tp4056_gpio">Chân đọc tín hiệu sạc (kéo trở Pull-up)</label>
+              <input type="number" class="form-control" id="tp4056_gpio" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_BATTERY_MONITOR_BQ27220"><span>Mạch giám sát pin chuyên dụng I2C (TI BQ27220)</span></label>
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_BATTERY_MONITOR_BQ27220">
+              <label class="form-label" for="kc_CUSTOM_BATTERY_BQ27220_I2C_SDA">Chân I2C SDA IC đo pin BQ27220</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_BATTERY_BQ27220_I2C_SDA" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_BATTERY_MONITOR_BQ27220">
+              <label class="form-label" for="kc_CUSTOM_BATTERY_BQ27220_I2C_SCL">Chân I2C SCL IC đo pin BQ27220</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_BATTERY_BQ27220_I2C_SCL" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_PMIC_I2C_SDA">Chân I2C SDA chip quản lý nguồn PMIC</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PMIC_I2C_SDA" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_PMIC_I2C_SCL">Chân I2C SCL chip quản lý nguồn PMIC</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PMIC_I2C_SCL" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_PMIC_INT_PIN">Chân ngắt INT chip quản lý nguồn PMIC</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PMIC_INT_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_IMU_I2C_SDA">Chân I2C SDA cảm biến chuyển động IMU</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_IMU_I2C_SDA" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_IMU_I2C_SCL">Chân I2C SCL cảm biến chuyển động IMU</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_IMU_I2C_SCL" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_EXPANDER_I2C_SDA">Chân I2C SDA chip mở rộng GPIO (IO Expander)</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_EXPANDER_I2C_SDA" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_EXPANDER_I2C_SCL">Chân I2C SCL chip mở rộng GPIO (IO Expander)</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_EXPANDER_I2C_SCL" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_EXPANDER_INT_PIN">Chân ngắt INT chip mở rộng GPIO</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_EXPANDER_INT_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_EXPANDER_RST_PIN">Chân reset RST chip mở rộng GPIO</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_EXPANDER_RST_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_ENABLE_PERIPH_RTC"><span>Đồng hồ thời gian thực ngoại vi (RTC I2C DS3231 / PCF8563)</span></label>
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_RTC">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_RTC_I2C_SDA">Chân I2C SDA module RTC</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_RTC_I2C_SDA" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_RTC">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_RTC_I2C_SCL">Chân I2C SCL module RTC</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_RTC_I2C_SCL" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_RTC">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_RTC_INT_PIN">Chân ngắt báo thức INT module RTC</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_RTC_INT_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_ENABLE_PERIPH_NFC_PN532"><span>Đầu đọc thẻ từ giao tiếp gần NFC (NXP PN532 I2C)</span></label>
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_NFC_PN532">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_NFC_I2C_SDA">Chân I2C SDA module NFC</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_NFC_I2C_SDA" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_NFC_PN532">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_NFC_I2C_SCL">Chân I2C SCL module NFC</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_NFC_I2C_SCL" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_NFC_PN532">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_NFC_IRQ_PIN">Chân ngắt IRQ module NFC</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_NFC_IRQ_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_NFC_PN532">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_NFC_RST_PIN">Chân reset RST module NFC</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_NFC_RST_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_ENABLE_PERIPH_PCA9685"><span>Mạch mở rộng 16 kênh PWM I2C (NXP PCA9685)</span></label>
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_PCA9685">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_PCA9685_I2C_SDA">Chân I2C SDA module PCA9685</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_PCA9685_I2C_SDA" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_PCA9685">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_PCA9685_I2C_SCL">Chân I2C SCL module PCA9685</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_PCA9685_I2C_SCL" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_PCA9685">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_PCA9685_OE_PIN">Chân cho phép đầu ra OE module PCA9685</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_PCA9685_OE_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC"><span>IC điều khiển LED chuyên dụng I2C (AW9523 / IS31FL)</span></label>
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_LED_IC_I2C_SDA">Chân I2C SDA chip điều khiển LED</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_LED_IC_I2C_SDA" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_LED_IC_I2C_SCL">Chân I2C SCL chip điều khiển LED</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_LED_IC_I2C_SCL" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_ENABLE_PERIPH_SDCARD_SPI"><span>Đầu đọc thẻ nhớ MicroSD qua giao tiếp SPI</span></label>
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_SDCARD_SPI">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_SDCARD_SPI_SCK">Chân xung nhịp SPI SCK thẻ nhớ</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_SDCARD_SPI_SCK" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_SDCARD_SPI">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_SDCARD_SPI_MOSI">Chân dữ liệu SPI MOSI thẻ nhớ</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_SDCARD_SPI_MOSI" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_SDCARD_SPI">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_SDCARD_SPI_MISO">Chân dữ liệu SPI MISO thẻ nhớ</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_SDCARD_SPI_MISO" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_SDCARD_SPI">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_SDCARD_SPI_CS">Chân chọn chip SPI CS thẻ nhớ</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_SDCARD_SPI_CS" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_RC522_SPI_SCK">Chân xung nhịp SPI SCK module RFID RC522</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_RC522_SPI_SCK" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_RC522_SPI_MOSI">Chân dữ liệu SPI MOSI module RFID RC522</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_RC522_SPI_MOSI" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_RC522_SPI_MISO">Chân dữ liệu SPI MISO module RFID RC522</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_RC522_SPI_MISO" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_RC522_SPI_CS">Chân chọn chip SPI CS module RFID RC522</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_RC522_SPI_CS" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_RC522_RST_PIN">Chân reset RST module RFID RC522</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_RC522_RST_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_ETH_SPI_CS_PIN">Chân chọn chip SPI CS module Ethernet (W5500)</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_ETH_SPI_CS_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_ETH_SPI_INT_PIN">Chân ngắt INT module Ethernet</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_ETH_SPI_INT_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_ETH_SPI_RST_PIN">Chân reset RST module Ethernet</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_ETH_SPI_RST_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_ENABLE_PERIPH_IR_REMOTE"><span>Module truyền nhận hồng ngoại điều khiển từ xa (IR Remote)</span></label>
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_IR_REMOTE">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_IR_TX_PIN">Chân phát hồng ngoại IR TX (38kHz)</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_IR_TX_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_IR_REMOTE">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_IR_RX_PIN">Chân thu hồng ngoại IR RX (VS1838B)</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_IR_RX_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_TWAI_TX_PIN">Chân phát mạng CAN / TWAI TX</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_TWAI_TX_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_TWAI_RX_PIN">Chân nhận mạng CAN / TWAI RX</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_TWAI_RX_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE"><span>Module truyền thông dữ liệu mạng di động 4G LTE (A7670 / SIM7600)</span></label>
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_4G_PWRKEY_PIN">Chân bật nguồn PWRKEY module 4G</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_4G_PWRKEY_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_4G_UART_TX_PIN">Chân truyền UART TX kết nối module 4G</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_4G_UART_TX_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_4G_UART_RX_PIN">Chân nhận UART RX kết nối module 4G</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_4G_UART_RX_PIN" min="-1" max="48">
+            </div>
+          </div>
+        </div>
+</section>

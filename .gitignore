@@ -1,0 +1,30 @@
+# Build output (ESP-IDF / CMake)
+build/
+managed_components/
+dependencies.lock.bak
+sdkconfig
+sdkconfig.old
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+
+# Node
+node_modules/
+
+# Local tooling and backups
+.comment_backup/
+.cleancommentsignore.local
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/

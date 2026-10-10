@@ -1,0 +1,105 @@
+<section class="tab-panel" id="panel-audio">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🔊 2. Âm thanh: Loa &amp; Micro (Audio: Speaker &amp; Microphone)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8) → 2. Âm thanh: Loa &amp; Micro (Audio: Speaker &amp; Microphone)</span>
+            </div>
+          <div class="tab-header-actions">
+            <span class="tab-status-pill saved" data-tab-status="panel-audio">Đã lưu</span>
+            <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-audio" title="Lưu thông tin mục này">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+              <span>Lưu mục này</span>
+            </button>
+          </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-item span-2 form-item-master">
+              <label class="form-checkbox"><input type="checkbox" id="speaker_enable"><span><strong>Loa phát thanh &amp; Mạch DAC (Speaker &amp; Audio Out)</strong></span></label>
+              <div class="form-hint">Cấu hình xuất âm thanh qua Loa và mạch giải mã I2S DAC.</div>
+            </div>
+            <div class="form-item" data-show-if="speaker_enable">
+              <label class="form-label" for="speaker_type">Loại Mạch DAC / Loa (Audio DAC / Amplifier)</label>
+              <select class="form-control" id="speaker_type">
+                <option value="CUSTOM_AUDIO_DAC_MAX98357A">MAX98357A (Mạch công suất I2S Class-D Mono 3W)</option>
+                <option value="CUSTOM_AUDIO_DAC_MAX98360A">MAX98360A / MAX98360B (I2S/PDM Class-D Mono 3W thế hệ mới)</option>
+                <option value="CUSTOM_AUDIO_DAC_PCM5102A">PCM5102A (Mạch giải mã Hi-Fi I2S Stereo DAC 32-bit/384kHz)</option>
+                <option value="CUSTOM_AUDIO_SPK_CODEC_ES8311">Everest Semi ES8311 Codec (I2C)</option>
+                <option value="CUSTOM_AUDIO_SPK_CODEC_ES8388">Everest Semi ES8388 Stereo Codec (I2C)</option>
+                <option value="CUSTOM_AUDIO_SPK_CODEC_ES8374">Everest Semi ES8374 Codec</option>
+                <option value="CUSTOM_AUDIO_SPK_CODEC_ES8389">Everest Semi ES8389 Codec</option>
+                <option value="CUSTOM_AUDIO_SPK_CODEC_BOX">Box Audio Codec</option>
+                <option value="CUSTOM_AUDIO_SPK_CODEC_USER_CUSTOM">Driver Loa / DAC phát tùy chỉnh (Custom User Speaker Hook)</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="speaker_enable">
+              <label class="form-label" for="spk_dout">Chân dữ liệu Loa I2S DOUT (DIN trên module)</label>
+              <input type="number" class="form-control" id="spk_dout" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="speaker_enable">
+              <label class="form-label" for="spk_bclk">Chân xung nhịp Loa I2S BCLK (BCK)</label>
+              <input type="number" class="form-control" id="spk_bclk" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="speaker_enable">
+              <label class="form-label" for="spk_lrck">Chân xung nhịp Loa I2S LRCK / WS (LCK)</label>
+              <input type="number" class="form-control" id="spk_lrck" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="speaker_enable&amp;speaker_type=CUSTOM_AUDIO_SPK_CODEC_ES8311|CUSTOM_AUDIO_SPK_CODEC_ES8388|CUSTOM_AUDIO_SPK_CODEC_ES8374|CUSTOM_AUDIO_SPK_CODEC_ES8389|CUSTOM_AUDIO_SPK_CODEC_BOX">
+              <label class="form-label" for="spk_codec_sda">Chân Codec DAC I2C SDA</label>
+              <input type="number" class="form-control" id="spk_codec_sda" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="speaker_enable&amp;speaker_type=CUSTOM_AUDIO_SPK_CODEC_ES8311|CUSTOM_AUDIO_SPK_CODEC_ES8388|CUSTOM_AUDIO_SPK_CODEC_ES8374|CUSTOM_AUDIO_SPK_CODEC_ES8389|CUSTOM_AUDIO_SPK_CODEC_BOX">
+              <label class="form-label" for="spk_codec_scl">Chân Codec DAC I2C SCL</label>
+              <input type="number" class="form-control" id="spk_codec_scl" min="-1" max="48">
+            </div>
+            <div class="form-item span-2 form-item-master">
+              <label class="form-checkbox"><input type="checkbox" id="mic_enable"><span><strong>Microphone thu âm (Microphone &amp; Audio In)</strong></span></label>
+              <div class="form-hint">Cấu hình thu âm giọng nói qua Microphone I2S MEMS hoặc PDM.</div>
+            </div>
+            <div class="form-item" data-show-if="mic_enable">
+              <label class="form-label" for="mic_type">Loại Microphone (Microphone Type)</label>
+              <select class="form-control" id="mic_type">
+                <option value="CUSTOM_AUDIO_MIC_INMP441">INMP441 / MSM261S (Microphone số I2S MEMS Omnidirectional)</option>
+                <option value="CUSTOM_AUDIO_MIC_PDM">PDM Microphone (Micro số giao thức PDM)</option>
+                <option value="CUSTOM_AUDIO_MIC_CODEC_ES8311">Everest Semi ES8311 ADC (I2C)</option>
+                <option value="CUSTOM_AUDIO_MIC_CODEC_ES8388">Everest Semi ES8388 ADC (I2C)</option>
+                <option value="CUSTOM_AUDIO_MIC_CODEC_ES8374">Everest Semi ES8374 ADC</option>
+                <option value="CUSTOM_AUDIO_MIC_CODEC_ES8389">Everest Semi ES8389 ADC</option>
+                <option value="CUSTOM_AUDIO_MIC_CODEC_BOX">Box Audio Codec ADC</option>
+                <option value="CUSTOM_AUDIO_MIC_CODEC_USER_CUSTOM">Driver Micro thu âm tùy chỉnh (Custom User Audio Mic Hook)</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="mic_enable">
+              <label class="form-label" for="mic_din">Chân dữ liệu Micro I2S DIN (SD trên INMP441/MSM261S)</label>
+              <input type="number" class="form-control" id="mic_din" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="mic_enable">
+              <label class="form-label" for="mic_sck">Chân xung nhịp Micro I2S SCK (SCK/BCLK)</label>
+              <input type="number" class="form-control" id="mic_sck" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="mic_enable">
+              <label class="form-label" for="mic_ws">Chân chọn kênh Micro I2S WS (WS/LRCK)</label>
+              <input type="number" class="form-control" id="mic_ws" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="mic_enable&amp;mic_type=CUSTOM_AUDIO_MIC_CODEC_ES8311|CUSTOM_AUDIO_MIC_CODEC_ES8388|CUSTOM_AUDIO_MIC_CODEC_ES8374|CUSTOM_AUDIO_MIC_CODEC_ES8389|CUSTOM_AUDIO_MIC_CODEC_BOX">
+              <label class="form-label" for="mic_codec_sda">Chân Codec ADC I2C SDA</label>
+              <input type="number" class="form-control" id="mic_codec_sda" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="mic_enable&amp;mic_type=CUSTOM_AUDIO_MIC_CODEC_ES8311|CUSTOM_AUDIO_MIC_CODEC_ES8388|CUSTOM_AUDIO_MIC_CODEC_ES8374|CUSTOM_AUDIO_MIC_CODEC_ES8389|CUSTOM_AUDIO_MIC_CODEC_BOX">
+              <label class="form-label" for="mic_codec_scl">Chân Codec ADC I2C SCL</label>
+              <input type="number" class="form-control" id="mic_codec_scl" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="speaker_enable||mic_enable">
+              <label class="form-label" for="audio_i2s_mode">Chế Độ Xung Nhịp I2S (I2S Clock Mode)</label>
+              <select class="form-control" id="audio_i2s_mode">
+                <option value="CUSTOM_AUDIO_I2S_SIMPLEX">Simplex (Độc lập: Loa và Micro có chân Clock BCLK/WS riêng)</option>
+                <option value="CUSTOM_AUDIO_I2S_DUPLEX">Duplex (Dùng chung: Loa và Micro chia sẻ chung chân BCLK và WS)</option>
+              </select>
+            </div>
+            <div class="form-item span-2" data-show-if="speaker_enable&amp;mic_enable&amp;speaker_type!=CUSTOM_AUDIO_SPK_CODEC_ES8311&amp;mic_type!=CUSTOM_AUDIO_MIC_CODEC_ES8311&amp;speaker_type=CUSTOM_AUDIO_SPK_CODEC_ES8388||speaker_enable&amp;mic_enable&amp;speaker_type!=CUSTOM_AUDIO_SPK_CODEC_ES8311&amp;mic_type!=CUSTOM_AUDIO_MIC_CODEC_ES8311&amp;mic_type=CUSTOM_AUDIO_MIC_CODEC_ES8388||speaker_enable&amp;mic_enable&amp;speaker_type!=CUSTOM_AUDIO_SPK_CODEC_ES8311&amp;mic_type!=CUSTOM_AUDIO_MIC_CODEC_ES8311&amp;speaker_type!=CUSTOM_AUDIO_SPK_CODEC_ES8388&amp;mic_type!=CUSTOM_AUDIO_MIC_CODEC_ES8388&amp;speaker_type!=CUSTOM_AUDIO_SPK_CODEC_ES8374&amp;mic_type!=CUSTOM_AUDIO_MIC_CODEC_ES8374&amp;speaker_type!=CUSTOM_AUDIO_SPK_CODEC_ES8389&amp;mic_type!=CUSTOM_AUDIO_MIC_CODEC_ES8389&amp;speaker_type=CUSTOM_AUDIO_SPK_CODEC_BOX||speaker_enable&amp;mic_enable&amp;speaker_type!=CUSTOM_AUDIO_SPK_CODEC_ES8311&amp;mic_type!=CUSTOM_AUDIO_MIC_CODEC_ES8311&amp;speaker_type!=CUSTOM_AUDIO_SPK_CODEC_ES8388&amp;mic_type!=CUSTOM_AUDIO_MIC_CODEC_ES8388&amp;speaker_type!=CUSTOM_AUDIO_SPK_CODEC_ES8374&amp;mic_type!=CUSTOM_AUDIO_MIC_CODEC_ES8374&amp;speaker_type!=CUSTOM_AUDIO_SPK_CODEC_ES8389&amp;mic_type!=CUSTOM_AUDIO_MIC_CODEC_ES8389&amp;mic_type=CUSTOM_AUDIO_MIC_CODEC_BOX">
+              <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_AUDIO_CODEC_AEC_REFERENCE"><span>Kênh tham chiếu khử tiếng vọng từ Codec (AEC Hardware Reference)</span></label>
+              <div class="form-hint">Thu tín hiệu loa đang phát làm kênh tham chiếu &quot;R&quot; cho AEC trên thiết bị.</div>
+            </div>
+          </div>
+        </div>
+</section>

@@ -1,0 +1,3 @@
+mainmenu "Xiaozhi Firmware Configuration"
+
+source "main/Kconfig.projbuild"

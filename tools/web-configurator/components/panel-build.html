@@ -1,0 +1,229 @@
+<section class="tab-panel" id="panel-build">
+  
+  <div class="config-group">
+    <div class="group-header">
+      <h3 class="group-title">
+        <span class="group-icon">🛠️</span> Cấu hình Biên dịch (ESP-IDF Build)
+      </h3>
+          <div class="tab-header-actions">
+            <span class="tab-status-pill saved" data-tab-status="panel-build">Đã lưu</span>
+            <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-build" title="Lưu thông tin mục này">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+              <span>Lưu mục này</span>
+            </button>
+          </div>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-col">
+        <label>
+          Mức độ Log (Log Level)
+          <button class="info-btn" data-info-title="Mức độ Log (Log Level)" data-info-desc="Xác định độ chi tiết của dữ liệu in ra màn hình Console. 
+- INFO: Khuyên dùng, cân bằng.
+- DEBUG/VERBOSE: In ra rất nhiều dữ liệu, làm chậm hệ thống, chỉ dùng khi sửa lỗi.
+- NONE/ERROR: Tắt log, tăng tốc tối đa.">-ℹ️-</button>
+        </label>
+        <select id="build_log_level" data-config-key="build.log_level">
+          <option value="NONE">Không có (NONE - Nhanh nhất)</option>
+          <option value="ERROR">Lỗi (ERROR)</option>
+          <option value="WARN">Cảnh báo (WARN)</option>
+          <option value="INFO">Thông tin (INFO - Khuyên dùng)</option>
+          <option value="DEBUG">Gỡ lỗi (DEBUG - Khá chậm)</option>
+          <option value="VERBOSE">Chi tiết (VERBOSE - Rất chậm)</option>
+        </select>
+      </div>
+      
+      <div class="form-col">
+        <label>
+          Tốc độ Console (Baud rate)
+          <button class="info-btn" data-info-title="Tốc độ Console" data-info-desc="Tốc độ in Log qua cổng USB/UART. Khuyên dùng 115200. Nếu dùng chip ESP32-S3 qua cổng USB-OTG ảo thì thông số này không ảnh hưởng nhiều.">-ℹ️-</button>
+        </label>
+        <select id="build_baud_rate" data-config-key="build.baud_rate">
+          <option value="115200">115200 (Tiêu chuẩn)</option>
+          <option value="921600">921600 (Siêu nhanh)</option>
+          <option value="2000000">2000000</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="config-group">
+    <h3 class="group-title">
+      <span class="group-icon">🛡️</span> Khắc phục lỗi (Troubleshooting)
+    </h3>
+    
+    <div class="form-row">
+      <div class="form-col" style="flex:1;">
+        <label class="toggle-container">
+          <input type="checkbox" id="build_touch_suppress" data-config-key="build.touch_suppress">
+          <span class="toggle-slider"></span>
+          <span class="toggle-label">Bỏ qua lỗi Cảm ứng (Touch Deprecation)</span>
+        </label>
+        <div class="field-hint" style="font-size:11px; margin-top:5px;">
+          <strong>Nên bật.</strong> ESP-IDF 6.1 sẽ báo lỗi (Dừng biên dịch) nếu bạn dùng thư viện Touch Pad cũ. Bật tính năng này để hệ thống bỏ qua cảnh báo và biên dịch bình thường.
+        </div>
+      </div>
+    </div>
+    
+    <div class="form-row" style="margin-top: 15px;">
+      <div class="form-col" style="flex:1;">
+        <label class="toggle-container">
+          <input type="checkbox" id="build_md5_partition" data-config-key="build.md5_partition">
+          <span class="toggle-slider"></span>
+          <span class="toggle-label">Kích hoạt Checksum MD5 (Phân vùng)</span>
+        </label>
+        <div class="field-hint" style="font-size:11px; margin-top:5px;">
+          Xác thực tính toàn vẹn của Bảng phân vùng. Giúp bảo vệ thiết bị khi flash ROM nhưng làm chậm quá trình khởi động đi một chút (Vài ms).
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="build-cards-grid">
+    <div class="build-card" id="build-card-idf">
+      <div class="build-card-header">
+        <div class="card-title-group">
+          <span class="build-card-icon">🧰</span>
+          <span class="build-card-title">ESP-IDF</span>
+          <span class="status-tag-custom" id="idf-custom-tag" style="display:none">Tùy chỉnh</span>
+        </div>
+        <span class="status-badge" id="idf-status-badge">Đang kiểm tra...</span>
+      </div>
+      <div class="build-card-body">
+        <div class="build-info-row"><span class="info-label">Phiên bản</span><span class="info-value" id="idf-version-val">--</span></div>
+        <div class="build-info-row"><span class="info-label">Đường dẫn</span><span class="info-value font-mono-sm" id="idf-path-val">--</span></div>
+        <div class="build-info-row"><span class="info-label">Python</span><span class="info-value" id="idf-python-val">--</span></div>
+      </div>
+      <div class="build-card-footer">
+        <button type="button" class="btn btn-outline btn-sm" id="btn-toggle-idf-custom">Tùy chỉnh / Dò tìm IDF</button>
+        <div class="idf-custom-panel" id="idf-custom-panel" style="display:none">
+          <div class="form-item-compact">
+            <label class="form-label-sm" for="custom-idf-input">Thư mục ESP-IDF</label>
+            <input type="text" class="form-control form-control-sm" id="custom-idf-input" data-no-config placeholder="Ví dụ: C:/esp/v6.1/esp-idf">
+          </div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button type="button" class="btn btn-primary btn-xs" id="btn-apply-idf-path">Áp dụng</button>
+            <button type="button" class="btn btn-outline btn-xs" id="btn-scan-all-idf">Dò tìm tự động</button>
+            <button type="button" class="btn btn-outline btn-xs" id="btn-reset-idf-path" style="display:none">Về tự động</button>
+          </div>
+          <div class="form-hint" id="idf-scan-loading" style="display:none">Đang dò tìm ESP-IDF trên máy...</div>
+          <div class="idf-scan-results-box" id="idf-scan-results" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="build-card" id="build-card-target">
+      <div class="build-card-header">
+        <div class="card-title-group">
+          <span class="build-card-icon">🎯</span>
+          <span class="build-card-title">Target chip</span>
+        </div>
+        <span class="status-badge" id="target-status-badge">--</span>
+      </div>
+      <div class="build-card-body">
+        <div class="build-info-row"><span class="info-label">Target hiện tại</span><span class="info-value" id="target-name-val">--</span></div>
+      </div>
+      <div class="build-card-footer">
+        <button type="button" class="btn btn-outline btn-sm" id="btn-quick-set-target">idf.py set-target esp32s3</button>
+      </div>
+    </div>
+
+    <div class="build-card">
+      <div class="build-card-header">
+        <div class="card-title-group">
+          <span class="build-card-icon">🔌</span>
+          <span class="build-card-title">Cổng nạp</span>
+        </div>
+        <button type="button" class="btn btn-outline btn-xs" id="btn-refresh-ports">Làm mới</button>
+      </div>
+      <div class="build-card-body">
+        <div class="form-item-compact">
+          <label class="form-label-sm" for="serial-port-select">Cổng COM</label>
+          <select class="form-control form-control-sm" id="serial-port-select" data-no-config>
+            <option value="">-- Chưa kết nối server --</option>
+          </select>
+        </div>
+        <div class="form-item-compact">
+          <label class="form-label-sm" for="serial-baud-select">Tốc độ nạp</label>
+          <select class="form-control form-control-sm" id="serial-baud-select" data-no-config>
+            <option value="115200">115200</option>
+            <option value="460800" selected>460800</option>
+            <option value="921600">921600</option>
+            <option value="2000000">2000000</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="build-action-bar">
+    <button type="button" class="btn btn-primary" id="btn-idf-build">Build</button>
+    <button type="button" class="btn btn-outline" id="btn-idf-flash">Flash</button>
+    <button type="button" class="btn btn-primary" id="btn-idf-build-flash">Build &amp; Flash</button>
+    <button type="button" class="btn btn-outline" id="btn-idf-clean">Clean</button>
+    <button type="button" class="btn btn-danger-outline" id="btn-idf-cancel" disabled>Dừng</button>
+    <span class="tab-status-pill saved" id="build-overall-status" style="margin-left:auto">Sẵn sàng</span>
+  </div>
+
+  <div class="terminal-container">
+    <div class="terminal-header">
+      <div class="terminal-title">
+        <span class="terminal-dot" id="terminal-live-dot"></span>
+        <span>Nhật ký idf.py</span>
+        <span class="terminal-state-tag" id="terminal-state-tag">IDLE</span>
+      </div>
+      <div class="terminal-controls">
+        <label class="terminal-checkbox"><input type="checkbox" id="terminal-autoscroll" data-no-config checked> Tự cuộn</label>
+        <button type="button" class="btn btn-outline btn-xs" id="btn-copy-logs">Sao chép</button>
+        <button type="button" class="btn btn-outline btn-xs" id="btn-clear-logs">Xóa</button>
+      </div>
+    </div>
+    <pre class="terminal-body" id="terminal-body"><span class="term-dim">Chưa có tác vụ nào. (Build / Flash cần mở trang qua run_configurator.bat)</span>
+</pre>
+    <div class="terminal-footer"><span id="term-status-line">Trạng thái: Sẵn sàng</span></div>
+  </div>
+
+  <dialog id="build-info-dialog" class="sys-dialog">
+    <div class="dialog-content">
+      <h3 id="build-dialog-title">ℹ️ Thông tin</h3>
+      <p id="build-dialog-desc">Mô tả chi tiết</p>
+      <button id="build-dialog-close" class="btn btn-outline" style="width: 100px;">Đã hiểu</button>
+    </div>
+  </dialog>
+
+  <script>
+    const buildDialog = document.getElementById('build-info-dialog');
+    const buildDialogTitle = document.getElementById('build-dialog-title');
+    const buildDialogDesc = document.getElementById('build-dialog-desc');
+    const buildCloseBtn = document.getElementById('build-dialog-close');
+    
+    if(buildDialog && buildCloseBtn) {
+      buildCloseBtn.addEventListener('click', () => buildDialog.close());
+      buildDialog.addEventListener('click', (e) => {
+        const rect = buildDialog.getBoundingClientRect();
+        if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) {
+          buildDialog.close();
+        }
+      });
+    }
+
+    document.querySelectorAll('#panel-build .info-btn').forEach(btn => {
+      btn.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      `;
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        buildDialogTitle.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          ${btn.getAttribute('data-info-title')}
+        `;
+        buildDialogDesc.innerText = btn.getAttribute('data-info-desc');
+        buildDialog.showModal();
+      });
+    });
+  </script>
+</section>

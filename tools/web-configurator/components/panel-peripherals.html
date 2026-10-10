@@ -1,0 +1,544 @@
+<section class="tab-panel" id="panel-peripherals">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🕹️ 4.1. Tương Tác &amp; Điều Khiển Đầu Vào (User Inputs)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8) → 4. Thiết bị ngoại vi &amp; 7 Nhóm Phần Cứng (Hardware Builder) → 4.1. Tương Tác &amp; Điều Khiển Đầu Vào (User Inputs)</span>
+            </div>
+          <div class="tab-header-actions">
+            <span class="tab-status-pill saved" data-tab-status="panel-peripherals">Đã lưu</span>
+            <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-peripherals" title="Lưu thông tin mục này">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+              <span>Lưu mục này</span>
+            </button>
+          </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="buttons_boot"><span>Nút bấm BOOT Onboard (BOOT Button)</span></label>
+              <div class="form-hint">Nút nhấn chuyển đổi trạng thái nói và vào chế độ cấu hình Wi-Fi.</div>
+            </div>
+            <div class="form-item" data-show-if="buttons_boot">
+              <label class="form-label" for="boot_gpio">Chân GPIO nút Boot</label>
+              <input type="number" class="form-control" id="boot_gpio" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="buttons_boot">
+              <label class="form-label" for="kc_CUSTOM_BUTTON_BOOT_EXTRA_GPIOS">Các chân GPIO nút Boot thêm (cách nhau dấu phẩy)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_BUTTON_BOOT_EXTRA_GPIOS">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="buttons_touch"><span>Nút bấm chức năng Action / Chạm (PTT / Touch Key)</span></label>
+              <div class="form-hint">Nút nhấn giữ để nói (Push-to-Talk) hoặc nút cảm ứng chạm.</div>
+            </div>
+            <div class="form-item" data-show-if="buttons_touch">
+              <label class="form-label" for="touch_btn_gpio">Chân GPIO nút Action</label>
+              <input type="number" class="form-control" id="touch_btn_gpio" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="buttons_vol"><span>Cụm phím vật lý Tăng / Giảm âm lượng (Volume Buttons)</span></label>
+              <div class="form-hint">Cặp phím bấm điều chỉnh âm lượng loa ngoài.</div>
+            </div>
+            <div class="form-item" data-show-if="buttons_vol">
+              <label class="form-label" for="vol_up_gpio">Chân GPIO nút tăng âm lượng (Vol Up)</label>
+              <input type="number" class="form-control" id="vol_up_gpio" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="buttons_vol">
+              <label class="form-label" for="vol_down_gpio">Chân GPIO nút giảm âm lượng (Vol Down)</label>
+              <input type="number" class="form-control" id="vol_down_gpio" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="buttons_slider"><span>Thanh trượt cảm ứng điện dung nội bộ ESP32-S3 (Touch Slider)</span></label>
+              <div class="form-hint">Thanh trượt điều khiển cảm ứng điện dung sử dụng 3 kênh Touch pad nội bộ.</div>
+            </div>
+            <div class="form-item" data-show-if="buttons_slider">
+              <label class="form-label" for="slider_pad1">Chân Touch Pad 1 của thanh trượt (Mặc định GPIO 1)</label>
+              <input type="number" class="form-control" id="slider_pad1" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="buttons_slider">
+              <label class="form-label" for="slider_pad2">Chân Touch Pad 2 của thanh trượt (Mặc định GPIO 2)</label>
+              <input type="number" class="form-control" id="slider_pad2" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="buttons_slider">
+              <label class="form-label" for="slider_pad3">Chân Touch Pad 3 của thanh trượt (Mặc định GPIO 3)</label>
+              <input type="number" class="form-control" id="slider_pad3" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="buttons_rotary"><span>Núm vặn xoay vô cấp cơ học (Rotary Encoder EC11 qua PCNT)</span></label>
+              <div class="form-hint">Núm xoay chiết áp số vô hạn để điều chỉnh âm lượng, độ sáng hoặc cuộn menu.</div>
+            </div>
+            <div class="form-item" data-show-if="buttons_rotary">
+              <label class="form-label" for="rotary_a">Chân xung pha A (CLK) Encoder</label>
+              <input type="number" class="form-control" id="rotary_a" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="buttons_rotary">
+              <label class="form-label" for="rotary_b">Chân xung pha B (DT) Encoder</label>
+              <input type="number" class="form-control" id="rotary_b" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="buttons_rotary">
+              <label class="form-label" for="rotary_key">Chân phím nhấn SW Encoder (-1 nếu không dùng)</label>
+              <input type="number" class="form-control" id="rotary_key" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="user_custom_sensors"><span>Driver Cảm biến ngoại vi tùy chỉnh (Custom User Sensor Hook)</span></label>
+              <div class="form-hint">Kích hoạt móc hàm InitializeUserCustomSensors() trong UserDriverRegistry để người dùng khởi tạo bất kỳ cảm biến I2C/SPI tùy chọn nào.</div>
+            </div>
+          </div>
+        </div>
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>📷 4.2. Thị Giác &amp; Ánh Sáng LED (Lighting &amp; Vision)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8) → 4. Thiết bị ngoại vi &amp; 7 Nhóm Phần Cứng (Hardware Builder) → 4.2. Thị Giác &amp; Ánh Sáng LED (Lighting &amp; Vision)</span>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-item span-2 form-item-master">
+              <label class="form-checkbox"><input type="checkbox" id="camera_enable"><span><strong>Camera &amp; Thị giác AI (Camera DVP / USB UVC)</strong></span></label>
+              <div class="form-hint">Bật/tắt hỗ trợ camera chụp ảnh và gửi dữ liệu thị giác cho AI Xiaozhi.</div>
+            </div>
+            <div class="form-item" data-show-if="camera_enable">
+              <label class="form-label" for="camera_sensor">Cảm Biến Camera (Camera Sensor Model)</label>
+              <select class="form-control" id="camera_sensor">
+                <option value="CUSTOM_CAMERA_OV2640">OmniVision OV2640 (2 Megapixel)</option>
+                <option value="CUSTOM_CAMERA_OV3660">OmniVision OV3660 (3 Megapixel)</option>
+                <option value="CUSTOM_CAMERA_OV5640">OmniVision OV5640 (5 Megapixel)</option>
+                <option value="CUSTOM_CAMERA_SC030IOT">SmartSens SC030IOT</option>
+                <option value="CUSTOM_CAMERA_USB_UVC">USB UVC Web Camera (ESP32-S3 USB Host Port)</option>
+                <option value="CUSTOM_CAMERA_USER_CUSTOM">Driver Camera tùy chỉnh (Custom User Camera Hook)</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="camera_sensor!=CUSTOM_CAMERA_USB_UVC&amp;camera_enable">
+              <label class="form-label" for="cam_xclk">Camera XCLK (Master Clock)</label>
+              <input type="number" class="form-control" id="cam_xclk" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="camera_sensor!=CUSTOM_CAMERA_USB_UVC&amp;camera_enable">
+              <label class="form-label" for="cam_pclk">Camera PCLK (Pixel Clock)</label>
+              <input type="number" class="form-control" id="cam_pclk" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="camera_sensor!=CUSTOM_CAMERA_USB_UVC&amp;camera_enable">
+              <label class="form-label" for="cam_vsync">Camera VSYNC (Vertical Sync)</label>
+              <input type="number" class="form-control" id="cam_vsync" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="camera_sensor!=CUSTOM_CAMERA_USB_UVC&amp;camera_enable">
+              <label class="form-label" for="cam_href">Camera HREF (Horizontal Reference)</label>
+              <input type="number" class="form-control" id="cam_href" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="camera_sensor!=CUSTOM_CAMERA_USB_UVC&amp;camera_enable">
+              <label class="form-label" for="cam_siod">Camera SIOD (SCCB I2C Data)</label>
+              <input type="number" class="form-control" id="cam_siod" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="camera_sensor!=CUSTOM_CAMERA_USB_UVC&amp;camera_enable">
+              <label class="form-label" for="cam_sioc">Camera SIOC (SCCB I2C Clock)</label>
+              <input type="number" class="form-control" id="cam_sioc" min="-1" max="48">
+            </div>
+            <div class="form-item span-2" data-show-if="camera_sensor!=CUSTOM_CAMERA_USB_UVC&amp;camera_enable">
+              <label class="form-checkbox"><input type="checkbox" id="cam_use_reset"><span>Sử dụng chân Reset Camera (RST)</span></label>
+            </div>
+            <div class="form-item" data-show-if="camera_sensor!=CUSTOM_CAMERA_USB_UVC&amp;cam_use_reset&amp;camera_enable">
+              <label class="form-label" for="cam_reset">Chân Camera Reset GPIO</label>
+              <input type="number" class="form-control" id="cam_reset" min="-1" max="48">
+            </div>
+            <div class="form-item span-2" data-show-if="camera_sensor!=CUSTOM_CAMERA_USB_UVC&amp;camera_enable">
+              <label class="form-checkbox"><input type="checkbox" id="cam_use_pwdn"><span>Sử dụng chân Power-Down Camera (PWDN)</span></label>
+            </div>
+            <div class="form-item" data-show-if="camera_sensor!=CUSTOM_CAMERA_USB_UVC&amp;cam_use_pwdn&amp;camera_enable">
+              <label class="form-label" for="cam_pwdn">Chân Camera PWDN GPIO</label>
+              <input type="number" class="form-control" id="cam_pwdn" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="camera_sensor!=CUSTOM_CAMERA_USB_UVC&amp;camera_enable">
+              <label class="form-label" for="cam_d0">Camera Data D0 Pin</label>
+              <input type="number" class="form-control" id="cam_d0" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="camera_sensor!=CUSTOM_CAMERA_USB_UVC&amp;camera_enable">
+              <label class="form-label" for="cam_d1">Camera Data D1 Pin</label>
+              <input type="number" class="form-control" id="cam_d1" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="camera_sensor!=CUSTOM_CAMERA_USB_UVC&amp;camera_enable">
+              <label class="form-label" for="cam_d2">Camera Data D2 Pin</label>
+              <input type="number" class="form-control" id="cam_d2" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="camera_sensor!=CUSTOM_CAMERA_USB_UVC&amp;camera_enable">
+              <label class="form-label" for="cam_d3">Camera Data D3 Pin</label>
+              <input type="number" class="form-control" id="cam_d3" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="camera_sensor!=CUSTOM_CAMERA_USB_UVC&amp;camera_enable">
+              <label class="form-label" for="cam_d4">Camera Data D4 Pin</label>
+              <input type="number" class="form-control" id="cam_d4" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="camera_sensor!=CUSTOM_CAMERA_USB_UVC&amp;camera_enable">
+              <label class="form-label" for="cam_d5">Camera Data D5 Pin</label>
+              <input type="number" class="form-control" id="cam_d5" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="camera_sensor!=CUSTOM_CAMERA_USB_UVC&amp;camera_enable">
+              <label class="form-label" for="cam_d6">Camera Data D6 Pin</label>
+              <input type="number" class="form-control" id="cam_d6" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="camera_sensor!=CUSTOM_CAMERA_USB_UVC&amp;camera_enable">
+              <label class="form-label" for="cam_d7">Camera Data D7 Pin</label>
+              <input type="number" class="form-control" id="cam_d7" min="-1" max="48">
+            </div>
+            <div class="form-item span-2" data-show-if="camera_sensor!=CUSTOM_CAMERA_USB_UVC&amp;camera_enable">
+              <label class="form-checkbox"><input type="checkbox" id="cam_hmirror"><span>Lật ảnh theo chiều ngang (Horizontal Mirror)</span></label>
+            </div>
+            <div class="form-item span-2" data-show-if="camera_sensor!=CUSTOM_CAMERA_USB_UVC&amp;camera_enable">
+              <label class="form-checkbox"><input type="checkbox" id="cam_vflip"><span>Lật ảnh theo chiều dọc (Vertical Flip)</span></label>
+            </div>
+            <div class="form-item span-2 form-item-master">
+              <label class="form-checkbox"><input type="checkbox" id="led_enable"><span><strong>Đèn LED trạng thái (Status LED WS2812 / Single LED)</strong></span></label>
+              <div class="form-hint">Cấu hình đèn LED trạng thái (WS2812 RGB, Single LED PWM, Circular LED Strip).</div>
+            </div>
+            <div class="form-item" data-show-if="led_enable">
+              <label class="form-label" for="led_type">Loại Đèn LED Báo Hiệu Trạng Thái</label>
+              <select class="form-control" id="led_type">
+                <option value="CUSTOM_LED_WS2812">Đèn LED RGB kỹ thuật số WS2812 / SK6812 (Giao thức RMT)</option>
+                <option value="CUSTOM_LED_SINGLE_PWM">Đèn LED đơn điều chỉnh độ sáng (LEDC PWM)</option>
+                <option value="CUSTOM_LED_CIRCULAR_STRIP">Vòng tròn LED xoay trạng thái (Circular LED Strip)</option>
+                <option value="CUSTOM_LED_USER_CUSTOM">Driver Đèn LED tùy chỉnh (Custom User LED Hook)</option>
+                <option value="CUSTOM_LED_NONE">Không sử dụng đèn LED</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="led_enable">
+              <label class="form-label" for="led_gpio">Chân GPIO kết nối Đèn LED (Mặc định chân LED onboard)</label>
+              <input type="number" class="form-control" id="led_gpio" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="led_enable">
+              <label class="form-label" for="kc_CUSTOM_LED_EXTRA_GPIOS">Các chân GPIO LED thêm (cách nhau dấu phẩy)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_LED_EXTRA_GPIOS">
+            </div>
+            <div class="form-item" data-show-if="led_enable">
+              <label class="form-label" for="led_count">Số lượng mắt LED trên dải/vòng (Hỗ trợ tối đa 1024 mắt LED)</label>
+              <input type="number" class="form-control" id="led_count" min="1" max="1024">
+              <div class="form-hint">Số lượng mắt LED kỹ thuật số WS2812/SK6812 (từ 1 đến 1024 mắt LED).</div>
+            </div>
+            <div class="form-item span-2" data-show-if="led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
+              <label class="form-checkbox"><input type="checkbox" id="led_rainbow"><span>Hiệu ứng Đổi Màu Cầu Vồng Nhanh (Fast Rainbow Effect khi nói / khởi động)</span></label>
+              <div class="form-hint">Kích hoạt hiệu ứng LED RGB chuyển màu cầu vồng đa sắc cực nhanh và mượt khi loa phát âm thanh hoặc khi khởi động.</div>
+            </div>
+          </div>
+        </div>
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🎞️ Camera Configuration</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → Camera Configuration</span>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="kc_XIAOZHI_CAMERA_MIRROR_CONFIGURED"><span>Override camera mirror settings</span></label>
+              <div class="form-hint">When enabled, the common camera implementations apply the horizontal and vertical mirror settings below after the sensor has been initialized.</div>
+            </div>
+            <div class="form-item span-2" data-show-if="kc_XIAOZHI_CAMERA_MIRROR_CONFIGURED">
+              <label class="form-checkbox"><input type="checkbox" id="kc_XIAOZHI_CAMERA_HMIRROR"><span>Mirror Camera Horizontally</span></label>
+              <div class="form-hint">Flip the captured camera image across the vertical axis.</div>
+            </div>
+            <div class="form-item span-2" data-show-if="kc_XIAOZHI_CAMERA_MIRROR_CONFIGURED">
+              <label class="form-checkbox"><input type="checkbox" id="kc_XIAOZHI_CAMERA_VFLIP"><span>Mirror Camera Vertically</span></label>
+              <div class="form-hint">Flip the captured camera image across the horizontal axis.</div>
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="kc_XIAOZHI_CAMERA_ALLOW_JPEG_INPUT"><span>Allow JPEG Input</span></label>
+              <div class="form-hint">Allow JPEG Input format for the camera.</div>
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="kc_XIAOZHI_ENABLE_CAMERA_DEBUG_MODE"><span>Enable Camera Debug Mode</span></label>
+              <div class="form-hint">Enable camera debug mode, print camera debug information to the console.</div>
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="kc_XIAOZHI_ENABLE_CAMERA_ENDIANNESS_SWAP"><span>Enable software camera buffer endianness swapping</span></label>
+              <div class="form-hint">This option treats the camera buffer as a uint16_t[] array and performs byte-swapping (endianness conversion) on each element.</div>
+            </div>
+            <div class="form-item span-2 form-item-master" data-show-if="!kc_XIAOZHI_CAMERA_ALLOW_JPEG_INPUT">
+              <label class="form-checkbox"><input type="checkbox" id="kc_XIAOZHI_ENABLE_ROTATE_CAMERA_IMAGE"><span><strong>Enable Camera Image Rotation</strong></span></label>
+              <div class="form-hint">Enable camera image rotation, rotate the camera image to the correct orientation.</div>
+            </div>
+            <div class="form-item" data-show-if="kc_XIAOZHI_ENABLE_ROTATE_CAMERA_IMAGE">
+              <label class="form-label" for="kc_XIAOZHI_CAMERA_IMAGE_ROTATION_ANGLE">Camera Image Rotation Angle (clockwise)</label>
+              <select class="form-control" id="kc_XIAOZHI_CAMERA_IMAGE_ROTATION_ANGLE">
+                <option value="XIAOZHI_CAMERA_IMAGE_ROTATION_ANGLE_90">90°</option>
+                <option value="XIAOZHI_CAMERA_IMAGE_ROTATION_ANGLE_270">270°</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🔔 4.3. Âm Thanh Cảnh Báo &amp; Xúc Giác (Audio &amp; Haptics)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8) → 4. Thiết bị ngoại vi &amp; 7 Nhóm Phần Cứng (Hardware Builder) → 4.3. Âm Thanh Cảnh Báo &amp; Xúc Giác (Audio &amp; Haptics)</span>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="servo_enable"><span>Động cơ Servo tương tác qua PWM (Servo Dog Controller)</span></label>
+              <div class="form-hint">Kích hoạt điều khiển Động cơ Servo nhiều khớp tương tác qua xung PWM.</div>
+            </div>
+            <div class="form-item" data-show-if="servo_enable">
+              <label class="form-label" for="servo_gpio">Chân GPIO cấp xung PWM cho Động cơ Servo</label>
+              <input type="number" class="form-control" id="servo_gpio" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="buzzer_enable"><span>Còi báo động Buzzer (GPIO 41)</span></label>
+              <div class="form-hint">Kích hoạt âm báo Buzzer trên chân GPIO 41.</div>
+            </div>
+            <div class="form-item" data-show-if="buzzer_enable">
+              <label class="form-label" for="kc_BUZZER_EXTRA_PINS">Các chân GPIO Còi thêm (cách nhau dấu phẩy)</label>
+              <input type="text" class="form-control" id="kc_BUZZER_EXTRA_PINS">
+            </div>
+            <div class="form-item" data-show-if="buzzer_enable">
+              <label class="form-label" for="buzzer_gpio">Chân GPIO Buzzer</label>
+              <input type="number" class="form-control" id="buzzer_gpio" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="haptic_enable"><span>Động cơ rung phản hồi xúc giác (GPIO 42)</span></label>
+              <div class="form-hint">Kích hoạt động cơ rung haptic phản hồi xúc giác trên GPIO 42.</div>
+            </div>
+            <div class="form-item" data-show-if="haptic_enable">
+              <label class="form-label" for="haptic_gpio">Chân GPIO Động cơ rung</label>
+              <input type="number" class="form-control" id="haptic_gpio" min="-1" max="48">
+            </div>
+          </div>
+        </div>
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🌡️ 4.4. Cảm Biến Môi Trường, Khí &amp; Lưu Lượng (Environment, Gas &amp; Flow)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8) → 4. Thiết bị ngoại vi &amp; 7 Nhóm Phần Cứng (Hardware Builder) → 4.4. Cảm Biến Môi Trường, Khí &amp; Lưu Lượng (Environment, Gas &amp; Flow)</span>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="sensor_dht"><span>Cảm biến Nhiệt độ &amp; Độ ẩm 1 dây (DHT11 / DHT22)</span></label>
+              <div class="form-hint">Cảm biến nhiệt độ và độ ẩm giao tiếp 1-Wire.</div>
+            </div>
+            <div class="form-item" data-show-if="sensor_dht">
+              <label class="form-label" for="kc_CUSTOM_SENSOR_DHT_EXTRA_GPIOS">Các chân GPIO DHT thêm (cách nhau dấu phẩy)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_SENSOR_DHT_EXTRA_GPIOS">
+            </div>
+            <div class="form-item" data-show-if="sensor_dht">
+              <label class="form-label" for="dht_gpio">Chân dữ liệu 1-Wire cảm biến DHT GPIO</label>
+              <input type="number" class="form-control" id="dht_gpio" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="sensor_temp"><span>Cảm biến Nhiệt độ &amp; Độ ẩm kỹ thuật số I2C (AHT20 / SHT3x)</span></label>
+              <div class="form-hint">Cảm biến nhiệt độ và độ ẩm độ chính xác cao qua I2C.</div>
+            </div>
+            <div class="form-item span-2" data-show-if="sensor_temp">
+              <label class="form-checkbox"><input type="checkbox" id="sensor_aht20"><span>Aosong AHT10 / AHT20 / AHT21 (I2C)</span></label>
+            </div>
+            <div class="form-item" data-show-if="sensor_temp">
+              <label class="form-label" for="kc_CUSTOM_SENSOR_AHT20_EXTRA_GPIOS">Các chân GPIO AHT20 thêm (cách nhau dấu phẩy)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_SENSOR_AHT20_EXTRA_GPIOS">
+            </div>
+            <div class="form-item" data-show-if="sensor_temp">
+              <label class="form-label" for="temp_sda">Chân I2C SDA cảm biến nhiệt ẩm</label>
+              <input type="number" class="form-control" id="temp_sda" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="sensor_temp">
+              <label class="form-label" for="temp_scl">Chân I2C SCL cảm biến nhiệt ẩm</label>
+              <input type="number" class="form-control" id="temp_scl" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="sensor_bmp280"><span>Cảm biến Áp suất khí quyển &amp; Độ cao (Bosch BMP280 / BME280 I2C)</span></label>
+              <div class="form-hint">Cảm biến áp suất khí quyển và ước tính độ cao qua I2C.</div>
+            </div>
+            <div class="form-item" data-show-if="sensor_bmp280">
+              <label class="form-label" for="kc_CUSTOM_SENSOR_BMP280_EXTRA_GPIOS">Các chân GPIO BMP280 thêm (cách nhau dấu phẩy)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_SENSOR_BMP280_EXTRA_GPIOS">
+            </div>
+            <div class="form-item" data-show-if="sensor_bmp280">
+              <label class="form-label" for="bmp280_sda">Chân I2C SDA cảm biến khí áp BMP280</label>
+              <input type="number" class="form-control" id="bmp280_sda" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="sensor_bmp280">
+              <label class="form-label" for="bmp280_scl">Chân I2C SCL cảm biến khí áp BMP280</label>
+              <input type="number" class="form-control" id="bmp280_scl" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="sensor_bh1750"><span>Cảm biến cường độ ánh sáng kỹ thuật số BH1750 (I2C)</span></label>
+              <div class="form-hint">Cảm biến đo cường độ sáng môi trường đơn vị Lux qua I2C.</div>
+            </div>
+            <div class="form-item" data-show-if="sensor_bh1750">
+              <label class="form-label" for="kc_CUSTOM_SENSOR_BH1750_EXTRA_GPIOS">Các chân GPIO BH1750 thêm (cách nhau dấu phẩy)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_SENSOR_BH1750_EXTRA_GPIOS">
+            </div>
+            <div class="form-item" data-show-if="sensor_bh1750">
+              <label class="form-label" for="bh1750_sda">Chân I2C SDA cảm biến ánh sáng BH1750</label>
+              <input type="number" class="form-control" id="bh1750_sda" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="sensor_bh1750">
+              <label class="form-label" for="bh1750_scl">Chân I2C SCL cảm biến ánh sáng BH1750</label>
+              <input type="number" class="form-control" id="bh1750_scl" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="sensor_ldr"><span>Cảm biến ánh sáng quang trở (LDR qua cầu phân áp ADC)</span></label>
+              <div class="form-hint">Đo mức độ sáng analog qua cầu phân áp quang trở ADC1.</div>
+            </div>
+            <div class="form-item" data-show-if="sensor_ldr">
+              <label class="form-label" for="kc_CUSTOM_SENSOR_LDR_EXTRA_CHS">Các kênh ADC quang trở LDR thêm (cách nhau dấu phẩy)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_SENSOR_LDR_EXTRA_CHS">
+            </div>
+            <div class="form-item" data-show-if="sensor_ldr">
+              <label class="form-label" for="ldr_ch">Kênh ADC1 đo quang trở LDR (Kênh 1 ứng với GPIO 2)</label>
+              <input type="number" class="form-control" id="ldr_ch" min="0" max="9">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="sensor_gas_co2"><span>Cảm biến nồng độ Khí độc TVOC &amp; CO2 NDIR (SCD40/41, SGP30/40 I2C)</span></label>
+              <div class="form-hint">Cảm biến đo nồng độ khí CO2 quang học NDIR thực hoặc TVOC/eCO2 qua I2C.</div>
+            </div>
+            <div class="form-item span-2" data-show-if="sensor_gas_co2">
+              <label class="form-checkbox"><input type="checkbox" id="gas_scd4x"><span>Sensirion SCD40 / SCD41 (Cảm biến CO2 NDIR I2C)</span></label>
+            </div>
+            <div class="form-item" data-show-if="sensor_gas_co2">
+              <label class="form-label" for="kc_CUSTOM_SENSOR_SCD4X_EXTRA_GPIOS">Các chân GPIO SCD4X thêm (cách nhau dấu phẩy)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_SENSOR_SCD4X_EXTRA_GPIOS">
+            </div>
+            <div class="form-item" data-show-if="sensor_gas_co2">
+              <label class="form-label" for="gas_sda">Chân I2C SDA cảm biến khí/CO2</label>
+              <input type="number" class="form-control" id="gas_sda" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="sensor_gas_co2">
+              <label class="form-label" for="gas_scl">Chân I2C SCL cảm biến khí/CO2</label>
+              <input type="number" class="form-control" id="gas_scl" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="sensor_gas_mq"><span>Cảm biến khói &amp; khí gas dễ cháy (MQ-2 / MQ-135 Analog ADC)</span></label>
+              <div class="form-hint">Đọc nồng độ khói, khí LPG, CO hoặc chất lượng không khí qua bộ chuyển đổi ADC.</div>
+            </div>
+            <div class="form-item" data-show-if="sensor_gas_mq">
+              <label class="form-label" for="gas_mq_gpio">Chân analog đọc điện áp cảm biến MQ (kênh ADC1)</label>
+              <input type="number" class="form-control" id="gas_mq_gpio" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_SENSOR_DS18B20_PIN">Chân dữ liệu 1-Wire cảm biến nhiệt độ DS18B20</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_SENSOR_DS18B20_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_SENSOR_FLOW_PULSE_PIN">Chân đọc xung lưu lượng chất lỏng (Flow Pulse)</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_SENSOR_FLOW_PULSE_PIN" min="-1" max="48">
+            </div>
+          </div>
+        </div>
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>📡 4.5. Không Gian, Khoảng Cách &amp; An Ninh (Space, Distance &amp; Security)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8) → 4. Thiết bị ngoại vi &amp; 7 Nhóm Phần Cứng (Hardware Builder) → 4.5. Không Gian, Khoảng Cách &amp; An Ninh (Space, Distance &amp; Security)</span>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_ENABLE_SENSOR_APDS9960"><span>Cảm biến màu sắc, cử chỉ &amp; tiệm cận (Broadcom APDS-9960 I2C)</span></label>
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_SENSOR_APDS9960">
+              <label class="form-label" for="kc_CUSTOM_SENSOR_APDS9960_I2C_SDA">Chân I2C SDA cảm biến APDS9960</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_SENSOR_APDS9960_I2C_SDA" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_SENSOR_APDS9960">
+              <label class="form-label" for="kc_CUSTOM_SENSOR_APDS9960_I2C_SCL">Chân I2C SCL cảm biến APDS9960</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_SENSOR_APDS9960_I2C_SCL" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_SENSOR_APDS9960">
+              <label class="form-label" for="kc_CUSTOM_SENSOR_APDS9960_INT_PIN">Chân ngắt INT cảm biến APDS9960</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_SENSOR_APDS9960_INT_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_ENABLE_SENSOR_VL53LX"><span>Cảm biến khoảng cách laser ToF (STMicroelectronics VL53L0X / VL53L1X I2C)</span></label>
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_SENSOR_VL53LX">
+              <label class="form-label" for="kc_CUSTOM_SENSOR_VL53LX_I2C_SDA">Chân I2C SDA cảm biến laser VL53L</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_SENSOR_VL53LX_I2C_SDA" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_SENSOR_VL53LX">
+              <label class="form-label" for="kc_CUSTOM_SENSOR_VL53LX_I2C_SCL">Chân I2C SCL cảm biến laser VL53L</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_SENSOR_VL53LX_I2C_SCL" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_SENSOR_VL53LX">
+              <label class="form-label" for="kc_CUSTOM_SENSOR_VL53LX_XSHUT_PIN">Chân tắt nguồn XSHUT cảm biến laser VL53L</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_SENSOR_VL53LX_XSHUT_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="sensor_hcsr04"><span>Cảm biến khoảng cách siêu âm (HC-SR04 / US-100)</span></label>
+              <div class="form-hint">Đo khoảng cách vật thể bằng sóng siêu âm qua chân Trig/Echo.</div>
+            </div>
+            <div class="form-item" data-show-if="sensor_hcsr04">
+              <label class="form-label" for="hcsr04_trig">Chân phát xung siêu âm Trig GPIO</label>
+              <input type="number" class="form-control" id="hcsr04_trig" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="sensor_hcsr04">
+              <label class="form-label" for="hcsr04_echo">Chân nhận tín hiệu siêu âm Echo GPIO</label>
+              <input type="number" class="form-control" id="hcsr04_echo" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="sensor_pir"><span>Cảm biến phát hiện người chuyển động PIR (HC-SR501 / RCWL-0516)</span></label>
+              <div class="form-hint">Phát hiện thân nhiệt chuyển động của con người qua cảm biến hồng ngoại thụ động PIR.</div>
+            </div>
+            <div class="form-item" data-show-if="sensor_pir">
+              <label class="form-label" for="pir_gpio">Chân tín hiệu cảm biến PIR GPIO</label>
+              <input type="number" class="form-control" id="pir_gpio" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="sensor_vibration"><span>Cảm biến cảnh báo chấn động / Rung tiếp điểm (SW-420 GPIO Interrupt)</span></label>
+              <div class="form-hint">Phát hiện va chạm, rung lắc cơ học và gửi tín hiệu cảnh báo tức thời.</div>
+            </div>
+            <div class="form-item" data-show-if="sensor_vibration">
+              <label class="form-label" for="vibration_gpio">Chân tín hiệu Digital Out cảm biến rung</label>
+              <input type="number" class="form-control" id="vibration_gpio" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="sensor_flame"><span>Cảm biến cảnh báo hỏa hoạn / Ngọn lửa (Flame Sensor IR)</span></label>
+              <div class="form-hint">Phát hiện nguồn phát bức xạ lửa hồng ngoại trong phạm vi quan sát.</div>
+            </div>
+            <div class="form-item" data-show-if="sensor_flame">
+              <label class="form-label" for="flame_gpio">Chân tín hiệu Digital báo lửa</label>
+              <input type="number" class="form-control" id="flame_gpio" min="-1" max="48">
+            </div>
+          </div>
+        </div>
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>⚙️ 4.6. Động Cơ, Robot &amp; Cơ Cấu Chấp Hành (Motors, Robotics &amp; Actuators)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8) → 4. Thiết bị ngoại vi &amp; 7 Nhóm Phần Cứng (Hardware Builder) → 4.6. Động Cơ, Robot &amp; Cơ Cấu Chấp Hành (Motors, Robotics &amp; Actuators)</span>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="relay_enable"><span>Rơ-le đóng cắt thiết bị độc lập (Relay Switch)</span></label>
+              <div class="form-hint">Điều khiển đóng cắt relay hoặc công tắc thiết bị điện ngoài.</div>
+            </div>
+            <div class="form-item" data-show-if="relay_enable">
+              <label class="form-label" for="relay_gpio">Chân GPIO kích hoạt Relay đóng cắt</label>
+              <input type="number" class="form-control" id="relay_gpio" min="-1" max="48">
+            </div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="motor_dc_enable"><span>Mạch cầu H Động cơ DC 2 chiều cho xe robot (TB6612FNG / L9110S / DRV8833)</span></label>
+              <div class="form-hint">Điều khiển 2 động cơ DC bánh xe di chuyển (tiến, lùi, rẽ) theo lệnh giọng nói AI.</div>
+            </div>
+            <div class="form-item" data-show-if="motor_dc_enable">
+              <label class="form-label" for="motor_driver">Loại Mạch Điều Khiển Động Cơ (Motor Driver)</label>
+              <select class="form-control" id="motor_driver">
+                <option value="CUSTOM_MOTOR_DRIVER_TB6612">Toshiba TB6612FNG (Hiệu suất cao MOSFET H-Bridge)</option>
+                <option value="CUSTOM_MOTOR_DRIVER_L9110S">L9110S / HG7881 (Mạch 2 kênh DC mini giá rẻ)</option>
+                <option value="CUSTOM_MOTOR_DRIVER_DRV8833">TI DRV8833 (Cầu H kép bảo vệ quá dòng)</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="motor_dc_enable">
+              <label class="form-label" for="motor_pwma">Chân điều tốc PWM Động cơ A (PWMA)</label>
+              <input type="number" class="form-control" id="motor_pwma" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="motor_dc_enable">
+              <label class="form-label" for="motor_dira">Chân hướng quay Động cơ A (DIRA / IN1)</label>
+              <input type="number" class="form-control" id="motor_dira" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="motor_dc_enable">
+              <label class="form-label" for="motor_pwmb">Chân điều tốc PWM Động cơ B (PWMB)</label>
+              <input type="number" class="form-control" id="motor_pwmb" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="motor_dc_enable">
+              <label class="form-label" for="motor_dirb">Chân hướng quay Động cơ B (DIRB / IN3)</label>
+              <input type="number" class="form-control" id="motor_dirb" min="-1" max="48">
+            </div>
+          </div>
+        </div>
+</section>

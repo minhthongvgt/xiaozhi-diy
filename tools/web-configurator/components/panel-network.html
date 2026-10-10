@@ -1,0 +1,94 @@
+<section class="tab-panel" id="panel-network">
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>📶 WiFi Configuration Method</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → WiFi Configuration Method</span>
+            </div>
+          <div class="tab-header-actions">
+            <span class="tab-status-pill saved" data-tab-status="panel-network">Đã lưu</span>
+            <button type="button" class="btn btn-primary btn-save-tab" data-tab="panel-network" title="Lưu thông tin mục này">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+              <span>Lưu mục này</span>
+            </button>
+          </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-item">
+              <label class="form-label" for="wifi_method">WiFi Configuration Method</label>
+              <select class="form-control" id="wifi_method">
+                <option value="USE_HOTSPOT_WIFI_PROVISIONING">Hotspot</option>
+                <option value="USE_ESP_BLUFI_WIFI_PROVISIONING">ESP-BluFi</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🔌 3. Giao thức truyền thông &amp; Mạng (Communication, 4G, Ethernet &amp; MCP)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8) → 3. Giao thức truyền thông &amp; Mạng (Communication, 4G, Ethernet &amp; MCP)</span>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-item span-2 form-item-master">
+              <label class="form-checkbox"><input type="checkbox" id="uart_enable"><span><strong>Cổng UART mở rộng (Serial Communication Port)</strong></span></label>
+              <div class="form-hint">Giao tiếp nối tiếp UART cho modem 4G, AI thị giác, Robot hoặc servo.</div>
+            </div>
+            <div class="form-item" data-show-if="uart_enable">
+              <label class="form-label" for="uart_port">Cổng UART Phần Cứng (Hardware UART Port)</label>
+              <select class="form-control" id="uart_port">
+                <option value="CUSTOM_UART_PORT_1">UART1 (Cổng serial phần cứng 1)</option>
+                <option value="CUSTOM_UART_PORT_2">UART2 (Cổng serial phần cứng 2)</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="uart_enable">
+              <label class="form-label" for="uart_tx">Chân phát UART TX GPIO</label>
+              <input type="number" class="form-control" id="uart_tx" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="uart_enable">
+              <label class="form-label" for="uart_rx">Chân nhận UART RX GPIO</label>
+              <input type="number" class="form-control" id="uart_rx" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="uart_enable">
+              <label class="form-label" for="uart_baud">Tốc độ baud truyền thông (Baudrate)</label>
+              <input type="number" class="form-control" id="uart_baud" min="9600" max="3000000">
+            </div>
+            <div class="form-item span-2" data-show-if="uart_enable">
+              <label class="form-checkbox"><input type="checkbox" id="uart_flow"><span>Kích hoạt điều khiển luồng phần cứng (RTS/CTS Hardware Flow Control)</span></label>
+            </div>
+            <div class="form-item" data-show-if="uart_flow&amp;uart_enable">
+              <label class="form-label" for="uart_rts">Chân RTS GPIO (Request to Send)</label>
+              <input type="number" class="form-control" id="uart_rts" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="uart_flow&amp;uart_enable">
+              <label class="form-label" for="uart_cts">Chân CTS GPIO (Clear to Send)</label>
+              <input type="number" class="form-control" id="uart_cts" min="-1" max="48">
+            </div>
+            <div class="form-item span-2 form-item-master">
+              <label class="form-checkbox"><input type="checkbox" id="mcp_enable"><span><strong>Giao thức IoT &amp; Tính năng MCP Server (Model Context Protocol)</strong></span></label>
+              <div class="form-hint">Cho phép AI Xiaozhi điều khiển các thiết bị ngoại vi và cảm biến qua giao thức MCP Server.</div>
+            </div>
+            <div class="form-item span-2" data-show-if="mcp_enable">
+              <label class="form-checkbox"><input type="checkbox" id="mcp_lamp"><span>Công cụ MCP: Điều khiển Đèn thông minh / Relay bật tắt qua AI</span></label>
+            </div>
+            <div class="form-item" data-show-if="mcp_enable">
+              <label class="form-label" for="kc_CUSTOM_MCP_TOOL_LAMP_EXTRA_GPIOS">Các chân GPIO Đèn (Lamp) thêm (cách nhau dấu phẩy)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_MCP_TOOL_LAMP_EXTRA_GPIOS">
+            </div>
+            <div class="form-item" data-show-if="mcp_lamp&amp;mcp_enable">
+              <label class="form-label" for="mcp_lamp_gpio">Chân GPIO điều khiển Đèn / Relay thông minh</label>
+              <input type="number" class="form-control" id="mcp_lamp_gpio" min="-1" max="48">
+            </div>
+            <div class="form-item span-2" data-show-if="mcp_enable">
+              <label class="form-checkbox"><input type="checkbox" id="mcp_sensor"><span>Công cụ MCP: Đọc dữ liệu Cảm biến môi trường, khoảng cách, an ninh qua AI</span></label>
+            </div>
+            <div class="form-item span-2" data-show-if="mcp_enable">
+              <label class="form-checkbox"><input type="checkbox" id="mcp_actuator"><span>Công cụ MCP: Điều khiển Động cơ Servo, Động cơ DC, Còi Buzzer qua AI</span></label>
+            </div>
+            <div class="form-item span-2" data-show-if="mcp_enable">
+              <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_MCP_TOOL_PRESS_TO_TALK"><span>Công cụ MCP: Nhấn để nói qua AI (Push to Talk tool)</span></label>
+            </div>
+          </div>
+        </div>
+</section>
