@@ -15,6 +15,14 @@
 #define SERVO_LEDC_FREQ_HZ      50
 #define DEFAULT_SERVO_MIN_US    500
 #define DEFAULT_SERVO_MAX_US    2500
+#define MOTOR_LEDC_MODE         LEDC_LOW_SPEED_MODE
+#define MOTOR_LEDC_TIMER        LEDC_TIMER_3
+#define MOTOR_LEDC_CHANNEL_A    LEDC_CHANNEL_4
+#define MOTOR_LEDC_CHANNEL_B    LEDC_CHANNEL_5
+#define MOTOR_LEDC_RES          LEDC_TIMER_10_BIT
+#define MOTOR_LEDC_FREQ_HZ      20000
+#define MOTOR_LEDC_DUTY_MAX     ((1U << 10) - 1)
+static bool s_motor_pwm_ready = false;
 static gpio_num_t s_relay_pin = (gpio_num_t)-1;
 static bool s_relay_state = false;
 static gpio_num_t s_buzzer_pin = (gpio_num_t)-1;
@@ -122,17 +130,72 @@ bool actuator_is_servo_attached(void)
 {
     return s_servo_attached;
 }
+static void __attribute__((unused)) motor_pwm_init(void)
+{
+    if (!GPIO_IS_VALID_OUTPUT_GPIO(s_motor_pwma) && !GPIO_IS_VALID_OUTPUT_GPIO(s_motor_pwmb)) {
+        return;
+    }
+    ledc_timer_config_t timer_cfg = {
+        .speed_mode = MOTOR_LEDC_MODE,
+        .duty_resolution = MOTOR_LEDC_RES,
+        .timer_num = MOTOR_LEDC_TIMER,
+        .freq_hz = MOTOR_LEDC_FREQ_HZ,
+        .clk_cfg = LEDC_AUTO_CLK,
+    };
+    esp_err_t err = ledc_timer_config(&timer_cfg);
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "Motor PWM timer init failed (%s), falling back to on/off control", esp_err_to_name(err));
+        return;
+    }
+    gpio_num_t pins[2] = {s_motor_pwma, s_motor_pwmb};
+    ledc_channel_t channels[2] = {MOTOR_LEDC_CHANNEL_A, MOTOR_LEDC_CHANNEL_B};
+    for (int i = 0; i < 2; i++) {
+        if (!GPIO_IS_VALID_OUTPUT_GPIO(pins[i])) continue;
+        ledc_channel_config_t ch_cfg = {
+            .gpio_num = pins[i],
+            .speed_mode = MOTOR_LEDC_MODE,
+            .channel = channels[i],
+            .timer_sel = MOTOR_LEDC_TIMER,
+            .duty = 0,
+            .hpoint = 0,
+        };
+        err = ledc_channel_config(&ch_cfg);
+        if (err != ESP_OK) {
+            ESP_LOGW(TAG, "Motor PWM channel %d init failed (%s)", (int)channels[i], esp_err_to_name(err));
+            return;
+        }
+    }
+    s_motor_pwm_ready = true;
+    ESP_LOGI(TAG, "Motor PWM ready (%d Hz, LEDC timer %d)", MOTOR_LEDC_FREQ_HZ, (int)MOTOR_LEDC_TIMER);
+}
+static void motor_apply(gpio_num_t pwm_pin, gpio_num_t dir_pin, ledc_channel_t channel, int speed_pct)
+{
+    int magnitude = speed_pct < 0 ? -speed_pct : speed_pct;
+    bool reverse = speed_pct < 0;
+#if defined(CONFIG_CUSTOM_MOTOR_DRIVER_L9110S) || defined(CONFIG_CUSTOM_MOTOR_DRIVER_DRV8833)
+    int duty_pct = (speed_pct == 0) ? 0 : (reverse ? 100 - magnitude : magnitude);
+    gpio_set_level(dir_pin, (speed_pct != 0 && reverse) ? 1 : 0);
+#else
+    int duty_pct = magnitude;
+    gpio_set_level(dir_pin, reverse ? 0 : 1);
+#endif
+    if (s_motor_pwm_ready) {
+        uint32_t duty = (uint32_t)duty_pct * MOTOR_LEDC_DUTY_MAX / 100;
+        ledc_set_duty(MOTOR_LEDC_MODE, channel, duty);
+        ledc_update_duty(MOTOR_LEDC_MODE, channel);
+    } else {
+        gpio_set_level(pwm_pin, duty_pct >= 50 ? 1 : 0);
+    }
+}
 void actuator_set_dc_motor(int motor_id, int speed_pct)
 {
     if (speed_pct > 100) speed_pct = 100;
     if (speed_pct < -100) speed_pct = -100;
     ESP_LOGI(TAG, "Setting Motor %d to %d%% speed", motor_id, speed_pct);
     if (motor_id == 1 && GPIO_IS_VALID_GPIO(s_motor_pwma) && GPIO_IS_VALID_GPIO(s_motor_dira)) {
-        gpio_set_level(s_motor_dira, (speed_pct >= 0) ? 1 : 0);
-        gpio_set_level(s_motor_pwma, (speed_pct != 0) ? 1 : 0);
+        motor_apply(s_motor_pwma, s_motor_dira, MOTOR_LEDC_CHANNEL_A, speed_pct);
     } else if (motor_id == 2 && GPIO_IS_VALID_GPIO(s_motor_pwmb) && GPIO_IS_VALID_GPIO(s_motor_dirb)) {
-        gpio_set_level(s_motor_dirb, (speed_pct >= 0) ? 1 : 0);
-        gpio_set_level(s_motor_pwmb, (speed_pct != 0) ? 1 : 0);
+        motor_apply(s_motor_pwmb, s_motor_dirb, MOTOR_LEDC_CHANNEL_B, speed_pct);
     }
 }
 void actuator_beep(uint32_t freq_hz, uint32_t duration_ms)
@@ -311,6 +374,7 @@ esp_err_t actuator_manager_init(void)
     if (GPIO_IS_VALID_GPIO(s_motor_dira)) init_output_pin(s_motor_dira, "Motor DC DIRA");
     if (GPIO_IS_VALID_GPIO(s_motor_pwmb)) init_output_pin(s_motor_pwmb, "Motor DC PWMB");
     if (GPIO_IS_VALID_GPIO(s_motor_dirb)) init_output_pin(s_motor_dirb, "Motor DC DIRB");
+    motor_pwm_init();
     ESP_LOGI(TAG, "DC Motor H-Bridge Driver configured (PWMA: %d, DIRA: %d, PWMB: %d, DIRB: %d)",
              s_motor_pwma, s_motor_dira, s_motor_pwmb, s_motor_dirb);
 #endif

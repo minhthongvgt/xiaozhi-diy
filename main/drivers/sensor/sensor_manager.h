@@ -38,6 +38,15 @@ typedef struct {
     bool valid;
 } sensor_power_t;
 typedef struct {
+    uint8_t proximity;
+    uint16_t clear;
+    uint16_t red;
+    uint16_t green;
+    uint16_t blue;
+    float light_lux;
+    bool valid;
+} sensor_color_t;
+typedef struct {
     float temperature_c;
     float humidity_pct;
     float light_lux;
@@ -53,6 +62,8 @@ esp_err_t sensor_read_distance(sensor_distance_t *out_dist);
 esp_err_t sensor_read_security(sensor_security_t *out_sec);
 esp_err_t sensor_read_power(sensor_power_t *out_pwr);
 esp_err_t sensor_manager_read_all(sensor_data_t *out_data);
+esp_err_t sensor_read_proximity_color(sensor_color_t *out_color);
+esp_err_t sensor_read_gesture(uint32_t timeout_ms, const char **out_gesture);
 void sensor_set_dht_pin(gpio_num_t pin);
 gpio_num_t sensor_get_dht_pin(void);
 void sensor_set_mq_pin(gpio_num_t pin);

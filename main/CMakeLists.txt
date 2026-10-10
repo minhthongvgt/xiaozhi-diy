@@ -67,6 +67,7 @@ list(APPEND SOURCES
     "boards/common/system_reset.cc"
     "boards/common/sensor_controller.cc"
     "boards/common/actuator_controller.cc"
+    "boards/common/periph_controller.cc"
 )
 if(CONFIG_XIAOZHI_NETWORK_ETHERNET)
     list(APPEND SOURCES "boards/common/ethernet_board.cc")
@@ -96,6 +97,13 @@ list(APPEND SOURCES
     "drivers/sensor/bh1750.c"
     "drivers/sensor/hcsr04.c"
     "drivers/sensor/ina219.c"
+    "drivers/sensor/vl53lx.c"
+    "drivers/sensor/apds9960.c"
+    "drivers/sensor/bq27220.c"
+    "drivers/periph/rtc_ext.c"
+    "drivers/periph/pn532.c"
+    "drivers/periph/pca9685.c"
+    "drivers/periph/led_ic.c"
     "drivers/actuator/actuator_manager.c"
     "drivers/actuator/actuator_init.c"
     "drivers/storage/storage_manager.c"

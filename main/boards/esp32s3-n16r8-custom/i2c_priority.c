@@ -41,7 +41,7 @@ void board_resolve_i2c_pins(gpio_num_t *sda_pin, gpio_num_t *scl_pin)
         scl = SENSOR_BH1750_I2C_SCL;
     }
 #endif
-#if defined(CONFIG_CUSTOM_ENABLE_BATTERY_MONITOR) && defined(CONFIG_CUSTOM_BATTERY_MONITOR_BQ27220)
+#if defined(CONFIG_CUSTOM_BATTERY_MONITOR_BQ27220)
     if (!GPIO_IS_VALID_GPIO(sda) && GPIO_IS_VALID_GPIO(BATTERY_BQ27220_I2C_SDA) && GPIO_IS_VALID_GPIO(BATTERY_BQ27220_I2C_SCL)) {
         sda = BATTERY_BQ27220_I2C_SDA;
         scl = BATTERY_BQ27220_I2C_SCL;

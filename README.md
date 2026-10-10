@@ -198,6 +198,8 @@ Nếu nạp không được (xem mục 5), giữ nút **BOOT** (GPIO 0), nhấn 
 
 | Tài liệu | Nội dung |
 | :--- | :--- |
+| [docs/MCP_TOOLS.md](docs/MCP_TOOLS.md) | Danh sách công cụ MCP: chatbot đọc cảm biến và điều khiển phần cứng bằng hàm nào, tham số, dữ liệu trả về, địa chỉ I2C. |
+| [docs/PROMPT_XIAOZHI.md](docs/PROMPT_XIAOZHI.md) | Prompt mẫu để dán vào ô mô tả vai trò trên xiaozhi.me. |
 | [Danh_Sach_Kconfig_WebUI.md](Danh_Sach_Kconfig_WebUI.md) | Danh sách đầy đủ các mục cấu hình hiển thị trên Web Configurator. |
 | [partitions/README.md](partitions/README.md) | Cách bố trí bảng phân vùng Flash. |
 | [partitions.csv](partitions.csv) | Bảng phân vùng đang dùng. |

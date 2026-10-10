@@ -25,6 +25,7 @@
 #include "lamp_controller.h"
 #include "sensor_controller.h"
 #include "actuator_controller.h"
+#include "periph_controller.h"
 #include "boards/common/led_mcp_controller.h"
 #include "boards/common/robot_mcp_controller.h"
 #include "boards/common/press_to_talk_mcp_tool.h"
@@ -152,6 +153,11 @@ static const gc9a01_lcd_init_cmd_t gc9107_lcd_init_cmds[] = {
 #elif defined(CONFIG_CUSTOM_TOUCH_GT911)
 #include <esp_lcd_touch_gt911.h>
 #elif defined(CONFIG_CUSTOM_TOUCH_FT5X06)
+#include <esp_lcd_touch_ft5x06.h>
+#endif
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_TOUCH_SCREEN)
+#include <esp_lcd_touch_cst816s.h>
+#include <esp_lcd_touch_gt911.h>
 #include <esp_lcd_touch_ft5x06.h>
 #endif
 
@@ -866,7 +872,108 @@ private:
             ESP_LOGI(TAG, "Touch panel registered to LVGL successfully");
         }
 #endif
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_TOUCH_SCREEN) && \
+    (!defined(CONFIG_ENABLE_CUSTOM_TOUCH) || defined(CONFIG_CUSTOM_TOUCH_NONE))
+        InitializePeripheralTouch();
+#endif
     }
+
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_TOUCH_SCREEN)
+    static void PeripheralTouchTask(void* arg) {
+        esp_lcd_touch_handle_t tp = static_cast<esp_lcd_touch_handle_t>(arg);
+        bool was_pressed = false;
+        while (true) {
+            esp_lcd_touch_point_data_t point = {};
+            uint8_t count = 0;
+            if (esp_lcd_touch_read_data(tp) == ESP_OK &&
+                esp_lcd_touch_get_data(tp, &point, &count, 1) == ESP_OK) {
+                bool pressed = count > 0;
+                if (was_pressed && !pressed) {
+                    Application::GetInstance().ToggleChatState();
+                }
+                was_pressed = pressed;
+            }
+            vTaskDelay(pdMS_TO_TICKS(30));
+        }
+    }
+
+    void InitializePeripheralTouch() {
+        InitializeI2c();
+        if (i2c_bus_ == nullptr) {
+            ESP_LOGW(TAG, "I2C bus unavailable, skipping peripheral touch controller");
+            return;
+        }
+        esp_lcd_touch_config_t tp_cfg = {
+            .x_max = (uint16_t)(DISPLAY_WIDTH - 1),
+            .y_max = (uint16_t)(DISPLAY_HEIGHT - 1),
+            .rst_gpio_num = PERIPH_TOUCH_RST_PIN,
+            .int_gpio_num = PERIPH_TOUCH_INT_PIN,
+            .levels = {
+                .reset = 0,
+                .interrupt = 0,
+            },
+            .flags = {
+                .swap_xy = 0,
+                .mirror_x = 0,
+                .mirror_y = 0,
+            },
+        };
+        esp_lcd_panel_io_i2c_config_t tp_io_config = {};
+        tp_io_config.scl_speed_hz = 400 * 1000;
+        tp_io_config.control_phase_bytes = 1;
+        tp_io_config.dc_bit_offset = 0;
+        tp_io_config.lcd_cmd_bits = 8;
+        tp_io_config.lcd_param_bits = 0;
+        tp_io_config.flags.disable_control_phase = 1;
+
+        esp_lcd_panel_io_handle_t tp_io_handle = NULL;
+        esp_lcd_touch_io_gt911_config_t gt911_cfg = {.dev_addr = ESP_LCD_TOUCH_IO_I2C_GT911_ADDRESS};
+        esp_err_t ret = ESP_ERR_NOT_FOUND;
+        const char* chip = "none";
+        if (i2c_master_probe(i2c_bus_, ESP_LCD_TOUCH_IO_I2C_CST816S_ADDRESS, 50) == ESP_OK) {
+            tp_io_config.dev_addr = ESP_LCD_TOUCH_IO_I2C_CST816S_ADDRESS;
+            tp_io_config.lcd_cmd_bits = 8;
+            ret = esp_lcd_new_panel_io_i2c(i2c_bus_, &tp_io_config, &tp_io_handle);
+            if (ret == ESP_OK) ret = esp_lcd_touch_new_i2c_cst816s(tp_io_handle, &tp_cfg, &touch_handle_);
+            chip = "CST816S";
+        } else if (i2c_master_probe(i2c_bus_, ESP_LCD_TOUCH_IO_I2C_GT911_ADDRESS, 50) == ESP_OK ||
+                   i2c_master_probe(i2c_bus_, ESP_LCD_TOUCH_IO_I2C_GT911_ADDRESS_BACKUP, 50) == ESP_OK) {
+            if (i2c_master_probe(i2c_bus_, ESP_LCD_TOUCH_IO_I2C_GT911_ADDRESS, 50) != ESP_OK) {
+                gt911_cfg.dev_addr = ESP_LCD_TOUCH_IO_I2C_GT911_ADDRESS_BACKUP;
+            }
+            tp_io_config.dev_addr = gt911_cfg.dev_addr;
+            tp_io_config.lcd_cmd_bits = 16;
+            tp_cfg.driver_data = &gt911_cfg;
+            ret = esp_lcd_new_panel_io_i2c(i2c_bus_, &tp_io_config, &tp_io_handle);
+            if (ret == ESP_OK) ret = esp_lcd_touch_new_i2c_gt911(tp_io_handle, &tp_cfg, &touch_handle_);
+            chip = "GT911";
+#if !defined(CONFIG_CUSTOM_ENABLE_SENSOR_I2C_TEMP_HUMID)
+        } else if (i2c_master_probe(i2c_bus_, ESP_LCD_TOUCH_IO_I2C_FT5x06_ADDRESS, 50) == ESP_OK) {
+            tp_io_config.dev_addr = ESP_LCD_TOUCH_IO_I2C_FT5x06_ADDRESS;
+            ret = esp_lcd_new_panel_io_i2c(i2c_bus_, &tp_io_config, &tp_io_handle);
+            if (ret == ESP_OK) ret = esp_lcd_touch_new_i2c_ft5x06(tp_io_handle, &tp_cfg, &touch_handle_);
+            chip = "FT5x06";
+#endif
+        }
+        if (ret != ESP_OK || touch_handle_ == nullptr) {
+            ESP_LOGW(TAG, "Peripheral touch controller not found or init failed (%s): %s", chip, esp_err_to_name(ret));
+            touch_handle_ = nullptr;
+            return;
+        }
+        ESP_LOGI(TAG, "Peripheral touch controller %s initialized", chip);
+        if (lv_display_get_default() != nullptr) {
+            const lvgl_port_touch_cfg_t touch_cfg = {
+                .disp = lv_display_get_default(),
+                .handle = touch_handle_,
+            };
+            lvgl_port_add_touch(&touch_cfg);
+            ESP_LOGI(TAG, "Peripheral touch registered to LVGL");
+        } else {
+            xTaskCreate(PeripheralTouchTask, "periph_touch", 3072, touch_handle_, 3, nullptr);
+            ESP_LOGI(TAG, "No display: tap the touch panel to start/stop a conversation");
+        }
+    }
+#endif
 
     void InitializeButtons() {
         if (GPIO_IS_VALID_GPIO(BOOT_BUTTON_GPIO)) {
@@ -1123,6 +1230,11 @@ private:
         static RobotMcpController robot_ctrl __attribute__((unused));
         ESP_LOGI(TAG, "MCP Robot Controller registered successfully");
 #endif
+#endif
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_RTC) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_NFC_PN532) || \
+    defined(CONFIG_CUSTOM_ENABLE_PERIPH_PCA9685) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC)
+        InitializeI2c();
+        static PeripheralController periph_ctrl __attribute__((unused)) (i2c_bus_);
 #endif
 #if defined(CONFIG_CUSTOM_ENABLE_USER_CUSTOM_SENSORS)
         ESP_LOGI(TAG, "Initializing User Custom Sensors via UserDriverRegistry hook...");

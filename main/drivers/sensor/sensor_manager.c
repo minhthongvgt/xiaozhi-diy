@@ -8,8 +8,12 @@
 #include "drivers/sensor/bh1750.h"
 #include "drivers/sensor/hcsr04.h"
 #include "drivers/sensor/ina219.h"
+#include "drivers/sensor/vl53lx.h"
+#include "drivers/sensor/apds9960.h"
+#include "drivers/sensor/bq27220.h"
 #include "boards/common/bus_manager.h"
 #include <esp_log.h>
+#include <esp_timer.h>
 #include <sdkconfig.h>
 #include <driver/gpio.h>
 #include <esp_adc/adc_oneshot.h>
@@ -24,6 +28,12 @@ static aht20_handle_t s_aht20_dev = NULL;
 static bh1750_handle_t s_bh1750_dev = NULL;
 static hcsr04_handle_t s_hcsr04_dev = NULL;
 static ina219_handle_t s_ina219_dev = NULL;
+static vl53lx_handle_t __attribute__((unused)) s_vl53lx_dev = NULL;
+static apds9960_handle_t __attribute__((unused)) s_apds9960_dev = NULL;
+static bq27220_handle_t __attribute__((unused)) s_bq27220_dev = NULL;
+static int64_t __attribute__((unused)) s_vl53lx_last_probe_us = 0;
+static int64_t __attribute__((unused)) s_apds9960_last_probe_us = 0;
+static int64_t __attribute__((unused)) s_bq27220_last_probe_us = 0;
 static gpio_num_t s_dht_pin = (gpio_num_t)-1;
 static gpio_num_t s_mq_pin = (gpio_num_t)-1;
 static gpio_num_t s_pir_pin = (gpio_num_t)-1;
@@ -183,8 +193,95 @@ esp_err_t sensor_manager_init(void)
     ESP_LOGI(TAG, "Sensors Subsystem initialized successfully.");
     return ESP_OK;
 }
+#define SENSOR_REPROBE_INTERVAL_US (10LL * 1000 * 1000)
+static bool __attribute__((unused)) probe_due(int64_t *last_probe_us)
+{
+    int64_t now = esp_timer_get_time();
+    if (*last_probe_us != 0 && (now - *last_probe_us) < SENSOR_REPROBE_INTERVAL_US) {
+        return false;
+    }
+    *last_probe_us = now;
+    return true;
+}
+static vl53lx_handle_t get_vl53lx_dev(void)
+{
+#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_VL53LX)
+    if (s_vl53lx_dev != NULL) {
+        return s_vl53lx_dev;
+    }
+    i2c_master_bus_handle_t i2c_bus = bus_manager_get_i2c_bus();
+    if (i2c_bus == NULL || !probe_due(&s_vl53lx_last_probe_us)) {
+        return NULL;
+    }
+    vl53lx_config_t cfg = {
+        .i2c_bus = i2c_bus,
+        .i2c_addr = VL53LX_DEFAULT_I2C_ADDR,
+#if defined(CONFIG_CUSTOM_SENSOR_VL53LX_XSHUT_PIN) && (CONFIG_CUSTOM_SENSOR_VL53LX_XSHUT_PIN >= 0)
+        .xshut_pin = (gpio_num_t)CONFIG_CUSTOM_SENSOR_VL53LX_XSHUT_PIN,
+#else
+        .xshut_pin = (gpio_num_t)-1,
+#endif
+    };
+    esp_err_t ret = vl53lx_init(&cfg, &s_vl53lx_dev);
+    if (ret != ESP_OK) {
+        ESP_LOGD(TAG, "VL53L0X/VL53L1X not detected: %s", esp_err_to_name(ret));
+        s_vl53lx_dev = NULL;
+    }
+    return s_vl53lx_dev;
+#else
+    return NULL;
+#endif
+}
+static apds9960_handle_t get_apds9960_dev(void)
+{
+#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_APDS9960)
+    if (s_apds9960_dev != NULL) {
+        return s_apds9960_dev;
+    }
+    i2c_master_bus_handle_t i2c_bus = bus_manager_get_i2c_bus();
+    if (i2c_bus == NULL || !probe_due(&s_apds9960_last_probe_us)) {
+        return NULL;
+    }
+#if defined(CONFIG_CUSTOM_SENSOR_APDS9960_INT_PIN) && (CONFIG_CUSTOM_SENSOR_APDS9960_INT_PIN >= 0)
+    gpio_num_t int_pin = (gpio_num_t)CONFIG_CUSTOM_SENSOR_APDS9960_INT_PIN;
+#else
+    gpio_num_t int_pin = (gpio_num_t)-1;
+#endif
+    esp_err_t ret = apds9960_init(i2c_bus, int_pin, &s_apds9960_dev);
+    if (ret != ESP_OK) {
+        ESP_LOGD(TAG, "APDS-9960 not detected: %s", esp_err_to_name(ret));
+        s_apds9960_dev = NULL;
+    }
+    return s_apds9960_dev;
+#else
+    return NULL;
+#endif
+}
+static bq27220_handle_t get_bq27220_dev(void)
+{
+#if defined(CONFIG_CUSTOM_BATTERY_MONITOR_BQ27220)
+    if (s_bq27220_dev != NULL) {
+        return s_bq27220_dev;
+    }
+    i2c_master_bus_handle_t i2c_bus = bus_manager_get_i2c_bus();
+    if (i2c_bus == NULL || !probe_due(&s_bq27220_last_probe_us)) {
+        return NULL;
+    }
+    esp_err_t ret = bq27220_init(i2c_bus, &s_bq27220_dev);
+    if (ret != ESP_OK) {
+        ESP_LOGD(TAG, "BQ27220 not detected: %s", esp_err_to_name(ret));
+        s_bq27220_dev = NULL;
+    }
+    return s_bq27220_dev;
+#else
+    return NULL;
+#endif
+}
 static vl6180x_handle_t get_vl6180x_dev(void)
 {
+#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_VL53LX)
+    return NULL;
+#endif
     if (s_vl6180x_dev != NULL) {
         return s_vl6180x_dev;
     }
@@ -287,6 +384,15 @@ esp_err_t sensor_read_environment(sensor_environment_t *out_env)
         }
     }
     if (!lux_read_ok) {
+        apds9960_handle_t apds = get_apds9960_dev();
+        apds9960_color_t color;
+        if (apds != NULL && apds9960_read_color(apds, &color) == ESP_OK) {
+            out_env->light_lux = apds9960_color_to_lux(&color);
+            lux_read_ok = true;
+            has_real_data = true;
+        }
+    }
+    if (!lux_read_ok) {
         vl6180x_handle_t tof = get_vl6180x_dev();
         if (tof != NULL) {
             float tof_lux = 0.0f;
@@ -336,6 +442,18 @@ esp_err_t sensor_read_distance(sensor_distance_t *out_dist)
     if (!out_dist) return ESP_ERR_INVALID_ARG;
     memset(out_dist, 0, sizeof(sensor_distance_t));
     out_dist->valid = false;
+    vl53lx_handle_t vl53 = get_vl53lx_dev();
+    if (vl53 != NULL) {
+        float mm = 0.0f;
+        esp_err_t vl_ret = vl53lx_read_distance_mm(vl53, &mm);
+        if (vl_ret == ESP_OK) {
+            out_dist->distance_laser_mm = mm;
+            out_dist->valid = true;
+        } else {
+            ESP_LOGD(TAG, "%s distance read failed: %s", vl53lx_type_name(vl53lx_get_type(vl53)),
+                     esp_err_to_name(vl_ret));
+        }
+    }
     vl6180x_handle_t tof = get_vl6180x_dev();
     if (tof != NULL) {
         float real_dist_mm = 0.0f;
@@ -401,7 +519,24 @@ esp_err_t sensor_read_power(sensor_power_t *out_pwr)
         out_pwr->is_charging = (gpio_get_level(s_chrg_pin) == 0);
         out_pwr->valid = true;
     }
+    bq27220_handle_t gauge = get_bq27220_dev();
+    if (gauge != NULL) {
+        bq27220_data_t gd;
+        if (bq27220_read(gauge, &gd) == ESP_OK) {
+            out_pwr->battery_voltage = gd.voltage_v;
+            out_pwr->battery_percentage = gd.state_of_charge_pct;
+            out_pwr->bus_current_ma = gd.current_ma;
+            out_pwr->bus_power_mw = gd.voltage_v * gd.current_ma;
+            out_pwr->is_charging = out_pwr->is_charging || gd.is_charging;
+            out_pwr->valid = true;
+            return ESP_OK;
+        }
+    }
+#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_PCA9685) && !defined(CONFIG_CUSTOM_ENABLE_SENSOR_INA2XX)
+    i2c_master_bus_handle_t i2c_bus = NULL;
+#else
     i2c_master_bus_handle_t i2c_bus = bus_manager_get_i2c_bus();
+#endif
     if (i2c_bus != NULL) {
         if (s_ina219_dev == NULL) {
             ina219_init(i2c_bus, &s_ina219_dev);
@@ -481,4 +616,37 @@ void sensor_set_hcsr04_pins(gpio_num_t trig_pin, gpio_num_t echo_pin)
     if (GPIO_IS_VALID_GPIO(trig_pin) && GPIO_IS_VALID_GPIO(echo_pin)) {
         hcsr04_init(trig_pin, echo_pin, &s_hcsr04_dev);
     }
+}
+esp_err_t sensor_read_proximity_color(sensor_color_t *out_color)
+{
+    if (!out_color) return ESP_ERR_INVALID_ARG;
+    memset(out_color, 0, sizeof(sensor_color_t));
+    apds9960_handle_t apds = get_apds9960_dev();
+    if (apds == NULL) return ESP_ERR_NOT_FOUND;
+    uint8_t prox = 0;
+    if (apds9960_read_proximity(apds, &prox) == ESP_OK) {
+        out_color->proximity = prox;
+        out_color->valid = true;
+    }
+    apds9960_color_t c;
+    if (apds9960_read_color(apds, &c) == ESP_OK) {
+        out_color->clear = c.clear;
+        out_color->red = c.red;
+        out_color->green = c.green;
+        out_color->blue = c.blue;
+        out_color->light_lux = apds9960_color_to_lux(&c);
+        out_color->valid = true;
+    }
+    return out_color->valid ? ESP_OK : ESP_FAIL;
+}
+esp_err_t sensor_read_gesture(uint32_t timeout_ms, const char **out_gesture)
+{
+    if (!out_gesture) return ESP_ERR_INVALID_ARG;
+    *out_gesture = "none";
+    apds9960_handle_t apds = get_apds9960_dev();
+    if (apds == NULL) return ESP_ERR_NOT_FOUND;
+    apds9960_gesture_t gesture = APDS9960_GESTURE_NONE;
+    esp_err_t ret = apds9960_read_gesture(apds, timeout_ms, &gesture);
+    *out_gesture = apds9960_gesture_name(gesture);
+    return ret;
 }
