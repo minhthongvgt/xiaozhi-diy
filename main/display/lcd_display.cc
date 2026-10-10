@@ -439,6 +439,7 @@ static bool TrySetupAdaptiveUi(LcdDisplay* display, lv_obj_t* screen, int width,
 #endif
 
     AdaptiveUiEngine::GetInstance().Initialize(screen, width, height, ui_config);
+    AdaptiveUiEngine::GetInstance().ApplyTheme(static_cast<LvglTheme*>(display->GetTheme()));
     status_label = AdaptiveUiEngine::GetInstance().GetStatusLabel();
     battery_label = AdaptiveUiEngine::GetInstance().GetBatteryLabel();
     network_label = AdaptiveUiEngine::GetInstance().GetNetworkLabel();

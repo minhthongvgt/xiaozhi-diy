@@ -205,6 +205,8 @@ void AdaptiveUiEngine::Initialize(lv_obj_t* parent_screen, int width, int height
         return;
     }
 
+    // Full-screen background layer, then a content layer inset by the round-screen safe area.
+    // Builders lay out inside the content layer, so every style gets the same safe margin.
     container_root_ = lv_obj_create(root_screen_);
     lv_obj_set_size(container_root_, metrics_.width, metrics_.height);
     lv_obj_align(container_root_, LV_ALIGN_CENTER, 0, 0);
@@ -215,22 +217,32 @@ void AdaptiveUiEngine::Initialize(lv_obj_t* parent_screen, int width, int height
     lv_obj_set_style_radius(container_root_, 0, 0);
     lv_obj_set_style_pad_all(container_root_, 0, 0);
 
+    lv_obj_t* content_root = lv_obj_create(container_root_);
+    lv_obj_set_size(content_root, metrics_.width - 2 * metrics_.safe_inset,
+                    metrics_.height - 2 * metrics_.safe_inset);
+    lv_obj_align(content_root, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_clear_flag(content_root, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_style_bg_opa(content_root, LV_OPA_TRANSP, 0);
+    lv_obj_set_style_border_width(content_root, 0, 0);
+    lv_obj_set_style_radius(content_root, 0, 0);
+    lv_obj_set_style_pad_all(content_root, 0, 0);
+
     switch (config_.style) {
         case UiStyle::CyberTerminal:
-            BuildCyberTerminal(container_root_);
+            BuildCyberTerminal(content_root);
             break;
         case UiStyle::ChatBubble:
-            BuildChatBubble(container_root_);
+            BuildChatBubble(content_root);
             break;
         case UiStyle::ClassicAvatar:
-            BuildClassicAvatar(container_root_);
+            BuildClassicAvatar(content_root);
             break;
         case UiStyle::MinimalZen:
-            BuildMinimalZen(container_root_);
+            BuildMinimalZen(content_root);
             break;
         case UiStyle::SmartDashboard:
         default:
-            BuildSmartDashboard(container_root_);
+            BuildSmartDashboard(content_root);
             break;
     }
 
@@ -254,7 +266,7 @@ void AdaptiveUiEngine::BuildSmartDashboard(lv_obj_t* parent) {
     lv_obj_set_style_pad_all(panel_top_bar_, 0, 0);
 
     label_network_ = lv_label_create(panel_top_bar_);
-    lv_label_set_text(label_network_, "WiFi");
+    lv_label_set_text(label_network_, "");
     lv_obj_align(label_network_, LV_ALIGN_LEFT_MID, 2, 0);
     lv_obj_set_style_text_color(label_network_, GetAccentColor(), 0);
 
@@ -264,7 +276,7 @@ void AdaptiveUiEngine::BuildSmartDashboard(lv_obj_t* parent) {
     lv_obj_set_style_text_color(label_time_, GetTextColor(), 0);
 
     label_battery_ = lv_label_create(panel_top_bar_);
-    lv_label_set_text(label_battery_, "100%");
+    lv_label_set_text(label_battery_, "");
     lv_obj_align(label_battery_, LV_ALIGN_RIGHT_MID, -2, 0);
     lv_obj_set_style_text_color(label_battery_, lv_color_hex(0xA6E3A1), 0);
 
@@ -320,12 +332,12 @@ void AdaptiveUiEngine::BuildSmartDashboard(lv_obj_t* parent) {
         lv_obj_set_style_text_color(label_weather_city_, GetAccentColor(), 0);
 
         label_weather_temp_ = lv_label_create(panel_weather_);
-        lv_label_set_text(label_weather_temp_, "31°C");
+        lv_label_set_text(label_weather_temp_, "--");
         lv_obj_align(label_weather_temp_, LV_ALIGN_TOP_RIGHT, -8, 4);
         lv_obj_set_style_text_color(label_weather_temp_, lv_color_hex(0xF9E2AF), 0);
 
         label_weather_desc_ = lv_label_create(panel_weather_);
-        lv_label_set_text(label_weather_desc_, "Nhiều mây, mưa rào nhẹ - 78%");
+        lv_label_set_text(label_weather_desc_, "Chưa có dữ liệu");
         lv_obj_align(label_weather_desc_, LV_ALIGN_BOTTOM_LEFT, 8, -4);
         lv_obj_set_style_text_color(label_weather_desc_, GetMutedTextColor(), 0);
 
@@ -367,7 +379,8 @@ void AdaptiveUiEngine::BuildSmartDashboard(lv_obj_t* parent) {
         cur_y += avatar_h + 4;
     }
 
-    int chat_h = metrics_.height - cur_y - bottom_bar_h - metrics_.pad_y - 4;
+    int inner_h = metrics_.height - 2 * metrics_.safe_inset;
+    int chat_h = inner_h - cur_y - bottom_bar_h - metrics_.pad_y - 4;
     if (chat_h < 30) chat_h = 30;
 
     panel_chat_ = lv_obj_create(parent);
@@ -432,7 +445,7 @@ void AdaptiveUiEngine::BuildCyberTerminal(lv_obj_t* parent) {
     lv_obj_set_style_pad_all(panel_top_bar_, 2, 0);
 
     label_network_ = lv_label_create(panel_top_bar_);
-    lv_label_set_text(label_network_, "[NET:OK]");
+    lv_label_set_text(label_network_, "");
     lv_obj_align(label_network_, LV_ALIGN_LEFT_MID, 4, 0);
     lv_obj_set_style_text_color(label_network_, lv_color_hex(0x00F0FF), 0);
 
@@ -442,7 +455,7 @@ void AdaptiveUiEngine::BuildCyberTerminal(lv_obj_t* parent) {
     lv_obj_set_style_text_color(label_time_, lv_color_hex(0x00FF66), 0);
 
     label_battery_ = lv_label_create(panel_top_bar_);
-    lv_label_set_text(label_battery_, "[PWR:98%]");
+    lv_label_set_text(label_battery_, "");
     lv_obj_align(label_battery_, LV_ALIGN_RIGHT_MID, -4, 0);
     lv_obj_set_style_text_color(label_battery_, lv_color_hex(0xFFB800), 0);
 
@@ -505,7 +518,8 @@ void AdaptiveUiEngine::BuildCyberTerminal(lv_obj_t* parent) {
 
     cur_y += 28;
 
-    int chat_h = metrics_.height - cur_y - 28 - metrics_.pad_y;
+    int inner_h = metrics_.height - 2 * metrics_.safe_inset;
+    int chat_h = inner_h - cur_y - 28 - metrics_.pad_y;
     if (chat_h < 35) chat_h = 35;
 
     panel_chat_ = lv_obj_create(parent);
@@ -562,12 +576,12 @@ void AdaptiveUiEngine::BuildChatBubble(lv_obj_t* parent) {
     lv_obj_set_style_pad_all(panel_top_bar_, 0, 0);
 
     label_network_ = lv_label_create(panel_top_bar_);
-    lv_label_set_text(label_network_, "Xiaozhi AI");
+    lv_label_set_text(label_network_, "");
     lv_obj_align(label_network_, LV_ALIGN_LEFT_MID, 0, 0);
     lv_obj_set_style_text_color(label_network_, lv_color_hex(0x89DCEB), 0);
 
     label_battery_ = lv_label_create(panel_top_bar_);
-    lv_label_set_text(label_battery_, "100%");
+    lv_label_set_text(label_battery_, "");
     lv_obj_align(label_battery_, LV_ALIGN_RIGHT_MID, 0, 0);
     lv_obj_set_style_text_color(label_battery_, lv_color_hex(0xA6E3A1), 0);
 
@@ -661,17 +675,17 @@ void AdaptiveUiEngine::BuildChatBubble(lv_obj_t* parent) {
 void AdaptiveUiEngine::BuildClassicAvatar(lv_obj_t* parent) {
     panel_top_bar_ = lv_obj_create(parent);
     lv_obj_set_size(panel_top_bar_, metrics_.content_width, 18);
-    lv_obj_align(panel_top_bar_, LV_ALIGN_TOP_MID, 0, metrics_.pad_y + metrics_.safe_inset / 2);
+    lv_obj_align(panel_top_bar_, LV_ALIGN_TOP_MID, 0, metrics_.pad_y);
     lv_obj_set_style_bg_opa(panel_top_bar_, LV_OPA_TRANSP, 0);
     lv_obj_set_style_border_width(panel_top_bar_, 0, 0);
 
     label_network_ = lv_label_create(panel_top_bar_);
-    lv_label_set_text(label_network_, "•");
+    lv_label_set_text(label_network_, "");
     lv_obj_align(label_network_, LV_ALIGN_LEFT_MID, 2, 0);
     lv_obj_set_style_text_color(label_network_, GetAccentColor(), 0);
 
     label_battery_ = lv_label_create(panel_top_bar_);
-    lv_label_set_text(label_battery_, "100%");
+    lv_label_set_text(label_battery_, "");
     lv_obj_align(label_battery_, LV_ALIGN_RIGHT_MID, -2, 0);
     lv_obj_set_style_text_color(label_battery_, lv_color_hex(0xA6E3A1), 0);
 
@@ -710,7 +724,7 @@ void AdaptiveUiEngine::BuildClassicAvatar(lv_obj_t* parent) {
 
     panel_chat_ = lv_obj_create(parent);
     lv_obj_set_size(panel_chat_, metrics_.content_width, 32);
-    lv_obj_align(panel_chat_, LV_ALIGN_BOTTOM_MID, 0, -metrics_.pad_y - metrics_.safe_inset / 2);
+    lv_obj_align(panel_chat_, LV_ALIGN_BOTTOM_MID, 0, -metrics_.pad_y);
     lv_obj_set_style_bg_color(panel_chat_, lv_color_hex(0x1F242C), 0);
     lv_obj_set_style_radius(panel_chat_, 16, 0);
     lv_obj_set_style_border_width(panel_chat_, 1, 0);
@@ -735,12 +749,12 @@ void AdaptiveUiEngine::BuildMinimalZen(lv_obj_t* parent) {
     lv_obj_set_style_border_width(panel_top_bar_, 0, 0);
 
     label_network_ = lv_label_create(panel_top_bar_);
-    lv_label_set_text(label_network_, "ONLINE");
+    lv_label_set_text(label_network_, "");
     lv_obj_align(label_network_, LV_ALIGN_LEFT_MID, 0, 0);
     lv_obj_set_style_text_color(label_network_, lv_color_hex(0xFFFFFF), 0);
 
     label_battery_ = lv_label_create(panel_top_bar_);
-    lv_label_set_text(label_battery_, "BAT: 100%");
+    lv_label_set_text(label_battery_, "");
     lv_obj_align(label_battery_, LV_ALIGN_RIGHT_MID, 0, 0);
     lv_obj_set_style_text_color(label_battery_, lv_color_hex(0xFFFFFF), 0);
 
@@ -976,11 +990,23 @@ void AdaptiveUiEngine::ApplyTheme(LvglTheme* theme) {
     const lv_font_t* text_font = text_font_wrapper ? text_font_wrapper->font() : nullptr;
     if (text_font != nullptr) {
         if (root_screen_) lv_obj_set_style_text_font(root_screen_, text_font, 0);
+        if (label_time_) lv_obj_set_style_text_font(label_time_, text_font, 0);
+        if (label_notification_) lv_obj_set_style_text_font(label_notification_, text_font, 0);
         if (label_chat_) lv_obj_set_style_text_font(label_chat_, text_font, 0);
+        if (label_chat_role_) lv_obj_set_style_text_font(label_chat_role_, text_font, 0);
         if (label_user_chat_) lv_obj_set_style_text_font(label_user_chat_, text_font, 0);
         if (label_status_) lv_obj_set_style_text_font(label_status_, text_font, 0);
         if (label_prompt_) lv_obj_set_style_text_font(label_prompt_, text_font, 0);
         if (label_weather_city_) lv_obj_set_style_text_font(label_weather_city_, text_font, 0);
         if (label_weather_desc_) lv_obj_set_style_text_font(label_weather_desc_, text_font, 0);
+    }
+
+    // network/battery labels receive Material icon glyphs from LvglDisplay::UpdateStatusBar,
+    // so they must use the icon font; a text font renders those glyphs as broken boxes.
+    auto icon_font_wrapper = theme->icon_font();
+    const lv_font_t* icon_font = icon_font_wrapper ? icon_font_wrapper->font() : nullptr;
+    if (icon_font != nullptr) {
+        if (label_network_) lv_obj_set_style_text_font(label_network_, icon_font, 0);
+        if (label_battery_) lv_obj_set_style_text_font(label_battery_, icon_font, 0);
     }
 }
