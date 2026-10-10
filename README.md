@@ -1,111 +1,237 @@
-# Xiaozhi-ESP32 (Board: ESP32-S3-N16R8)
+# Xiaozhi-ESP32 — ESP32-S3-N16R8
 
-Dự án trợ lý thông minh Chatbot Xiaozhi trên vi điều khiển **ESP32-S3-N16R8** (16MB Octal Flash, 8MB Octal PSRAM) sử dụng framework ESP-IDF 6.1.
+Hướng dẫn cấu hình, biên dịch, nạp firmware và khắc phục lỗi cho board **ESP32-S3-N16R8** (16 MB Octal Flash, 8 MB Octal PSRAM) với ESP-IDF 6.1.
 
 ---
 
-## 1. Công cụ Web Configurator (Zero-Install)
+## Mục lục
 
-Dự án cung cấp bộ cấu hình phần cứng trực quan trên nền Web chạy hoàn toàn phía client (SPA Zero-Install). Người dùng có thể thiết lập chân GPIO, màn hình, chip âm thanh codec, các giao tiếp và toàn bộ ngoại vi/cảm biến mà không cần sửa mã nguồn C/C++ thủ công.
+1. [Yêu cầu](#1-yêu-cầu)
+2. [Cấu hình phần cứng bằng Web Configurator](#2-cấu-hình-phần-cứng-bằng-web-configurator)
+3. [Sơ đồ chân GPIO](#3-sơ-đồ-chân-gpio)
+4. [Biên dịch và nạp firmware](#4-biên-dịch-và-nạp-firmware)
+5. [Khắc phục lỗi thường gặp](#5-khắc-phục-lỗi-thường-gặp)
+6. [Tài liệu bổ sung](#6-tài-liệu-bổ-sung)
+7. [Liên hệ và ủng hộ](#7-liên-hệ-và-ủng-hộ)
 
-### 1.1 Khởi động công cụ
-- **Cách 1 (Khuyến nghị tối ưu - Khởi chạy ngay tại thư mục gốc mã nguồn)**:
-  Nhấp đúp vào tệp ngay tại thư mục gốc dự án:
-  ```text
-  run_configurator.bat
-  ```
-  *(Kịch bản tự động nhận diện vị trí thực tế của thư mục dự án dù bạn đặt ở bất kỳ đâu, tự động nạp sẵn cấu hình hiện có vào UI, mở trình duyệt tại `http://localhost:8080`, và cho phép lưu cấu hình trực tiếp vào mã nguồn tức thì).*
-- **Cách 2**: Nhấp đúp vào `tools/web-configurator/start_configurator.bat`.
-- **Cách 3**: Mở tệp `configurator.html` hoặc `tools/web-configurator/index.html` trực tiếp trên trình duyệt (Google Chrome / Edge).
+---
 
-### 1.2 Danh mục Cấu hình Chuẩn theo Hệ thống Menuconfig
+## 1. Yêu cầu
 
-Sidebar hiện có 8 tab (mỗi tab là một component trong `tools/web-configurator/components/`, nạp động qua `js/main.js`). Các tab phần cứng được sinh tự động từ `main/Kconfig.projbuild`: nhóm, thứ tự, tên mục, danh sách lựa chọn và điều kiện ẩn/hiện giống hệt `idf.py menuconfig`.
+| Thành phần | Ghi chú |
+| :--- | :--- |
+| Hệ điều hành | Windows 10/11 |
+| ESP-IDF | **6.1**, cài bằng ESP-IDF Windows installer, target `esp32s3` |
+| Python | Đi kèm ESP-IDF; cần Python 3 nếu chạy Web Configurator |
+| Trình duyệt | Google Chrome hoặc Microsoft Edge |
+| Board | ESP32-S3-N16R8 (16 MB Flash, 8 MB PSRAM) |
+| Cáp | Cáp USB hỗ trợ truyền dữ liệu (không phải cáp chỉ sạc) |
 
-| Tab (data-target) | Nhóm | Menu tương ứng trong menuconfig |
+---
+
+## 2. Cấu hình phần cứng bằng Web Configurator
+
+Web Configurator giúp chọn chân GPIO, màn hình, codec âm thanh, camera, cảm biến và ngoại vi mà không cần sửa mã C/C++ bằng tay.
+
+### 2.1 Mở công cụ
+
+Chọn một trong các cách sau:
+
+- **Cách 1 (khuyên dùng):** nhấp đúp `run_configurator.bat` ở thư mục gốc dự án. Công cụ tự mở trình duyệt tại `http://localhost:8080`, nạp cấu hình hiện có và cho phép lưu trực tiếp vào mã nguồn.
+- **Cách 2:** nhấp đúp `tools/web-configurator/start_configurator.bat`.
+- **Cách 3:** mở `configurator.html` hoặc `tools/web-configurator/index.html` bằng trình duyệt. Cách này không lưu được trực tiếp vào dự án, chỉ dùng để xem trước.
+
+### 2.2 Các tab cấu hình
+
+| Tab | Nội dung |
+| :--- | :--- |
+| Trợ lý (Assistant) | Ngôn ngữ, địa chỉ OTA, Wake Word, xử lý âm thanh và khử tiếng vọng (AEC) |
+| Màn hình (Display) | Màn hình, cảm ứng, gói tài nguyên giao diện |
+| Âm thanh (Audio) | Loa và micro |
+| Mạng (Network) | Phương thức cấu hình WiFi, UART mở rộng, MCP Server |
+| Ngoại vi (Peripherals) | Nút bấm, camera, LED, còi, rung, servo, cảm biến, motor, relay |
+| Nguồn & viễn thông (Power) | Pin, bộ sạc, RTC, NFC, thẻ SD, 4G, hồng ngoại |
+| Hệ thống (System) | CPU, Flash, PSRAM, bảng phân vùng |
+| Biên dịch & Nạp (Build) | Build, flash, xem log, chọn ESP-IDF, target và cổng COM |
+
+### 2.3 Lưu và kiểm tra cấu hình
+
+- Nút **Lưu** nằm ở góc trên bên phải mỗi tab. Lưu sẽ ghi toàn bộ cấu hình, không chỉ tab hiện tại.
+- Khi chuyển tab mà còn thay đổi chưa lưu, hộp thoại cho bạn chọn **Lưu rồi chuyển**, **Bỏ thay đổi** hoặc **Ở lại**.
+- Nếu hai chức năng dùng cùng một chân GPIO, nút Lưu bị khoá và báo trùng chân. Gỡ một trong hai rồi lưu lại.
+- Nhiều thiết bị có thể dùng chung bus I2C/SPI nếu cùng vai trò (SDA nối SDA, SCK nối SCK).
+- Mở thẳng một tab bằng URL, ví dụ `http://localhost:8080/#panel-build`.
+
+### 2.4 Cấu hình được ghi vào đâu
+
+Sau khi lưu, cấu hình được ghi vào:
+
+- `sdkconfig.defaults`: cấu hình gốc của dự án, nên đưa vào git.
+- `sdkconfig`: cấu hình build hiện tại, tự sinh ra khi build.
+
+Bạn cũng có thể dùng `idf.py menuconfig` trong terminal. Web Configurator đọc lại `sdkconfig` khi mở, nên thay đổi từ menuconfig sẽ hiện lên giao diện web.
+
+---
+
+## 3. Sơ đồ chân GPIO
+
+Các chân dưới đây là quy tắc bắt buộc cho ESP32-S3-N16R8. Web Configurator đã kiểm tra trước khi cho lưu, nhưng bạn cũng nên biết để tránh xung đột khi đấu nối phần cứng.
+
+| Nhóm chân | GPIO | Lưu ý |
 | :--- | :--- | :--- |
-| `panel-assistant` | 1. Xiaozhi Assistant | Ngôn ngữ, OTA URL, Audio Debugger · Từ khóa đánh thức (Wake Word) · Bộ xử lý âm thanh & Khử tiếng vọng (AEC) |
-| `panel-display` | 1. Xiaozhi Assistant | Giao diện hiển thị & Gói tài nguyên · 1. Màn hình & Cảm ứng |
-| `panel-audio` | 1. Xiaozhi Assistant | 2. Âm thanh: Loa & Micro |
-| `panel-network` | 1. Xiaozhi Assistant | WiFi Configuration Method · 3. Giao thức truyền thông & Mạng (UART mở rộng, MCP Server) |
-| `panel-peripherals` | 1. Xiaozhi Assistant | 4.1 – 4.6 (nút bấm, camera, LED, còi, rung, servo, cảm biến, motor, relay) · Camera Configuration |
-| `panel-power` | 1. Xiaozhi Assistant | 4.7. Nguồn điện, Bộ nhớ & Viễn thông (pin, INA2xx, TP4056, RTC, NFC, SD, 4G, IR...) |
-| `panel-system` | 2. ESP-IDF Cốt lõi | CPU, Flash, PSRAM, bảng phân vùng |
-| `panel-build` | 2. ESP-IDF Cốt lõi | Build, flash, nhật ký idf.py, chọn ESP-IDF, target, cổng COM |
+| Octal Flash & Octal PSRAM | **26 – 37** | **Không được dùng.** Dùng nội bộ cho bộ nhớ, Web Configurator sẽ khoá. |
+| USB Serial/JTAG | 19, 20 | Dùng cho nạp và debug. Hạn chế dùng làm chân thường. |
+| Strapping | 0, 3, 45, 46 | Ảnh hưởng chế độ khởi động. GPIO 0 là nút BOOT. |
+| LED WS2812 tích hợp | 48 | Đèn trạng thái, bật sẵn. |
+| I2S loa | 14, 15, 7, 2 | BCLK, WS, DOUT, PA (bật amply). |
+| I2S micro | 4, 5, 6 | SCK, WS, DIN. |
+| I2C (cảm ứng, cảm biến, codec) | 8 (SDA), 9 (SCL) | Dùng chung cho OLED, ToF, codec ES8311. |
+| Cảm ứng màn hình | 8, 9, 3, 10 | I2C + INT (3) + RST (10). |
+| UART màn hình rời | 17 (TX), 18 (RX) | UART_NUM_1. |
+| Servo PWM | 13 | 50 Hz, LEDC timer 2. |
+| Relay / đèn | 45 | Liên kết với MCP. |
+| Thanh trượt cảm ứng | 1, 2, 3 | Touch pad nội bộ. |
+| Nút âm lượng | 47, 48 hoặc chân tự do | Pull-up nội bộ. |
+| Ngoại vi mở rộng | 1, 2, 4–7, 10–18, 21, 38–44, 47 | Dùng tự do cho buzzer, rung, motor, encoder, SD, Ethernet... |
 
-Giao diện tích hợp **Lưu theo từng Tab**, **Theo dõi thay đổi** và **Kiểm tra trùng chân GPIO**:
-- Nút lưu nằm ở góc trên bên phải mỗi tab. Lưu sẽ ghi toàn bộ cấu hình, nên mọi tab đều chuyển sang trạng thái "Đã lưu".
-- Khi rời tab có thay đổi chưa lưu, hộp thoại cho phép **Lưu rồi chuyển**, **Bỏ thay đổi** (khôi phục giá trị đã lưu của tab đó) hoặc **Ở lại**.
-- Trùng chân GPIO sẽ khoá nút lưu; nhiều thiết bị được dùng chung một bus I2C/SPI khi nối cùng vai trò (SDA với SDA, SCK với SCK...).
-- Mở thẳng một tab qua URL, ví dụ `http://localhost:8080/#panel-build`.
-
----
-
-## 2. Quy tắc Sơ đồ chân GPIO (ESP32-S3-N16R8 Pinout Rules)
-
-| Phân vùng chân | Dải GPIO | Chú thích an toàn |
-| :--- | :--- | :--- |
-| **Octal Flash & Octal PSRAM** | **GPIO 26 – 37** | **NGHIÊM CẤM SỬ DỤNG**. Được nối cứng nội bộ cho bus dữ liệu Octal SPI (26-32) và Octal PSRAM (33-37) tốc độ cao trên ESP32-S3-N16R8. Hệ thống tự động khóa và cảnh báo đỏ nếu người dùng gán vào dải này. |
-| **Native USB & JTAG Console** | **GPIO 19, 20** | Dùng cho cổng nạp và debug USB Serial/JTAG tích hợp. Hạn chế sử dụng làm GPIO thông thường để tránh mất kết nối nạp/debug. |
-| **Strapping Pins** | **GPIO 0, 3, 45, 46** | GPIO 0 dùng cho phím BOOT Onboard (mặc định Bật). Chú ý mức logic khi khởi động để tránh vào sai chế độ nạp ROM. |
-| **Trạng thái Mặc định (Clean Defaults)** | **Boot = 0, LED = 48** | Sau khi `set-target esp32s3`, phím Boot (GPIO 0) và Đèn LED WS2812 (GPIO 48, 1 LED) được bật sẵn. Mọi ngoại vi chưa kết nối đều có chân mặc định là `-1` (an toàn tuyệt đối, không crash khởi động). |
-| **I2S Audio (Phần 1: Loa)** | GPIO 14, 15, 7, 2 | BCLK, WS/LRCK, DOUT (MAX98357A / PCM5102A / NS4168 / ES8311 / ES8388). Chân PA bật amply. Mặc định chưa nối là `-1`. |
-| **I2S Audio (Phần 2: Mic)** | GPIO 4, 5, 6 | SCK, WS, DIN (INMP441 / ICS-43434 / MSM261S / ES7210). Mặc định chưa nối là `-1`. |
-| **UART Display (Nextion/DWIN/JSON)** | **GPIO 17, 18** | TX=17, RX=18 trên `UART_NUM_1` (Màn hình thông minh rời; tự động escape chuỗi, chống tràn khung DGUS). |
-| **Custom UART Subsystem** | **UART_NUM_2** | Cổng UART mở rộng cho Modem 4G, AI Vision, Bus Servo (Tự động cách ly với UART Display). |
-| **Touch Controller (Cảm ứng)** | GPIO 8, 9, 3, 10 | I2C SDA=8, SCL=9, ngắt INT=3, reset RST=10 (CST816S, GT911, FT6236). |
-| **I2C Bus & Cảm biến** | GPIO 8, 9 | SDA=8, SCL=9 (Hỗ trợ OLED SSD1306, ToF VL6180X, Codec ES8311, cảm biến môi trường). |
-| **Servo PWM (Động cơ)** | **GPIO 13** | Tần số 50Hz, 14-bit duty trên LEDC Timer 2 (Độc lập chống xung đột backlight/LED). |
-| **Relay / Lamp (Ngoại vi)** | **GPIO 45** | Rơ-le 220V / Đèn bàn, liên kết tự động với công cụ AI MCP. |
-| **Built-in LED** | GPIO 48 | Đèn LED WS2812 báo trạng thái hệ thống (Mặc định 1 LED, Bật sẵn). |
-| **Touch Slider (Thanh trượt cảm ứng)** | **GPIO 1, 2, 3** | Touch Pad 1, 2, 3 nội bộ ESP32-S3 (FSM đo điện dung). Dải kênh cho phép từ -1 đến 48. |
-| **Phím âm lượng (Volume Buttons)** | **GPIO 47, 48 (hoặc chân tự do)** | Nút nhấn kéo trở Pull-up. Tự động cách ly với Touch Slider khi kích hoạt cả hai. |
-| **Cổng kết nối mở rộng an toàn** | GPIO 1, 2, 4..7, 10..13, 14..18, 21, 38..44, 47 | Tự do cấu hình cho Còi Buzzer (41), Rung Haptic (42), Động cơ DC TB6612, Encoder EC11, Cảm biến siêu âm, Thẻ nhớ SD Card SPI, Ethernet W5500. |
+Chân không dùng đến được đặt là `-1`. Với cấu hình mặc định, không chân nào bị gán ngẫu nhiên, nên khởi động không bị lỗi.
 
 ---
 
-## 3. Quy trình Biên dịch mã nguồn (Windows / ESP-IDF 6.1)
+## 4. Biên dịch và nạp firmware
 
-Sau khi bấm **"Lưu mục này" (Save Tab)** trên giao diện Web Configurator, toàn bộ cấu hình phần cứng sẽ được lưu và đồng bộ trực tiếp vào:
-- `sdkconfig.defaults`: Tệp cấu hình gốc chuẩn ESP-IDF menuconfig của dự án.
-- `sdkconfig`: Đồng bộ tức thì các tiền tố `CONFIG_` (Bo mạch, Chân GPIO, Driver Màn hình, Codec Loa/Mic, Camera, Cảm biến, v.v.).
-- Hệ thống tự động kiểm soát chống xung đột chân GPIO và khóa cứng an toàn dải **GPIO 26 – 32** dành riêng cho bus Octal Flash / Octal PSRAM của chip ESP32-S3-N16R8.
+### 4.1 Biên dịch từ Web Configurator
 
-### 3.1. Tính Tương đồng 100% Logic với ESP-IDF menuconfig (Kconfig Engine Parity)
-Web Configurator hiện tại hoạt động hoàn toàn đồng nhất 100% theo đúng quy tắc của bộ máy Kconfig ESP-IDF:
-1. **Ràng buộc phụ thuộc phân cấp (`depends on` / `if ... endif`)**: Khi tắt tính năng cha (Display, Camera, Wakeword, Loa, Mic, v.v.), Web Configurator tự động ẩn giao diện và triệt tiêu toàn bộ biến con, chỉ ghi `# CONFIG_ENABLE_... is not set`, ngăn ngừa triệt để việc rò rỉ cấu hình thừa.
-2. **Cơ chế Choice hai chiều (Choice Flag + Derived Value)**: Sinh đồng thời cả cờ chọn (`CONFIG_CHOICE_X=y`) và giá trị tương ứng (ví dụ: `CONFIG_CUSTOM_DISPLAY_UART_BAUDRATE_115200=y` đi kèm `CONFIG_CUSTOM_DISPLAY_UART_BAUDRATE=115200`), giúp khi mở lệnh `idf.py menuconfig` không bao giờ bị nhảy mất cấu hình hoặc reset về mặc định.
-3. **Kích hoạt tự động phụ thuộc chéo (`select`)**: Ví dụ chọn Wi-Fi BluFi sẽ tự động kích hoạt Bluetooth stack (`BT_ENABLED`, `BT_BLE_42_FEATURES_SUPPORTED`, `BT_BLE_BLUFI_ENABLE`).
-4. **Đồng bộ hóa 2 chiều (Bidirectional Sync)**: Web Configurator ưu tiên đọc từ `sdkconfig` (nơi `menuconfig` lưu) khi khởi động, giúp mọi thay đổi bạn thực hiện bằng lệnh `idf.py menuconfig` trên terminal hiển thị tức thì trên giao diện Web.
-5. **Bộ kiểm thử**: chạy `tools/web-configurator/run_all_tests.bat` (`test_modules.mjs`, `test_sdkconfig_io.py`, `test_dom.cjs`, `test_project_integration.mjs`, `test_kconfig_parity.mjs`, `test_gui_dom.mjs`; test cuối cần chạy `npm install` một lần trong `tools/web-configurator/`).
-6. **Sau khi sửa `main/Kconfig.projbuild`**: chạy `tools/web-configurator/sync_menuconfig.bat` để sinh lại giao diện, cập nhật `Danh_Sach_Kconfig_WebUI.md` và đối chiếu sdkconfig sinh ra với kconfiglib của ESP-IDF (cần đã cấu hình build một lần, ví dụ `idf.py -B build_sim reconfigure`).
+Vào tab **Biên dịch & Nạp**, bấm Build. Log hiển thị trực tiếp trong trình duyệt.
 
-Yêu cầu cài ESP-IDF 6.1 cho ESP32-S3 bằng Windows installer, gồm Python environment và compiler/toolchain. Bạn có thể biên dịch trực tiếp từ **Web Configurator** (Tab *Biên dịch & Nạp*) hoặc chạy dòng lệnh từ thư mục gốc:
+### 4.2 Biên dịch bằng dòng lệnh
+
+Mở thư mục gốc dự án và chạy:
 
 ```bat
 build_windows.bat
 ```
 
-Launcher tự nạp `export.bat`, đặt Python ở UTF-8 và gọi `idf.py` trong môi trường ESP-IDF. Nó dùng `IDF_PATH` nếu đã có; nếu không, tự tìm một số thư mục cài đặt phổ biến. Lệnh build giữ nguyên `sdkconfig` hiện tại. Có thể truyền lệnh ESP-IDF khác, ví dụ:
+Script tự nạp môi trường ESP-IDF và chạy `idf.py build`. Nếu đã đặt biến `IDF_PATH`, script dùng đường dẫn đó; nếu không, script tự tìm ESP-IDF trong các thư mục cài đặt thông dụng.
+
+Truyền thêm lệnh của `idf.py` nếu cần, ví dụ build, nạp và mở monitor:
 
 ```bat
-build_windows.bat -p COMx flash monitor
+build_windows.bat -p COM3 flash monitor
 ```
 
-Để mở giao diện `idf.py menuconfig` mượt mà và hiển thị đúng tiếng Việt / ký tự đặc biệt trên Windows:
-1. Nhấp đúp chạy file `01-set_utf8.bat` ở thư mục gốc (tự động thiết lập codepage 65001 và biến môi trường UTF-8).
-2. Chạy lệnh:
-```powershell
-idf.py menuconfig
-```
+Thay `COM3` bằng cổng thực tế của board (xem trong Device Manager).
 
-Để biên dịch thủ công qua dòng lệnh, mở ESP-IDF PowerShell/CMD đã export môi trường:
-```powershell
-idf.py build
-```
+### 4.3 Cấu hình chi tiết bằng menuconfig
 
-Nạp firmware và theo dõi cổng Serial:
+1. Nhấp đúp `01-set_utf8.bat` một lần để bật UTF-8 cho Windows, sau đó **mở terminal mới**.
+2. Chạy:
+   ```powershell
+   idf.py menuconfig
+   ```
+
+### 4.4 Nạp và xem log
+
+Trong ESP-IDF terminal:
+
 ```bash
-idf.py -p COMx flash monitor
+idf.py -p COM3 flash monitor
 ```
 
+Thoát monitor bằng `Ctrl + ]`.
+
+### 4.5 Đưa board vào chế độ nạp
+
+Nếu nạp không được (xem mục 5), giữ nút **BOOT** (GPIO 0), nhấn và thả **RESET**, rồi thả **BOOT**. Sau đó chạy lại lệnh nạp.
+
+---
+
+## 5. Khắc phục lỗi thường gặp
+
+### 5.1 Web Configurator
+
+| Triệu chứng | Nguyên nhân thường gặp | Cách xử lý |
+| :--- | :--- | :--- |
+| `run_configurator.bat` báo không có Python | Chưa cài Python hoặc không nằm trong PATH | Cài ESP-IDF (có Python đi kèm) hoặc cài Python 3, rồi chạy lại. |
+| Trình duyệt không mở được `localhost:8080` | Cổng 8080 đang bị chương trình khác dùng | Công cụ tự chuyển sang cổng từ 8081 đến 8099. Xem địa chỉ trong cửa sổ terminal. |
+| Nút Lưu bị khoá, báo trùng chân | Hai chức năng cùng dùng một GPIO | Đổi chân của một chức năng, hoặc chọn `-1` nếu không dùng. |
+| Lưu xong nhưng code không đổi | Đang mở HTML trực tiếp, không qua server | Dùng `run_configurator.bat` để lưu vào dự án. |
+| Chọn chân 26–37 bị từ chối | Dải này là bộ nhớ Octal Flash/PSRAM | Chọn chân khác, xem mục 3. |
+| Giao diện lỗi tiếng Việt | Terminal chưa dùng UTF-8 | Chạy `01-set_utf8.bat`, mở terminal mới. |
+| Đã sửa `main/Kconfig.projbuild` nhưng web không cập nhật | Giao diện chưa được sinh lại | Chạy `tools/web-configurator/sync_menuconfig.bat`. |
+
+### 5.2 Biên dịch
+
+| Triệu chứng | Nguyên nhân thường gặp | Cách xử lý |
+| :--- | :--- | :--- |
+| `ESP-IDF 6.x was not found` | Không tìm thấy ESP-IDF | Cài ESP-IDF 6.1, rồi đặt biến `IDF_PATH` trỏ tới thư mục cài đặt. Hoặc mở "ESP-IDF PowerShell" và chạy `build_windows.bat` từ đó. |
+| `Missing file ... .h` hoặc `undefined reference` | Sau khi thêm hoặc đổi tên file, CMake chưa cập nhật | Xoá thư mục `build/` và build lại. |
+| Build báo lỗi chữ tiếng Việt hoặc ký tự lạ | Terminal chưa dùng UTF-8 | Chạy `01-set_utf8.bat`, mở terminal mới. |
+| Đổi cấu hình nhưng firmware vẫn như cũ | Chưa build lại sau khi lưu | Lưu trên Web Configurator, rồi build lại. Nếu cần, xoá `sdkconfig` để sinh lại từ `sdkconfig.defaults`. |
+| Build lỗi sau khi chuyển board | `sdkconfig` cũ còn giữ target khác | Xoá `build/` và `sdkconfig`, rồi chạy `idf.py set-target esp32s3`. |
+
+### 5.3 Nạp firmware và khởi động
+
+| Triệu chứng | Nguyên nhân thường gặp | Cách xử lý |
+| :--- | :--- | :--- |
+| Không tìm thấy cổng COM | Cáp chỉ sạc, thiếu driver, hoặc board chưa được cấp nguồn | Thay cáp dữ liệu, kiểm tra Device Manager, thử cổng USB khác. |
+| `Failed to connect to ESP32-S3` | Board chưa vào chế độ nạp | Làm theo mục 4.5 (giữ BOOT, nhấn RESET). |
+| Board khởi động lại liên tục | Lỗi bộ nhớ, PSRAM cấu hình sai, hoặc chân bị xung đột | Xem log bằng `idf.py monitor`. Kiểm tra mục Hệ thống (System) trong Web Configurator và các chân ở mục 3. |
+| Log báo `Guru Meditation Error` hoặc `LoadProhibited` | Truy cập bộ nhớ không hợp lệ | Chụp đoạn log quanh lỗi, kiểm tra cấu hình ngoại vi vừa thay đổi. |
+| Log báo `Out of memory` | Thiếu RAM hoặc PSRAM chưa bật | Kiểm tra cấu hình PSRAM trong tab Hệ thống, và bảng phân vùng `partitions.csv`. |
+| `Interrupt wdt timeout` | Một tác vụ chiếm CPU quá lâu | Ghi lại tên tác vụ trong log và báo lại. |
+
+### 5.4 Phần cứng
+
+| Triệu chứng | Kiểm tra |
+| :--- | :--- |
+| Màn hình trắng hoặc đen | Chân SPI/I2C đúng với Web Configurator, nguồn 3.3 V ổn định, đúng driver màn hình. |
+| Loa không có tiếng | Chân I2S (BCLK, WS, DOUT), chân PA bật amply, mức điện áp codec. |
+| Micro không thu được | Chân I2S micro (SCK, WS, DIN), chọn đúng loại micro trong Web Configurator. |
+| Cảm ứng không nhận | Địa chỉ I2C, chân INT và RST, loại chip (CST816S, GT911, FT6236). |
+| Thiết bị I2C báo timeout | Điện trở kéo lên trên SDA/SCL, đấu nối không bị chạm, không trùng địa chỉ. |
+| Nút BOOT ảnh hưởng khởi động | GPIO 0 là strapping pin, không nối tải mạnh vào chân này. |
+
+---
+
+## 6. Tài liệu bổ sung
+
+| Tài liệu | Nội dung |
+| :--- | :--- |
+| [Danh_Sach_Kconfig_WebUI.md](Danh_Sach_Kconfig_WebUI.md) | Danh sách đầy đủ các mục cấu hình hiển thị trên Web Configurator. |
+| [partitions/README.md](partitions/README.md) | Cách bố trí bảng phân vùng Flash. |
+| [partitions.csv](partitions.csv) | Bảng phân vùng đang dùng. |
+| [main/boards/esp32-p4/docs/](main/boards/esp32-p4/docs/) | Sơ đồ nguyên lý và sơ đồ khối của board ESP32-P4 (khác với board chính). |
+| [sdkconfig.defaults.esp32s3](sdkconfig.defaults.esp32s3) | Cấu hình mặc định cho ESP32-S3. |
+| [sdkconfig.defaults.esp32p4](sdkconfig.defaults.esp32p4) | Cấu hình mặc định cho ESP32-P4. |
+| [tools/web-configurator/](tools/web-configurator/) | Mã nguồn Web Configurator và các script kiểm thử. |
+| [tools/clean_comments.py](tools/clean_comments.py) | Công cụ xoá comment trong mã nguồn trước khi xuất bản. |
+
+### 6.1 Kiểm thử Web Configurator (dành cho lập trình viên)
+
+Chạy `tools/web-configurator/run_all_tests.bat`. Lần đầu cần chạy `npm install` trong thư mục `tools/web-configurator/`.
+
+### 6.2 Sau khi sửa Kconfig
+
+Chạy `tools/web-configurator/sync_menuconfig.bat` để sinh lại giao diện Web và cập nhật `Danh_Sach_Kconfig_WebUI.md`. Cần đã build một lần, ví dụ `idf.py -B build_sim reconfigure`.
+
+---
+
+## 7. Liên hệ và ủng hộ
+
+- **Nhóm Zalo:** https://zalo.me/g/fkyi7ksh3rcddiqvkufu
+- **YouTube:** https://www.youtube.com/@tuyhung-diy
+- **TikTok:** https://www.tiktok.com/@gocdiy
+- **GitHub:** https://github.com/minhthongvgt/xiaozhi-diy
+
+### Ủng hộ dự án qua BIDV
+
+Quét mã QR bằng ứng dụng ngân hàng BIDV:
+
+<img src="tools/web-configurator/logo/BIDV-nganhang.png" alt="Mã QR ủng hộ qua BIDV" width="260">
+
+### Tham gia nhóm Zalo
+
+Quét mã QR bằng Zalo để vào nhóm:
+
+<img src="tools/web-configurator/logo/Zalogroup.png" alt="Mã QR nhóm Zalo" width="260">
