@@ -418,12 +418,12 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_ETH_SPI_CS_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân chọn chip SPI CS module Ethernet (W5500) | -1 |
 | `CONFIG_CUSTOM_ETH_SPI_INT_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân ngắt INT module Ethernet | -1 |
 | `CONFIG_CUSTOM_ETH_SPI_RST_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân reset RST module Ethernet | -1 |
-| `CONFIG_CUSTOM_ENABLE_PERIPH_IR_REMOTE` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Module truyền nhận hồng ngoại điều khiển từ xa (IR Remote) | n |
+| `CONFIG_CUSTOM_ENABLE_PERIPH_IR_REMOTE` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Module truyền nhận hồng ngoại điều khiển từ xa (IR Remote) - CHƯA HỖ TRỢ, chưa có driver | n |
 | `CONFIG_CUSTOM_PERIPH_IR_TX_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân phát hồng ngoại IR TX (38kHz) | -1 |
 | `CONFIG_CUSTOM_PERIPH_IR_RX_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân thu hồng ngoại IR RX (VS1838B) | -1 |
 | `CONFIG_CUSTOM_PERIPH_TWAI_TX_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân phát mạng CAN / TWAI TX | -1 |
 | `CONFIG_CUSTOM_PERIPH_TWAI_RX_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân nhận mạng CAN / TWAI RX | -1 |
-| `CONFIG_CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Module truyền thông dữ liệu mạng di động 4G LTE (A7670 / SIM7600) | n |
+| `CONFIG_CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Module truyền thông dữ liệu mạng di động 4G LTE (A7670 / SIM7600) - CHƯA HỖ TRỢ, chưa có driver | n |
 | `CONFIG_CUSTOM_PERIPH_4G_PWRKEY_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân bật nguồn PWRKEY module 4G | -1 |
 | `CONFIG_CUSTOM_PERIPH_4G_UART_TX_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân truyền UART TX kết nối module 4G | -1 |
 | `CONFIG_CUSTOM_PERIPH_4G_UART_RX_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân nhận UART RX kết nối module 4G | -1 |

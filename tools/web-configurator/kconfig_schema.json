@@ -11864,7 +11864,7 @@
    "name": "CUSTOM_ENABLE_PERIPH_IR_REMOTE",
    "order": 433,
    "type": "bool",
-   "prompt": "Module truyền nhận hồng ngoại điều khiển từ xa (IR Remote)",
+   "prompt": "Module truyền nhận hồng ngoại điều khiển từ xa (IR Remote) - CHƯA HỖ TRỢ, chưa có driver",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
@@ -12011,7 +12011,7 @@
    "name": "CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE",
    "order": 438,
    "type": "bool",
-   "prompt": "Module truyền thông dữ liệu mạng di động 4G LTE (A7670 / SIM7600)",
+   "prompt": "Module truyền thông dữ liệu mạng di động 4G LTE (A7670 / SIM7600) - CHƯA HỖ TRỢ, chưa có driver",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",

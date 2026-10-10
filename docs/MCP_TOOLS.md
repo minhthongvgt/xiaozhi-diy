@@ -140,16 +140,16 @@ Motor DC được điều khiển tốc độ bằng PWM 20 kHz. Với L9110S v�
 
 ---
 
-## 7. Công cụ chưa hoạt động
+## 7. Chưa hỗ trợ
 
-| Công cụ | Tình trạng |
+Hai mục sau có trong Kconfig nhưng **chưa có driver**, nên firmware không đăng ký công cụ MCP nào cho chúng:
+
+| Mục Kconfig | Tình trạng |
 | :--- | :--- |
-| `self.ir.send_remote` | Chỉ có khung lệnh, chưa phát tín hiệu hồng ngoại thật. Chưa được bật trong firmware. |
-| `self.cellular.send_sms`, `self.cellular.get_status` | Chỉ có khung lệnh, chưa giao tiếp với modem 4G (luôn trả "đã gửi", sóng 28). Chưa được bật trong firmware. |
+| IR Remote (hồng ngoại) | Chưa có driver phát/thu tín hiệu. Không có công cụ `self.ir.*`. |
+| 4G LTE (A7670 / SIM7600) | Chưa có driver AT cho module. Không có công cụ `self.cellular.*`. Mạng 4G hiện chỉ dùng qua board ML307 (`ml307_board.cc`), không phải mục này. |
 
-Hai nhóm này sẽ không xuất hiện cho tới khi có driver thật, để chatbot không báo sai kết quả.
-
----
+Hai mục này đã được ghi chú "CHƯA HỖ TRỢ" trong Web Configurator, để không bật nhầm.
 
 ## 8. Công cụ chỉ dành cho người dùng
 

@@ -2187,7 +2187,7 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             default -1
 
         config CUSTOM_ENABLE_PERIPH_IR_REMOTE
-            bool "Module truyền nhận hồng ngoại điều khiển từ xa (IR Remote)"
+            bool "Module truyền nhận hồng ngoại điều khiển từ xa (IR Remote) - CHƯA HỖ TRỢ, chưa có driver"
             default n
 
         if CUSTOM_ENABLE_PERIPH_IR_REMOTE
@@ -2213,7 +2213,7 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             default -1
 
         config CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE
-            bool "Module truyền thông dữ liệu mạng di động 4G LTE (A7670 / SIM7600)"
+            bool "Module truyền thông dữ liệu mạng di động 4G LTE (A7670 / SIM7600) - CHƯA HỖ TRỢ, chưa có driver"
             default n
 
         if CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE
