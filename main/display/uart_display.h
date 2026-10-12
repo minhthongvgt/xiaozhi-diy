@@ -5,6 +5,7 @@
 #include <driver/uart.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>
+#include <freertos/task.h>
 #include <string>
 enum class UartDisplayProtocol {
     NextionTjc = 0,
@@ -36,8 +37,22 @@ private:
     UartDisplayProtocol protocol_;
     SemaphoreHandle_t mutex_ = nullptr;
     bool is_initialized_ = false;
+    // Last values sent, replayed when a JSON display announces itself with "hello".
+    std::string last_status_;
+    std::string last_emotion_;
+    std::string last_user_message_;
+    std::string last_assistant_role_ = "assistant";
+    std::string last_assistant_message_;
+    TickType_t last_sysinfo_tick_ = 0;
+    TaskHandle_t rx_task_ = nullptr;
+    volatile bool rx_running_ = false;
     void SendRawString(const std::string& str);
     void SendNextionCmd(const std::string& cmd);
     void SendDwinText(uint16_t vp_addr, const std::string& text);
+    void SendSysInfo();
+    void ReplayState();
+    void StartRxTask();
+    void HandleDisplayEvent(const std::string& line);
+    static void RxTask(void* arg);
 };
 #endif 

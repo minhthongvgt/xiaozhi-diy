@@ -1,11 +1,21 @@
 #include "uart_display.h"
+#include "application.h"
+#include "audio_codec.h"
+#include "board.h"
 #include <driver/gpio.h>
 #include <esp_log.h>
 #include <nlohmann/json.hpp>
+#include <algorithm>
 #include <cstring>
+#include <ctime>
 #include <vector>
 
 #define TAG "UartDisplay"
+
+// JSON protocol only: how often the status-bar data is pushed, and the longest
+// line accepted from the display (longer lines are dropped).
+#define SYSINFO_INTERVAL_MS 30000
+#define RX_LINE_MAX 256
 
 UartDisplay::UartDisplay(uart_port_t uart_num, gpio_num_t tx_pin, gpio_num_t rx_pin, int baud_rate,
                          UartDisplayProtocol protocol)
@@ -62,9 +72,20 @@ UartDisplay::UartDisplay(uart_port_t uart_num, gpio_num_t tx_pin, gpio_num_t rx_
              static_cast<int>(uart_num_), static_cast<int>(tx_pin), static_cast<int>(rx_pin), baud_rate, static_cast<int>(protocol_));
 
     SetStatus("Connected");
+
+    // Commands from the display (two-way) are only defined for the JSON protocol.
+    if (protocol_ == UartDisplayProtocol::JsonStream && rx != UART_PIN_NO_CHANGE) {
+        StartRxTask();
+    }
 }
 
 UartDisplay::~UartDisplay() {
+    if (rx_task_ != nullptr) {
+        rx_running_ = false;
+        for (int i = 0; i < 20 && rx_task_ != nullptr; ++i) {
+            vTaskDelay(pdMS_TO_TICKS(50));
+        }
+    }
     if (is_initialized_) {
         uart_driver_delete(uart_num_);
         is_initialized_ = false;
@@ -142,6 +163,7 @@ void UartDisplay::SendDwinText(uint16_t vp_addr, const std::string& text) {
 void UartDisplay::SetStatus(const char* status) {
     DisplayLockGuard lock(this);
     if (!status) return;
+    last_status_ = status;
 
     switch (protocol_) {
         case UartDisplayProtocol::NextionTjc:
@@ -194,6 +216,7 @@ void UartDisplay::ShowNotification(const std::string& notification, int duration
 void UartDisplay::SetEmotion(const char* emotion) {
     DisplayLockGuard lock(this);
     if (!emotion) return;
+    last_emotion_ = emotion;
 
     switch (protocol_) {
         case UartDisplayProtocol::NextionTjc:
@@ -218,6 +241,12 @@ void UartDisplay::SetEmotion(const char* emotion) {
 void UartDisplay::SetChatMessage(const char* role, const char* content) {
     DisplayLockGuard lock(this);
     if (!role || !content) return;
+    if (strcmp(role, "user") == 0) {
+        last_user_message_ = content;
+    } else {
+        last_assistant_role_ = role;
+        last_assistant_message_ = content;
+    }
 
     switch (protocol_) {
         case UartDisplayProtocol::NextionTjc: {
@@ -252,6 +281,8 @@ void UartDisplay::SetChatMessage(const char* role, const char* content) {
 
 void UartDisplay::ClearChatMessages() {
     DisplayLockGuard lock(this);
+    last_user_message_.clear();
+    last_assistant_message_.clear();
     switch (protocol_) {
         case UartDisplayProtocol::NextionTjc:
             SendNextionCmd("t_user.txt=\"\"");
@@ -270,7 +301,150 @@ void UartDisplay::ClearChatMessages() {
     }
 }
 
+// Called every second by the application clock; JSON displays get a sysinfo
+// message every SYSINFO_INTERVAL_MS and keep their own clock running in between.
 void UartDisplay::UpdateStatusBar(bool update_all) {
+    if (protocol_ != UartDisplayProtocol::JsonStream || !is_initialized_) return;
+    TickType_t now = xTaskGetTickCount();
+    if (!update_all && last_sysinfo_tick_ != 0 &&
+        now - last_sysinfo_tick_ < pdMS_TO_TICKS(SYSINFO_INTERVAL_MS)) {
+        return;
+    }
+    DisplayLockGuard lock(this);
+    SendSysInfo();
+}
+
+// Caller holds the display lock.
+void UartDisplay::SendSysInfo() {
+    last_sysinfo_tick_ = xTaskGetTickCount();
+    auto& board = Board::GetInstance();
+    nlohmann::json j;
+    j["type"] = "sysinfo";
+
+    time_t now = time(nullptr);
+    struct tm tm_now;
+    localtime_r(&now, &tm_now);
+    if (tm_now.tm_year >= 2025 - 1900) {  // only once the clock has been synced
+        char buf[16];
+        strftime(buf, sizeof(buf), "%H:%M", &tm_now);
+        j["time"] = buf;
+        strftime(buf, sizeof(buf), "%Y-%m-%d", &tm_now);
+        j["date"] = buf;
+    }
+
+    // Wi-Fi boards report "rssi" in their board JSON; other network types omit it.
+    auto board_json = nlohmann::json::parse(board.GetBoardJson(), nullptr, false);
+    if (board_json.is_object() && board_json.contains("rssi") && board_json["rssi"].is_number()) {
+        j["wifi"] = board_json["rssi"];
+    }
+
+    int battery_level = 0;
+    bool charging = false, discharging = false;
+    if (board.GetBatteryLevel(battery_level, charging, discharging)) {
+        j["battery"] = battery_level;
+        j["charging"] = charging;
+    }
+
+    auto codec = board.GetAudioCodec();
+    if (codec != nullptr) {
+        j["volume"] = codec->output_volume();
+    }
+    SendRawString(j.dump() + "\n");
+}
+
+// Caller holds the display lock. Sends what a freshly booted display has missed.
+void UartDisplay::ReplayState() {
+    if (!last_status_.empty()) {
+        SendRawString(nlohmann::json{{"type", "status"}, {"val", last_status_}}.dump() + "\n");
+    }
+    if (!last_emotion_.empty()) {
+        SendRawString(nlohmann::json{{"type", "emotion"}, {"val", last_emotion_}}.dump() + "\n");
+    }
+    if (!last_user_message_.empty()) {
+        SendRawString(nlohmann::json{{"type", "chat"}, {"role", "user"},
+                                     {"content", last_user_message_}}.dump() + "\n");
+    }
+    if (!last_assistant_message_.empty()) {
+        SendRawString(nlohmann::json{{"type", "chat"}, {"role", last_assistant_role_},
+                                     {"content", last_assistant_message_}}.dump() + "\n");
+    }
+    SendSysInfo();
+}
+
+void UartDisplay::StartRxTask() {
+    rx_running_ = true;
+    if (xTaskCreate(RxTask, "uart_disp_rx", 4096, this, 3, &rx_task_) != pdPASS) {
+        rx_running_ = false;
+        rx_task_ = nullptr;
+        ESP_LOGE(TAG, "Failed to start UART display RX task");
+    }
+}
+
+// Reads newline-terminated JSON events from the display.
+void UartDisplay::RxTask(void* arg) {
+    auto self = static_cast<UartDisplay*>(arg);
+    std::string line;
+    bool overflow = false;
+    uint8_t buf[64];
+    while (self->rx_running_) {
+        int len = uart_read_bytes(self->uart_num_, buf, sizeof(buf), pdMS_TO_TICKS(100));
+        for (int i = 0; i < len; ++i) {
+            char c = static_cast<char>(buf[i]);
+            if (c == '\n') {
+                if (!overflow && !line.empty()) {
+                    self->HandleDisplayEvent(line);
+                }
+                line.clear();
+                overflow = false;
+            } else if (c != '\r') {
+                if (line.size() < RX_LINE_MAX) {
+                    line += c;
+                } else {
+                    overflow = true;
+                }
+            }
+        }
+    }
+    self->rx_task_ = nullptr;
+    vTaskDelete(nullptr);
+}
+
+// Events run on the application task, like every other state change.
+void UartDisplay::HandleDisplayEvent(const std::string& line) {
+    auto j = nlohmann::json::parse(line, nullptr, false);
+    if (!j.is_object() || !j.contains("event") || !j["event"].is_string()) {
+        ESP_LOGW(TAG, "Ignoring display line: %.64s", line.c_str());
+        return;
+    }
+    std::string event = j["event"].get<std::string>();
+    auto& app = Application::GetInstance();
+
+    if (event == "hello") {
+        ESP_LOGI(TAG, "Display connected, replaying state");
+        app.Schedule([this]() {
+            DisplayLockGuard lock(this);
+            ReplayState();
+        });
+    } else if (event == "toggle_chat") {
+        app.Schedule([&app]() { app.ToggleChatState(); });
+    } else if (event == "abort") {
+        app.Schedule([&app]() {
+            if (app.GetDeviceState() == kDeviceStateSpeaking) {
+                app.AbortSpeaking(kAbortReasonNone);
+            }
+        });
+    } else if (event == "volume" && j.contains("val") && j["val"].is_number()) {
+        int volume = std::clamp(j["val"].get<int>(), 0, 100);
+        app.Schedule([this, volume]() {
+            auto codec = Board::GetInstance().GetAudioCodec();
+            if (codec != nullptr) {
+                codec->SetOutputVolume(volume);
+            }
+            DisplayLockGuard lock(this);
+            SendSysInfo();
+        });
+    }
+    // Other events (screen_changed, ...) carry nothing for the firmware.
 }
 
 void UartDisplay::SetPowerSaveMode(bool on) {

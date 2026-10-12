@@ -4,7 +4,7 @@ Cập nhật: 2026-10-12
 
 ## Tổng quan
 
-Firmware Xiaozhi gửi trạng thái chatbot ra một cổng UART theo **một chiều** (ESP32 → màn hình rời). Màn hình rời chỉ cần nhận và hiển thị; firmware hiện **không đọc** dữ liệu gửi ngược về. Mã nguồn: `main/display/uart_display.cc`.
+Firmware Xiaozhi gửi trạng thái chatbot ra một cổng UART tới màn hình rời. Với giao thức **JSON**, kênh này **hai chiều**: màn hình gửi lệnh ngược về (bấm để nói, ngắt lời, âm lượng) và nhận thêm tin `sysinfo` (giờ, Wi-Fi, pin, âm lượng). Ba giao thức còn lại chỉ một chiều. Mã nguồn: `main/display/uart_display.cc`.
 
 Có hai cách dùng:
 
@@ -13,7 +13,7 @@ Có hai cách dùng:
 
 Mỗi khi ứng dụng đổi trạng thái (chờ, nghe, nói…), nhận câu nói (STT), câu trả lời (TTS) hay cảm xúc từ server, firmware gọi một hàm hiển thị. `UartDisplay` dịch lời gọi đó thành một khung dữ liệu theo giao thức đã chọn: **Nextion/TJC**, **JSON**, **Raw text** hoặc **DWIN DGUS**.
 
-Không được gửi qua UART: icon Wi-Fi, pin, đồng hồ (hàm `UpdateStatusBar` của UART để trống), hình emoji/GIF, ảnh xem trước camera và mức âm lượng.
+Không được gửi qua UART: hình emoji/GIF và ảnh xem trước camera. Giờ, Wi-Fi, pin và âm lượng chỉ được gửi với giao thức JSON (tin `sysinfo`).
 
 ## Đấu nối và cấu hình
 
@@ -24,7 +24,7 @@ Chỉ cần 3 dây: **TX của ESP32 → RX của màn hình**, GND chung, và n
 | `CUSTOM_DISPLAY_UART` hoặc `ENABLE_CUSTOM_SECONDARY_UART_DISPLAY` | bật | UART là màn chính, hoặc chạy song song màn LCD/OLED |
 | `CUSTOM_DISPLAY_UART_PORT` | 1 hoặc 2 (mặc định 1) | Không dùng UART0 (nạp firmware và log). Khi màn hình dùng UART1, cổng UART tùy biến khác tự chuyển sang UART2 |
 | `CUSTOM_DISPLAY_UART_TX_PIN` | GPIO (mặc định -1) | **Bắt buộc**. -1 thì firmware bỏ qua màn hình UART. Tránh GPIO 26–37 (Flash/PSRAM Octal) |
-| `CUSTOM_DISPLAY_UART_RX_PIN` | GPIO hoặc -1 | Không bắt buộc. Hiện firmware chưa đọc dữ liệu từ chân này |
+| `CUSTOM_DISPLAY_UART_RX_PIN` | GPIO hoặc -1 | Cần cho chiều màn hình → Xiaozhi (chỉ giao thức JSON). -1 thì chỉ gửi một chiều |
 | Baudrate | 9600 – 921600 (mặc định 115200) | Phải trùng với màn hình. Nextion xuất xưởng chạy 9600 |
 | Giao thức | Nextion/TJC, JSON, Raw text, DWIN DGUS | Mặc định Nextion/TJC |
 
@@ -34,7 +34,7 @@ Nếu chân TX sai hoặc cài driver UART lỗi, log sẽ báo `Secondary UART 
 
 ## Trạng thái và sự kiện được gửi
 
-Firmware gửi 7 loại tin. Trạng thái thiết bị **không có mã số riêng**: màn hình nhận biết trạng thái qua chuỗi `status`, vốn là văn bản theo ngôn ngữ đã chọn khi build (bảng dưới dùng tiếng Việt, `vi-VN`).
+Firmware gửi 8 loại tin. Trạng thái thiết bị **không có mã số riêng**: màn hình nhận biết trạng thái qua chuỗi `status`, vốn là văn bản theo ngôn ngữ đã chọn khi build (bảng dưới dùng tiếng Việt, `vi-VN`).
 
 | Loại tin | Hàm trong firmware | Nội dung |
 | --- | --- | --- |
@@ -44,6 +44,7 @@ Firmware gửi 7 loại tin. Trạng thái thiết bị **không có mã số ri
 | chat | `SetChatMessage` | `role` = `user` (câu người nói), `assistant` (câu AI trả lời) hoặc `system` (tin hệ thống). Nội dung rỗng = xoá dòng đó |
 | clear_chat | `ClearChatMessages` | Xoá cả câu người dùng lẫn câu AI |
 | power | `SetPowerSaveMode` | `sleep` khi vào tiết kiệm điện, `wake` khi thoát |
+| sysinfo (chỉ JSON) | `UpdateStatusBar` | Giờ, ngày, RSSI Wi-Fi, pin, âm lượng; gửi mỗi 30 s, khi màn hình gửi `hello` và khi âm lượng đổi |
 | (khởi động UART) | `SetStatus("Connected")` | Gửi một lần khi UART khởi tạo xong |
 
 ```mermaid
@@ -104,6 +105,7 @@ Mọi văn bản được gửi dạng **UTF-8**: một chữ tiếng Việt có
 | chat `assistant` / `system` | `t_chat.txt="…"` | `{"type":"chat","role":"assistant","content":"…"}` (hoặc `system`) | `CHAT:assistant:…` | `0x1400` |
 | clear_chat | `t_user.txt=""` và `t_chat.txt=""` | `{"type":"clear_chat"}` | `CLEAR_CHAT` | ghi chuỗi rỗng vào `0x1300` và `0x1400` |
 | power | `sleep=1` / `sleep=0` | `{"type":"power","state":"sleep"}` / `"wake"` | `SLEEP` / `WAKE` | không gửi |
+| sysinfo | không gửi | `{"type":"sysinfo","time":"14:05","date":"2026-10-12","wifi":-55,"battery":87,"charging":false,"volume":70}` | không gửi | không gửi |
 
 ### Nextion / TJC
 
@@ -153,14 +155,26 @@ status "Connected" → 5A A5 0E 82 10 00 43 6F 6E 6E 65 63 74 65 64 00 00
 
 ## Chiều ngược lại: màn hình gửi về ESP32
 
-Hiện **chưa hỗ trợ**. Firmware cài bộ đệm nhận 512 byte và cấu hình chân RX, nhưng không có đoạn mã nào đọc dữ liệu. Nút bấm hay cảm ứng trên màn hình rời sẽ không điều khiển được chatbot.
+Chỉ có với giao thức **JSON** và khi đã đặt `CUSTOM_DISPLAY_UART_RX_PIN`. Màn hình gửi mỗi sự kiện là một đối tượng JSON trên một dòng, kết thúc `\n`, dài tối đa **256 byte**. Dòng dài hơn hoặc JSON hỏng bị bỏ qua. Mọi lệnh được chạy trên task chính của ứng dụng, giống như bấm nút trên board.
 
-Dữ liệu màn hình tự gửi về cũng bị bỏ qua:
+| Sự kiện | Firmware làm gì |
+| --- | --- |
+| `{"event":"hello","ver":1}` | Gửi lại status, emotion, câu người dùng và câu AI cuối cùng, rồi một tin `sysinfo`. Dùng khi màn hình khởi động sau Xiaozhi |
+| `{"event":"toggle_chat"}` | Giống bấm nút chat: bắt đầu hoặc dừng hội thoại (`Application::ToggleChatState`) |
+| `{"event":"abort"}` | Ngắt lời khi AI đang nói (`AbortSpeaking`); ở trạng thái khác thì bỏ qua |
+| `{"event":"volume","val":70}` | Đặt âm lượng 0–100 (giá trị ngoài khoảng bị kẹp lại), lưu vào bộ nhớ, rồi gửi lại `sysinfo` |
+| sự kiện khác | Bỏ qua |
 
-- **Nextion**: mã lỗi (ví dụ `02 FF FF FF` khi không tìm thấy ô `t_chat` trên trang hiện tại) và sự kiện chạm `65 <trang> <ID> <01/00> FF FF FF`.
-- **DWIN**: khung xác nhận `5A A5 03 82 4F 4B` và khung tự gửi lên khi bấm nút (lệnh `0x83`).
+Tin `sysinfo` (Xiaozhi → màn hình) chỉ chứa những trường có thật trên thiết bị:
 
-Nếu cần điều khiển từ màn hình (bấm để nói, ngắt lời, chỉnh âm lượng), phải thêm một task đọc UART trong `uart_display.cc` và gọi `Application::ToggleChatState()` hoặc các hàm tương ứng. Phần này chưa được làm.
+- `time` (`HH:MM`) và `date` (`YYYY-MM-DD`): chỉ khi đồng hồ đã được đồng bộ. Màn hình nên tự đếm giờ giữa hai tin.
+- `wifi`: RSSI tính bằng dBm, chỉ với board dùng Wi-Fi.
+- `battery` (0–100) và `charging`: chỉ khi board đo được pin.
+- `volume` (0–100): luôn có.
+
+Màn hình phải bỏ qua mọi `type` và trường không biết, để sau này có thể thêm tin mới.
+
+Với Nextion, Raw text và DWIN, dữ liệu màn hình gửi về (mã lỗi Nextion `02 FF FF FF`, sự kiện chạm `65 …`, xác nhận DWIN `5A A5 03 82 4F 4B`) vẫn bị bỏ qua.
 
 ## Làm màn hình rời
 
@@ -247,7 +261,8 @@ Gợi ý hiển thị:
 | Thỉnh thoảng một câu không hiện (Nextion) | Câu trả lời chứa ký tự `\` | Giới hạn đã biết của firmware; dùng JSON nếu cần ổn định |
 | Raw text bị vỡ dòng | Nội dung có xuống dòng | Chuyển sang JSON |
 | DWIN cụt chữ hoặc lỗi chữ cuối | Văn bản dài hơn 240 byte | Giới hạn đã biết của firmware |
-| Không thấy giờ, pin, Wi-Fi | UART không gửi thanh trạng thái | Chưa hỗ trợ; màn hình tự làm có thể tự lấy giờ riêng |
+| Không thấy giờ, pin, Wi-Fi | Đang dùng giao thức khác JSON, hoặc đồng hồ chưa đồng bộ | Chọn JSON; `time` chỉ có sau khi thiết bị lấy được giờ |
+| Bấm trên màn hình không có tác dụng | Chưa đặt chân RX, sai giao thức, hoặc dòng gửi lên thiếu `\n` | Đặt RX, chọn JSON, kết thúc mỗi sự kiện bằng `\n`; xem log `Ignoring display line` |
 | UART của chức năng khác ngừng chạy | Hai chức năng cùng dùng một cổng | Màn hình dùng UART1 thì cổng tùy biến khác tự sang UART2; kiểm tra không trùng chân |
 
 ## Nguồn tham khảo
