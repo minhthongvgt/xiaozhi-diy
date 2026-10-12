@@ -30,6 +30,10 @@ CONFIG_ESP_MAIN_TASK_STACK_SIZE=6584
 CONFIG_USB_HOST_CONTROL_TRANSFER_MAX_SIZE=1536
 
 CONFIG_LV_USE_SNAPSHOT=y
+# assets.bin text fonts (noto common) need >1 MB glyph bitmaps: 16-byte glyph descriptors
+CONFIG_LV_FONT_FMT_TXT_LARGE=y
+# assets.bin emoji collections are PNG files
+CONFIG_LV_USE_LODEPNG=y
 CONFIG_LV_USE_BUILTIN_MALLOC=y
 CONFIG_LV_MEM_SIZE_KILOBYTES=1024
 
