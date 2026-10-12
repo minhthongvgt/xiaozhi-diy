@@ -65,7 +65,7 @@ class AdaptiveUiTests(unittest.TestCase):
             content = f.read()
 
         self.assertIn('#include "adaptive_ui.h"', content)
-        self.assertIn("TrySetupAdaptiveUi", content)
+        self.assertIn("SetupAdaptiveUi()", content)
         self.assertIn("AdaptiveUiEngine::GetInstance()", content)
 
     def test_config_h_has_fallback_defaults(self):

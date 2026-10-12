@@ -124,7 +124,7 @@ Thay `COM3` bằng cổng thực tế của board (xem trong Device Manager).
 
 ### 4.3 Cấu hình chi tiết bằng menuconfig
 
-1. Nhấp đúp `01-set_utf8.bat` một lần để bật UTF-8 cho Windows, sau đó **mở terminal mới**.
+1. Nhấp đúp `01 set-UTF8-Fix-windows.bat` một lần để bật UTF-8 cho Windows, sau đó **mở terminal mới**.
 2. Chạy:
    ```powershell
    idf.py menuconfig
@@ -157,7 +157,7 @@ Nếu nạp không được (xem mục 5), giữ nút **BOOT** (GPIO 0), nhấn 
 | Nút Lưu bị khoá, báo trùng chân | Hai chức năng cùng dùng một GPIO | Đổi chân của một chức năng, hoặc chọn `-1` nếu không dùng. |
 | Lưu xong nhưng code không đổi | Đang mở HTML trực tiếp, không qua server | Dùng `run_configurator.bat` để lưu vào dự án. |
 | Chọn chân 26–37 bị từ chối | Dải này là bộ nhớ Octal Flash/PSRAM | Chọn chân khác, xem mục 3. |
-| Giao diện lỗi tiếng Việt | Terminal chưa dùng UTF-8 | Chạy `01-set_utf8.bat`, mở terminal mới. |
+| Giao diện lỗi tiếng Việt | Terminal chưa dùng UTF-8 | Chạy `01 set-UTF8-Fix-windows.bat`, mở terminal mới. |
 | Đã sửa `main/Kconfig.projbuild` nhưng web không cập nhật | Giao diện chưa được sinh lại | Chạy `tools/web-configurator/sync_menuconfig.bat`. |
 
 ### 5.2 Biên dịch
@@ -166,7 +166,7 @@ Nếu nạp không được (xem mục 5), giữ nút **BOOT** (GPIO 0), nhấn 
 | :--- | :--- | :--- |
 | `ESP-IDF 6.x was not found` | Không tìm thấy ESP-IDF | Cài ESP-IDF 6.1, rồi đặt biến `IDF_PATH` trỏ tới thư mục cài đặt. Hoặc mở "ESP-IDF PowerShell" và chạy `build_windows.bat` từ đó. |
 | `Missing file ... .h` hoặc `undefined reference` | Sau khi thêm hoặc đổi tên file, CMake chưa cập nhật | Xoá thư mục `build/` và build lại. |
-| Build báo lỗi chữ tiếng Việt hoặc ký tự lạ | Terminal chưa dùng UTF-8 | Chạy `01-set_utf8.bat`, mở terminal mới. |
+| Build báo lỗi chữ tiếng Việt hoặc ký tự lạ | Terminal chưa dùng UTF-8 | Chạy `01 set-UTF8-Fix-windows.bat`, mở terminal mới. |
 | Đổi cấu hình nhưng firmware vẫn như cũ | Chưa build lại sau khi lưu | Lưu trên Web Configurator, rồi build lại. Nếu cần, xoá `sdkconfig` để sinh lại từ `sdkconfig.defaults`. |
 | Build lỗi sau khi chuyển board | `sdkconfig` cũ còn giữ target khác | Xoá `build/` và `sdkconfig`, rồi chạy `idf.py set-target esp32s3`. |
 

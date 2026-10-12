@@ -4,6 +4,7 @@
 #include <cstring>
 #include <cstdio>
 #include <algorithm>
+#include <ctime>
 
 static const char* TAG = "AdaptiveUI";
 
@@ -161,9 +162,82 @@ lv_color_t AdaptiveUiEngine::GetMutedTextColor() const {
     }
 }
 
+namespace {
+
+constexpr int kAvatarMinSize = 40;
+
+// Plain container: drops the default LVGL theme styles (padding, border, background,
+// scrollbars) so children are placed exactly where the layout puts them.
+lv_obj_t* CreateBox(lv_obj_t* parent) {
+    lv_obj_t* obj = lv_obj_create(parent);
+    lv_obj_remove_style_all(obj);
+    lv_obj_remove_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+    return obj;
+}
+
+void StyleCard(lv_obj_t* obj, lv_color_t bg, lv_color_t border, int radius, int border_width) {
+    lv_obj_set_style_bg_color(obj, bg, 0);
+    lv_obj_set_style_bg_opa(obj, LV_OPA_COVER, 0);
+    lv_obj_set_style_radius(obj, radius, 0);
+    lv_obj_set_style_border_width(obj, border_width, 0);
+    lv_obj_set_style_border_color(obj, border, 0);
+}
+
+// Single-line label that scrolls instead of overflowing into its neighbours.
+lv_obj_t* CreateLineLabel(lv_obj_t* parent, int width, lv_color_t color, const char* text) {
+    lv_obj_t* label = lv_label_create(parent);
+    lv_obj_set_width(label, width);
+    lv_label_set_long_mode(label, LV_LABEL_LONG_SCROLL_CIRCULAR);
+    lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, 0);
+    lv_obj_set_style_text_color(label, color, 0);
+    lv_label_set_text(label, text);
+    return label;
+}
+
+lv_obj_t* CreateWrapLabel(lv_obj_t* parent, lv_color_t color, const char* text) {
+    lv_obj_t* label = lv_label_create(parent);
+    lv_obj_set_width(label, lv_pct(100));
+    lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
+    lv_obj_set_style_text_color(label, color, 0);
+    lv_label_set_text(label, text);
+    return label;
+}
+
+// Vertical scroll area whose children stack top to bottom.
+lv_obj_t* CreateScrollColumn(lv_obj_t* parent, int pad, int gap) {
+    lv_obj_t* area = CreateBox(parent);
+    lv_obj_add_flag(area, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_scroll_dir(area, LV_DIR_VER);
+    lv_obj_set_scrollbar_mode(area, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_style_pad_all(area, pad, 0);
+    lv_obj_set_flex_flow(area, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_pad_row(area, gap, 0);
+    return area;
+}
+
+lv_obj_t* CreateWaveBar(lv_obj_t* parent, int width, lv_color_t track, lv_color_t indicator) {
+    lv_obj_t* bar = lv_bar_create(parent);
+    lv_bar_set_range(bar, 0, 100);
+    lv_bar_set_value(bar, 0, LV_ANIM_OFF);
+    lv_obj_set_size(bar, width, 4);
+    lv_obj_align(bar, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_set_style_bg_color(bar, track, 0);
+    lv_obj_set_style_bg_color(bar, indicator, LV_PART_INDICATOR);
+    lv_obj_set_style_radius(bar, 2, 0);
+    lv_obj_set_style_radius(bar, 2, LV_PART_INDICATOR);
+    lv_obj_add_flag(bar, LV_OBJ_FLAG_HIDDEN);
+    return bar;
+}
+
+}  // namespace
+
 void AdaptiveUiEngine::Destroy() {
+    if (clock_timer_ != nullptr) {
+        lv_timer_delete(clock_timer_);
+        clock_timer_ = nullptr;
+    }
     if (container_root_ != nullptr) {
-        lv_obj_del(container_root_);
+        lv_obj_delete(container_root_);
         container_root_ = nullptr;
     }
     root_screen_ = nullptr;
@@ -183,6 +257,7 @@ void AdaptiveUiEngine::Destroy() {
     label_avatar_ = nullptr;
     bar_ota_progress_ = nullptr;
     label_ota_progress_ = nullptr;
+    chat_scroll_ = nullptr;
     panel_chat_ = nullptr;
     label_chat_role_ = nullptr;
     label_chat_ = nullptr;
@@ -197,6 +272,8 @@ void AdaptiveUiEngine::Destroy() {
 void AdaptiveUiEngine::Initialize(lv_obj_t* parent_screen, int width, int height, const AdaptiveUiConfig& config) {
     Destroy();
     config_ = config;
+    line_h_ = config_.text_font != nullptr ? config_.text_font->line_height : 20;
+    icon_h_ = config_.icon_font != nullptr ? config_.icon_font->line_height : line_h_;
     CalculateMetrics(width, height);
 
     root_screen_ = parent_screen ? parent_screen : lv_screen_active();
@@ -207,25 +284,16 @@ void AdaptiveUiEngine::Initialize(lv_obj_t* parent_screen, int width, int height
 
     // Full-screen background layer, then a content layer inset by the round-screen safe area.
     // Builders lay out inside the content layer, so every style gets the same safe margin.
-    container_root_ = lv_obj_create(root_screen_);
+    container_root_ = CreateBox(root_screen_);
     lv_obj_set_size(container_root_, metrics_.width, metrics_.height);
     lv_obj_align(container_root_, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_clear_flag(container_root_, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_set_style_bg_color(container_root_, GetBgColor(), 0);
     lv_obj_set_style_bg_opa(container_root_, LV_OPA_COVER, 0);
-    lv_obj_set_style_border_width(container_root_, 0, 0);
-    lv_obj_set_style_radius(container_root_, 0, 0);
-    lv_obj_set_style_pad_all(container_root_, 0, 0);
 
-    lv_obj_t* content_root = lv_obj_create(container_root_);
+    lv_obj_t* content_root = CreateBox(container_root_);
     lv_obj_set_size(content_root, metrics_.width - 2 * metrics_.safe_inset,
                     metrics_.height - 2 * metrics_.safe_inset);
     lv_obj_align(content_root, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_clear_flag(content_root, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_style_bg_opa(content_root, LV_OPA_TRANSP, 0);
-    lv_obj_set_style_border_width(content_root, 0, 0);
-    lv_obj_set_style_radius(content_root, 0, 0);
-    lv_obj_set_style_pad_all(content_root, 0, 0);
 
     switch (config_.style) {
         case UiStyle::CyberTerminal:
@@ -246,24 +314,146 @@ void AdaptiveUiEngine::Initialize(lv_obj_t* parent_screen, int width, int height
             break;
     }
 
+    if (label_time_ != nullptr) {
+        UpdateClock();
+        clock_timer_ = lv_timer_create(ClockTimerCallback, 1000, this);
+    }
+
     initialized_ = true;
-    ESP_LOGI(TAG, "Adaptive UI initialized successfully with style %d", (int)config_.style);
+    ESP_LOGI(TAG, "Adaptive UI initialized with style %d (line height %d)", (int)config_.style,
+             line_h_);
 }
 
-void AdaptiveUiEngine::BuildSmartDashboard(lv_obj_t* parent) {
-    int top_bar_h = metrics_.is_mini ? 16 : (metrics_.is_large ? 28 : 20);
-    int pill_h = metrics_.is_mini ? 14 : (metrics_.is_large ? 28 : 22);
-    int weather_h = metrics_.is_mini ? 0 : (metrics_.is_large ? 72 : 50);
-    int avatar_h = metrics_.is_mini ? 16 : (metrics_.is_large ? 80 : 54);
-    int bottom_bar_h = metrics_.is_mini ? 12 : (metrics_.is_large ? 32 : 24);
+bool AdaptiveUiEngine::NeedsRelayout(LvglTheme* theme) const {
+    if (!initialized_ || theme == nullptr) return false;
+    auto text_font = theme->text_font();
+    auto icon_font = theme->icon_font();
+    int text_h = (text_font && text_font->font()) ? text_font->font()->line_height : line_h_;
+    int icon_h = (icon_font && icon_font->font()) ? icon_font->font()->line_height : icon_h_;
+    return text_h != line_h_ || icon_h != icon_h_;
+}
 
-    panel_top_bar_ = lv_obj_create(parent);
-    lv_obj_set_size(panel_top_bar_, metrics_.content_width, top_bar_h);
-    lv_obj_align(panel_top_bar_, LV_ALIGN_TOP_MID, 0, metrics_.pad_y);
-    lv_obj_clear_flag(panel_top_bar_, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_style_bg_opa(panel_top_bar_, LV_OPA_TRANSP, 0);
-    lv_obj_set_style_border_width(panel_top_bar_, 0, 0);
-    lv_obj_set_style_pad_all(panel_top_bar_, 0, 0);
+void AdaptiveUiEngine::ClockTimerCallback(lv_timer_t* timer) {
+    static_cast<AdaptiveUiEngine*>(lv_timer_get_user_data(timer))->UpdateClock();
+}
+
+void AdaptiveUiEngine::UpdateClock() {
+    if (label_time_ == nullptr) return;
+    time_t now = time(nullptr);
+    struct tm tm_now;
+    localtime_r(&now, &tm_now);
+    char buf[16];
+    if (tm_now.tm_year < 2025 - 1900) {
+        snprintf(buf, sizeof(buf), "%s",
+                 config_.style == UiStyle::CyberTerminal ? "[--:--]" : "--:--");
+    } else {
+        strftime(buf, sizeof(buf),
+                 config_.style == UiStyle::CyberTerminal ? "[%H:%M:%S]" : "%H:%M", &tm_now);
+    }
+    if (strcmp(lv_label_get_text(label_time_), buf) != 0) {
+        lv_label_set_text(label_time_, buf);
+    }
+}
+
+// Status and notification share one slot: LvglDisplay shows one and hides the other,
+// so they must sit on top of each other instead of on top of other widgets.
+void AdaptiveUiEngine::BuildStatusPill(lv_obj_t* parent, int y, int height, lv_color_t bg,
+                                       lv_color_t border, int radius, lv_color_t dot_color,
+                                       lv_color_t text_color) {
+    int w = metrics_.content_width;
+    panel_state_pill_ = CreateBox(parent);
+    lv_obj_set_size(panel_state_pill_, w, height);
+    lv_obj_align(panel_state_pill_, LV_ALIGN_TOP_MID, 0, y);
+    StyleCard(panel_state_pill_, bg, border, radius, 1);
+
+    int dot_size = height > 18 ? 8 : 6;
+    led_state_dot_ = CreateBox(panel_state_pill_);
+    lv_obj_set_size(led_state_dot_, dot_size, dot_size);
+    lv_obj_align(led_state_dot_, LV_ALIGN_LEFT_MID, 8, 0);
+    StyleCard(led_state_dot_, dot_color, dot_color, dot_size / 2, 0);
+
+    int label_w = w - 2 * (8 + dot_size + 4);
+    label_status_ = CreateLineLabel(panel_state_pill_, label_w, text_color, "Sẵn sàng");
+    lv_obj_align(label_status_, LV_ALIGN_CENTER, 0, 0);
+
+    label_notification_ = CreateLineLabel(panel_state_pill_, label_w, lv_color_hex(0xF9E2AF), "");
+    lv_obj_align(label_notification_, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_add_flag(label_notification_, LV_OBJ_FLAG_HIDDEN);
+}
+
+// Smallest chat card that still shows the role caption plus one line of text.
+int AdaptiveUiEngine::ChatMinHeight() const { return 2 * line_h_ + 16; }
+
+void AdaptiveUiEngine::BuildAvatarPanel(lv_obj_t* parent, int x, int y, int width, int height,
+                                        lv_color_t bg, lv_color_t border, int radius,
+                                        lv_color_t progress_color) {
+    panel_avatar_ = CreateBox(parent);
+    lv_obj_set_size(panel_avatar_, width, height);
+    lv_obj_align(panel_avatar_, LV_ALIGN_TOP_LEFT, metrics_.pad_x + x, y);
+    StyleCard(panel_avatar_, bg, border, radius, 1);
+
+    bar_ota_progress_ = lv_bar_create(panel_avatar_);
+    lv_bar_set_range(bar_ota_progress_, 0, 100);
+    lv_bar_set_value(bar_ota_progress_, 0, LV_ANIM_OFF);
+    lv_obj_set_size(bar_ota_progress_, width * 80 / 100, 4);
+    lv_obj_align(bar_ota_progress_, LV_ALIGN_BOTTOM_MID, 0, -4);
+    lv_obj_set_style_bg_color(bar_ota_progress_, lv_color_hex(0x313244), 0);
+    lv_obj_set_style_bg_color(bar_ota_progress_, progress_color, LV_PART_INDICATOR);
+    lv_obj_add_flag(bar_ota_progress_, LV_OBJ_FLAG_HIDDEN);
+}
+
+// Scrollable chat card: a role caption followed by the wrapped message text.
+void AdaptiveUiEngine::BuildChatCard(lv_obj_t* parent, int x, int y, int width, int height,
+                                     lv_color_t bg, lv_color_t border, int radius,
+                                     const char* role, lv_color_t role_color,
+                                     const char* greeting, lv_color_t text_color) {
+    panel_chat_ = CreateScrollColumn(parent, 6, 2);
+    lv_obj_set_size(panel_chat_, width, height);
+    lv_obj_align(panel_chat_, LV_ALIGN_TOP_LEFT, metrics_.pad_x + x, y);
+    StyleCard(panel_chat_, bg, border, radius, 1);
+    chat_scroll_ = panel_chat_;
+
+    label_chat_role_ = CreateWrapLabel(panel_chat_, role_color, role);
+    if (height < ChatMinHeight()) {
+        // Too short for a caption: give the single visible line to the message.
+        lv_obj_add_flag(label_chat_role_, LV_OBJ_FLAG_HIDDEN);
+    }
+    label_chat_ = CreateWrapLabel(panel_chat_, text_color, greeting);
+}
+
+void AdaptiveUiEngine::BuildBottomBar(lv_obj_t* parent, int height, const char* prompt,
+                                      lv_color_t prompt_color, lv_color_t wave_track,
+                                      lv_color_t wave_color) {
+    const int w = metrics_.content_width;
+    panel_bottom_bar_ = CreateBox(parent);
+    lv_obj_set_size(panel_bottom_bar_, w, height);
+    lv_obj_align(panel_bottom_bar_, LV_ALIGN_BOTTOM_MID, 0, -metrics_.pad_y);
+
+    label_prompt_ = CreateLineLabel(panel_bottom_bar_, w - 16, prompt_color, prompt);
+    lv_obj_align(label_prompt_, LV_ALIGN_CENTER, 0, 0);
+
+    if (config_.voice_wave_enabled) {
+        bar_audio_wave_ = CreateWaveBar(panel_bottom_bar_, w * 75 / 100, wave_track, wave_color);
+    }
+}
+
+// Layout rule shared by the stacked styles: the status row and the chat always stay; the
+// prompt bar, weather card and avatar are only added while the chat keeps ChatMinHeight().
+// Landscape screens put the avatar beside the chat instead of above it.
+void AdaptiveUiEngine::BuildSmartDashboard(lv_obj_t* parent) {
+    const int w = metrics_.content_width;
+    const int inner_h = metrics_.height - 2 * metrics_.safe_inset;
+    const int top_bar_h = std::max(line_h_, icon_h_) + 4;
+    const int pill_h = line_h_ + 8;
+    const int bottom_bar_h = line_h_ + 6;
+    const int weather_h = 2 * line_h_ + 10;
+    const int gap = metrics_.is_mini ? 2 : 4;
+    const int chat_min = ChatMinHeight();
+
+    int y = metrics_.pad_y;
+    panel_top_bar_ = CreateBox(parent);
+    lv_obj_set_size(panel_top_bar_, w, top_bar_h);
+    lv_obj_align(panel_top_bar_, LV_ALIGN_TOP_MID, 0, y);
 
     label_network_ = lv_label_create(panel_top_bar_);
     lv_label_set_text(label_network_, "");
@@ -271,7 +461,7 @@ void AdaptiveUiEngine::BuildSmartDashboard(lv_obj_t* parent) {
     lv_obj_set_style_text_color(label_network_, GetAccentColor(), 0);
 
     label_time_ = lv_label_create(panel_top_bar_);
-    lv_label_set_text(label_time_, "12:00");
+    lv_label_set_text(label_time_, "--:--");
     lv_obj_align(label_time_, LV_ALIGN_CENTER, 0, 0);
     lv_obj_set_style_text_color(label_time_, GetTextColor(), 0);
 
@@ -279,52 +469,23 @@ void AdaptiveUiEngine::BuildSmartDashboard(lv_obj_t* parent) {
     lv_label_set_text(label_battery_, "");
     lv_obj_align(label_battery_, LV_ALIGN_RIGHT_MID, -2, 0);
     lv_obj_set_style_text_color(label_battery_, lv_color_hex(0xA6E3A1), 0);
+    y += top_bar_h + gap;
 
-    label_notification_ = lv_label_create(panel_top_bar_);
-    lv_label_set_text(label_notification_, "");
-    lv_obj_align(label_notification_, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_style_text_color(label_notification_, lv_color_hex(0xF9E2AF), 0);
-    lv_obj_add_flag(label_notification_, LV_OBJ_FLAG_HIDDEN);
+    BuildStatusPill(parent, y, pill_h, GetCardBgColor(), GetBorderColor(), pill_h / 2,
+                    GetAccentColor(), GetTextColor());
+    y += pill_h + gap;
 
-    int cur_y = metrics_.pad_y + top_bar_h + 3;
+    int avail = inner_h - y - metrics_.pad_y;
+    const bool show_bottom = avail >= chat_min + bottom_bar_h + gap;
+    if (show_bottom) avail -= bottom_bar_h + gap;
 
-    panel_state_pill_ = lv_obj_create(parent);
-    lv_obj_set_size(panel_state_pill_, metrics_.content_width, pill_h);
-    lv_obj_align(panel_state_pill_, LV_ALIGN_TOP_MID, 0, cur_y);
-    lv_obj_clear_flag(panel_state_pill_, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_style_bg_color(panel_state_pill_, GetCardBgColor(), 0);
-    lv_obj_set_style_bg_opa(panel_state_pill_, LV_OPA_COVER, 0);
-    lv_obj_set_style_radius(panel_state_pill_, pill_h / 2, 0);
-    lv_obj_set_style_border_width(panel_state_pill_, 1, 0);
-    lv_obj_set_style_border_color(panel_state_pill_, GetBorderColor(), 0);
-    lv_obj_set_style_pad_all(panel_state_pill_, 0, 0);
-
-    led_state_dot_ = lv_obj_create(panel_state_pill_);
-    int dot_size = pill_h > 18 ? 8 : 6;
-    lv_obj_set_size(led_state_dot_, dot_size, dot_size);
-    lv_obj_align(led_state_dot_, LV_ALIGN_LEFT_MID, 10, 0);
-    lv_obj_set_style_radius(led_state_dot_, dot_size / 2, 0);
-    lv_obj_set_style_bg_color(led_state_dot_, GetAccentColor(), 0);
-    lv_obj_set_style_border_width(led_state_dot_, 0, 0);
-
-    label_status_ = lv_label_create(panel_state_pill_);
-    lv_label_set_text(label_status_, "Sẵn sàng");
-    lv_obj_align(label_status_, LV_ALIGN_CENTER, 6, 0);
-    lv_obj_set_style_text_color(label_status_, GetTextColor(), 0);
-
-    cur_y += pill_h + 4;
-
-    if (config_.weather_enabled && !metrics_.is_mini && (metrics_.height >= 240)) {
-        panel_weather_ = lv_obj_create(parent);
-        lv_obj_set_size(panel_weather_, metrics_.content_width, weather_h);
-        lv_obj_align(panel_weather_, LV_ALIGN_TOP_MID, 0, cur_y);
-        lv_obj_clear_flag(panel_weather_, LV_OBJ_FLAG_SCROLLABLE);
-        lv_obj_set_style_bg_color(panel_weather_, GetCardBgColor(), 0);
-        lv_obj_set_style_bg_opa(panel_weather_, LV_OPA_COVER, 0);
-        lv_obj_set_style_radius(panel_weather_, metrics_.corner_radius, 0);
-        lv_obj_set_style_border_width(panel_weather_, 1, 0);
-        lv_obj_set_style_border_color(panel_weather_, GetBorderColor(), 0);
-        lv_obj_set_style_pad_all(panel_weather_, 0, 0);
+    const bool side_by_side = metrics_.is_landscape;
+    const int avatar_reserve = side_by_side ? 0 : kAvatarMinSize + gap;
+    if (config_.weather_enabled && avail >= chat_min + avatar_reserve + weather_h + gap) {
+        panel_weather_ = CreateBox(parent);
+        lv_obj_set_size(panel_weather_, w, weather_h);
+        lv_obj_align(panel_weather_, LV_ALIGN_TOP_MID, 0, y);
+        StyleCard(panel_weather_, GetCardBgColor(), GetBorderColor(), metrics_.corner_radius, 1);
 
         label_weather_city_ = lv_label_create(panel_weather_);
         lv_label_set_text(label_weather_city_, config_.weather_city.c_str());
@@ -340,344 +501,208 @@ void AdaptiveUiEngine::BuildSmartDashboard(lv_obj_t* parent) {
         lv_label_set_text(label_weather_desc_, "Chưa có dữ liệu");
         lv_obj_align(label_weather_desc_, LV_ALIGN_BOTTOM_LEFT, 8, -4);
         lv_obj_set_style_text_color(label_weather_desc_, GetMutedTextColor(), 0);
-
-        cur_y += weather_h + 4;
+        y += weather_h + gap;
+        avail -= weather_h + gap;
     }
 
-    if (!metrics_.is_mini) {
-        panel_avatar_ = lv_obj_create(parent);
-        lv_obj_set_size(panel_avatar_, metrics_.content_width, avatar_h);
-        lv_obj_align(panel_avatar_, LV_ALIGN_TOP_MID, 0, cur_y);
-        lv_obj_clear_flag(panel_avatar_, LV_OBJ_FLAG_SCROLLABLE);
-        lv_obj_set_style_bg_color(panel_avatar_, GetCardBgColor(), 0);
-        lv_obj_set_style_bg_opa(panel_avatar_, LV_OPA_COVER, 0);
-        lv_obj_set_style_radius(panel_avatar_, metrics_.corner_radius, 0);
-        lv_obj_set_style_border_width(panel_avatar_, 1, 0);
-        lv_obj_set_style_border_color(panel_avatar_, GetBorderColor(), 0);
-        lv_obj_set_style_pad_all(panel_avatar_, 0, 0);
-
-        label_avatar_ = lv_label_create(panel_avatar_);
-        lv_label_set_text(label_avatar_, "( ^ _ ^ )");
-        lv_obj_align(label_avatar_, LV_ALIGN_CENTER, 0, 0);
-        lv_obj_set_style_text_color(label_avatar_, GetAccentColor(), 0);
-
-        bar_ota_progress_ = lv_bar_create(panel_avatar_);
-        lv_bar_set_range(bar_ota_progress_, 0, 100);
-        lv_bar_set_value(bar_ota_progress_, 0, LV_ANIM_OFF);
-        lv_obj_set_size(bar_ota_progress_, metrics_.content_width * 80 / 100, 6);
-        lv_obj_align(bar_ota_progress_, LV_ALIGN_BOTTOM_MID, 0, -12);
-        lv_obj_set_style_bg_color(bar_ota_progress_, lv_color_hex(0x313244), 0);
-        lv_obj_set_style_bg_color(bar_ota_progress_, lv_color_hex(0xA6E3A1), LV_PART_INDICATOR);
-        lv_obj_add_flag(bar_ota_progress_, LV_OBJ_FLAG_HIDDEN);
-
-        label_ota_progress_ = lv_label_create(panel_avatar_);
-        lv_label_set_text(label_ota_progress_, "0%");
-        lv_obj_align(label_ota_progress_, LV_ALIGN_BOTTOM_MID, 0, -2);
-        lv_obj_set_style_text_color(label_ota_progress_, lv_color_hex(0xA6E3A1), 0);
-        lv_obj_add_flag(label_ota_progress_, LV_OBJ_FLAG_HIDDEN);
-
-        cur_y += avatar_h + 4;
+    int chat_x = 0;
+    int chat_w = w;
+    if (side_by_side) {
+        int avatar_w = std::clamp(std::min(avail, w * 40 / 100), kAvatarMinSize, 160);
+        if (w - avatar_w - gap >= w / 2) {
+            BuildAvatarPanel(parent, 0, y, avatar_w, avail, GetCardBgColor(), GetBorderColor(),
+                             metrics_.corner_radius, lv_color_hex(0xA6E3A1));
+            chat_x = avatar_w + gap;
+            chat_w = w - chat_x;
+        }
+    } else {
+        int avatar_h = std::min(std::clamp(avail * 45 / 100, kAvatarMinSize, 140),
+                                avail - gap - chat_min);
+        if (avatar_h >= kAvatarMinSize) {
+            BuildAvatarPanel(parent, 0, y, w, avatar_h, GetCardBgColor(), GetBorderColor(),
+                             metrics_.corner_radius, lv_color_hex(0xA6E3A1));
+            y += avatar_h + gap;
+            avail -= avatar_h + gap;
+        }
     }
 
-    int inner_h = metrics_.height - 2 * metrics_.safe_inset;
-    int chat_h = inner_h - cur_y - bottom_bar_h - metrics_.pad_y - 4;
-    if (chat_h < 30) chat_h = 30;
+    BuildChatCard(parent, chat_x, y, chat_w, std::max(avail, line_h_ + 14), GetCardBgColor(),
+                  GetBorderColor(), metrics_.corner_radius, "Xiaozhi", lv_color_hex(0xF9E2AF),
+                  "Xin chào! Tôi là trợ lý AI Xiaozhi.", GetTextColor());
 
-    panel_chat_ = lv_obj_create(parent);
-    lv_obj_set_size(panel_chat_, metrics_.content_width, chat_h);
-    lv_obj_align(panel_chat_, LV_ALIGN_TOP_MID, 0, cur_y);
-    lv_obj_set_style_bg_color(panel_chat_, GetCardBgColor(), 0);
-    lv_obj_set_style_bg_opa(panel_chat_, LV_OPA_COVER, 0);
-    lv_obj_set_style_radius(panel_chat_, metrics_.corner_radius, 0);
-    lv_obj_set_style_border_width(panel_chat_, 1, 0);
-    lv_obj_set_style_border_color(panel_chat_, GetBorderColor(), 0);
-    lv_obj_set_style_pad_all(panel_chat_, 6, 0);
-
-    label_chat_role_ = lv_label_create(panel_chat_);
-    lv_label_set_text(label_chat_role_, "Xiaozhi");
-    lv_obj_align(label_chat_role_, LV_ALIGN_TOP_LEFT, 0, 0);
-    lv_obj_set_style_text_color(label_chat_role_, lv_color_hex(0xF9E2AF), 0);
-
-    label_chat_ = lv_label_create(panel_chat_);
-    lv_obj_set_width(label_chat_, metrics_.content_width - 16);
-    lv_label_set_long_mode(label_chat_, LV_LABEL_LONG_WRAP);
-    lv_label_set_text(label_chat_, "Xin chào! Tôi là trợ lý AI Xiaozhi.");
-    lv_obj_align(label_chat_, LV_ALIGN_TOP_LEFT, 0, 16);
-    lv_obj_set_style_text_color(label_chat_, GetTextColor(), 0);
-
-    panel_bottom_bar_ = lv_obj_create(parent);
-    lv_obj_set_size(panel_bottom_bar_, metrics_.content_width, bottom_bar_h);
-    lv_obj_align(panel_bottom_bar_, LV_ALIGN_BOTTOM_MID, 0, -metrics_.pad_y);
-    lv_obj_clear_flag(panel_bottom_bar_, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_style_bg_opa(panel_bottom_bar_, LV_OPA_TRANSP, 0);
-    lv_obj_set_style_border_width(panel_bottom_bar_, 0, 0);
-    lv_obj_set_style_pad_all(panel_bottom_bar_, 0, 0);
-
-    label_prompt_ = lv_label_create(panel_bottom_bar_);
-    lv_label_set_text(label_prompt_, "Nói 'Xiaozhi' hoặc bấm nút");
-    lv_obj_align(label_prompt_, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_style_text_color(label_prompt_, GetMutedTextColor(), 0);
-
-    if (config_.voice_wave_enabled) {
-        bar_audio_wave_ = lv_bar_create(panel_bottom_bar_);
-        lv_bar_set_range(bar_audio_wave_, 0, 100);
-        lv_bar_set_value(bar_audio_wave_, 0, LV_ANIM_OFF);
-        lv_obj_set_size(bar_audio_wave_, metrics_.content_width * 75 / 100, 4);
-        lv_obj_align(bar_audio_wave_, LV_ALIGN_CENTER, 0, 0);
-        lv_obj_set_style_bg_color(bar_audio_wave_, lv_color_hex(0x313244), 0);
-        lv_obj_set_style_bg_color(bar_audio_wave_, GetAccentColor(), LV_PART_INDICATOR);
-        lv_obj_set_style_radius(bar_audio_wave_, 2, 0);
-        lv_obj_set_style_radius(bar_audio_wave_, 2, LV_PART_INDICATOR);
-        lv_obj_add_flag(bar_audio_wave_, LV_OBJ_FLAG_HIDDEN);
+    if (show_bottom) {
+        BuildBottomBar(parent, bottom_bar_h, "Nói 'Xiaozhi' hoặc bấm nút", GetMutedTextColor(),
+                       lv_color_hex(0x313244), GetAccentColor());
     }
 }
 
 void AdaptiveUiEngine::BuildCyberTerminal(lv_obj_t* parent) {
-    int header_h = metrics_.is_large ? 32 : 22;
+    const int w = metrics_.content_width;
+    const int inner_h = metrics_.height - 2 * metrics_.safe_inset;
+    const int header_h = std::max(line_h_, icon_h_) + 6;
+    const int pill_h = line_h_ + 6;
+    const int bottom_bar_h = line_h_ + 4;
+    const int gap = 4;
+    const int chat_min = ChatMinHeight();
+    const lv_color_t cyan = lv_color_hex(0x00F0FF);
+    const lv_color_t green = lv_color_hex(0x00FF66);
+    const lv_color_t panel_bg = lv_color_hex(0x081624);
 
-    panel_top_bar_ = lv_obj_create(parent);
-    lv_obj_set_size(panel_top_bar_, metrics_.content_width, header_h);
-    lv_obj_align(panel_top_bar_, LV_ALIGN_TOP_MID, 0, metrics_.pad_y);
-    lv_obj_set_style_bg_color(panel_top_bar_, lv_color_hex(0x07111A), 0);
-    lv_obj_set_style_border_color(panel_top_bar_, lv_color_hex(0x00F0FF), 0);
-    lv_obj_set_style_border_width(panel_top_bar_, 1, 0);
-    lv_obj_set_style_radius(panel_top_bar_, 2, 0);
-    lv_obj_set_style_pad_all(panel_top_bar_, 2, 0);
+    int y = metrics_.pad_y;
+    panel_top_bar_ = CreateBox(parent);
+    lv_obj_set_size(panel_top_bar_, w, header_h);
+    lv_obj_align(panel_top_bar_, LV_ALIGN_TOP_MID, 0, y);
+    StyleCard(panel_top_bar_, lv_color_hex(0x07111A), cyan, 2, 1);
 
     label_network_ = lv_label_create(panel_top_bar_);
     lv_label_set_text(label_network_, "");
     lv_obj_align(label_network_, LV_ALIGN_LEFT_MID, 4, 0);
-    lv_obj_set_style_text_color(label_network_, lv_color_hex(0x00F0FF), 0);
+    lv_obj_set_style_text_color(label_network_, cyan, 0);
 
     label_time_ = lv_label_create(panel_top_bar_);
-    lv_label_set_text(label_time_, "[12:00:00]");
+    lv_label_set_text(label_time_, "[--:--]");
     lv_obj_align(label_time_, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_style_text_color(label_time_, lv_color_hex(0x00FF66), 0);
+    lv_obj_set_style_text_color(label_time_, green, 0);
 
     label_battery_ = lv_label_create(panel_top_bar_);
     lv_label_set_text(label_battery_, "");
     lv_obj_align(label_battery_, LV_ALIGN_RIGHT_MID, -4, 0);
     lv_obj_set_style_text_color(label_battery_, lv_color_hex(0xFFB800), 0);
+    y += header_h + gap;
 
-    label_notification_ = lv_label_create(parent);
-    lv_label_set_text(label_notification_, "");
-    lv_obj_align(label_notification_, LV_ALIGN_TOP_MID, 0, metrics_.pad_y + header_h + 2);
-    lv_obj_set_style_text_color(label_notification_, lv_color_hex(0xFFB800), 0);
-    lv_obj_add_flag(label_notification_, LV_OBJ_FLAG_HIDDEN);
+    int avail = inner_h - y - metrics_.pad_y - (pill_h + gap);
+    const bool show_bottom = avail >= chat_min + bottom_bar_h + gap;
+    if (show_bottom) avail -= bottom_bar_h + gap;
 
-    int cur_y = metrics_.pad_y + header_h + 6;
+    int chat_x = 0;
+    int chat_w = w;
+    if (metrics_.is_landscape) {
+        BuildStatusPill(parent, y, pill_h, lv_color_hex(0x07111A), cyan, 2, green,
+                        lv_color_hex(0xCDD6F4));
+        y += pill_h + gap;
+        int core_w = std::clamp(std::min(avail, w * 40 / 100), kAvatarMinSize, 160);
+        if (w - core_w - gap >= w / 2) {
+            BuildAvatarPanel(parent, 0, y, core_w, avail, panel_bg, cyan, 4, green);
+            chat_x = core_w + gap;
+            chat_w = w - chat_x;
+        }
+    } else {
+        int core_h = std::min(std::clamp(avail * 40 / 100, kAvatarMinSize, 140),
+                              avail - gap - chat_min);
+        if (core_h >= kAvatarMinSize) {
+            BuildAvatarPanel(parent, 0, y, w, core_h, panel_bg, cyan, 4, green);
+            y += core_h + gap;
+            avail -= core_h + gap;
+        }
+        BuildStatusPill(parent, y, pill_h, lv_color_hex(0x07111A), cyan, 2, green,
+                        lv_color_hex(0xCDD6F4));
+        y += pill_h + gap;
+    }
 
-    panel_avatar_ = lv_obj_create(parent);
-    int core_h = metrics_.is_large ? 100 : (metrics_.is_compact ? 45 : 65);
-    lv_obj_set_size(panel_avatar_, metrics_.content_width, core_h);
-    lv_obj_align(panel_avatar_, LV_ALIGN_TOP_MID, 0, cur_y);
-    lv_obj_set_style_bg_color(panel_avatar_, lv_color_hex(0x081624), 0);
-    lv_obj_set_style_border_color(panel_avatar_, lv_color_hex(0x00F0FF), 0);
-    lv_obj_set_style_border_width(panel_avatar_, 1, 0);
-    lv_obj_set_style_radius(panel_avatar_, 4, 0);
+    BuildChatCard(parent, chat_x, y, chat_w, std::max(avail, line_h_ + 14),
+                  lv_color_hex(0x050D14), cyan, 2, "> STREAM LINKED:", cyan,
+                  "System ready. Awaiting voice input...", green);
 
-    label_avatar_ = lv_label_create(panel_avatar_);
-    lv_label_set_text(label_avatar_, "« [ AI REACTOR ONLINE ] »");
-    lv_obj_align(label_avatar_, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_style_text_color(label_avatar_, lv_color_hex(0x00F0FF), 0);
-
-    bar_ota_progress_ = lv_bar_create(panel_avatar_);
-    lv_bar_set_range(bar_ota_progress_, 0, 100);
-    lv_obj_set_size(bar_ota_progress_, metrics_.content_width * 80 / 100, 4);
-    lv_obj_align(bar_ota_progress_, LV_ALIGN_BOTTOM_MID, 0, -8);
-    lv_obj_set_style_bg_color(bar_ota_progress_, lv_color_hex(0x003344), 0);
-    lv_obj_set_style_bg_color(bar_ota_progress_, lv_color_hex(0x00FF66), LV_PART_INDICATOR);
-    lv_obj_add_flag(bar_ota_progress_, LV_OBJ_FLAG_HIDDEN);
-
-    label_ota_progress_ = lv_label_create(panel_avatar_);
-    lv_label_set_text(label_ota_progress_, "0%");
-    lv_obj_align(label_ota_progress_, LV_ALIGN_BOTTOM_MID, 0, -2);
-    lv_obj_set_style_text_color(label_ota_progress_, lv_color_hex(0x00FF66), 0);
-    lv_obj_add_flag(label_ota_progress_, LV_OBJ_FLAG_HIDDEN);
-
-    cur_y += core_h + 6;
-
-    panel_state_pill_ = lv_obj_create(parent);
-    lv_obj_set_size(panel_state_pill_, metrics_.content_width, 24);
-    lv_obj_align(panel_state_pill_, LV_ALIGN_TOP_MID, 0, cur_y);
-    lv_obj_set_style_bg_color(panel_state_pill_, lv_color_hex(0x07111A), 0);
-    lv_obj_set_style_border_color(panel_state_pill_, lv_color_hex(0x00F0FF), 0);
-    lv_obj_set_style_border_width(panel_state_pill_, 1, 0);
-    lv_obj_set_style_radius(panel_state_pill_, 2, 0);
-
-    led_state_dot_ = lv_obj_create(panel_state_pill_);
-    lv_obj_set_size(led_state_dot_, 6, 6);
-    lv_obj_align(led_state_dot_, LV_ALIGN_LEFT_MID, 6, 0);
-    lv_obj_set_style_bg_color(led_state_dot_, lv_color_hex(0x00FF66), 0);
-    lv_obj_set_style_radius(led_state_dot_, 3, 0);
-
-    label_status_ = lv_label_create(panel_state_pill_);
-    lv_label_set_text(label_status_, "SYS: STANDBY // READY");
-    lv_obj_align(label_status_, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_style_text_color(label_status_, lv_color_hex(0xCDD6F4), 0);
-
-    cur_y += 28;
-
-    int inner_h = metrics_.height - 2 * metrics_.safe_inset;
-    int chat_h = inner_h - cur_y - 28 - metrics_.pad_y;
-    if (chat_h < 35) chat_h = 35;
-
-    panel_chat_ = lv_obj_create(parent);
-    lv_obj_set_size(panel_chat_, metrics_.content_width, chat_h);
-    lv_obj_align(panel_chat_, LV_ALIGN_TOP_MID, 0, cur_y);
-    lv_obj_set_style_bg_color(panel_chat_, lv_color_hex(0x050D14), 0);
-    lv_obj_set_style_border_color(panel_chat_, lv_color_hex(0x00F0FF), 0);
-    lv_obj_set_style_border_width(panel_chat_, 1, 0);
-    lv_obj_set_style_radius(panel_chat_, 2, 0);
-    lv_obj_set_style_pad_all(panel_chat_, 6, 0);
-
-    label_chat_role_ = lv_label_create(panel_chat_);
-    lv_label_set_text(label_chat_role_, "> STREAM LINKED:");
-    lv_obj_align(label_chat_role_, LV_ALIGN_TOP_LEFT, 0, 0);
-    lv_obj_set_style_text_color(label_chat_role_, lv_color_hex(0x00F0FF), 0);
-
-    label_chat_ = lv_label_create(panel_chat_);
-    lv_obj_set_width(label_chat_, metrics_.content_width - 16);
-    lv_label_set_long_mode(label_chat_, LV_LABEL_LONG_WRAP);
-    lv_label_set_text(label_chat_, "System ready. Awaiting voice input...");
-    lv_obj_align(label_chat_, LV_ALIGN_TOP_LEFT, 0, 16);
-    lv_obj_set_style_text_color(label_chat_, lv_color_hex(0x00FF66), 0);
-
-    panel_bottom_bar_ = lv_obj_create(parent);
-    lv_obj_set_size(panel_bottom_bar_, metrics_.content_width, 20);
-    lv_obj_align(panel_bottom_bar_, LV_ALIGN_BOTTOM_MID, 0, -metrics_.pad_y);
-    lv_obj_clear_flag(panel_bottom_bar_, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_style_bg_opa(panel_bottom_bar_, LV_OPA_TRANSP, 0);
-    lv_obj_set_style_border_width(panel_bottom_bar_, 0, 0);
-
-    bar_audio_wave_ = lv_bar_create(panel_bottom_bar_);
-    lv_bar_set_range(bar_audio_wave_, 0, 100);
-    lv_bar_set_value(bar_audio_wave_, 0, LV_ANIM_OFF);
-    lv_obj_set_size(bar_audio_wave_, metrics_.content_width * 90 / 100, 4);
-    lv_obj_align(bar_audio_wave_, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_style_bg_color(bar_audio_wave_, lv_color_hex(0x003344), 0);
-    lv_obj_set_style_bg_color(bar_audio_wave_, lv_color_hex(0x00F0FF), LV_PART_INDICATOR);
-    lv_obj_add_flag(bar_audio_wave_, LV_OBJ_FLAG_HIDDEN);
-
-    label_prompt_ = lv_label_create(panel_bottom_bar_);
-    lv_label_set_text(label_prompt_, "[LISTEN_PORT: ACTIVE]");
-    lv_obj_align(label_prompt_, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_style_text_color(label_prompt_, lv_color_hex(0x00F0FF), 0);
+    if (show_bottom) {
+        BuildBottomBar(parent, bottom_bar_h, "[LISTEN_PORT: ACTIVE]", cyan,
+                       lv_color_hex(0x003344), cyan);
+    }
 }
 
 void AdaptiveUiEngine::BuildChatBubble(lv_obj_t* parent) {
-    int header_h = 20;
+    const int w = metrics_.content_width;
+    const int inner_h = metrics_.height - 2 * metrics_.safe_inset;
+    const int header_h = std::max(line_h_, icon_h_) + 4;
+    const int pill_h = line_h_ + 6;
+    const int bottom_bar_h = line_h_ + 10;
+    const int gap = 4;
+    const int bubble_min = 2 * line_h_ + 18;  // bubble padding + caption + one line
+    const int bubble_w = metrics_.is_landscape ? w * 70 / 100 : w * 85 / 100;
 
-    panel_top_bar_ = lv_obj_create(parent);
-    lv_obj_set_size(panel_top_bar_, metrics_.content_width, header_h);
-    lv_obj_align(panel_top_bar_, LV_ALIGN_TOP_MID, 0, metrics_.pad_y);
-    lv_obj_set_style_bg_opa(panel_top_bar_, LV_OPA_TRANSP, 0);
-    lv_obj_set_style_border_width(panel_top_bar_, 0, 0);
-    lv_obj_set_style_pad_all(panel_top_bar_, 0, 0);
+    int y = metrics_.pad_y;
+    panel_top_bar_ = CreateBox(parent);
+    lv_obj_set_size(panel_top_bar_, w, header_h);
+    lv_obj_align(panel_top_bar_, LV_ALIGN_TOP_MID, 0, y);
 
     label_network_ = lv_label_create(panel_top_bar_);
     lv_label_set_text(label_network_, "");
     lv_obj_align(label_network_, LV_ALIGN_LEFT_MID, 0, 0);
     lv_obj_set_style_text_color(label_network_, lv_color_hex(0x89DCEB), 0);
 
+    label_time_ = lv_label_create(panel_top_bar_);
+    lv_label_set_text(label_time_, "--:--");
+    lv_obj_align(label_time_, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_set_style_text_color(label_time_, GetTextColor(), 0);
+
     label_battery_ = lv_label_create(panel_top_bar_);
     lv_label_set_text(label_battery_, "");
     lv_obj_align(label_battery_, LV_ALIGN_RIGHT_MID, 0, 0);
     lv_obj_set_style_text_color(label_battery_, lv_color_hex(0xA6E3A1), 0);
+    y += header_h + gap;
 
-    label_notification_ = lv_label_create(panel_top_bar_);
-    lv_label_set_text(label_notification_, "");
-    lv_obj_align(label_notification_, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_style_text_color(label_notification_, lv_color_hex(0xF9E2AF), 0);
-    lv_obj_add_flag(label_notification_, LV_OBJ_FLAG_HIDDEN);
+    BuildStatusPill(parent, y, pill_h, lv_color_hex(0x181824), lv_color_hex(0x181824),
+                    pill_h / 2, lv_color_hex(0x89DCEB), lv_color_hex(0xCDD6F4));
+    y += pill_h + gap;
 
-    int cur_y = metrics_.pad_y + header_h + 4;
+    int avail = inner_h - y - metrics_.pad_y;
+    const bool show_bottom = avail >= bubble_min + bottom_bar_h + gap;
+    if (show_bottom) avail -= bottom_bar_h + gap;
 
-    panel_state_pill_ = lv_obj_create(parent);
-    lv_obj_set_size(panel_state_pill_, metrics_.content_width, 20);
-    lv_obj_align(panel_state_pill_, LV_ALIGN_TOP_MID, 0, cur_y);
-    lv_obj_set_style_bg_color(panel_state_pill_, lv_color_hex(0x181824), 0);
-    lv_obj_set_style_border_width(panel_state_pill_, 0, 0);
-    lv_obj_set_style_radius(panel_state_pill_, 10, 0);
+    // Conversation column: the user's bubble (right) and Xiaozhi's reply (left) stack
+    // in order and scroll together, so a long reply can never cover the other bubble.
+    chat_scroll_ = CreateScrollColumn(parent, 0, 6);
+    lv_obj_set_size(chat_scroll_, w, std::max(avail, line_h_ + 16));
+    lv_obj_align(chat_scroll_, LV_ALIGN_TOP_MID, 0, y);
 
-    led_state_dot_ = lv_obj_create(panel_state_pill_);
-    lv_obj_set_size(led_state_dot_, 6, 6);
-    lv_obj_align(led_state_dot_, LV_ALIGN_LEFT_MID, 8, 0);
-    lv_obj_set_style_bg_color(led_state_dot_, lv_color_hex(0x89DCEB), 0);
-    lv_obj_set_style_radius(led_state_dot_, 3, 0);
-
-    label_status_ = lv_label_create(panel_state_pill_);
-    lv_label_set_text(label_status_, "Trực tuyến");
-    lv_obj_align(label_status_, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_style_text_color(label_status_, lv_color_hex(0xCDD6F4), 0);
-
-    cur_y += 24;
-
-    int bubble_w = metrics_.content_width * 85 / 100;
-
-    panel_chat_ = lv_obj_create(parent);
-    lv_obj_set_size(panel_chat_, bubble_w, LV_SIZE_CONTENT);
-    lv_obj_align(panel_chat_, LV_ALIGN_TOP_LEFT, metrics_.pad_x, cur_y);
-    lv_obj_set_style_bg_color(panel_chat_, lv_color_hex(0x252536), 0);
-    lv_obj_set_style_radius(panel_chat_, 12, 0);
-    lv_obj_set_style_border_width(panel_chat_, 0, 0);
-    lv_obj_set_style_pad_all(panel_chat_, 8, 0);
-
-    label_chat_role_ = lv_label_create(panel_chat_);
-    lv_label_set_text(label_chat_role_, "Xiaozhi");
-    lv_obj_align(label_chat_role_, LV_ALIGN_TOP_LEFT, 0, 0);
-    lv_obj_set_style_text_color(label_chat_role_, lv_color_hex(0x89DCEB), 0);
-
-    label_chat_ = lv_label_create(panel_chat_);
-    lv_obj_set_width(label_chat_, bubble_w - 16);
-    lv_label_set_long_mode(label_chat_, LV_LABEL_LONG_WRAP);
-    lv_label_set_text(label_chat_, "Xin chào! Bạn muốn trò chuyện về chủ đề gì?");
-    lv_obj_align(label_chat_, LV_ALIGN_TOP_LEFT, 0, 16);
-    lv_obj_set_style_text_color(label_chat_, lv_color_hex(0xFFFFFF), 0);
-
-    panel_user_bubble_ = lv_obj_create(parent);
-    lv_obj_set_size(panel_user_bubble_, bubble_w, LV_SIZE_CONTENT);
-    lv_obj_align(panel_user_bubble_, LV_ALIGN_TOP_RIGHT, -metrics_.pad_x, cur_y + 70);
-    lv_obj_set_style_bg_color(panel_user_bubble_, lv_color_hex(0x07C160), 0);
-    lv_obj_set_style_radius(panel_user_bubble_, 12, 0);
-    lv_obj_set_style_border_width(panel_user_bubble_, 0, 0);
-    lv_obj_set_style_pad_all(panel_user_bubble_, 8, 0);
+    panel_user_bubble_ = CreateBox(chat_scroll_);
+    lv_obj_set_size(panel_user_bubble_, lv_pct(100), LV_SIZE_CONTENT);
+    lv_obj_set_flex_flow(panel_user_bubble_, LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_align(panel_user_bubble_, LV_FLEX_ALIGN_END, LV_FLEX_ALIGN_START,
+                          LV_FLEX_ALIGN_START);
     lv_obj_add_flag(panel_user_bubble_, LV_OBJ_FLAG_HIDDEN);
 
-    label_user_chat_ = lv_label_create(panel_user_bubble_);
-    lv_obj_set_width(label_user_chat_, bubble_w - 16);
-    lv_label_set_long_mode(label_user_chat_, LV_LABEL_LONG_WRAP);
-    lv_label_set_text(label_user_chat_, "");
-    lv_obj_align(label_user_chat_, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_style_text_color(label_user_chat_, lv_color_hex(0xFFFFFF), 0);
+    lv_obj_t* user_bubble = CreateBox(panel_user_bubble_);
+    lv_obj_set_size(user_bubble, bubble_w, LV_SIZE_CONTENT);
+    StyleCard(user_bubble, lv_color_hex(0x07C160), lv_color_hex(0x07C160), 12, 0);
+    lv_obj_set_style_pad_all(user_bubble, 8, 0);
+    label_user_chat_ = CreateWrapLabel(user_bubble, lv_color_hex(0xFFFFFF), "");
 
-    panel_bottom_bar_ = lv_obj_create(parent);
-    lv_obj_set_size(panel_bottom_bar_, metrics_.content_width, 28);
-    lv_obj_align(panel_bottom_bar_, LV_ALIGN_BOTTOM_MID, 0, -metrics_.pad_y);
-    lv_obj_set_style_bg_color(panel_bottom_bar_, lv_color_hex(0x1F1F2E), 0);
-    lv_obj_set_style_radius(panel_bottom_bar_, 14, 0);
-    lv_obj_set_style_border_width(panel_bottom_bar_, 1, 0);
-    lv_obj_set_style_border_color(panel_bottom_bar_, lv_color_hex(0x313244), 0);
+    panel_chat_ = CreateBox(chat_scroll_);
+    lv_obj_set_size(panel_chat_, lv_pct(100), LV_SIZE_CONTENT);
+    lv_obj_set_flex_flow(panel_chat_, LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_align(panel_chat_, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START,
+                          LV_FLEX_ALIGN_START);
 
-    label_prompt_ = lv_label_create(panel_bottom_bar_);
-    lv_label_set_text(label_prompt_, "Giữ hoặc nói 'Xiaozhi'...");
-    lv_obj_align(label_prompt_, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_style_text_color(label_prompt_, GetMutedTextColor(), 0);
+    lv_obj_t* ai_bubble = CreateBox(panel_chat_);
+    lv_obj_set_size(ai_bubble, bubble_w, LV_SIZE_CONTENT);
+    StyleCard(ai_bubble, lv_color_hex(0x252536), lv_color_hex(0x252536), 12, 0);
+    lv_obj_set_style_pad_all(ai_bubble, 8, 0);
+    lv_obj_set_flex_flow(ai_bubble, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_pad_row(ai_bubble, 2, 0);
+    label_chat_role_ = CreateWrapLabel(ai_bubble, lv_color_hex(0x89DCEB), "Xiaozhi");
+    if (avail < bubble_min) {
+        lv_obj_add_flag(label_chat_role_, LV_OBJ_FLAG_HIDDEN);
+    }
+    label_chat_ = CreateWrapLabel(ai_bubble, lv_color_hex(0xFFFFFF),
+                                  "Xin chào! Bạn muốn trò chuyện về chủ đề gì?");
 
-    bar_audio_wave_ = lv_bar_create(panel_bottom_bar_);
-    lv_bar_set_range(bar_audio_wave_, 0, 100);
-    lv_obj_set_size(bar_audio_wave_, metrics_.content_width * 70 / 100, 4);
-    lv_obj_align(bar_audio_wave_, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_style_bg_color(bar_audio_wave_, lv_color_hex(0x07C160), LV_PART_INDICATOR);
-    lv_obj_add_flag(bar_audio_wave_, LV_OBJ_FLAG_HIDDEN);
+    if (show_bottom) {
+        BuildBottomBar(parent, bottom_bar_h, "Giữ hoặc nói 'Xiaozhi'...", GetMutedTextColor(),
+                       lv_color_hex(0x313244), lv_color_hex(0x07C160));
+        StyleCard(panel_bottom_bar_, lv_color_hex(0x1F1F2E), lv_color_hex(0x313244),
+                  bottom_bar_h / 2, 1);
+    }
 }
 
 void AdaptiveUiEngine::BuildClassicAvatar(lv_obj_t* parent) {
-    panel_top_bar_ = lv_obj_create(parent);
-    lv_obj_set_size(panel_top_bar_, metrics_.content_width, 18);
+    const int w = metrics_.content_width;
+    const int inner_h = metrics_.height - 2 * metrics_.safe_inset;
+    const int top_bar_h = std::max(line_h_, icon_h_) + 4;
+    const int chat_h = line_h_ + 10;
+
+    panel_top_bar_ = CreateBox(parent);
+    lv_obj_set_size(panel_top_bar_, w, top_bar_h);
     lv_obj_align(panel_top_bar_, LV_ALIGN_TOP_MID, 0, metrics_.pad_y);
-    lv_obj_set_style_bg_opa(panel_top_bar_, LV_OPA_TRANSP, 0);
-    lv_obj_set_style_border_width(panel_top_bar_, 0, 0);
 
     label_network_ = lv_label_create(panel_top_bar_);
     lv_label_set_text(label_network_, "");
@@ -689,64 +714,47 @@ void AdaptiveUiEngine::BuildClassicAvatar(lv_obj_t* parent) {
     lv_obj_align(label_battery_, LV_ALIGN_RIGHT_MID, -2, 0);
     lv_obj_set_style_text_color(label_battery_, lv_color_hex(0xA6E3A1), 0);
 
-    label_notification_ = lv_label_create(panel_top_bar_);
-    lv_label_set_text(label_notification_, "");
+    // Status gets its own slot between the icons; it used to share the chat label,
+    // so every status update wiped the conversation text.
+    int status_w = w - 2 * (icon_h_ + 8);
+    label_status_ = CreateLineLabel(panel_top_bar_, status_w, GetTextColor(), "Sẵn sàng");
+    lv_obj_align(label_status_, LV_ALIGN_CENTER, 0, 0);
+    label_notification_ = CreateLineLabel(panel_top_bar_, status_w, lv_color_hex(0xF9E2AF), "");
     lv_obj_align(label_notification_, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_style_text_color(label_notification_, lv_color_hex(0xF9E2AF), 0);
     lv_obj_add_flag(label_notification_, LV_OBJ_FLAG_HIDDEN);
 
-    panel_avatar_ = lv_obj_create(parent);
-    int face_size = std::min(metrics_.content_width, metrics_.content_height * 65 / 100);
+    int top = metrics_.pad_y + top_bar_h + 6;
+    int bottom = inner_h - metrics_.pad_y - chat_h - 6;
+    int face_size = std::max(std::min(w, bottom - top), 40);
+    panel_avatar_ = CreateBox(parent);
     lv_obj_set_size(panel_avatar_, face_size, face_size);
-    lv_obj_align(panel_avatar_, LV_ALIGN_CENTER, 0, -10);
-    lv_obj_set_style_bg_color(panel_avatar_, lv_color_hex(0x161B22), 0);
-    lv_obj_set_style_radius(panel_avatar_, face_size / 2, 0);
-    lv_obj_set_style_border_color(panel_avatar_, GetAccentColor(), 0);
-    lv_obj_set_style_border_width(panel_avatar_, 2, 0);
-
-    label_avatar_ = lv_label_create(panel_avatar_);
-    lv_label_set_text(label_avatar_, "( ^ _ ^ )");
-    lv_obj_align(label_avatar_, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_style_text_color(label_avatar_, GetAccentColor(), 0);
+    lv_obj_align(panel_avatar_, LV_ALIGN_TOP_MID, 0, top + std::max(0, (bottom - top - face_size) / 2));
+    StyleCard(panel_avatar_, lv_color_hex(0x161B22), GetAccentColor(), face_size / 2, 2);
 
     bar_ota_progress_ = lv_bar_create(panel_avatar_);
     lv_bar_set_range(bar_ota_progress_, 0, 100);
-    lv_obj_set_size(bar_ota_progress_, face_size * 70 / 100, 6);
-    lv_obj_align(bar_ota_progress_, LV_ALIGN_BOTTOM_MID, 0, -15);
+    lv_obj_set_size(bar_ota_progress_, face_size * 60 / 100, 6);
+    lv_obj_align(bar_ota_progress_, LV_ALIGN_BOTTOM_MID, 0, -face_size / 8);
     lv_obj_set_style_bg_color(bar_ota_progress_, lv_color_hex(0xA6E3A1), LV_PART_INDICATOR);
     lv_obj_add_flag(bar_ota_progress_, LV_OBJ_FLAG_HIDDEN);
 
-    label_ota_progress_ = lv_label_create(panel_avatar_);
-    lv_label_set_text(label_ota_progress_, "0%");
-    lv_obj_align(label_ota_progress_, LV_ALIGN_BOTTOM_MID, 0, -2);
-    lv_obj_set_style_text_color(label_ota_progress_, lv_color_hex(0xA6E3A1), 0);
-    lv_obj_add_flag(label_ota_progress_, LV_OBJ_FLAG_HIDDEN);
-
-    panel_chat_ = lv_obj_create(parent);
-    lv_obj_set_size(panel_chat_, metrics_.content_width, 32);
+    panel_chat_ = CreateBox(parent);
+    lv_obj_set_size(panel_chat_, w, chat_h);
     lv_obj_align(panel_chat_, LV_ALIGN_BOTTOM_MID, 0, -metrics_.pad_y);
-    lv_obj_set_style_bg_color(panel_chat_, lv_color_hex(0x1F242C), 0);
-    lv_obj_set_style_radius(panel_chat_, 16, 0);
-    lv_obj_set_style_border_width(panel_chat_, 1, 0);
-    lv_obj_set_style_border_color(panel_chat_, lv_color_hex(0x30363D), 0);
-    lv_obj_set_style_pad_all(panel_chat_, 4, 0);
+    StyleCard(panel_chat_, lv_color_hex(0x1F242C), lv_color_hex(0x30363D), chat_h / 2, 1);
 
-    label_chat_ = lv_label_create(panel_chat_);
-    lv_obj_set_width(label_chat_, metrics_.content_width - 24);
-    lv_label_set_long_mode(label_chat_, LV_LABEL_LONG_SCROLL_CIRCULAR);
-    lv_label_set_text(label_chat_, "Xiaozhi sẵn sàng!");
+    label_chat_ = CreateLineLabel(panel_chat_, w - 24, GetTextColor(), "Xiaozhi sẵn sàng!");
     lv_obj_align(label_chat_, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_style_text_color(label_chat_, GetTextColor(), 0);
-
-    label_status_ = label_chat_;
 }
 
 void AdaptiveUiEngine::BuildMinimalZen(lv_obj_t* parent) {
-    panel_top_bar_ = lv_obj_create(parent);
-    lv_obj_set_size(panel_top_bar_, metrics_.content_width, 22);
+    const int w = metrics_.content_width;
+    const int inner_h = metrics_.height - 2 * metrics_.safe_inset;
+    const int top_bar_h = std::max(line_h_, icon_h_) + 4;
+
+    panel_top_bar_ = CreateBox(parent);
+    lv_obj_set_size(panel_top_bar_, w, top_bar_h);
     lv_obj_align(panel_top_bar_, LV_ALIGN_TOP_MID, 0, metrics_.pad_y);
-    lv_obj_set_style_bg_opa(panel_top_bar_, LV_OPA_TRANSP, 0);
-    lv_obj_set_style_border_width(panel_top_bar_, 0, 0);
 
     label_network_ = lv_label_create(panel_top_bar_);
     lv_label_set_text(label_network_, "");
@@ -758,35 +766,50 @@ void AdaptiveUiEngine::BuildMinimalZen(lv_obj_t* parent) {
     lv_obj_align(label_battery_, LV_ALIGN_RIGHT_MID, 0, 0);
     lv_obj_set_style_text_color(label_battery_, lv_color_hex(0xFFFFFF), 0);
 
-    label_notification_ = lv_label_create(panel_top_bar_);
-    lv_label_set_text(label_notification_, "");
-    lv_obj_align(label_notification_, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_style_text_color(label_notification_, lv_color_hex(0xFFFFFF), 0);
+    // Clock, divider and status form one block that sits just above the middle of the
+    // screen; the chat text gets everything below it. The clock is the first thing
+    // dropped when the screen is too short for the block plus one line of chat.
+    const int top = metrics_.pad_y + top_bar_h + 4;
+    const int chat_min = line_h_ + 4;
+    bool show_time = true;
+    int block_h = line_h_ + 4 + 1 + 4 + line_h_;
+    int block_y = std::max(top, inner_h / 2 - block_h);
+    if (inner_h - metrics_.pad_y - (block_y + block_h + 8) < chat_min) {
+        show_time = false;
+        block_h = 1 + 4 + line_h_;
+        block_y = std::max(top, inner_h / 2 - block_h);
+    }
+
+    int y = block_y;
+    if (show_time) {
+        label_time_ = lv_label_create(parent);
+        lv_label_set_text(label_time_, "--:--");
+        lv_obj_align(label_time_, LV_ALIGN_TOP_MID, 0, y);
+        lv_obj_set_style_text_color(label_time_, lv_color_hex(0xFFFFFF), 0);
+        y += line_h_ + 4;
+    }
+
+    lv_obj_t* divider = CreateBox(parent);
+    lv_obj_set_size(divider, w * 80 / 100, 1);
+    lv_obj_align(divider, LV_ALIGN_TOP_MID, 0, y);
+    StyleCard(divider, lv_color_hex(0x666666), lv_color_hex(0x666666), 0, 0);
+    y += 1 + 4;
+
+    label_status_ = CreateLineLabel(parent, w, lv_color_hex(0xAAAAAA), "SẴN SÀNG");
+    lv_obj_align(label_status_, LV_ALIGN_TOP_MID, 0, y);
+    label_notification_ = CreateLineLabel(parent, w, lv_color_hex(0xFFFFFF), "");
+    lv_obj_align(label_notification_, LV_ALIGN_TOP_MID, 0, y);
     lv_obj_add_flag(label_notification_, LV_OBJ_FLAG_HIDDEN);
+    y += line_h_ + 8;
 
-    label_time_ = lv_label_create(parent);
-    lv_label_set_text(label_time_, "12:00");
-    lv_obj_align(label_time_, LV_ALIGN_CENTER, 0, -30);
-    lv_obj_set_style_text_color(label_time_, lv_color_hex(0xFFFFFF), 0);
+    int chat_h = std::max(inner_h - y - metrics_.pad_y, chat_min);
+    panel_chat_ = CreateScrollColumn(parent, 0, 0);
+    lv_obj_set_size(panel_chat_, w, chat_h);
+    lv_obj_align(panel_chat_, LV_ALIGN_TOP_MID, 0, y);
+    chat_scroll_ = panel_chat_;
 
-    lv_obj_t* divider = lv_obj_create(parent);
-    lv_obj_set_size(divider, metrics_.content_width * 80 / 100, 1);
-    lv_obj_align(divider, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_style_bg_color(divider, lv_color_hex(0x666666), 0);
-    lv_obj_set_style_border_width(divider, 0, 0);
-
-    label_status_ = lv_label_create(parent);
-    lv_label_set_text(label_status_, "SẴN SÀNG");
-    lv_obj_align(label_status_, LV_ALIGN_CENTER, 0, 18);
-    lv_obj_set_style_text_color(label_status_, lv_color_hex(0xAAAAAA), 0);
-
-    label_chat_ = lv_label_create(parent);
-    lv_obj_set_width(label_chat_, metrics_.content_width);
-    lv_label_set_long_mode(label_chat_, LV_LABEL_LONG_WRAP);
-    lv_label_set_text(label_chat_, "");
-    lv_obj_align(label_chat_, LV_ALIGN_BOTTOM_MID, 0, -metrics_.pad_y);
+    label_chat_ = CreateWrapLabel(panel_chat_, lv_color_hex(0xFFFFFF), "");
     lv_obj_set_style_text_align(label_chat_, LV_TEXT_ALIGN_CENTER, 0);
-    lv_obj_set_style_text_color(label_chat_, lv_color_hex(0xFFFFFF), 0);
 }
 
 void AdaptiveUiEngine::SetDeviceState(int state, const char* custom_message) {
@@ -865,15 +888,36 @@ void AdaptiveUiEngine::SetDeviceState(int state, const char* custom_message) {
     }
 }
 
+void AdaptiveUiEngine::ScrollChatToEnd() {
+    if (chat_scroll_ == nullptr) return;
+    lv_obj_update_layout(chat_scroll_);
+    lv_obj_scroll_to_y(chat_scroll_, LV_COORD_MAX, LV_ANIM_OFF);
+}
+
 void AdaptiveUiEngine::SetChatMessage(const char* role, const char* content) {
     if (!initialized_) return;
+    const char* text = content ? content : "";
 
-    if (config_.style == UiStyle::ChatBubble && panel_user_bubble_ && label_user_chat_) {
+    if (config_.style == UiStyle::ChatBubble) {
         if (role && strcmp(role, "user") == 0) {
-            lv_obj_remove_flag(panel_user_bubble_, LV_OBJ_FLAG_HIDDEN);
-            lv_label_set_text(label_user_chat_, content ? content : "");
+            // A new question starts a new exchange: show it and wait for the reply.
+            lv_label_set_text(label_user_chat_, text);
+            if (text[0] != '\0') {
+                lv_obj_remove_flag(panel_user_bubble_, LV_OBJ_FLAG_HIDDEN);
+            } else {
+                lv_obj_add_flag(panel_user_bubble_, LV_OBJ_FLAG_HIDDEN);
+            }
+            lv_label_set_text(label_chat_, "");
+            lv_obj_add_flag(panel_chat_, LV_OBJ_FLAG_HIDDEN);
+            ScrollChatToEnd();
             return;
         }
+        if (text[0] == '\0') {
+            lv_label_set_text(label_chat_, "");
+            lv_obj_add_flag(panel_chat_, LV_OBJ_FLAG_HIDDEN);
+            return;
+        }
+        lv_obj_remove_flag(panel_chat_, LV_OBJ_FLAG_HIDDEN);
     }
 
     if (label_chat_role_ && role) {
@@ -889,47 +933,19 @@ void AdaptiveUiEngine::SetChatMessage(const char* role, const char* content) {
         }
     }
 
-    if (label_chat_ && content) {
-        lv_label_set_text(label_chat_, content);
+    if (label_chat_) {
+        lv_label_set_text(label_chat_, text);
     }
+    ScrollChatToEnd();
 }
 
 void AdaptiveUiEngine::ClearChatMessages() {
     if (!initialized_) return;
     if (label_chat_) lv_label_set_text(label_chat_, "");
+    if (label_user_chat_) lv_label_set_text(label_user_chat_, "");
     if (panel_user_bubble_) lv_obj_add_flag(panel_user_bubble_, LV_OBJ_FLAG_HIDDEN);
-}
-
-void AdaptiveUiEngine::SetEmotion(const char* emotion) {
-    if (!label_avatar_ || !emotion) return;
-
-    if (strcmp(emotion, "happy") == 0 || strcmp(emotion, "laughing") == 0) {
-        lv_label_set_text(label_avatar_, "( ^ _ ^ )");
-        lv_obj_set_style_text_color(label_avatar_, lv_color_hex(0xA6E3A1), 0);
-    } else if (strcmp(emotion, "speaking") == 0) {
-        lv_label_set_text(label_avatar_, "( ^ o ^ )");
-        lv_obj_set_style_text_color(label_avatar_, GetAccentColor(), 0);
-    } else if (strcmp(emotion, "listening") == 0) {
-        lv_label_set_text(label_avatar_, "( O _ O )");
-        lv_obj_set_style_text_color(label_avatar_, lv_color_hex(0x89B4FA), 0);
-    } else if (strcmp(emotion, "thinking") == 0) {
-        lv_label_set_text(label_avatar_, "( - _ . )");
-        lv_obj_set_style_text_color(label_avatar_, lv_color_hex(0xF9E2AF), 0);
-    } else if (strcmp(emotion, "sad") == 0 || strcmp(emotion, "crying") == 0) {
-        lv_label_set_text(label_avatar_, "( T _ T )");
-        lv_obj_set_style_text_color(label_avatar_, lv_color_hex(0x89B4FA), 0);
-    } else if (strcmp(emotion, "angry") == 0) {
-        lv_label_set_text(label_avatar_, "( > _ < )");
-        lv_obj_set_style_text_color(label_avatar_, lv_color_hex(0xF38BA8), 0);
-    } else if (strcmp(emotion, "sleepy") == 0 || strcmp(emotion, "sleeping") == 0) {
-        lv_label_set_text(label_avatar_, "( - _ - ) zZ");
-        lv_obj_set_style_text_color(label_avatar_, GetMutedTextColor(), 0);
-    } else if (strcmp(emotion, "surprise") == 0 || strcmp(emotion, "shocked") == 0) {
-        lv_label_set_text(label_avatar_, "( O _ o !)");
-        lv_obj_set_style_text_color(label_avatar_, lv_color_hex(0xFAB387), 0);
-    } else {
-        lv_label_set_text(label_avatar_, "( ^ _ ^ )");
-        lv_obj_set_style_text_color(label_avatar_, GetAccentColor(), 0);
+    if (config_.style == UiStyle::ChatBubble && panel_chat_) {
+        lv_obj_add_flag(panel_chat_, LV_OBJ_FLAG_HIDDEN);
     }
 }
 

@@ -374,15 +374,22 @@ bool LcdDisplay::Lock(int timeout_ms) { return lvgl_port_lock(timeout_ms); }
 
 void LcdDisplay::Unlock() { lvgl_port_unlock(); }
 
-static bool TrySetupAdaptiveUi(LcdDisplay* display, lv_obj_t* screen, int width, int height,
-                               lv_obj_t*& status_label, lv_obj_t*& battery_label,
-                               lv_obj_t*& network_label, lv_obj_t*& notification_label,
-                               lv_obj_t*& chat_message_label) {
 #if defined(CONFIG_CUSTOM_UI_STYLE_SMART_DASHBOARD) || \
     defined(CONFIG_CUSTOM_UI_STYLE_CYBER_TERMINAL) || \
     defined(CONFIG_CUSTOM_UI_STYLE_CHAT_BUBBLE) || \
     defined(CONFIG_CUSTOM_UI_STYLE_CLASSIC_AVATAR) || \
     defined(CONFIG_CUSTOM_UI_STYLE_MINIMAL_ZEN)
+#define LCD_DISPLAY_ADAPTIVE_UI 1
+#endif
+
+// Builds (or rebuilds) the adaptive layout and binds LvglDisplay's widgets to it. Emotions keep
+// using the regular emoji / GIF pipeline, hosted inside the style's avatar panel.
+bool LcdDisplay::SetupAdaptiveUi() {
+#ifdef LCD_DISPLAY_ADAPTIVE_UI
+    auto lvgl_theme = static_cast<LvglTheme*>(current_theme_);
+    if (lvgl_theme == nullptr) {
+        return false;
+    }
 
     AdaptiveUiConfig ui_config;
 #if defined(CONFIG_CUSTOM_UI_STYLE_CYBER_TERMINAL)
@@ -438,17 +445,95 @@ static bool TrySetupAdaptiveUi(LcdDisplay* display, lv_obj_t* screen, int width,
     ui_config.auto_scale = false;
 #endif
 
-    AdaptiveUiEngine::GetInstance().Initialize(screen, width, height, ui_config);
-    AdaptiveUiEngine::GetInstance().ApplyTheme(static_cast<LvglTheme*>(display->GetTheme()));
-    status_label = AdaptiveUiEngine::GetInstance().GetStatusLabel();
-    battery_label = AdaptiveUiEngine::GetInstance().GetBatteryLabel();
-    network_label = AdaptiveUiEngine::GetInstance().GetNetworkLabel();
-    notification_label = AdaptiveUiEngine::GetInstance().GetNotificationLabel();
-    chat_message_label = AdaptiveUiEngine::GetInstance().GetChatMessageLabel();
+    ui_config.text_font = lvgl_theme->text_font()->font();
+    ui_config.icon_font = lvgl_theme->icon_font()->font();
+
+    // Widgets of a previous layout are about to be deleted.
+    if (gif_controller_) {
+        gif_controller_->Stop();
+        gif_controller_.reset();
+    }
+    if (preview_timer_ != nullptr) {
+        esp_timer_stop(preview_timer_);
+    }
+    preview_image_cached_.reset();
+
+    auto& engine = AdaptiveUiEngine::GetInstance();
+    engine.Initialize(lv_screen_active(), width_, height_, ui_config);
+    if (!engine.IsInitialized()) {
+        return false;
+    }
+    engine.ApplyTheme(lvgl_theme);
+
+    status_label_ = engine.GetStatusLabel();
+    battery_label_ = engine.GetBatteryLabel();
+    network_label_ = engine.GetNetworkLabel();
+    notification_label_ = engine.GetNotificationLabel();
+    chat_message_label_ = engine.GetChatMessageLabel();
+    mute_label_ = nullptr;
+    battery_icon_ = nullptr;
+    network_icon_ = nullptr;
+
+    emoji_box_ = nullptr;
+    emoji_label_ = nullptr;
+    emoji_image_ = nullptr;
+    emoji_max_size_ = 0;
+    lv_obj_t* emotion_parent = engine.GetEmotionContainer();
+    if (emotion_parent != nullptr) {
+        lv_obj_update_layout(emotion_parent);
+        emoji_max_size_ = std::min(lv_obj_get_content_width(emotion_parent),
+                                   lv_obj_get_content_height(emotion_parent)) - 4;
+
+        emoji_box_ = lv_obj_create(emotion_parent);
+        lv_obj_remove_style_all(emoji_box_);
+        lv_obj_remove_flag(emoji_box_, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_size(emoji_box_, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+        lv_obj_center(emoji_box_);
+
+        emoji_label_ = lv_label_create(emoji_box_);
+        lv_obj_set_style_text_font(emoji_label_, lvgl_theme->large_icon_font()->font(), 0);
+        lv_obj_set_style_text_color(emoji_label_, engine.GetAccentColor(), 0);
+        lv_label_set_text(emoji_label_, MATERIAL_SYMBOLS_ROBOT_2);
+
+        emoji_image_ = lv_image_create(emoji_box_);
+        lv_obj_center(emoji_image_);
+        lv_obj_add_flag(emoji_image_, LV_OBJ_FLAG_HIDDEN);
+    }
+
+    lv_obj_t* root = engine.GetRoot();
+    preview_image_ = lv_image_create(root);
+    lv_obj_set_size(preview_image_, width_ / 2, height_ / 2);
+    lv_obj_align(preview_image_, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_add_flag(preview_image_, LV_OBJ_FLAG_HIDDEN);
+
+    auto text_font = lvgl_theme->text_font()->font();
+    low_battery_popup_ = lv_obj_create(root);
+    lv_obj_set_scrollbar_mode(low_battery_popup_, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_size(low_battery_popup_, width_ * 9 / 10, text_font->line_height * 2);
+    lv_obj_align(low_battery_popup_, LV_ALIGN_BOTTOM_MID, 0, -lvgl_theme->spacing(4));
+    lv_obj_set_style_bg_color(low_battery_popup_, lv_color_hex(0xF38BA8), 0);
+    lv_obj_set_style_radius(low_battery_popup_, lvgl_theme->spacing(4), 0);
+    low_battery_label_ = lv_label_create(low_battery_popup_);
+    lv_label_set_text(low_battery_label_, Lang::Strings::BATTERY_NEED_CHARGE);
+    lv_obj_set_style_text_color(low_battery_label_, lv_color_white(), 0);
+    lv_obj_center(low_battery_label_);
+    lv_obj_add_flag(low_battery_popup_, LV_OBJ_FLAG_HIDDEN);
     return true;
 #else
     return false;
 #endif
+}
+
+void LcdDisplay::FitEmojiImage(const lv_image_dsc_t* dsc) {
+    if (emoji_image_ == nullptr || emoji_max_size_ <= 0 || dsc == nullptr) {
+        return;
+    }
+    int longest = std::max<int>(dsc->header.w, dsc->header.h);
+    uint32_t scale = LV_SCALE_NONE;
+    if (longest > emoji_max_size_) {
+        scale = LV_SCALE_NONE * emoji_max_size_ / longest;
+    }
+    lv_image_set_scale(emoji_image_, scale);
 }
 
 #if CONFIG_USE_WECHAT_MESSAGE_STYLE
@@ -479,8 +564,7 @@ void LcdDisplay::SetupUI() {
     lv_obj_set_style_text_color(screen, lvgl_theme->text_color(), 0);
     lv_obj_set_style_bg_color(screen, lvgl_theme->background_color(), 0);
 
-    if (TrySetupAdaptiveUi(this, screen, width_, height_, status_label_, battery_label_,
-                           network_label_, notification_label_, chat_message_label_)) {
+    if (SetupAdaptiveUi()) {
         return;
     }
 
@@ -890,8 +974,7 @@ void LcdDisplay::SetupUI() {
     lv_obj_set_style_text_color(screen, lvgl_theme->text_color(), 0);
     lv_obj_set_style_bg_color(screen, lvgl_theme->background_color(), 0);
 
-    if (TrySetupAdaptiveUi(this, screen, width_, height_, status_label_, battery_label_,
-                           network_label_, notification_label_, chat_message_label_)) {
+    if (SetupAdaptiveUi()) {
         return;
     }
 
@@ -1069,7 +1152,7 @@ void LcdDisplay::SetPreviewImage(std::unique_ptr<LvglImage> image) {
 
     if (image == nullptr) {
         esp_timer_stop(preview_timer_);
-        lv_obj_remove_flag(emoji_box_, LV_OBJ_FLAG_HIDDEN);
+        if (emoji_box_ != nullptr) lv_obj_remove_flag(emoji_box_, LV_OBJ_FLAG_HIDDEN);
         lv_obj_add_flag(preview_image_, LV_OBJ_FLAG_HIDDEN);
         preview_image_cached_.reset();
         if (gif_controller_) {
@@ -1088,7 +1171,7 @@ void LcdDisplay::SetPreviewImage(std::unique_ptr<LvglImage> image) {
     if (gif_controller_) {
         gif_controller_->Stop();
     }
-    lv_obj_add_flag(emoji_box_, LV_OBJ_FLAG_HIDDEN);
+    if (emoji_box_ != nullptr) lv_obj_add_flag(emoji_box_, LV_OBJ_FLAG_HIDDEN);
     lv_obj_remove_flag(preview_image_, LV_OBJ_FLAG_HIDDEN);
     esp_timer_stop(preview_timer_);
     ESP_ERROR_CHECK(esp_timer_start_once(preview_timer_, PREVIEW_IMAGE_DURATION_MS * 1000));
@@ -1147,10 +1230,8 @@ void LcdDisplay::ClearChatMessages() {
 #endif
 
 void LcdDisplay::SetEmotion(const char* emotion) {
-    if (AdaptiveUiEngine::GetInstance().IsInitialized()) {
-        DisplayLockGuard lock(this);
-        AdaptiveUiEngine::GetInstance().SetEmotion(emotion);
-        return;
+    if (AdaptiveUiEngine::GetInstance().IsInitialized() && emoji_image_ == nullptr) {
+        return;  // this adaptive style has no avatar area
     }
     if (!setup_ui_called_) {
         ESP_LOGW(TAG, "SetEmotion('%s') called before SetupUI() - emotion will not be displayed!",
@@ -1203,6 +1284,7 @@ void LcdDisplay::SetEmotion(const char* emotion) {
                 [this]() { lv_image_set_src(emoji_image_, gif_controller_->image_dsc()); });
 
             lv_image_set_src(emoji_image_, gif_controller_->image_dsc());
+            FitEmojiImage(gif_controller_->image_dsc());
             gif_controller_->Start();
 
             lv_obj_add_flag(emoji_label_, LV_OBJ_FLAG_HIDDEN);
@@ -1213,6 +1295,7 @@ void LcdDisplay::SetEmotion(const char* emotion) {
         }
     } else {
         lv_image_set_src(emoji_image_, image->image_dsc());
+        FitEmojiImage(image->image_dsc());
         lv_obj_add_flag(emoji_label_, LV_OBJ_FLAG_HIDDEN);
         lv_obj_remove_flag(emoji_image_, LV_OBJ_FLAG_HIDDEN);
     }
@@ -1239,9 +1322,16 @@ void LcdDisplay::SetTheme(Theme* theme) {
         return;
     }
 
-    if (AdaptiveUiEngine::GetInstance().IsInitialized()) {
-        AdaptiveUiEngine::GetInstance().ApplyTheme(lvgl_theme);
+    auto& adaptive_ui = AdaptiveUiEngine::GetInstance();
+    if (adaptive_ui.IsInitialized()) {
         Display::SetTheme(lvgl_theme);
+        // A font with a different size (e.g. from assets.bin) needs new row heights,
+        // otherwise text spills over the neighbouring widgets.
+        if (adaptive_ui.NeedsRelayout(lvgl_theme)) {
+            SetupAdaptiveUi();
+        } else {
+            adaptive_ui.ApplyTheme(lvgl_theme);
+        }
         return;
     }
 

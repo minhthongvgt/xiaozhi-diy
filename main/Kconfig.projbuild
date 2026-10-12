@@ -176,7 +176,11 @@ menu "Giao diện hiển thị & Gói tài nguyên (Display Style & Assets)"
     config CUSTOM_UI_ROUND_SCREEN_SAFE_AREA
         bool "Vùng hiển thị an toàn cho màn hình tròn (Round Screen Safe Area)"
         depends on CUSTOM_UI_STYLE_CHAT_BUBBLE || CUSTOM_UI_STYLE_CLASSIC_AVATAR || CUSTOM_UI_STYLE_CYBER_TERMINAL || CUSTOM_UI_STYLE_MINIMAL_ZEN || CUSTOM_UI_STYLE_SMART_DASHBOARD
+        default y if CUSTOM_DISPLAY_GC9A01 || CUSTOM_DISPLAY_AMOLED_CO5300 || CUSTOM_DISPLAY_AMOLED_SPD2010
         default n
+        help
+            Thu nhỏ vùng vẽ vào giữa để các góc không bị cắt trên màn hình tròn.
+            Tự bật với GC9A01, CO5300, SPD2010.
 
     config CUSTOM_UI_VOICE_WAVE_ENABLE
         bool "Hiển thị sóng âm thanh động khi đàm thoại (Voice Waveform)"

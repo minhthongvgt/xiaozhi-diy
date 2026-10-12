@@ -26,8 +26,11 @@ protected:
     lv_obj_t* chat_message_label_ = nullptr;
     esp_timer_handle_t preview_timer_ = nullptr;
     std::unique_ptr<LvglImage> preview_image_cached_ = nullptr;
-    bool hide_subtitle_ = false;  
+    bool hide_subtitle_ = false;
+    int emoji_max_size_ = 0;  // >0: emoji images are scaled down to fit this many pixels
     void InitializeLcdThemes();
+    bool SetupAdaptiveUi();
+    void FitEmojiImage(const lv_image_dsc_t* dsc);
     virtual bool Lock(int timeout_ms = 0) override;
     virtual void Unlock() override;
 protected:

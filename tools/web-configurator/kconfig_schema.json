@@ -1588,12 +1588,24 @@
    ],
    "default": [
     [
+     "y",
+     [
+      "or",
+      "CUSTOM_DISPLAY_GC9A01",
+      [
+       "or",
+       "CUSTOM_DISPLAY_AMOLED_CO5300",
+       "CUSTOM_DISPLAY_AMOLED_SPD2010"
+      ]
+     ]
+    ],
+    [
      "n",
      "y"
     ]
    ],
    "range": [],
-   "help": ""
+   "help": "Thu nhỏ vùng vẽ vào giữa để các góc không bị cắt trên màn hình tròn.\nTự bật với GC9A01, CO5300, SPD2010."
   },
   {
    "name": "CUSTOM_UI_VOICE_WAVE_ENABLE",
