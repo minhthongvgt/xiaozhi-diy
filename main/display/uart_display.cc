@@ -326,7 +326,7 @@ void UartDisplay::SendSysInfo() {
     localtime_r(&now, &tm_now);
     if (tm_now.tm_year >= 2025 - 1900) {  // only once the clock has been synced
         char buf[16];
-        strftime(buf, sizeof(buf), "%H:%M", &tm_now);
+        strftime(buf, sizeof(buf), "%H:%M:%S", &tm_now);
         j["time"] = buf;
         strftime(buf, sizeof(buf), "%Y-%m-%d", &tm_now);
         j["date"] = buf;

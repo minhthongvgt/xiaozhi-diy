@@ -105,7 +105,7 @@ Mọi văn bản được gửi dạng **UTF-8**: một chữ tiếng Việt có
 | chat `assistant` / `system` | `t_chat.txt="…"` | `{"type":"chat","role":"assistant","content":"…"}` (hoặc `system`) | `CHAT:assistant:…` | `0x1400` |
 | clear_chat | `t_user.txt=""` và `t_chat.txt=""` | `{"type":"clear_chat"}` | `CLEAR_CHAT` | ghi chuỗi rỗng vào `0x1300` và `0x1400` |
 | power | `sleep=1` / `sleep=0` | `{"type":"power","state":"sleep"}` / `"wake"` | `SLEEP` / `WAKE` | không gửi |
-| sysinfo | không gửi | `{"type":"sysinfo","time":"14:05","date":"2026-10-12","wifi":-55,"battery":87,"charging":false,"volume":70}` | không gửi | không gửi |
+| sysinfo | không gửi | `{"type":"sysinfo","time":"14:05:32","date":"2026-10-12","wifi":-55,"battery":87,"charging":false,"volume":70}` | không gửi | không gửi |
 
 ### Nextion / TJC
 
@@ -167,7 +167,7 @@ Chỉ có với giao thức **JSON** và khi đã đặt `CUSTOM_DISPLAY_UART_RX
 
 Tin `sysinfo` (Xiaozhi → màn hình) chỉ chứa những trường có thật trên thiết bị:
 
-- `time` (`HH:MM`) và `date` (`YYYY-MM-DD`): chỉ khi đồng hồ đã được đồng bộ. Màn hình nên tự đếm giờ giữa hai tin.
+- `time` (`HH:MM:SS`) và `date` (`YYYY-MM-DD`): chỉ khi đồng hồ đã được đồng bộ. Màn hình nên tự đếm giờ giữa hai tin.
 - `wifi`: RSSI tính bằng dBm, chỉ với board dùng Wi-Fi.
 - `battery` (0–100) và `charging`: chỉ khi board đo được pin.
 - `volume` (0–100): luôn có.
