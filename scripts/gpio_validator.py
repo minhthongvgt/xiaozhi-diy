@@ -314,10 +314,10 @@ def extract_pin_assignments(config: Dict[str, str]) -> List[PinAssignment]:
             assignments.append(PinAssignment("Đèn LED đơn PWM", led_pin))
         elif _is_yes(config, "CONFIG_CUSTOM_LED_CIRCULAR_STRIP"):
             assignments.append(PinAssignment("Vòng tròn LED xoay", led_pin))
-        for index, token in enumerate(config.get("CONFIG_CUSTOM_LED_EXTRA_GPIOS", "").split(","), start=1):
-            token = token.strip()
-            if token.lstrip("-").isdigit() and int(token) >= 0:
-                assignments.append(PinAssignment(f"LED đơn {index}", int(token)))
+    for index, token in enumerate(config.get("CONFIG_CUSTOM_LED_EXTRA_GPIOS", "").split(","), start=1):
+        token = token.strip()
+        if token.lstrip("-").isdigit() and int(token) >= 0:
+            assignments.append(PinAssignment(f"LED đơn {index}", int(token)))
 
     if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SERVO_DOG"):
         servo_pin = _get_int(config, "CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO", 48)

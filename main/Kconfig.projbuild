@@ -1350,7 +1350,7 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
 
         config CUSTOM_MCP_TOOL_GPIO_LED
             bool
-            default y if ENABLE_CUSTOM_LEDS && CUSTOM_LED_EXTRA_GPIOS != ""
+            default y if CUSTOM_LED_EXTRA_GPIOS != ""
 
         config CUSTOM_MCP_TOOL_PERIPH
             bool
@@ -1644,13 +1644,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 range -1 48
                 default 48
 
-            config CUSTOM_LED_EXTRA_GPIOS
-                string "Các chân LED đơn do chatbot điều khiển (cách nhau dấu phẩy)"
-                default ""
-                help
-                    Mỗi chân là một LED một màu. Chatbot bật/tắt, chỉnh độ sáng và chọn hiệu ứng nháy/thở.
-                    Bốn LED đầu dùng PWM (3 nếu LED trạng thái là LED đơn PWM); các LED sau chỉ bật/tắt và nháy.
-
             config CUSTOM_LED_COUNT
                 int "Số lượng mắt LED trên dải/vòng (Hỗ trợ tối đa 1024 mắt LED)"
                 range 1 1024
@@ -1665,6 +1658,33 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 default n
                 help
                     Kích hoạt hiệu ứng LED RGB chuyển màu cầu vồng đa sắc cực nhanh và mượt khi loa phát âm thanh hoặc khi khởi động.
+        endif
+
+        menu "LED đơn GPIO (chatbot điều khiển)"
+            config CUSTOM_LED_EXTRA_GPIOS
+                string "Các chân LED đơn (cách nhau dấu phẩy, để trống là không dùng)"
+                default ""
+                help
+                    Mỗi chân là một LED một màu. Chatbot bật/tắt, chỉnh độ sáng và chọn hiệu ứng nháy/thở.
+                    Bốn LED đầu dùng PWM (3 nếu LED trạng thái là LED đơn PWM); các LED sau chỉ bật/tắt và nháy.
+        endmenu
+
+        menuconfig CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC
+            bool "LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh)"
+            default n
+            help
+                Chatbot chỉnh độ sáng từng kênh LED của chip qua I2C.
+
+        if CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC
+            config CUSTOM_PERIPH_LED_IC_I2C_SDA
+                int "Chân I2C SDA chip điều khiển LED"
+                range -1 48
+                default -1
+
+            config CUSTOM_PERIPH_LED_IC_I2C_SCL
+                int "Chân I2C SCL chip điều khiển LED"
+                range -1 48
+                default -1
         endif
 
         endmenu
@@ -2222,22 +2242,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
 
             config CUSTOM_PERIPH_PCA9685_OE_PIN
                 int "Chân cho phép đầu ra OE module PCA9685"
-                range -1 48
-                default -1
-        endif
-
-        config CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC
-            bool "IC điều khiển LED chuyên dụng I2C (AW9523 / IS31FL)"
-            default n
-
-        if CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC
-            config CUSTOM_PERIPH_LED_IC_I2C_SDA
-                int "Chân I2C SDA chip điều khiển LED"
-                range -1 48
-                default -1
-
-            config CUSTOM_PERIPH_LED_IC_I2C_SCL
-                int "Chân I2C SCL chip điều khiển LED"
                 range -1 48
                 default -1
         endif

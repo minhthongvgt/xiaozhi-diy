@@ -202,11 +202,6 @@
               <input type="number" class="form-control" id="led_gpio" min="-1" max="48">
             </div>
             <div class="form-item" data-show-if="led_enable">
-              <label class="form-label" for="kc_CUSTOM_LED_EXTRA_GPIOS">Các chân LED đơn do chatbot điều khiển (cách nhau dấu phẩy)</label>
-              <input type="text" class="form-control" id="kc_CUSTOM_LED_EXTRA_GPIOS">
-              <div class="form-hint">Mỗi chân là một LED một màu.</div>
-            </div>
-            <div class="form-item" data-show-if="led_enable">
               <label class="form-label" for="led_count">Số lượng mắt LED trên dải/vòng (Hỗ trợ tối đa 1024 mắt LED)</label>
               <input type="number" class="form-control" id="led_count" min="1" max="1024">
               <div class="form-hint">Số lượng mắt LED kỹ thuật số WS2812/SK6812 (từ 1 đến 1024 mắt LED).</div>
@@ -214,6 +209,24 @@
             <div class="form-item span-2" data-show-if="led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
               <label class="form-checkbox"><input type="checkbox" id="led_rainbow"><span>Hiệu ứng Đổi Màu Cầu Vồng Nhanh (Fast Rainbow Effect khi nói / khởi động)</span></label>
               <div class="form-hint">Kích hoạt hiệu ứng LED RGB chuyển màu cầu vồng đa sắc cực nhanh và mượt khi loa phát âm thanh hoặc khi khởi động.</div>
+            </div>
+            <div class="span-2 form-subheading"><span>LED đơn GPIO (chatbot điều khiển)</span></div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_LED_EXTRA_GPIOS">Các chân LED đơn (cách nhau dấu phẩy, để trống là không dùng)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_LED_EXTRA_GPIOS">
+              <div class="form-hint">Mỗi chân là một LED một màu.</div>
+            </div>
+            <div class="form-item span-2 form-item-master">
+              <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC"><span><strong>LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh)</strong></span></label>
+              <div class="form-hint">Chatbot chỉnh độ sáng từng kênh LED của chip qua I2C.</div>
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_LED_IC_I2C_SDA">Chân I2C SDA chip điều khiển LED</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_LED_IC_I2C_SDA" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC">
+              <label class="form-label" for="kc_CUSTOM_PERIPH_LED_IC_I2C_SCL">Chân I2C SCL chip điều khiển LED</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_LED_IC_I2C_SCL" min="-1" max="48">
             </div>
           </div>
         </div>

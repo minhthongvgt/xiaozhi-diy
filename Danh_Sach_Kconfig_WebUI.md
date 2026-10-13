@@ -273,7 +273,7 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_MCP_TOOL_ACTUATOR` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_PERIPH_RELAY_ENABLE \|\| CUSTOM_ENABLE_SERVO_DOG \|\| CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE \|\| ENABLE_BUZZER \|\| ENABLE_HAPTIC_MOTOR |
 | `CONFIG_CUSTOM_MCP_TOOL_ROBOT` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE \|\| CUSTOM_ENABLE_SERVO_DOG |
 | `CONFIG_CUSTOM_MCP_TOOL_LED` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if ENABLE_CUSTOM_LEDS && !CUSTOM_LED_NONE |
-| `CONFIG_CUSTOM_MCP_TOOL_GPIO_LED` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if ENABLE_CUSTOM_LEDS && CUSTOM_LED_EXTRA_GPIOS != "" |
+| `CONFIG_CUSTOM_MCP_TOOL_GPIO_LED` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_LED_EXTRA_GPIOS != "" |
 | `CONFIG_CUSTOM_MCP_TOOL_PERIPH` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_ENABLE_PERIPH_RTC \|\| CUSTOM_ENABLE_PERIPH_NFC_PN532 \|\| CUSTOM_ENABLE_PERIPH_PCA9685 \|\| CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC \|\| CUSTOM_PERIPH_RC522_SPI_CS >= 0 \|\| CUSTOM_IMU_I2C_SDA >= 0 \|\| CUSTOM_PMIC_I2C_SDA >= 0 \|\| CUSTOM_EXPANDER_I2C_SDA >= 0 \|\| CUSTOM_ETH_SPI_CS_PIN >= 0 |
 | `CONFIG_CUSTOM_MCP_TOOL_PRESS_TO_TALK` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_ENABLE_BUTTON_BOOT \|\| CUSTOM_ENABLE_BUTTON_TOUCH |
 | `CONFIG_CUSTOM_MCP_TOOL_BT_UART` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if ENABLE_BT_UART_MODULE && !CUSTOM_DISPLAY_UART_LINK_BLUETOOTH |
@@ -329,9 +329,12 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_LED_USER_CUSTOM` | bool | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Driver Đèn LED tùy chỉnh (Custom User LED Hook) |  |
 | `CONFIG_CUSTOM_LED_NONE` | bool | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Không sử dụng đèn LED |  |
 | `CONFIG_CUSTOM_LED_GPIO` | int | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Chân GPIO kết nối Đèn LED (Mặc định chân LED onboard) | 48 |
-| `CONFIG_CUSTOM_LED_EXTRA_GPIOS` | string | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Các chân LED đơn do chatbot điều khiển (cách nhau dấu phẩy) | "" |
 | `CONFIG_CUSTOM_LED_COUNT` | int | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Số lượng mắt LED trên dải/vòng (Hỗ trợ tối đa 1024 mắt LED) | 1 |
 | `CONFIG_CUSTOM_LED_FAST_RAINBOW_EFFECT` | bool | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Hiệu ứng Đổi Màu Cầu Vồng Nhanh (Fast Rainbow Effect khi nói / khởi động) | n |
+| `CONFIG_CUSTOM_LED_EXTRA_GPIOS` | string | LED đơn GPIO (chatbot điều khiển) | Các chân LED đơn (cách nhau dấu phẩy, để trống là không dùng) | "" |
+| `CONFIG_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC` | bool | 4.2. Hệ thống chính (Main System) | LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh) | n |
+| `CONFIG_CUSTOM_PERIPH_LED_IC_I2C_SDA` | int | LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh) | Chân I2C SDA chip điều khiển LED | -1 |
+| `CONFIG_CUSTOM_PERIPH_LED_IC_I2C_SCL` | int | LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh) | Chân I2C SCL chip điều khiển LED | -1 |
 | `CONFIG_CUSTOM_ENABLE_SERVO_DOG` | bool | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Động cơ Servo tương tác qua PWM (Servo Dog Controller) | n |
 | `CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO` | int | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Chân GPIO cấp xung PWM cho Động cơ Servo | -1 |
 | `CONFIG_ENABLE_BUZZER` | bool | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Còi báo động Buzzer (GPIO 41) | n |
@@ -430,9 +433,6 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_PERIPH_PCA9685_I2C_SDA` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SDA module PCA9685 | -1 |
 | `CONFIG_CUSTOM_PERIPH_PCA9685_I2C_SCL` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SCL module PCA9685 | -1 |
 | `CONFIG_CUSTOM_PERIPH_PCA9685_OE_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân cho phép đầu ra OE module PCA9685 | -1 |
-| `CONFIG_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | IC điều khiển LED chuyên dụng I2C (AW9523 / IS31FL) | n |
-| `CONFIG_CUSTOM_PERIPH_LED_IC_I2C_SDA` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SDA chip điều khiển LED | -1 |
-| `CONFIG_CUSTOM_PERIPH_LED_IC_I2C_SCL` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SCL chip điều khiển LED | -1 |
 | `CONFIG_CUSTOM_ENABLE_PERIPH_SDCARD_SPI` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Đầu đọc thẻ nhớ MicroSD qua giao tiếp SPI | n |
 | `CONFIG_CUSTOM_PERIPH_SDCARD_SPI_SCK` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân xung nhịp SPI SCK thẻ nhớ | -1 |
 | `CONFIG_CUSTOM_PERIPH_SDCARD_SPI_MOSI` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân dữ liệu SPI MOSI thẻ nhớ | -1 |

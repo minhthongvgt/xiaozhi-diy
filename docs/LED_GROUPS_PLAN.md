@@ -15,7 +15,7 @@ Mỗi bước làm theo cùng một quy trình:
 |---|---|---|
 | 1 | Đổi tên mục 4.2 thành "Hệ thống chính (Main System)", giữ nguyên vị trí và nội dung | xong |
 | 2 | Nối `CUSTOM_LED_EXTRA_GPIOS` thành LED đơn (PWM LEDC) cho chatbot điều khiển | xong |
-| 3 | Tách các nhóm LED trong 4.2 thành menu con riêng (xem bảng nhóm) | chưa làm |
+| 3 | Tách các nhóm LED trong 4.2 thành menu con riêng (xem bảng nhóm) | xong (PCA9685 và IC mở rộng làm ở 4c, 4e) |
 | 4a | LED trạng thái: độ sáng thấp/thường/cao, màu và hiệu ứng cho từng trạng thái | chưa làm |
 | 4b | LED đơn GPIO: độ sáng mặc định, hiệu ứng nháy/thở, MCP bật/tắt/độ sáng/hiệu ứng | chưa làm |
 | 4c | LED qua PCA9685: chọn kênh dùng cho LED, độ sáng mặc định, hiệu ứng | chưa làm |
@@ -44,3 +44,12 @@ Mỗi bước làm theo cùng một quy trình:
 - Kênh LEDC cho LED đơn: 1, 3, 6, 7 (bỏ kênh 1 khi LED trạng thái là LED đơn PWM). Hết kênh thì LED chỉ bật/tắt và nháy; hiệu ứng thở chuyển thành nháy. Hiệu ứng chạy bằng `esp_timer`.
 - Bảng kênh LEDC: đèn nền kênh 0 (timer 0); LED trạng thái PWM và LED đơn kênh 1/3/6/7 (timer 1, 4 kHz, 13 bit); servo kênh 2 (timer 2); motor kênh 4/5 (timer 3).
 - Ký hiệu ẩn `CUSTOM_MCP_TOOL_GPIO_LED` tự bật khi danh sách chân không rỗng. Chân trùng LED trạng thái, trùng nhau hoặc không hợp lệ bị bỏ qua và ghi log. `gpio_validator.py` kiểm tra trùng chân và vùng cấm cho danh sách này.
+
+## Bước 3 đã làm
+Mục 4.2 "Hệ thống chính" gồm:
+- Camera (`ENABLE_CUSTOM_CAMERA`).
+- LED trạng thái (`ENABLE_CUSTOM_LEDS`).
+- Menu con "LED đơn GPIO (chatbot điều khiển)": `CUSTOM_LED_EXTRA_GPIOS`, không còn phụ thuộc LED trạng thái; để trống là không dùng.
+- "LED qua IC điều khiển LED I2C" (`CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC` + SDA/SCL): chuyển từ 4.7 sang 4.2.
+
+PCA9685 và TCA9554 còn phục vụ servo và IO chung, nên chip vẫn ở 4.7. Menu LED của hai chip này sẽ thêm ở 4.2 trong bước 4c và 4e, và phụ thuộc vào việc bật chip.

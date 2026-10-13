@@ -320,6 +320,13 @@ class GpioValidatorTests(unittest.TestCase):
         self.assertTrue(any("Xung đột GPIO 48" in err for err in bad_errors), bad_errors)
         self.assertTrue(any("GPIO 30 bị CẤM" in err for err in bad_errors), bad_errors)
 
+        no_status_cfg = {
+            "CONFIG_BOARD_TYPE_ESP32_S3_N16R8_CUSTOM": "y",
+            "CONFIG_CUSTOM_LED_EXTRA_GPIOS": "4,4",
+        }
+        dup_errors, _ = validate_sdkconfig(no_status_cfg, is_n16r8=True)
+        self.assertTrue(any("Xung đột GPIO 4" in err for err in dup_errors), dup_errors)
+
 
 if __name__ == "__main__":
     unittest.main()
