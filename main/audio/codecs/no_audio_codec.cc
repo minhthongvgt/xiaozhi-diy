@@ -30,7 +30,7 @@ NoAudioCodecDuplex::NoAudioCodecDuplex(int input_sample_rate, int output_sample_
     }
 
     i2s_chan_config_t chan_cfg = {
-        .id = XIAOZHI_I2S_PORT(0),
+        .id = 0,
         .role = I2S_ROLE_MASTER,
         .dma_desc_num = AUDIO_CODEC_DMA_DESC_NUM,
         .dma_frame_num = AUDIO_CODEC_DMA_FRAME_NUM,
@@ -98,7 +98,7 @@ NoAudioCodecSimplex::NoAudioCodecSimplex(int input_sample_rate, int output_sampl
 
     if (GPIO_IS_VALID_GPIO(spk_bclk) && GPIO_IS_VALID_GPIO(spk_ws) && GPIO_IS_VALID_GPIO(spk_dout)) {
         i2s_chan_config_t chan_cfg = {
-            .id = XIAOZHI_I2S_PORT(0),
+            .id = 0,
             .role = I2S_ROLE_MASTER,
             .dma_desc_num = AUDIO_CODEC_DMA_DESC_NUM,
             .dma_frame_num = AUDIO_CODEC_DMA_FRAME_NUM,
@@ -153,7 +153,7 @@ NoAudioCodecSimplex::NoAudioCodecSimplex(int input_sample_rate, int output_sampl
 
     if (GPIO_IS_VALID_GPIO(mic_sck) && GPIO_IS_VALID_GPIO(mic_ws) && GPIO_IS_VALID_GPIO(mic_din)) {
         i2s_chan_config_t chan_cfg = {
-            .id = XIAOZHI_I2S_PORT(1),
+            .id = 1,
             .role = I2S_ROLE_MASTER,
             .dma_desc_num = AUDIO_CODEC_DMA_DESC_NUM,
             .dma_frame_num = AUDIO_CODEC_DMA_FRAME_NUM,
@@ -297,7 +297,7 @@ NoAudioCodecSimplexPdm::NoAudioCodecSimplexPdm(int input_sample_rate, int output
     int rx_desc_num = 0;
 
     if (GPIO_IS_VALID_GPIO(spk_bclk) && GPIO_IS_VALID_GPIO(spk_ws) && GPIO_IS_VALID_GPIO(spk_dout)) {
-        i2s_chan_config_t tx_chan_cfg = I2S_CHANNEL_DEFAULT_CONFIG(XIAOZHI_I2S_PORT(1), I2S_ROLE_MASTER);
+        i2s_chan_config_t tx_chan_cfg = I2S_CHANNEL_DEFAULT_CONFIG(1, I2S_ROLE_MASTER);
         tx_chan_cfg.dma_desc_num = AUDIO_CODEC_DMA_DESC_NUM;
         tx_chan_cfg.dma_frame_num = AUDIO_CODEC_DMA_FRAME_NUM;
         tx_chan_cfg.auto_clear_after_cb = true;
@@ -349,7 +349,7 @@ NoAudioCodecSimplexPdm::NoAudioCodecSimplexPdm(int input_sample_rate, int output
     }
 #if SOC_I2S_SUPPORTS_PDM_RX
     if (GPIO_IS_VALID_GPIO(mic_sck) && GPIO_IS_VALID_GPIO(mic_din)) {
-        i2s_chan_config_t rx_chan_cfg = I2S_CHANNEL_DEFAULT_CONFIG(XIAOZHI_I2S_PORT(0), I2S_ROLE_MASTER);
+        i2s_chan_config_t rx_chan_cfg = I2S_CHANNEL_DEFAULT_CONFIG(0, I2S_ROLE_MASTER);
         rx_frames_per_block = rx_chan_cfg.dma_frame_num;
         rx_desc_num = rx_chan_cfg.dma_desc_num;
         ESP_ERROR_CHECK(i2s_new_channel(&rx_chan_cfg, NULL, &rx_handle_));

@@ -96,7 +96,7 @@ esp_err_t vl6180x_init(const vl6180x_config_t *config, vl6180x_handle_t *out_han
     dev->scaling = (config->scaling > 0 && config->scaling <= 3) ? config->scaling : 1;
     dev->als_gain = VL6180X_ALS_GAIN_1;
     dev->als_integration_ms = 100;
-    if (dev->xshut_pin >= 0) {
+    if (GPIO_IS_VALID_GPIO(dev->xshut_pin)) {
         gpio_config_t io_conf = {
             .pin_bit_mask = (1ULL << dev->xshut_pin),
             .mode = GPIO_MODE_OUTPUT,
@@ -159,7 +159,7 @@ esp_err_t vl6180x_init(const vl6180x_config_t *config, vl6180x_handle_t *out_han
 esp_err_t vl6180x_deinit(vl6180x_handle_t handle)
 {
     if (!handle) return ESP_ERR_INVALID_ARG;
-    if (handle->xshut_pin >= 0) {
+    if (GPIO_IS_VALID_GPIO(handle->xshut_pin)) {
         gpio_set_level(handle->xshut_pin, 0);
     }
     if (handle->i2c_dev) {

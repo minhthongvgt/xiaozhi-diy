@@ -106,21 +106,13 @@ Vào tab **Biên dịch & Nạp**, bấm Build. Log hiển thị trực tiếp t
 
 ### 4.2 Biên dịch bằng dòng lệnh
 
-Mở thư mục gốc dự án và chạy:
+Nhấp đúp `02-build_esp32s3.bat` ở thư mục gốc dự án. Script:
 
-```bat
-build_windows.bat
-```
+1. Tự tìm ESP-IDF 6.1 (bản cài bằng ESP-IDF Installation Manager hoặc bản cài cũ) và nạp môi trường.
+2. Tự `set-target esp32s3` nếu thư mục chưa ở target này; đã đúng thì bỏ qua (set-target xoá `sdkconfig`).
+3. Hiện menu: `menuconfig`, `build`, hoặc làm lại set-target.
 
-Script tự nạp môi trường ESP-IDF và chạy `idf.py build`. Nếu đã đặt biến `IDF_PATH`, script dùng đường dẫn đó; nếu không, script tự tìm ESP-IDF trong các thư mục cài đặt thông dụng.
-
-Truyền thêm lệnh của `idf.py` nếu cần, ví dụ build, nạp và mở monitor:
-
-```bat
-build_windows.bat -p COM3 flash monitor
-```
-
-Thay `COM3` bằng cổng thực tế của board (xem trong Device Manager).
+Để nạp firmware và xem log, dùng `idf.py -p COMx flash monitor` trong ESP-IDF terminal (mục 4.4). Thay `COMx` bằng cổng thực tế của board (xem trong Device Manager).
 
 ### 4.3 Cấu hình chi tiết bằng menuconfig
 
@@ -164,7 +156,7 @@ Nếu nạp không được (xem mục 5), giữ nút **BOOT** (GPIO 0), nhấn 
 
 | Triệu chứng | Nguyên nhân thường gặp | Cách xử lý |
 | :--- | :--- | :--- |
-| `ESP-IDF 6.x was not found` | Không tìm thấy ESP-IDF | Cài ESP-IDF 6.1, rồi đặt biến `IDF_PATH` trỏ tới thư mục cài đặt. Hoặc mở "ESP-IDF PowerShell" và chạy `build_windows.bat` từ đó. |
+| `Khong tim thay ESP-IDF 6.1` | Không tìm thấy ESP-IDF 6.1 | Cài ESP-IDF 6.1 bằng ESP-IDF Installation Manager, hoặc mở terminal ESP-IDF 6.1 rồi chạy `02-build_esp32s3.bat` từ đó. |
 | `Missing file ... .h` hoặc `undefined reference` | Sau khi thêm hoặc đổi tên file, CMake chưa cập nhật | Xoá thư mục `build/` và build lại. |
 | Build báo lỗi chữ tiếng Việt hoặc ký tự lạ | Terminal chưa dùng UTF-8 | Chạy `01 set-UTF8-Fix-windows.bat`, mở terminal mới. |
 | Đổi cấu hình nhưng firmware vẫn như cũ | Chưa build lại sau khi lưu | Lưu trên Web Configurator, rồi build lại. Nếu cần, xoá `sdkconfig` để sinh lại từ `sdkconfig.defaults`. |

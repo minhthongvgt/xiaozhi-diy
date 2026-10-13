@@ -21,21 +21,18 @@ echo.
 
 set "PY_CMD="
 
-:: 1. Kiểm tra python trong PATH
 python --version >nul 2>&1
 if not errorlevel 1 (
     set "PY_CMD=python"
     goto python_found
 )
 
-:: 2. Kiểm tra py launcher
 py -3 --version >nul 2>&1
 if not errorlevel 1 (
     set "PY_CMD=py -3"
     goto python_found
 )
 
-:: 3. Kiểm tra biến môi trường IDF_TOOLS_PATH
 if defined IDF_TOOLS_PATH (
     if exist "%IDF_TOOLS_PATH%\python.exe" (
         set "PY_CMD=%IDF_TOOLS_PATH%\python.exe"
@@ -43,7 +40,6 @@ if defined IDF_TOOLS_PATH (
     )
 )
 
-:: 4. Quét các ổ đĩa tìm Espressif tools python
 for %%D in (C D E F) do (
     if not defined PY_CMD if exist "%%D:\Espressif\tools\python\python.exe" (
         set "PY_CMD=%%D:\Espressif\tools\python\python.exe"
@@ -51,7 +47,6 @@ for %%D in (C D E F) do (
     )
 )
 
-:: 5. Quét Espressif idf-python
 for %%D in (C D E F) do (
     if not defined PY_CMD if exist "%%D:\Espressif\tools\idf-python\" (
         for /f "delims=" %%F in ('dir /b /s "%%D:\Espressif\tools\idf-python\python.exe" 2^>nul') do (
@@ -63,7 +58,6 @@ for %%D in (C D E F) do (
     )
 )
 
-:: 6. Quét .espressif trong User Profile
 if exist "%USERPROFILE%\.espressif\python_env\" (
     for /f "delims=" %%F in ('dir /b /s "%USERPROFILE%\.espressif\python_env\python.exe" 2^>nul') do (
         if not defined PY_CMD if exist "%%F" (

@@ -299,11 +299,7 @@ constexpr size_t kBlufiIvSize = 16;
 constexpr size_t kBlufiHashSize = 32;
 constexpr char kBlufiEncryptDomain[] = "blufi_enc";
 constexpr char kBlufiDecryptDomain[] = "blufi_dec";
-#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(6, 0, 0)
 constexpr auto kBlufiHashError = ESP_BLUFI_CALC_SHA_256_ERROR;
-#else
-constexpr auto kBlufiHashError = ESP_BLUFI_CALC_MD5_ERROR;
-#endif
 }  
 void Blufi::_security_init() {
     _security_deinit();

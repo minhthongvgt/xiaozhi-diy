@@ -10,7 +10,7 @@
 class RobotMcpController {
 public:
     RobotMcpController() {
-        auto& mcp_server = McpServer::GetInstance();
+        [[maybe_unused]] auto& mcp_server = McpServer::GetInstance();
 #if defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE)
         mcp_server.AddTool(
             "self.robot.move",

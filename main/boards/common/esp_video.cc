@@ -819,7 +819,7 @@ bool EspVideo::Capture() {
                     return false;
                 }
                 memcpy(data, frame_.data, frame_.len);
-                lvgl_image_size = frame_.len;  // fallthrough 时兼顾 YUYV 与 RGB565
+                lvgl_image_size = frame_.len;
                 break;
 
 #ifdef CONFIG_XIAOZHI_CAMERA_ALLOW_JPEG_INPUT

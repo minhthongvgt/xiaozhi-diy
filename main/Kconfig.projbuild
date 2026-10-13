@@ -436,7 +436,6 @@ menu "Camera Configuration"
 
             Not currently supported when used simultaneously with XIAOZHI_ENABLE_ROTATE_CAMERA_IMAGE.
 
-
     config XIAOZHI_ENABLE_CAMERA_DEBUG_MODE
         bool "Enable Camera Debug Mode"
         default n
@@ -483,8 +482,6 @@ menu "Camera Configuration"
         endchoice
     endif
 endmenu
-
-
 
 menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
     depends on IDF_TARGET_ESP32S3
@@ -665,25 +662,21 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 range -1 48
                 default -1
 
-
             config CUSTOM_DISPLAY_PIN_CLK
                 int "Chân xung nhịp SPI CLK (SCL)"
                 depends on !CUSTOM_DISPLAY_OLED_SSD1306 && !CUSTOM_DISPLAY_OLED_SH1106 && !CUSTOM_DISPLAY_QSPI_AMOLED && !CUSTOM_DISPLAY_UART && !CUSTOM_DISPLAY_NONE
                 range -1 48
                 default -1
 
-
             config CUSTOM_DISPLAY_PIN_CS
                 int "Chân chọn chip SPI CS (-1 nếu không dùng)"
                 range -1 48
                 default -1
 
-
             config CUSTOM_DISPLAY_PIN_DC
                 int "Chân lệnh/dữ liệu SPI DC"
                 range -1 48
                 default -1
-
 
             config CUSTOM_DISPLAY_USE_RST
                 bool "Sử dụng chân Reset màn hình (RST)"
@@ -695,7 +688,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 range -1 48
                 default -1
 
-
             config CUSTOM_DISPLAY_USE_BLK
                 bool "Điều khiển đèn nền màn hình (Backlight BLK)"
                 default y
@@ -706,20 +698,17 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 range -1 48
                 default -1
 
-
             config CUSTOM_DISPLAY_PIN_I2C_SDA
                 int "Chân OLED I2C SDA"
                 depends on CUSTOM_DISPLAY_OLED_SSD1306 || CUSTOM_DISPLAY_OLED_SH1106
                 range -1 48
                 default -1
 
-
             config CUSTOM_DISPLAY_PIN_I2C_SCL
                 int "Chân OLED I2C SCL"
                 depends on CUSTOM_DISPLAY_OLED_SSD1306 || CUSTOM_DISPLAY_OLED_SH1106
                 range -1 48
                 default -1
-
 
             choice CUSTOM_DISPLAY_AMOLED_CHIP
                 prompt "Chip điều khiển AMOLED QSPI (AMOLED Controller IC)"
@@ -904,7 +893,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     Mặc định tắt. Chỉ bật khi màu hiển thị bị âm bản (thường gặp ở một số tấm IPS).
         endif
 
-
         menuconfig ENABLE_CUSTOM_TOUCH
             bool "Màn hình cảm ứng (Touch Screen Panel)"
             default n
@@ -1024,25 +1012,21 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 range -1 48
                 default -1
 
-
             config CUSTOM_AUDIO_SPK_GPIO_BCLK
                 int "Chân xung nhịp Loa I2S BCLK (BCK)"
                 range -1 48
                 default -1
-
 
             config CUSTOM_AUDIO_SPK_GPIO_LRCK
                 int "Chân xung nhịp Loa I2S LRCK / WS (LCK)"
                 range -1 48
                 default -1
 
-
             config CUSTOM_AUDIO_SPK_CODEC_I2C_SDA
                 int "Chân Codec DAC I2C SDA"
                 depends on CUSTOM_AUDIO_SPK_CODEC_ES8311 || CUSTOM_AUDIO_SPK_CODEC_ES8388 || CUSTOM_AUDIO_SPK_CODEC_ES8374 || CUSTOM_AUDIO_SPK_CODEC_ES8389 || CUSTOM_AUDIO_SPK_CODEC_BOX
                 range -1 48
                 default -1
-
 
             config CUSTOM_AUDIO_SPK_CODEC_I2C_SCL
                 int "Chân Codec DAC I2C SCL"
@@ -1086,25 +1070,21 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 range -1 48
                 default -1
 
-
             config CUSTOM_AUDIO_MIC_GPIO_SCK
                 int "Chân xung nhịp Micro I2S SCK (SCK/BCLK)"
                 range -1 48
                 default -1
-
 
             config CUSTOM_AUDIO_MIC_GPIO_WS
                 int "Chân chọn kênh Micro I2S WS (WS/LRCK)"
                 range -1 48
                 default -1
 
-
             config CUSTOM_AUDIO_MIC_CODEC_I2C_SDA
                 int "Chân Codec ADC I2C SDA"
                 depends on CUSTOM_AUDIO_MIC_CODEC_ES8311 || CUSTOM_AUDIO_MIC_CODEC_ES8388 || CUSTOM_AUDIO_MIC_CODEC_ES8374 || CUSTOM_AUDIO_MIC_CODEC_ES8389 || CUSTOM_AUDIO_MIC_CODEC_BOX
                 range -1 48
                 default -1
-
 
             config CUSTOM_AUDIO_MIC_CODEC_I2C_SCL
                 int "Chân Codec ADC I2C SCL"
@@ -1165,12 +1145,10 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 range -1 48
                 default -1
 
-
             config CUSTOM_UART_PIN_RX
                 int "Chân nhận UART RX GPIO"
                 range -1 48
                 default -1
-
 
             config CUSTOM_UART_BAUDRATE
                 int "Tốc độ baud truyền thông (Baudrate)"
@@ -1248,8 +1226,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             depends on CUSTOM_ENABLE_BUTTON_BOOT
             default ""
 
-
-        # 5. Nút bấm Action / Chạm (PTT Key)
         config CUSTOM_ENABLE_BUTTON_TOUCH
             bool "Nút bấm chức năng Action / Chạm (PTT / Touch Key)"
             default n
@@ -1262,7 +1238,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             range -1 48
             default -1
 
-        # 6. Cụm phím vật lý Tăng / Giảm âm lượng
         config CUSTOM_ENABLE_BUTTON_VOLUME
             bool "Cụm phím vật lý Tăng / Giảm âm lượng (Volume Buttons)"
             default n
@@ -1281,7 +1256,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             range -1 48
             default -1
 
-        # 18. Thanh trượt cảm ứng nội bộ (Touch Slider - Bổ sung chân Touch Pad)
         config CUSTOM_ENABLE_TOUCH_SLIDER
             bool "Thanh trượt cảm ứng điện dung nội bộ ESP32-S3 (Touch Slider)"
             default n
@@ -1318,12 +1292,10 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 range -1 48
                 default -1
 
-
             config CUSTOM_PERIPH_ENCODER_PHASE_B
                 int "Chân xung pha B (DT) Encoder"
                 range -1 48
                 default -1
-
 
             config CUSTOM_PERIPH_ENCODER_KEY_PIN
                 int "Chân phím nhấn SW Encoder (-1 nếu không dùng)"
@@ -1331,7 +1303,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 default -1
         endif
 
-        # 31. Driver Cảm biến / Ngoại vi tùy chỉnh do người dùng tự viết
         config CUSTOM_ENABLE_USER_CUSTOM_SENSORS
             bool "Driver Cảm biến ngoại vi tùy chỉnh (Custom User Sensor Hook)"
             default n
@@ -1341,7 +1312,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
         endmenu
 
         menu "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)"
-        # 1. Camera & Thị giác AI
         menuconfig ENABLE_CUSTOM_CAMERA
             bool "Camera & Thị giác AI (Camera DVP / USB UVC)"
             default n
@@ -1535,7 +1505,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
         endmenu
 
         menu "4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics)"
-        # 3. Động cơ Servo tương tác qua PWM (Tách độc lập)
         config CUSTOM_ENABLE_SERVO_DOG
             bool "Động cơ Servo tương tác qua PWM (Servo Dog Controller)"
             default n
@@ -1548,7 +1517,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             range -1 48
             default -1
 
-        # Âm thanh cảnh báo Buzzer & Phản hồi xúc giác
         config ENABLE_BUZZER
             bool "Còi báo động Buzzer (GPIO 41)"
             default n
@@ -1581,7 +1549,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
         endmenu
 
         menu "4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow)"
-        # 11. Cảm biến Nhiệt độ & Độ ẩm 1 dây DHT11 / DHT22
         config CUSTOM_ENABLE_SENSOR_DHT11_22
             bool "Cảm biến Nhiệt độ & Độ ẩm 1 dây (DHT11 / DHT22)"
             default n
@@ -1599,7 +1566,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             range -1 48
             default -1
 
-        # 12. Cảm biến Nhiệt độ & Độ ẩm kỹ thuật số I2C AHT20 / SHT3x
         config CUSTOM_ENABLE_SENSOR_I2C_TEMP_HUMID
             bool "Cảm biến Nhiệt độ & Độ ẩm kỹ thuật số I2C (AHT20 / SHT3x)"
             default n
@@ -1785,7 +1751,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 range -1 48
                 default -1
         endif
-        # 16. Cảm biến Khoảng cách siêu âm HC-SR04 / US-100
         config CUSTOM_ENABLE_SENSOR_HCSR04
             bool "Cảm biến khoảng cách siêu âm (HC-SR04 / US-100)"
             default n
@@ -1804,7 +1769,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             range -1 48
             default -1
 
-        # 17. Cảm biến Chuyển động người PIR
         config CUSTOM_ENABLE_SENSOR_PIR
             bool "Cảm biến phát hiện người chuyển động PIR (HC-SR501 / RCWL-0516)"
             default n
@@ -1817,7 +1781,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             range -1 48
             default -1
 
-        # 36. Cảm biến cảnh báo chấn động / Rung SW-420
         config CUSTOM_ENABLE_SENSOR_VIBRATION_SW420
             bool "Cảm biến cảnh báo chấn động / Rung tiếp điểm (SW-420 GPIO Interrupt)"
             default n
@@ -1831,7 +1794,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 default -1
         endif
 
-        # 37. Cảm biến cảnh báo hỏa hoạn / Lửa Flame Sensor
         config CUSTOM_ENABLE_SENSOR_FLAME
             bool "Cảm biến cảnh báo hỏa hoạn / Ngọn lửa (Flame Sensor IR)"
             default n
@@ -1848,7 +1810,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
         endmenu
 
         menu "4.6. Động Cơ, Robot & Cơ Cấu Chấp Hành (Motors, Robotics & Actuators)"
-        # 7. Rơ-le điều khiển thiết bị
         config CUSTOM_PERIPH_RELAY_ENABLE
             bool "Rơ-le đóng cắt thiết bị độc lập (Relay Switch)"
             default n
@@ -1861,7 +1822,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             range -1 48
             default -1
 
-        # 32. Mạch cầu H Động cơ DC 2 chiều cho xe robot
         config CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE
             bool "Mạch cầu H Động cơ DC 2 chiều cho xe robot (TB6612FNG / L9110S / DRV8833)"
             default n
@@ -1886,18 +1846,15 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 range -1 48
                 default -1
 
-
             config CUSTOM_PERIPH_MOTOR_DIRA_PIN
                 int "Chân hướng quay Động cơ A (DIRA / IN1)"
                 range -1 48
                 default -1
 
-
             config CUSTOM_PERIPH_MOTOR_PWMB_PIN
                 int "Chân điều tốc PWM Động cơ B (PWMB)"
                 range -1 48
                 default -1
-
 
             config CUSTOM_PERIPH_MOTOR_DIRB_PIN
                 int "Chân hướng quay Động cơ B (DIRB / IN3)"
@@ -1909,7 +1866,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
         endmenu
 
         menu "4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom)"
-        # 19. Mạch đo dung lượng Pin (Battery Level Monitor - Chuẩn hóa Checkbox)
         config CUSTOM_ENABLE_BATTERY_MONITOR
             bool "Mạch đo dung lượng Pin (Battery Level Monitor)"
             default n
@@ -1940,7 +1896,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 default 100
         endif
 
-        # 27. Module đo điện áp, dòng điện & công suất INA219 / INA226
         config CUSTOM_ENABLE_SENSOR_INA2XX
             bool "Module đo điện áp, dòng điện & công suất tiêu thụ (TI INA219 / INA226 I2C)"
             default n
@@ -1957,7 +1912,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 range -1 48
                 default -1
 
-
             config CUSTOM_SENSOR_INA2XX_I2C_SCL
                 int "Chân I2C SCL module đo dòng INA"
                 range -1 48
@@ -1965,7 +1919,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
 
         endif
 
-        # 39. Giám sát trạng thái sạc pin TP4056
         config CUSTOM_ENABLE_PERIPH_BATTERY_CHARGING_DETECT
             bool "Giám sát trạng thái sạc pin (TP4056 CHRG / STDBY Pin)"
             default n
@@ -2267,4 +2220,3 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
 endmenu
 
 endmenu
-

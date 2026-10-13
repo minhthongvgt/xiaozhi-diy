@@ -9,6 +9,7 @@
 #include <esp_log.h>
 #include <string>
 #include <unistd.h>
+#include <cstdlib>
 #endif
 
 #define TAG "AudioDebugger"
@@ -22,7 +23,15 @@ AudioDebugger::AudioDebugger() {
 
         if (colon_pos != std::string::npos) {
             std::string ip = server_addr.substr(0, colon_pos);
-            int port = std::stoi(server_addr.substr(colon_pos + 1));
+            const char* port_text = server_addr.c_str() + colon_pos + 1;
+            char* port_end = nullptr;
+            long port = std::strtol(port_text, &port_end, 10);
+            if (port_end == port_text || port <= 0 || port > 65535) {
+                ESP_LOGE(TAG, "Invalid audio debug server port in %s", CONFIG_AUDIO_DEBUG_UDP_SERVER);
+                close(udp_sockfd_);
+                udp_sockfd_ = -1;
+                return;
+            }
 
             memset(&udp_server_addr_, 0, sizeof(udp_server_addr_));
             udp_server_addr_.sin_family = AF_INET;

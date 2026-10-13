@@ -3,7 +3,6 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/event_groups.h>
 #include <driver/i2s_std.h>
-#include <esp_idf_version.h>
 #include <esp_timer.h>
 #include <vector>
 #include <string>
@@ -13,11 +12,6 @@
 #include "soft_aec_reference.h"
 #define AUDIO_CODEC_DMA_DESC_NUM 8
 #define AUDIO_CODEC_DMA_FRAME_NUM 480
-#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(6, 0, 0)
-#define XIAOZHI_I2S_PORT(port) (port)
-#else
-#define XIAOZHI_I2S_PORT(port) static_cast<i2s_port_t>(port)
-#endif
 class AudioCodec {
 public:
     AudioCodec();

@@ -1,7 +1,5 @@
-# Project include for main component
 message(STATUS "[Xiaozhi] Loading main/project_include.cmake")
 
-# Override partition_table_get_partition_info to suppress esp-sr's model partition query
 function(partition_table_get_partition_info result get_part_info_args part_info)
     if((CMAKE_CURRENT_LIST_DIR MATCHES "esp-sr" OR COMPONENT_NAME MATCHES "esp-sr") AND get_part_info_args MATCHES "model")
         message(STATUS "[Xiaozhi] Suppressed esp-sr model partition query (srmodels already bundled in generated_assets.bin)")
@@ -37,7 +35,6 @@ function(partition_table_get_partition_info result get_part_info_args part_info)
     set(${result} "${info}" PARENT_SCOPE)
 endfunction()
 
-# Override esptool_py_flash_to_partition to block duplicate srmodels.bin flash to 'model' partition
 function(esptool_py_flash_to_partition target_name partition_name binary_path)
     if(binary_path MATCHES "srmodels" AND partition_name STREQUAL "model")
         message(STATUS "[Xiaozhi] Suppressed duplicate srmodels.bin flash to 'model' partition")

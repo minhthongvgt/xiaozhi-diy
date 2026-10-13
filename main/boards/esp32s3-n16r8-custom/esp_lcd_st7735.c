@@ -10,7 +10,6 @@
 #include "driver/gpio.h"
 #include "esp_log.h"
 #include "esp_check.h"
-#include "esp_idf_version.h"
 #include "esp_lcd_st7735.h"
 static const char *TAG = "lcd_panel.st7735";
 static esp_err_t panel_st7735_del(esp_lcd_panel_t *panel);
@@ -70,31 +69,6 @@ esp_err_t esp_lcd_new_panel_st7735(const esp_lcd_panel_io_handle_t io, const esp
         io_conf.pin_bit_mask = 1ULL << panel_dev_config->reset_gpio_num;
         ESP_GOTO_ON_ERROR(gpio_config(&io_conf), err, TAG, "configure GPIO for RST line failed");
     }
-#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
-    switch (panel_dev_config->color_space) {
-    case ESP_LCD_COLOR_SPACE_RGB:
-        st7735->madctl_val = 0;
-        break;
-    case ESP_LCD_COLOR_SPACE_BGR:
-        st7735->madctl_val |= LCD_CMD_BGR_BIT;
-        break;
-    default:
-        ESP_GOTO_ON_FALSE(false, ESP_ERR_NOT_SUPPORTED, err, TAG, "unsupported color space");
-        break;
-    }
-#elif ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(6, 0, 0)
-    switch (panel_dev_config->rgb_endian) {
-    case LCD_RGB_ENDIAN_RGB:
-        st7735->madctl_val = 0;
-        break;
-    case LCD_RGB_ENDIAN_BGR:
-        st7735->madctl_val |= LCD_CMD_BGR_BIT;
-        break;
-    default:
-        ESP_GOTO_ON_FALSE(false, ESP_ERR_NOT_SUPPORTED, err, TAG, "unsupported rgb endian");
-        break;
-    }
-#else
     switch (panel_dev_config->rgb_ele_order) {
     case LCD_RGB_ELEMENT_ORDER_RGB:
         st7735->madctl_val = 0;
@@ -107,7 +81,6 @@ esp_err_t esp_lcd_new_panel_st7735(const esp_lcd_panel_io_handle_t io, const esp
                           "unsupported rgb element order");
         break;
     }
-#endif
     switch (panel_dev_config->bits_per_pixel) {
     case 12: 
         st7735->colmod_val = 0x03;
@@ -140,11 +113,7 @@ esp_err_t esp_lcd_new_panel_st7735(const esp_lcd_panel_io_handle_t io, const esp
     st7735->base.set_gap = panel_st7735_set_gap;
     st7735->base.mirror = panel_st7735_mirror;
     st7735->base.swap_xy = panel_st7735_swap_xy;
-#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
-    st7735->base.disp_off = panel_st7735_disp_on_off;
-#else
     st7735->base.disp_on_off = panel_st7735_disp_on_off;
-#endif
     *ret_panel = &(st7735->base);
     ESP_LOGD(TAG, "new st7735 panel @%p", st7735);
     ESP_LOGI(TAG, "ST7735 LCD panel create success");
@@ -289,9 +258,6 @@ static esp_err_t panel_st7735_disp_on_off(esp_lcd_panel_t *panel, bool on_off)
     st7735_panel_t *st7735 = __containerof(panel, st7735_panel_t, base);
     esp_lcd_panel_io_handle_t io = st7735->io;
     int command = 0;
-#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
-    on_off = !on_off;
-#endif
     if (on_off) {
         command = LCD_CMD_DISPON;
     } else {

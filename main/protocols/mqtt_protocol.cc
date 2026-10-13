@@ -8,6 +8,7 @@
 #include <netdb.h>
 #include <cstring>
 #include "assets/lang_config.h"
+#include <cstdlib>
 
 #define TAG "MQTT"
 
@@ -151,7 +152,14 @@ bool MqttProtocol::StartMqttClient(bool report_error) {
     size_t pos = endpoint.find(':');
     if (pos != std::string::npos) {
         broker_address = endpoint.substr(0, pos);
-        broker_port = std::stoi(endpoint.substr(pos + 1));
+        const char* port_text = endpoint.c_str() + pos + 1;
+        char* port_end = nullptr;
+        long port = std::strtol(port_text, &port_end, 10);
+        if (port_end != port_text && port > 0 && port <= 65535) {
+            broker_port = static_cast<int>(port);
+        } else {
+            ESP_LOGW(TAG, "Invalid MQTT port in endpoint '%s', using %d", endpoint.c_str(), broker_port);
+        }
     } else {
         broker_address = endpoint;
     }

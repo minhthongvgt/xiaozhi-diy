@@ -4,7 +4,6 @@
 #include <vector>
 #include "esp_blufi_api.h"
 #include "esp_err.h"
-#include "esp_idf_version.h"
 #include "esp_timer.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"

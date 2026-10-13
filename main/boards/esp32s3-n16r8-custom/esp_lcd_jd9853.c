@@ -12,7 +12,6 @@
 #include "driver/gpio.h"
 #include "esp_log.h"
 #include "esp_check.h"
-#include "esp_idf_version.h"
 static const char *TAG = "JD9853";
 static esp_err_t panel_jd9853_del(esp_lcd_panel_t *panel);
 static esp_err_t panel_jd9853_reset(esp_lcd_panel_t *panel);
@@ -45,39 +44,12 @@ esp_err_t esp_lcd_new_panel_jd9853(const esp_lcd_panel_io_handle_t io, const esp
     ESP_GOTO_ON_FALSE(io && panel_dev_config && ret_panel, ESP_ERR_INVALID_ARG, err, TAG, "invalid argument");
     jd9853 = (jd9853_panel_t *)calloc(1, sizeof(jd9853_panel_t));
     ESP_GOTO_ON_FALSE(jd9853, ESP_ERR_NO_MEM, err, TAG, "no mem for jd9853 panel");
-    if (panel_dev_config->reset_gpio_num >= 0)
+    if (GPIO_IS_VALID_GPIO(panel_dev_config->reset_gpio_num))
     {
         io_conf.mode = GPIO_MODE_OUTPUT;
         io_conf.pin_bit_mask = 1ULL << panel_dev_config->reset_gpio_num;
         ESP_GOTO_ON_ERROR(gpio_config(&io_conf), err, TAG, "configure GPIO for RST line failed");
     }
-#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
-    switch (panel_dev_config->color_space)
-    {
-    case ESP_LCD_COLOR_SPACE_RGB:
-        jd9853->madctl_val = 0;
-        break;
-    case ESP_LCD_COLOR_SPACE_BGR:
-        jd9853->madctl_val |= LCD_CMD_BGR_BIT;
-        break;
-    default:
-        ESP_GOTO_ON_FALSE(false, ESP_ERR_NOT_SUPPORTED, err, TAG, "unsupported color space");
-        break;
-    }
-#elif ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(6, 0, 0)
-    switch (panel_dev_config->rgb_endian)
-    {
-    case LCD_RGB_ENDIAN_RGB:
-        jd9853->madctl_val = 0;
-        break;
-    case LCD_RGB_ENDIAN_BGR:
-        jd9853->madctl_val |= LCD_CMD_BGR_BIT;
-        break;
-    default:
-        ESP_GOTO_ON_FALSE(false, ESP_ERR_NOT_SUPPORTED, err, TAG, "unsupported rgb endian");
-        break;
-    }
-#else
     switch (panel_dev_config->rgb_ele_order)
     {
     case LCD_RGB_ELEMENT_ORDER_RGB:
@@ -90,7 +62,6 @@ esp_err_t esp_lcd_new_panel_jd9853(const esp_lcd_panel_io_handle_t io, const esp
         ESP_GOTO_ON_FALSE(false, ESP_ERR_NOT_SUPPORTED, err, TAG, "unsupported RGB element order");
         break;
     }
-#endif
     switch (panel_dev_config->bits_per_pixel)
     {
     case 16: 
@@ -121,18 +92,14 @@ esp_err_t esp_lcd_new_panel_jd9853(const esp_lcd_panel_io_handle_t io, const esp
     jd9853->base.set_gap = panel_jd9853_set_gap;
     jd9853->base.mirror = panel_jd9853_mirror;
     jd9853->base.swap_xy = panel_jd9853_swap_xy;
-#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
-    jd9853->base.disp_off = panel_jd9853_disp_on_off;
-#else
     jd9853->base.disp_on_off = panel_jd9853_disp_on_off;
-#endif
     *ret_panel = &(jd9853->base);
     ESP_LOGD(TAG, "new jd9853 panel @%p", jd9853);
     return ESP_OK;
 err:
     if (jd9853)
     {
-        if (panel_dev_config->reset_gpio_num >= 0)
+        if (GPIO_IS_VALID_GPIO(panel_dev_config->reset_gpio_num))
         {
             gpio_reset_pin(panel_dev_config->reset_gpio_num);
         }
@@ -143,7 +110,7 @@ err:
 static esp_err_t panel_jd9853_del(esp_lcd_panel_t *panel)
 {
     jd9853_panel_t *jd9853 = __containerof(panel, jd9853_panel_t, base);
-    if (jd9853->reset_gpio_num >= 0)
+    if (GPIO_IS_VALID_GPIO(jd9853->reset_gpio_num))
     {
         gpio_reset_pin(jd9853->reset_gpio_num);
     }
@@ -155,7 +122,7 @@ static esp_err_t panel_jd9853_reset(esp_lcd_panel_t *panel)
 {
     jd9853_panel_t *jd9853 = __containerof(panel, jd9853_panel_t, base);
     esp_lcd_panel_io_handle_t io = jd9853->io;
-    if (jd9853->reset_gpio_num >= 0)
+    if (GPIO_IS_VALID_GPIO(jd9853->reset_gpio_num))
     {
         gpio_set_level(jd9853->reset_gpio_num, jd9853->reset_level);
         vTaskDelay(pdMS_TO_TICKS(10));
@@ -359,9 +326,6 @@ static esp_err_t panel_jd9853_disp_on_off(esp_lcd_panel_t *panel, bool on_off)
     jd9853_panel_t *jd9853 = __containerof(panel, jd9853_panel_t, base);
     esp_lcd_panel_io_handle_t io = jd9853->io;
     int command = 0;
-#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
-    on_off = !on_off;
-#endif
     if (on_off)
     {
         command = LCD_CMD_DISPON;

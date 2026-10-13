@@ -92,13 +92,11 @@ def scan_c_like(text, lang):
     n = len(text)
     i = 0
     line_comments = lang != 'css'
-    # Ngăn xếp cho template literal JS: mỗi phần tử là độ sâu ngoặc { } trong ${...}
     tpl_stack = []
-    last_sig = ''      # ký tự có nghĩa cuối cùng (bỏ qua khoảng trắng và comment)
-    last_word = ''     # từ định danh cuối cùng, để nhận diện regex sau từ khoá
+    last_sig = ''
+    last_word = ''
 
     def skip_quoted(j, quote):
-        # Chuỗi kết thúc tại dấu nháy đóng hoặc xuống dòng không được escape
         while j < n:
             ch = text[j]
             if ch == '\\':
@@ -112,7 +110,6 @@ def scan_c_like(text, lang):
         return n
 
     def skip_template(j):
-        # j trỏ ngay sau dấu ` mở hoặc sau } đóng ${...}; trả về (vị trí, gặp_${)
         while j < n:
             ch = text[j]
             if ch == '\\':
@@ -155,7 +152,6 @@ def scan_c_like(text, lang):
             j = i + 2
             while j < n:
                 if text[j] == '\n':
-                    # Trong C, dấu \ cuối dòng nối comment sang dòng sau
                     k = j - 1
                     if k >= i and text[k] == '\r':
                         k -= 1
@@ -200,7 +196,6 @@ def scan_c_like(text, lang):
             continue
 
         if ch == "'" and lang == 'c':
-            # Phân biệt dấu phân cách chữ số C++14 (1'000'000) với ký tự literal
             k = i - 1
             while k >= 0 and IDENT_CHARS.match(text[k]):
                 k -= 1
@@ -363,7 +358,6 @@ def remove_spans(text, spans):
                 continue
             line = clean_sentinel_line(line)
         elif not line.strip():
-            # Không để lại nhiều dòng trống liên tiếp ở chỗ vừa xoá comment
             prev_blank = not result or not result[-1][0].strip()
             if dropped_since_kept and prev_blank:
                 removed_lines += 1
@@ -372,7 +366,6 @@ def remove_spans(text, spans):
             dropped_since_kept = False
         result.append((line, sep))
 
-    # Bỏ dòng trống ở đầu file nếu header comment bị xoá
     if not text[:spans[0].start].strip():
         while result and not result[0][0].strip():
             result.pop(0)
@@ -386,12 +379,10 @@ def clean_sentinel_line(line):
     out = pieces[0]
     for piece in pieces[1:]:
         if not out.strip():
-            # Comment ở đầu dòng: giữ thụt lề gốc
             out += piece.lstrip(' 	')
         elif not piece.strip():
             out = out.rstrip(' 	')
         else:
-            # Giữ khoảng trắng để hai token không dính nhau (a/**/b -> a b)
             left = out.rstrip(' 	')
             right = piece.lstrip(' 	')
             gap = out[len(left):] or piece[:len(piece) - len(right)] or ' '
@@ -484,15 +475,25 @@ def write_source(path, text, bom):
         f.write(data)
 
 
-def is_excluded(rel, patterns):
+def safe_relpath(path, root):
+    try:
+        return os.path.relpath(path, root)
+    except ValueError:
+        return os.path.abspath(path)
+
+
+def is_excluded(rel, patterns, is_dir=False):
     rel = rel.replace('\\', '/')
     parts = rel.split('/')
+    dir_parts = parts if is_dir else parts[:-1]
     for pat in patterns:
         pat = pat.replace('\\', '/').strip('/')
         if '/' in pat:
             if fnmatch.fnmatch(rel, pat) or fnmatch.fnmatch(rel, pat + '/*') or rel.startswith(pat + '/'):
                 return True
-        elif any(fnmatch.fnmatch(p, pat) for p in parts):
+        elif any(fnmatch.fnmatch(p, pat) for p in dir_parts):
+            return True
+        elif '.' in pat and fnmatch.fnmatch(parts[-1], pat):
             return True
     return False
 
@@ -503,16 +504,16 @@ def iter_files(paths, root, excludes, exts, self_path):
             yield os.path.abspath(target)
             continue
         for dirpath, dirnames, filenames in os.walk(target):
-            rel_dir = os.path.relpath(dirpath, root)
+            rel_dir = safe_relpath(dirpath, root)
             dirnames[:] = [d for d in dirnames
-                           if not is_excluded(os.path.normpath(os.path.join(rel_dir, d)), excludes)]
+                           if not is_excluded(os.path.normpath(os.path.join(rel_dir, d)), excludes, is_dir=True)]
             for name in sorted(filenames):
                 full = os.path.abspath(os.path.join(dirpath, name))
                 if full == self_path:
                     continue
                 if os.path.splitext(name)[1].lower() not in exts:
                     continue
-                if is_excluded(os.path.relpath(full, root), excludes):
+                if is_excluded(safe_relpath(full, root), excludes):
                     continue
                 yield full
 
@@ -556,7 +557,7 @@ def main():
     errors = []
     total_comments = total_lines = 0
     for path in iter_files(paths, root, excludes, exts, os.path.abspath(__file__)):
-        rel = os.path.relpath(path, root)
+        rel = safe_relpath(path, root)
         try:
             text, bom = read_source(path)
         except UnicodeDecodeError:
@@ -594,7 +595,7 @@ def main():
         with zipfile.ZipFile(backup, 'w', zipfile.ZIP_DEFLATED) as z:
             for path, rel, *_ in changes:
                 z.write(path, rel)
-        print(f'Đã sao lưu {len(changes)} file vào {os.path.relpath(backup, root)}')
+        print(f'Đã sao lưu {len(changes)} file vào {safe_relpath(backup, root)}')
 
     for path, rel, text, cleaned, bom in changes:
         write_source(path, cleaned, bom)

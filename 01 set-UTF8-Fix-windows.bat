@@ -3,15 +3,6 @@ setlocal EnableExtensions
 chcp 65001 >nul
 title Windows fix: UTF-8 + Long Path
 
-:: =====================================================================
-::  01 set-UTF8-Fix-windows.bat
-::  1. Bật UTF-8 cho Python / terminal (cho tài khoản hiện tại)
-::  2. Mở giới hạn độ dài đường dẫn (Long Path > 260 ký tự)
-::     - Windows: HKLM\...\FileSystem\LongPathsEnabled = 1 (cần quyền Admin)
-::     - Git: core.longpaths = true (nếu có Git)
-:: =====================================================================
-
-:: Tự xin quyền Administrator (cần cho Long Path)
 net session >nul 2>&1
 if errorlevel 1 (
     echo [INFO] Dang xin quyen Administrator...

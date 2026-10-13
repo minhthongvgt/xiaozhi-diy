@@ -93,16 +93,6 @@ dependencies:
       registry_url: https://components.espressif.com/
       type: service
     version: 2.0.0
-  cube32esp/xpowerslib:
-    component_hash: 2514666cb8528bfd155d57b8e9f8b7eea2f8d5ceec8de1a937a063106d8c266e
-    dependencies:
-    - name: idf
-      require: private
-      version: '>=4.4.0'
-    source:
-      registry_url: https://components.espressif.com/
-      type: service
-    version: 0.3.3
   esphome/esp-hub75:
     component_hash: 202ba936d1b18780903b734ce9e40b9ec04114dba7420714743018b3047753a8
     dependencies:
@@ -1158,7 +1148,6 @@ direct_dependencies:
 - 78/esp_lcd_nv3023
 - 78/uart-eth-modem
 - 78/xiaozhi-fonts
-- cube32esp/xpowerslib
 - esphome/esp-hub75
 - espressif/adc_battery_estimation
 - espressif/bmi270_sensor
@@ -1209,6 +1198,6 @@ direct_dependencies:
 - waveshare/esp_lcd_sh8601
 - waveshare/esp_lcd_touch_cst9217
 - wvirgil123/sscma_client
-manifest_hash: 28993ffc9d1c06c7962e11b131cdc329e7d963a41b4681d0c3dd1875230a42ff
+manifest_hash: 98dce733cf0d88b508407a3bd24bd419466efae0b7339b24c4e3f77d465022b8
 target: esp32s3
 version: 3.0.0

@@ -45,36 +45,11 @@ esp_err_t esp_lcd_new_panel_ili9486(const esp_lcd_panel_io_handle_t io, const es
     ESP_GOTO_ON_FALSE(io && panel_dev_config && ret_panel, ESP_ERR_INVALID_ARG, err, TAG, "invalid argument");
     ili9486 = (ili9486_panel_t *)calloc(1, sizeof(ili9486_panel_t));
     ESP_GOTO_ON_FALSE(ili9486, ESP_ERR_NO_MEM, err, TAG, "no mem for ili9486 panel");
-    if (panel_dev_config->reset_gpio_num >= 0) {
+    if (GPIO_IS_VALID_GPIO(panel_dev_config->reset_gpio_num)) {
         io_conf.mode = GPIO_MODE_OUTPUT;
         io_conf.pin_bit_mask = 1ULL << panel_dev_config->reset_gpio_num;
         ESP_GOTO_ON_ERROR(gpio_config(&io_conf), err, TAG, "configure GPIO for RST line failed");
     }
-#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
-    switch (panel_dev_config->color_space) {
-    case ESP_LCD_COLOR_SPACE_RGB:
-        ili9486->madctl_val = 0;
-        break;
-    case ESP_LCD_COLOR_SPACE_BGR:
-        ili9486->madctl_val |= LCD_CMD_BGR_BIT;
-        break;
-    default:
-        ESP_GOTO_ON_FALSE(false, ESP_ERR_NOT_SUPPORTED, err, TAG, "unsupported color space");
-        break;
-    }
-#elif ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(6, 0, 0)
-    switch (panel_dev_config->rgb_endian) {
-    case LCD_RGB_ENDIAN_RGB:
-        ili9486->madctl_val = 0;
-        break;
-    case LCD_RGB_ENDIAN_BGR:
-        ili9486->madctl_val |= LCD_CMD_BGR_BIT;
-        break;
-    default:
-        ESP_GOTO_ON_FALSE(false, ESP_ERR_NOT_SUPPORTED, err, TAG, "unsupported rgb endian");
-        break;
-    }
-#else
     switch (panel_dev_config->rgb_ele_order) {
         case LCD_RGB_ELEMENT_ORDER_RGB:
             ili9486->madctl_val = 0;
@@ -87,7 +62,6 @@ esp_err_t esp_lcd_new_panel_ili9486(const esp_lcd_panel_io_handle_t io, const es
                               "unsupported rgb element order");
             break;
     }
-#endif
     switch (panel_dev_config->bits_per_pixel) {
     case 16: 
         ili9486->colmod_val = 0x55;
@@ -116,11 +90,7 @@ esp_err_t esp_lcd_new_panel_ili9486(const esp_lcd_panel_io_handle_t io, const es
     ili9486->base.set_gap = panel_ili9486_set_gap;
     ili9486->base.mirror = panel_ili9486_mirror;
     ili9486->base.swap_xy = panel_ili9486_swap_xy;
-#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
-    ili9486->base.disp_off = panel_ili9486_disp_on_off;
-#else
     ili9486->base.disp_on_off = panel_ili9486_disp_on_off;
-#endif
     *ret_panel = &(ili9486->base);
     ESP_LOGD(TAG, "new ili9486 panel @%p", ili9486);
     ESP_LOGI(TAG, "LCD panel create success, version: %d.%d.%d", ESP_LCD_ILI9486_VER_MAJOR, ESP_LCD_ILI9486_VER_MINOR,
@@ -128,7 +98,7 @@ esp_err_t esp_lcd_new_panel_ili9486(const esp_lcd_panel_io_handle_t io, const es
     return ESP_OK;
 err:
     if (ili9486) {
-        if (panel_dev_config->reset_gpio_num >= 0) {
+        if (GPIO_IS_VALID_GPIO(panel_dev_config->reset_gpio_num)) {
             gpio_reset_pin(panel_dev_config->reset_gpio_num);
         }
         free(ili9486);
@@ -138,7 +108,7 @@ err:
 static esp_err_t panel_ili9486_del(esp_lcd_panel_t *panel)
 {
     ili9486_panel_t *ili9486 = __containerof(panel, ili9486_panel_t, base);
-    if (ili9486->reset_gpio_num >= 0) {
+    if (GPIO_IS_VALID_GPIO(ili9486->reset_gpio_num)) {
         gpio_reset_pin(ili9486->reset_gpio_num);
     }
     ESP_LOGD(TAG, "del ili9486 panel @%p", ili9486);
@@ -149,7 +119,7 @@ static esp_err_t panel_ili9486_reset(esp_lcd_panel_t *panel)
 {
     ili9486_panel_t *ili9486 = __containerof(panel, ili9486_panel_t, base);
     esp_lcd_panel_io_handle_t io = ili9486->io;
-    if (ili9486->reset_gpio_num >= 0) {
+    if (GPIO_IS_VALID_GPIO(ili9486->reset_gpio_num)) {
         gpio_set_level(ili9486->reset_gpio_num, ili9486->reset_level);
         vTaskDelay(pdMS_TO_TICKS(10));
         gpio_set_level(ili9486->reset_gpio_num, !ili9486->reset_level);
@@ -315,9 +285,6 @@ static esp_err_t panel_ili9486_disp_on_off(esp_lcd_panel_t *panel, bool on_off)
     ili9486_panel_t *ili9486 = __containerof(panel, ili9486_panel_t, base);
     esp_lcd_panel_io_handle_t io = ili9486->io;
     int command = 0;
-#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
-    on_off = !on_off;
-#endif
     if (on_off) {
         command = LCD_CMD_DISPON;
     } else {

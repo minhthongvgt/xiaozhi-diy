@@ -4,13 +4,6 @@ chcp 65001 >nul
 title Xiaozhi - set-target esp32s3 / menuconfig / build (ESP-IDF 6.1)
 cd /d "%~dp0"
 
-:: =====================================================================
-::  02-build_esp32s3.bat
-::  1. Tự tìm ESP-IDF 6.1 trên máy (không dùng đường dẫn cố định)
-::  2. Tự nhận diện target: chưa là esp32s3 thì set-target, có rồi thì bỏ qua
-::  3. Menu chọn: menuconfig / build / set-target lại
-:: =====================================================================
-
 set "TARGET=esp32s3"
 set "WANT_MAJOR=6"
 set "WANT_MINOR=1"
@@ -24,13 +17,9 @@ echo    XIAOZHI - BUILD %TARGET% VOI ESP-IDF %WANT_MAJOR%.%WANT_MINOR%
 echo =====================================================================
 echo.
 
-:: ---------------------------------------------------------------------
-:: Tìm ESP-IDF 6.1
-:: ---------------------------------------------------------------------
 set "FOUND_IDF="
 set "EIM_SCRIPT="
 
-:: 0. Đang chạy trong terminal ESP-IDF 6.1 đã kích hoạt sẵn
 if defined IDF_PATH (
     call :check_idf "%IDF_PATH%"
     if defined FOUND_IDF (
@@ -39,10 +28,8 @@ if defined IDF_PATH (
     )
 )
 
-:: 1. Bản cài bằng ESP-IDF Installation Manager (EIM, mặc định của IDF 6.x)
 if not defined FOUND_IDF call :scan_eim
 
-:: 2. Quét các thư mục cài đặt thông dụng trên mọi ổ đĩa
 if not defined FOUND_IDF call :scan_root "%USERPROFILE%\esp"
 if not defined FOUND_IDF call :scan_root "%USERPROFILE%\.espressif"
 if not defined FOUND_IDF call :scan_root "%USERPROFILE%\.espressif\frameworks"
@@ -63,9 +50,6 @@ if not defined FOUND_IDF goto missing_idf
 echo [OK] ESP-IDF %WANT_MAJOR%.%WANT_MINOR%: %FOUND_IDF%
 echo.
 
-:: ---------------------------------------------------------------------
-:: Kích hoạt môi trường ESP-IDF
-:: ---------------------------------------------------------------------
 if defined EIM_SCRIPT (
     call :activate_eim
 ) else (
@@ -81,9 +65,6 @@ echo.
 call idf.py --version
 if errorlevel 1 goto activation_failed
 
-:: ---------------------------------------------------------------------
-:: Tự nhận diện target: đã là esp32s3 thì bỏ qua, chưa thì set-target
-:: ---------------------------------------------------------------------
 call :detect_target
 if /i "%CUR_TARGET%"=="%TARGET%" (
     echo.
@@ -94,9 +75,6 @@ if /i "%CUR_TARGET%"=="%TARGET%" (
     call :do_set_target
 )
 
-:: ---------------------------------------------------------------------
-:: Menu
-:: ---------------------------------------------------------------------
 :menu
 call :detect_target
 echo.
@@ -148,12 +126,6 @@ goto menu
 endlocal
 exit /b 0
 
-:: =====================================================================
-:: Subroutines
-:: =====================================================================
-
-:: detect_target : CUR_TARGET = target trong sdkconfig (rỗng nếu chưa set-target
-:: hoặc thư mục build đang ở target khác)
 :detect_target
 set "CUR_TARGET="
 set "_BUILD_TARGET="
@@ -173,7 +145,6 @@ call idf.py set-target %TARGET%
 if errorlevel 1 (echo [ERROR] set-target that bai. Xem log o tren.) else (echo [OK] Da set-target %TARGET%.)
 exit /b 0
 
-:: check_idf <dir> : đặt FOUND_IDF nếu <dir> là ESP-IDF đúng phiên bản 6.1
 :check_idf
 if defined FOUND_IDF exit /b 0
 set "_D=%~1"
@@ -189,8 +160,6 @@ if "%_MAJ%"=="%WANT_MAJOR%" if "%_MIN%"=="%WANT_MINOR%" set "FOUND_IDF=%_D%"
 if not defined FOUND_IDF echo [SKIP] %_D% ^(ESP-IDF %_MAJ%.%_MIN%^)
 exit /b 0
 
-:: scan_root <dir> : kiểm tra <dir>, <dir>\esp-idf, <dir>\*, <dir>\*\esp-idf
-:: (chỉ nhận bản có export.bat - bản cài kiểu cũ)
 :scan_root
 if defined FOUND_IDF exit /b 0
 if not exist "%~1\" exit /b 0
@@ -206,7 +175,6 @@ exit /b 0
 if exist "%~1\export.bat" call :check_idf "%~1"
 exit /b 0
 
-:: scan_eim : đọc eim_idf.json của ESP-IDF Installation Manager (nếu có)
 :scan_eim
 set "_EIM_JSON="
 if defined IDF_TOOLS_PATH if exist "%IDF_TOOLS_PATH%\eim_idf.json" set "_EIM_JSON=%IDF_TOOLS_PATH%\eim_idf.json"
@@ -226,7 +194,6 @@ for /f "usebackq tokens=1,2 delims=|" %%A in (`powershell -NoProfile -ExecutionP
 )
 exit /b 0
 
-:: activate_eim : nạp biến môi trường từ script kích hoạt của EIM (cờ -e)
 :activate_eim
 echo [INFO] Kich hoat moi truong qua EIM: %EIM_SCRIPT%
 set "_OLD_PATH=%PATH%"
@@ -243,9 +210,6 @@ set "PATH=%_EIM_PATH%;%_OLD_PATH%"
 if defined IDF_PYTHON_ENV_PATH set "VIRTUAL_ENV=%IDF_PYTHON_ENV_PATH%"
 exit /b 0
 
-:: =====================================================================
-:: Errors
-:: =====================================================================
 :missing_idf
 echo.
 echo [ERROR] Khong tim thay ESP-IDF %WANT_MAJOR%.%WANT_MINOR% tren may nay.

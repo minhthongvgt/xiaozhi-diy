@@ -11,7 +11,6 @@
 #include <driver/gpio.h>
 #include <driver/i2c_master.h>
 #include <driver/sdmmc_host.h>
-#include <esp_idf_version.h>
 #include <esp_lcd_mipi_dsi.h>
 #include <esp_lcd_panel_ops.h>
 #include <esp_ldo_regulator.h>
@@ -83,9 +82,6 @@ private:
         esp_lcd_dpi_panel_config_t dpi_config =
             EK79007_1024_600_PANEL_60HZ_CONFIG_CF(LCD_COLOR_FMT_RGB565);
         dpi_config.num_fbs = 1;
-#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(6, 0, 0)
-        dpi_config.flags.use_dma2d = true;
-#endif
 
         ek79007_vendor_config_t vendor_config = {
             .mipi_config =
@@ -102,9 +98,7 @@ private:
 
         esp_lcd_panel_handle_t panel = nullptr;
         ESP_ERROR_CHECK(esp_lcd_new_panel_ek79007(panel_io, &panel_config, &panel));
-#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(6, 0, 0)
         ESP_ERROR_CHECK(esp_lcd_dpi_panel_enable_dma2d(panel));
-#endif
         ESP_ERROR_CHECK(esp_lcd_panel_reset(panel));
         ESP_ERROR_CHECK(esp_lcd_panel_init(panel));
 

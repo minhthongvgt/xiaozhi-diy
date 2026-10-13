@@ -42,36 +42,11 @@ esp_err_t esp_lcd_new_panel_nv3030b(const esp_lcd_panel_io_handle_t io, const es
     ESP_GOTO_ON_FALSE(io && panel_dev_config && ret_panel, ESP_ERR_INVALID_ARG, err, TAG, "invalid argument");
     nv3030b = (nv3030b_panel_t *)calloc(1, sizeof(nv3030b_panel_t));
     ESP_GOTO_ON_FALSE(nv3030b, ESP_ERR_NO_MEM, err, TAG, "no mem for nv3030b panel");
-    if (panel_dev_config->reset_gpio_num >= 0) {
+    if (GPIO_IS_VALID_GPIO(panel_dev_config->reset_gpio_num)) {
         io_conf.mode = GPIO_MODE_OUTPUT;
         io_conf.pin_bit_mask = 1ULL << panel_dev_config->reset_gpio_num;
         ESP_GOTO_ON_ERROR(gpio_config(&io_conf), err, TAG, "configure GPIO for RST line failed");
     }
-#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
-    switch (panel_dev_config->color_space) {
-    case ESP_LCD_COLOR_SPACE_RGB:
-        nv3030b->madctl_val = 0;
-        break;
-    case ESP_LCD_COLOR_SPACE_BGR:
-        nv3030b->madctl_val |= LCD_CMD_BGR_BIT;
-        break;
-    default:
-        ESP_GOTO_ON_FALSE(false, ESP_ERR_NOT_SUPPORTED, err, TAG, "unsupported color space");
-        break;
-    }
-#elif ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(6, 0, 0)
-    switch (panel_dev_config->rgb_endian) {
-    case LCD_RGB_ENDIAN_RGB:
-        nv3030b->madctl_val = 0;
-        break;
-    case LCD_RGB_ENDIAN_BGR:
-        nv3030b->madctl_val |= LCD_CMD_BGR_BIT;
-        break;
-    default:
-        ESP_GOTO_ON_FALSE(false, ESP_ERR_NOT_SUPPORTED, err, TAG, "unsupported rgb endian");
-        break;
-    }
-#else
     switch (panel_dev_config->rgb_ele_order) {
         case LCD_RGB_ELEMENT_ORDER_RGB:
             nv3030b->madctl_val = 0;
@@ -84,7 +59,6 @@ esp_err_t esp_lcd_new_panel_nv3030b(const esp_lcd_panel_io_handle_t io, const es
                               "unsupported rgb element order");
             break;
     }
-#endif
     switch (panel_dev_config->bits_per_pixel) {
     case 12: 
         nv3030b->colmod_val = 0x33;
@@ -117,11 +91,7 @@ esp_err_t esp_lcd_new_panel_nv3030b(const esp_lcd_panel_io_handle_t io, const es
     nv3030b->base.set_gap = panel_nv3030b_set_gap;
     nv3030b->base.mirror = panel_nv3030b_mirror;
     nv3030b->base.swap_xy = panel_nv3030b_swap_xy;
-#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
-    nv3030b->base.disp_off = panel_nv3030b_disp_on_off;
-#else
     nv3030b->base.disp_on_off = panel_nv3030b_disp_on_off;
-#endif
     *ret_panel = &(nv3030b->base);
     ESP_LOGD(TAG, "new nv3030b panel @%p", nv3030b);
     ESP_LOGI(TAG, "LCD panel create success, version: %d.%d.%d", 1, 1,
@@ -129,7 +99,7 @@ esp_err_t esp_lcd_new_panel_nv3030b(const esp_lcd_panel_io_handle_t io, const es
     return ESP_OK;
 err:
     if (nv3030b) {
-        if (panel_dev_config->reset_gpio_num >= 0) {
+        if (GPIO_IS_VALID_GPIO(panel_dev_config->reset_gpio_num)) {
             gpio_reset_pin(panel_dev_config->reset_gpio_num);
         }
         free(nv3030b);
@@ -139,7 +109,7 @@ err:
 static esp_err_t panel_nv3030b_del(esp_lcd_panel_t *panel)
 {
     nv3030b_panel_t *nv3030b = __containerof(panel, nv3030b_panel_t, base);
-    if (nv3030b->reset_gpio_num >= 0) {
+    if (GPIO_IS_VALID_GPIO(nv3030b->reset_gpio_num)) {
         gpio_reset_pin(nv3030b->reset_gpio_num);
     }
     ESP_LOGD(TAG, "del nv3030b panel @%p", nv3030b);
@@ -150,7 +120,7 @@ static esp_err_t panel_nv3030b_reset(esp_lcd_panel_t *panel)
 {
     nv3030b_panel_t *nv3030b = __containerof(panel, nv3030b_panel_t, base);
     esp_lcd_panel_io_handle_t io = nv3030b->io;
-    if (nv3030b->reset_gpio_num >= 0) {
+    if (GPIO_IS_VALID_GPIO(nv3030b->reset_gpio_num)) {
         gpio_set_level(nv3030b->reset_gpio_num, nv3030b->reset_level);
         vTaskDelay(pdMS_TO_TICKS(10));
         gpio_set_level(nv3030b->reset_gpio_num, !nv3030b->reset_level);
@@ -324,9 +294,6 @@ static esp_err_t panel_nv3030b_disp_on_off(esp_lcd_panel_t *panel, bool on_off)
     nv3030b_panel_t *nv3030b = __containerof(panel, nv3030b_panel_t, base);
     esp_lcd_panel_io_handle_t io = nv3030b->io;
     int command = 0;
-#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
-    on_off = !on_off;
-#endif
     if (on_off) {
         command = LCD_CMD_DISPON;
     } else {

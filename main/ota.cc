@@ -21,6 +21,7 @@
 #include <vector>
 #include <sstream>
 #include <algorithm>
+#include <cstdlib>
 
 #define TAG "Ota"
 
@@ -381,7 +382,13 @@ std::vector<int> Ota::ParseVersion(const std::string& version) {
     std::string segment;
     
     while (std::getline(ss, segment, '.')) {
-        versionNumbers.push_back(std::stoi(segment));
+        char* segment_end = nullptr;
+        long number = std::strtol(segment.c_str(), &segment_end, 10);
+        if (segment_end == segment.c_str() || number < 0) {
+            ESP_LOGW(TAG, "Invalid version segment '%s' in '%s'", segment.c_str(), version.c_str());
+            number = 0;
+        }
+        versionNumbers.push_back(static_cast<int>(number));
     }
     
     return versionNumbers;

@@ -32,7 +32,6 @@ def get_file_path(base_dir, filename):
 def build_assets(wakenet_model, text_font, emoji_collection, build_dir, final_dir):
     """Build assets.bin using build.py with given parameters"""
     
-    # Prepare arguments for build.py
     cmd = [sys.executable, "build.py"]
     
     if wakenet_model != "none":
@@ -51,13 +50,10 @@ def build_assets(wakenet_model, text_font, emoji_collection, build_dir, final_di
     print(f"执行命令: {' '.join(cmd)}")
     
     try:
-        # Run build.py
         result = subprocess.run(cmd, check=True, cwd=os.path.dirname(__file__))
         
-        # Generate output filename
         output_name = f"{wakenet_model}-{text_font}-{emoji_collection}.bin"
         
-        # Copy generated assets.bin to final directory with new name
         src_path = os.path.join(build_dir, "assets.bin")
         dst_path = os.path.join(final_dir, output_name)
         
@@ -78,7 +74,6 @@ def build_assets(wakenet_model, text_font, emoji_collection, build_dir, final_di
 
 
 def main():
-    # Configuration
     wakenet_models = [
         "none",
         "wn9_nihaoxiaozhi_tts",
@@ -99,27 +94,21 @@ def main():
         "noto-color-emoji_64",
     ]
     
-    # Get script directory
     script_dir = os.path.dirname(os.path.abspath(__file__))
     
-    # Set directory paths
     build_dir = os.path.join(script_dir, "build")
     final_dir = os.path.join(build_dir, "final")
     
-    # Ensure directories exist
     ensure_dir(build_dir)
     ensure_dir(final_dir)
     
     print("开始构建多个 SPIFFS assets 分区...")
     print(f"输出目录: {final_dir}")
     
-    # Calculate total combinations
     total_combinations = len(wakenet_models) * len(text_fonts) * len(emoji_collections)
     
-    # Track successful builds
     successful_builds = 0
     
-    # Build all combinations with emoji_collections
     for wakenet_model in wakenet_models:
         for text_font in text_fonts:
             for emoji_collection in emoji_collections:
@@ -130,7 +119,6 @@ def main():
     print(f"成功构建: {successful_builds}/{total_combinations}")
     print(f"输出文件位置: {final_dir}")
     
-    # List generated files
     if os.path.exists(final_dir):
         files = [f for f in os.listdir(final_dir) if f.endswith('.bin')]
         if files:
