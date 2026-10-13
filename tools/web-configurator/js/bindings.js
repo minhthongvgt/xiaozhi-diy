@@ -152,7 +152,6 @@ export const BINDINGS = [
   ['led_type', 'led.type', 'str'],
   ['led_gpio', 'led.gpio', 'int'],
   ['led_count', 'led.count', 'int', 1],
-  ['led_rainbow', 'led.rainbow', 'bool'],
   ['mcp_lamp', 'mcp.lamp', 'bool'],
   ['mcp_lamp_gpio', 'mcp.lamp_gpio', 'int'],
   ['uart_enable', 'uart.enable', 'bool'],

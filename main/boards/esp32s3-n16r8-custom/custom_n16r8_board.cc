@@ -24,7 +24,8 @@
 #include <algorithm>
 #include "mcp_server.h"
 #include "lamp_controller.h"
-#include "boards/common/gpio_led_controller.h"
+#include "boards/common/user_led_group.h"
+#include "boards/common/configurable_status_led.h"
 #include "sensor_controller.h"
 #include "actuator_controller.h"
 #include "periph_controller.h"
@@ -1295,7 +1296,13 @@ private:
         ledc_channels.push_back(LEDC_CHANNEL_3);
         ledc_channels.push_back(LEDC_CHANNEL_6);
         ledc_channels.push_back(LEDC_CHANNEL_7);
-        static GpioLedController gpio_led_controller(pins, ledc_channels);
+        std::vector<std::unique_ptr<UserLedOutput>> outputs;
+        for (size_t i = 0; i < pins.size(); i++) {
+            const int channel = i < ledc_channels.size() ? ledc_channels[i] : -1;
+            outputs.push_back(std::make_unique<GpioLedOutput>(pins[i], channel));
+        }
+        static UserLedGroup gpio_led_group("self.gpio_led", "Single-color LEDs on GPIO", std::move(outputs),
+                                           USER_LED_DEFAULTS(CONFIG_CUSTOM_GPIO_LED));
     }
 
     void InitializeLampTools() {
@@ -1450,18 +1457,18 @@ public:
 #if !defined(CONFIG_ENABLE_CUSTOM_LEDS) || defined(CONFIG_CUSTOM_LED_NONE)
         return nullptr;
 #elif defined(CONFIG_CUSTOM_LED_CIRCULAR_STRIP)
-        static CircularStrip led __attribute__((unused)) (BUILTIN_LED_GPIO, BUILTIN_LED_COUNT);
+        static ConfigurableCircularStrip led __attribute__((unused)) (BUILTIN_LED_GPIO, BUILTIN_LED_COUNT);
         return &led;
 #elif defined(CONFIG_CUSTOM_LED_WS2812)
         if (BUILTIN_LED_COUNT > 1) {
-            static CircularStrip led __attribute__((unused)) (BUILTIN_LED_GPIO, BUILTIN_LED_COUNT);
+            static ConfigurableCircularStrip led __attribute__((unused)) (BUILTIN_LED_GPIO, BUILTIN_LED_COUNT);
             return &led;
         } else {
-            static SingleLed led __attribute__((unused)) (BUILTIN_LED_GPIO);
+            static ConfigurableSingleLed led __attribute__((unused)) (BUILTIN_LED_GPIO);
             return &led;
         }
 #elif defined(CONFIG_CUSTOM_LED_SINGLE_PWM)
-        static GpioLed led __attribute__((unused)) (BUILTIN_LED_GPIO, 0, LEDC_TIMER_1, LEDC_CHANNEL_1);
+        static ConfigurableGpioLed led __attribute__((unused)) (BUILTIN_LED_GPIO, LEDC_TIMER_1, LEDC_CHANNEL_1);
         return &led;
 #elif defined(CONFIG_CUSTOM_LED_USER_CUSTOM)
         static Led* user_led = CreateUserCustomLedDriver();

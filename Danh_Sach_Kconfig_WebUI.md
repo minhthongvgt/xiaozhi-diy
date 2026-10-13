@@ -330,11 +330,116 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_LED_NONE` | bool | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Không sử dụng đèn LED |  |
 | `CONFIG_CUSTOM_LED_GPIO` | int | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Chân GPIO kết nối Đèn LED (Mặc định chân LED onboard) | 48 |
 | `CONFIG_CUSTOM_LED_COUNT` | int | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Số lượng mắt LED trên dải/vòng (Hỗ trợ tối đa 1024 mắt LED) | 1 |
-| `CONFIG_CUSTOM_LED_FAST_RAINBOW_EFFECT` | bool | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Hiệu ứng Đổi Màu Cầu Vồng Nhanh (Fast Rainbow Effect khi nói / khởi động) | n |
+| `CONFIG_CUSTOM_LED_BRIGHTNESS_NORMAL` | int | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Độ sáng thường (%) | 10 |
+| `CONFIG_CUSTOM_LED_BRIGHTNESS_LOW` | int | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Độ sáng thấp (%) cho trạng thái Chờ | 2 |
+| `CONFIG_CUSTOM_LED_BRIGHTNESS_HIGH` | int | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Độ sáng cao (%) cho Lỗi và khi nghe thấy tiếng nói | 40 |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_OFF` | bool | Màu và hiệu ứng theo trạng thái | Tắt |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_STEADY` | bool | Màu và hiệu ứng theo trạng thái | Sáng đứng yên |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_FAST` | bool | Màu và hiệu ứng theo trạng thái | Nháy nhanh (100 ms) | y (mặc định của choice) |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_SLOW` | bool | Màu và hiệu ứng theo trạng thái | Nháy chậm (500 ms) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_BREATHE` | bool | Màu và hiệu ứng theo trạng thái | Thở (sáng dần, tối dần) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_RAINBOW` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng đổi màu |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_ID` | int | Màu và hiệu ứng theo trạng thái |  | 0 if CUSTOM_LED_STATE_STARTING_EFFECT_OFF |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_COLOR` | string | Màu và hiệu ứng theo trạng thái | Khởi động: màu (mã RRGGBB) | "0000FF" |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_OFF` | bool | Màu và hiệu ứng theo trạng thái | Tắt |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_STEADY` | bool | Màu và hiệu ứng theo trạng thái | Sáng đứng yên |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_FAST` | bool | Màu và hiệu ứng theo trạng thái | Nháy nhanh (100 ms) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_SLOW` | bool | Màu và hiệu ứng theo trạng thái | Nháy chậm (500 ms) | y (mặc định của choice) |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BREATHE` | bool | Màu và hiệu ứng theo trạng thái | Thở (sáng dần, tối dần) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_RAINBOW` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng đổi màu |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_ID` | int | Màu và hiệu ứng theo trạng thái |  | 0 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_OFF |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_COLOR` | string | Màu và hiệu ứng theo trạng thái | Cấu hình WiFi: màu (mã RRGGBB) | "0000FF" |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_OFF` | bool | Màu và hiệu ứng theo trạng thái | Tắt | y (mặc định của choice) |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_STEADY` | bool | Màu và hiệu ứng theo trạng thái | Sáng đứng yên |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_FAST` | bool | Màu và hiệu ứng theo trạng thái | Nháy nhanh (100 ms) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_SLOW` | bool | Màu và hiệu ứng theo trạng thái | Nháy chậm (500 ms) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_BREATHE` | bool | Màu và hiệu ứng theo trạng thái | Thở (sáng dần, tối dần) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_RAINBOW` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng đổi màu |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_ID` | int | Màu và hiệu ứng theo trạng thái |  | 0 if CUSTOM_LED_STATE_IDLE_EFFECT_OFF |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_COLOR` | string | Màu và hiệu ứng theo trạng thái | Chờ: màu (mã RRGGBB) | "0000FF" |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_OFF` | bool | Màu và hiệu ứng theo trạng thái | Tắt |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_STEADY` | bool | Màu và hiệu ứng theo trạng thái | Sáng đứng yên | y (mặc định của choice) |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_FAST` | bool | Màu và hiệu ứng theo trạng thái | Nháy nhanh (100 ms) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_SLOW` | bool | Màu và hiệu ứng theo trạng thái | Nháy chậm (500 ms) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_BREATHE` | bool | Màu và hiệu ứng theo trạng thái | Thở (sáng dần, tối dần) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_RAINBOW` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng đổi màu |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_ID` | int | Màu và hiệu ứng theo trạng thái |  | 0 if CUSTOM_LED_STATE_CONNECTING_EFFECT_OFF |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_COLOR` | string | Màu và hiệu ứng theo trạng thái | Đang kết nối: màu (mã RRGGBB) | "0000FF" |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_OFF` | bool | Màu và hiệu ứng theo trạng thái | Tắt |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_STEADY` | bool | Màu và hiệu ứng theo trạng thái | Sáng đứng yên | y (mặc định của choice) |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_FAST` | bool | Màu và hiệu ứng theo trạng thái | Nháy nhanh (100 ms) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_SLOW` | bool | Màu và hiệu ứng theo trạng thái | Nháy chậm (500 ms) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_BREATHE` | bool | Màu và hiệu ứng theo trạng thái | Thở (sáng dần, tối dần) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_RAINBOW` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng đổi màu |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_ID` | int | Màu và hiệu ứng theo trạng thái |  | 0 if CUSTOM_LED_STATE_LISTENING_EFFECT_OFF |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_COLOR` | string | Màu và hiệu ứng theo trạng thái | Đang nghe: màu (mã RRGGBB) | "FF0000" |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_OFF` | bool | Màu và hiệu ứng theo trạng thái | Tắt |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_STEADY` | bool | Màu và hiệu ứng theo trạng thái | Sáng đứng yên | y (mặc định của choice) |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_FAST` | bool | Màu và hiệu ứng theo trạng thái | Nháy nhanh (100 ms) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_SLOW` | bool | Màu và hiệu ứng theo trạng thái | Nháy chậm (500 ms) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_BREATHE` | bool | Màu và hiệu ứng theo trạng thái | Thở (sáng dần, tối dần) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_RAINBOW` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng đổi màu |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_ID` | int | Màu và hiệu ứng theo trạng thái |  | 0 if CUSTOM_LED_STATE_SPEAKING_EFFECT_OFF |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_COLOR` | string | Màu và hiệu ứng theo trạng thái | Đang nói: màu (mã RRGGBB) | "00FF00" |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_OFF` | bool | Màu và hiệu ứng theo trạng thái | Tắt |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_STEADY` | bool | Màu và hiệu ứng theo trạng thái | Sáng đứng yên |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_FAST` | bool | Màu và hiệu ứng theo trạng thái | Nháy nhanh (100 ms) | y (mặc định của choice) |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_SLOW` | bool | Màu và hiệu ứng theo trạng thái | Nháy chậm (500 ms) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_BREATHE` | bool | Màu và hiệu ứng theo trạng thái | Thở (sáng dần, tối dần) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_RAINBOW` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng đổi màu |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_ID` | int | Màu và hiệu ứng theo trạng thái |  | 0 if CUSTOM_LED_STATE_UPGRADING_EFFECT_OFF |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_COLOR` | string | Màu và hiệu ứng theo trạng thái | Nâng cấp firmware: màu (mã RRGGBB) | "00FF00" |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_OFF` | bool | Màu và hiệu ứng theo trạng thái | Tắt |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_STEADY` | bool | Màu và hiệu ứng theo trạng thái | Sáng đứng yên |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_FAST` | bool | Màu và hiệu ứng theo trạng thái | Nháy nhanh (100 ms) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_SLOW` | bool | Màu và hiệu ứng theo trạng thái | Nháy chậm (500 ms) | y (mặc định của choice) |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_BREATHE` | bool | Màu và hiệu ứng theo trạng thái | Thở (sáng dần, tối dần) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_RAINBOW` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng đổi màu |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_ID` | int | Màu và hiệu ứng theo trạng thái |  | 0 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_OFF |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_COLOR` | string | Màu và hiệu ứng theo trạng thái | Kích hoạt thiết bị: màu (mã RRGGBB) | "00FF00" |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_OFF` | bool | Màu và hiệu ứng theo trạng thái | Tắt |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_STEADY` | bool | Màu và hiệu ứng theo trạng thái | Sáng đứng yên |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_FAST` | bool | Màu và hiệu ứng theo trạng thái | Nháy nhanh (100 ms) | y (mặc định của choice) |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_SLOW` | bool | Màu và hiệu ứng theo trạng thái | Nháy chậm (500 ms) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_BREATHE` | bool | Màu và hiệu ứng theo trạng thái | Thở (sáng dần, tối dần) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_RAINBOW` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng đổi màu |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_ID` | int | Màu và hiệu ứng theo trạng thái |  | 0 if CUSTOM_LED_STATE_ERROR_EFFECT_OFF |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_COLOR` | string | Màu và hiệu ứng theo trạng thái | Lỗi: màu (mã RRGGBB) | "FF0000" |
 | `CONFIG_CUSTOM_LED_EXTRA_GPIOS` | string | LED đơn GPIO (chatbot điều khiển) | Các chân LED đơn (cách nhau dấu phẩy, để trống là không dùng) | "" |
+| `CONFIG_CUSTOM_GPIO_LED_BRIGHTNESS` | int | LED đơn GPIO (chatbot điều khiển) | Độ sáng mặc định (%) | 100 |
+| `CONFIG_CUSTOM_GPIO_LED_BOOT_EFFECT_OFF` | bool | LED đơn GPIO (chatbot điều khiển) | Tắt | y (mặc định của choice) |
+| `CONFIG_CUSTOM_GPIO_LED_BOOT_EFFECT_STEADY` | bool | LED đơn GPIO (chatbot điều khiển) | Sáng đứng yên |  |
+| `CONFIG_CUSTOM_GPIO_LED_BOOT_EFFECT_BLINK` | bool | LED đơn GPIO (chatbot điều khiển) | Nháy |  |
+| `CONFIG_CUSTOM_GPIO_LED_BOOT_EFFECT_BREATHE` | bool | LED đơn GPIO (chatbot điều khiển) | Thở (LED không chỉnh độ sáng được sẽ nháy) |  |
+| `CONFIG_CUSTOM_GPIO_LED_BOOT_EFFECT_ID` | int | LED đơn GPIO (chatbot điều khiển) |  | 0 if CUSTOM_GPIO_LED_BOOT_EFFECT_OFF |
+| `CONFIG_CUSTOM_GPIO_LED_PERIOD_MS` | int | LED đơn GPIO (chatbot điều khiển) | Chu kỳ nháy/thở mặc định (ms) | 1000 |
 | `CONFIG_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC` | bool | 4.2. Hệ thống chính (Main System) | LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh) | n |
 | `CONFIG_CUSTOM_PERIPH_LED_IC_I2C_SDA` | int | LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh) | Chân I2C SDA chip điều khiển LED | -1 |
 | `CONFIG_CUSTOM_PERIPH_LED_IC_I2C_SCL` | int | LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh) | Chân I2C SCL chip điều khiển LED | -1 |
+| `CONFIG_CUSTOM_LED_IC_LED_CHANNELS` | string | LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh) | Kênh dùng làm LED (cách nhau dấu phẩy, để trống là tất cả kênh) | "" |
+| `CONFIG_CUSTOM_LED_IC_LED_BRIGHTNESS` | int | LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh) | Độ sáng mặc định (%) | 100 |
+| `CONFIG_CUSTOM_LED_IC_LED_BOOT_EFFECT_OFF` | bool | LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh) | Tắt | y (mặc định của choice) |
+| `CONFIG_CUSTOM_LED_IC_LED_BOOT_EFFECT_STEADY` | bool | LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh) | Sáng đứng yên |  |
+| `CONFIG_CUSTOM_LED_IC_LED_BOOT_EFFECT_BLINK` | bool | LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh) | Nháy |  |
+| `CONFIG_CUSTOM_LED_IC_LED_BOOT_EFFECT_BREATHE` | bool | LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh) | Thở (LED không chỉnh độ sáng được sẽ nháy) |  |
+| `CONFIG_CUSTOM_LED_IC_LED_BOOT_EFFECT_ID` | int | LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh) |  | 0 if CUSTOM_LED_IC_LED_BOOT_EFFECT_OFF |
+| `CONFIG_CUSTOM_LED_IC_LED_PERIOD_MS` | int | LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh) | Chu kỳ nháy/thở mặc định (ms) | 1000 |
+| `CONFIG_CUSTOM_PCA9685_LED_CHANNELS` | string | LED qua PCA9685 (16 kênh PWM) | Kênh PCA9685 dùng làm LED (0-15, cách nhau dấu phẩy, để trống là không dùng) | "" |
+| `CONFIG_CUSTOM_PCA9685_LED_BRIGHTNESS` | int | LED qua PCA9685 (16 kênh PWM) | Độ sáng mặc định (%) | 100 |
+| `CONFIG_CUSTOM_PCA9685_LED_BOOT_EFFECT_OFF` | bool | LED qua PCA9685 (16 kênh PWM) | Tắt | y (mặc định của choice) |
+| `CONFIG_CUSTOM_PCA9685_LED_BOOT_EFFECT_STEADY` | bool | LED qua PCA9685 (16 kênh PWM) | Sáng đứng yên |  |
+| `CONFIG_CUSTOM_PCA9685_LED_BOOT_EFFECT_BLINK` | bool | LED qua PCA9685 (16 kênh PWM) | Nháy |  |
+| `CONFIG_CUSTOM_PCA9685_LED_BOOT_EFFECT_BREATHE` | bool | LED qua PCA9685 (16 kênh PWM) | Thở (LED không chỉnh độ sáng được sẽ nháy) |  |
+| `CONFIG_CUSTOM_PCA9685_LED_BOOT_EFFECT_ID` | int | LED qua PCA9685 (16 kênh PWM) |  | 0 if CUSTOM_PCA9685_LED_BOOT_EFFECT_OFF |
+| `CONFIG_CUSTOM_PCA9685_LED_PERIOD_MS` | int | LED qua PCA9685 (16 kênh PWM) | Chu kỳ nháy/thở mặc định (ms) | 1000 |
+| `CONFIG_CUSTOM_EXPANDER_LED_PINS` | string | LED qua IC mở rộng GPIO (TCA9554 / TCA9555 / TCA9539) | Chân IC mở rộng dùng làm LED (cách nhau dấu phẩy, để trống là không dùng) | "" |
+| `CONFIG_CUSTOM_EXPANDER_LED_BRIGHTNESS` | int | LED qua IC mở rộng GPIO (TCA9554 / TCA9555 / TCA9539) | Độ sáng mặc định (%) | 100 |
+| `CONFIG_CUSTOM_EXPANDER_LED_BOOT_EFFECT_OFF` | bool | LED qua IC mở rộng GPIO (TCA9554 / TCA9555 / TCA9539) | Tắt | y (mặc định của choice) |
+| `CONFIG_CUSTOM_EXPANDER_LED_BOOT_EFFECT_STEADY` | bool | LED qua IC mở rộng GPIO (TCA9554 / TCA9555 / TCA9539) | Sáng đứng yên |  |
+| `CONFIG_CUSTOM_EXPANDER_LED_BOOT_EFFECT_BLINK` | bool | LED qua IC mở rộng GPIO (TCA9554 / TCA9555 / TCA9539) | Nháy |  |
+| `CONFIG_CUSTOM_EXPANDER_LED_BOOT_EFFECT_BREATHE` | bool | LED qua IC mở rộng GPIO (TCA9554 / TCA9555 / TCA9539) | Thở (LED không chỉnh độ sáng được sẽ nháy) |  |
+| `CONFIG_CUSTOM_EXPANDER_LED_BOOT_EFFECT_ID` | int | LED qua IC mở rộng GPIO (TCA9554 / TCA9555 / TCA9539) |  | 0 if CUSTOM_EXPANDER_LED_BOOT_EFFECT_OFF |
+| `CONFIG_CUSTOM_EXPANDER_LED_PERIOD_MS` | int | LED qua IC mở rộng GPIO (TCA9554 / TCA9555 / TCA9539) | Chu kỳ nháy/thở mặc định (ms) | 1000 |
 | `CONFIG_CUSTOM_ENABLE_SERVO_DOG` | bool | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Động cơ Servo tương tác qua PWM (Servo Dog Controller) | n |
 | `CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO` | int | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Chân GPIO cấp xung PWM cho Động cơ Servo | -1 |
 | `CONFIG_ENABLE_BUZZER` | bool | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Còi báo động Buzzer (GPIO 41) | n |
@@ -420,6 +525,9 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_EXPANDER_I2C_SCL` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SCL chip mở rộng GPIO (IO Expander) | -1 |
 | `CONFIG_CUSTOM_EXPANDER_INT_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân ngắt INT chip mở rộng GPIO | -1 |
 | `CONFIG_CUSTOM_EXPANDER_RST_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân reset RST chip mở rộng GPIO | -1 |
+| `CONFIG_CUSTOM_EXPANDER_CHIP_TCA9554` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | TCA9554 / PCA9554 / TCA9554A (8 chân) | y (mặc định của choice) |
+| `CONFIG_CUSTOM_EXPANDER_CHIP_TCA95XX_16BIT` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | TCA9555 / PCA9555 / TCA9535 / TCA9539 (16 chân) |  |
+| `CONFIG_CUSTOM_EXPANDER_I2C_ADDR` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Địa chỉ I2C chip mở rộng GPIO (thập phân) | 32 |
 | `CONFIG_CUSTOM_ENABLE_PERIPH_RTC` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Đồng hồ thời gian thực ngoại vi (RTC I2C DS3231 / PCF8563) | n |
 | `CONFIG_CUSTOM_PERIPH_RTC_I2C_SDA` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SDA module RTC | -1 |
 | `CONFIG_CUSTOM_PERIPH_RTC_I2C_SCL` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SCL module RTC | -1 |

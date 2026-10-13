@@ -301,7 +301,6 @@
   "led_type": "choice:CUSTOM_LED_TYPE",
   "led_gpio": "CUSTOM_LED_GPIO",
   "led_count": "CUSTOM_LED_COUNT",
-  "led_rainbow": "CUSTOM_LED_FAST_RAINBOW_EFFECT",
   "mcp_lamp": "CUSTOM_MCP_TOOL_LAMP",
   "mcp_lamp_gpio": "CUSTOM_MCP_TOOL_LAMP_GPIO",
   "uart_enable": "ENABLE_CUSTOM_UART",

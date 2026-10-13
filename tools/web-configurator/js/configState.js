@@ -110,7 +110,6 @@ export const DEFAULT_CONFIG = {
     type:    "CUSTOM_LED_WS2812",
     gpio:   48,
     count:   1,
-    rainbow: true,
   },
   mcp: {
     lamp:     false, lamp_gpio: -1,

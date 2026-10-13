@@ -442,10 +442,6 @@ export class SdkconfigGenerator {
               'CUSTOM_LED_CIRCULAR_STRIP','CUSTOM_LED_USER_CUSTOM','CUSTOM_LED_NONE']);
       set('CONFIG_CUSTOM_LED_GPIO',  s.led.gpio);
       set('CONFIG_CUSTOM_LED_COUNT', s.led.count);
-      if (['CUSTOM_LED_WS2812','CUSTOM_LED_CIRCULAR_STRIP'].includes(s.led.type)) {
-        if (s.led.rainbow) en('CONFIG_CUSTOM_LED_FAST_RAINBOW_EFFECT');
-        else dis('CONFIG_CUSTOM_LED_FAST_RAINBOW_EFFECT');
-      }
     } else dis('CONFIG_ENABLE_CUSTOM_LEDS');
     lines.push('');
     

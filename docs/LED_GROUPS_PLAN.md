@@ -16,11 +16,11 @@ Mỗi bước làm theo cùng một quy trình:
 | 1 | Đổi tên mục 4.2 thành "Hệ thống chính (Main System)", giữ nguyên vị trí và nội dung | xong |
 | 2 | Nối `CUSTOM_LED_EXTRA_GPIOS` thành LED đơn (PWM LEDC) cho chatbot điều khiển | xong |
 | 3 | Tách các nhóm LED trong 4.2 thành menu con riêng (xem bảng nhóm) | xong (PCA9685 và IC mở rộng làm ở 4c, 4e) |
-| 4a | LED trạng thái: độ sáng thấp/thường/cao, màu và hiệu ứng cho từng trạng thái | chưa làm |
-| 4b | LED đơn GPIO: độ sáng mặc định, hiệu ứng nháy/thở, MCP bật/tắt/độ sáng/hiệu ứng | chưa làm |
-| 4c | LED qua PCA9685: chọn kênh dùng cho LED, độ sáng mặc định, hiệu ứng | chưa làm |
-| 4d | LED qua IC LED (AW9523B / IS31FL3236): độ sáng mặc định, hiệu ứng | chưa làm |
-| 4e | LED qua IC mở rộng (TCA9554 và chip tương tự): chọn chân dùng cho LED, bật/tắt/nháy | chưa làm |
+| 4a | LED trạng thái: độ sáng thấp/thường/cao, màu và hiệu ứng cho từng trạng thái | xong (chưa build) |
+| 4b | LED đơn GPIO: độ sáng mặc định, hiệu ứng nháy/thở, MCP bật/tắt/độ sáng/hiệu ứng | xong (chưa build) |
+| 4c | LED qua PCA9685: chọn kênh dùng cho LED, độ sáng mặc định, hiệu ứng | xong (chưa build) |
+| 4d | LED qua IC LED (AW9523B / IS31FL3236): độ sáng mặc định, hiệu ứng | xong (chưa build) |
+| 4e | LED qua IC mở rộng (TCA9554 và chip tương tự): chọn chân dùng cho LED, bật/tắt/nháy | xong (chưa build) |
 
 ## Các nhóm LED và khả năng phần cứng
 
@@ -53,3 +53,36 @@ Mục 4.2 "Hệ thống chính" gồm:
 - "LED qua IC điều khiển LED I2C" (`CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC` + SDA/SCL): chuyển từ 4.7 sang 4.2.
 
 PCA9685 và TCA9554 còn phục vụ servo và IO chung, nên chip vẫn ở 4.7. Menu LED của hai chip này sẽ thêm ở 4.2 trong bước 4c và 4e, và phụ thuộc vào việc bật chip.
+
+## Bước 4a–4e đã làm (2026-10-13, chưa build thử theo yêu cầu)
+
+### 4a. LED trạng thái
+- Kconfig trong `ENABLE_CUSTOM_LEDS`:
+  - `CUSTOM_LED_BRIGHTNESS_NORMAL` / `_LOW` / `_HIGH` (%, mặc định 10 / 2 / 40).
+  - Menu "Màu và hiệu ứng theo trạng thái" với 9 trạng thái: STARTING, WIFI_CONFIG, IDLE, CONNECTING, LISTENING, SPEAKING, UPGRADING, ACTIVATING, ERROR.
+  - Mỗi trạng thái có `choice CUSTOM_LED_STATE_<S>_EFFECT` (tắt, đứng yên, nháy nhanh 100 ms, nháy chậm 500 ms, thở, cầu vồng). Cầu vồng chỉ có với WS2812 hoặc vòng LED.
+  - Mỗi trạng thái có ký hiệu ẩn `_EFFECT_ID`, và `_COLOR` (chuỗi RRGGBB, chỉ khi LED có màu).
+- Độ sáng: Chờ dùng mức thấp; Lỗi và Đang nghe khi có tiếng nói dùng mức cao; các trạng thái còn lại dùng mức thường. Notifying dùng kiểu của Đang nói, AudioTesting dùng kiểu của Đang nghe.
+- Mã: `boards/common/configurable_status_led.h` (`ConfigurableSingleLed`, `ConfigurableCircularStrip`, `ConfigurableGpioLed`); `GetLed()` của board dùng các lớp này. Màu sai định dạng thì dùng màu mặc định của trạng thái.
+- Bỏ `CUSTOM_LED_FAST_RAINBOW_EFFECT`; thay bằng hiệu ứng "Cầu vồng" theo trạng thái. Web bỏ ô `led_rainbow`. `led/single_led.cc` và `led/circular_strip.cc` bỏ nhánh `#if` của ký hiệu này.
+
+### 4b–4e. Nhóm LED do chatbot điều khiển
+- Bộ hiệu ứng dùng chung: `boards/common/user_led_group.h`.
+  - `UserLedOutput` là đầu ra; có các loại GPIO PWM/số, PCA9685, IC LED, IC mở rộng.
+  - `UserLed` chạy hiệu ứng đứng yên/nháy/thở bằng `esp_timer`.
+  - `UserLedGroup` đăng ký các công cụ MCP `<prefix>.get_state`, `turn_on`, `turn_off`, `set_brightness`, `set_effect`.
+- Mỗi nhóm có `<P>_BRIGHTNESS` (%), `choice <P>_BOOT_EFFECT` (tắt/đứng yên/nháy/thở) + `<P>_BOOT_EFFECT_ID`, và `<P>_PERIOD_MS`.
+
+| Nhóm | Danh sách | Tiền tố Kconfig | Công cụ MCP |
+|---|---|---|---|
+| LED đơn GPIO | `CUSTOM_LED_EXTRA_GPIOS` | `CUSTOM_GPIO_LED` | `self.gpio_led.*` |
+| PCA9685 | `CUSTOM_PCA9685_LED_CHANNELS` (0-15) | `CUSTOM_PCA9685_LED` | `self.pwm_led.*` (giữ `self.pwm.*` cho servo) |
+| IC LED | `CUSTOM_LED_IC_LED_CHANNELS` (trống = tất cả) | `CUSTOM_LED_IC_LED` | `self.led_ic.*` (thay `set_channel`/`set_all` cũ) |
+| IC mở rộng | `CUSTOM_EXPANDER_LED_PINS` | `CUSTOM_EXPANDER_LED` | `self.expander_led.*` (giữ `self.expander.*`) |
+
+- IC mở rộng: thêm `choice CUSTOM_EXPANDER_CHIP` (TCA9554/PCA9554/TCA9554A 8 chân; TCA9555/PCA9555/TCA9535/TCA9539 16 chân, driver `esp_io_expander_tca95xx_16bit` đã có sẵn) và `CUSTOM_EXPANDER_I2C_ADDR` (thập phân, mặc định 32 = 0x20). `self.expander.set_pin/get_pin` nhận chân theo số chân của chip.
+- Menu LED PCA9685 và IC mở rộng không có `depends on`, vì chip được khai báo sau, ở mục 4.7. Firmware chỉ tạo LED khi chip đã bật và được tìm thấy.
+
+### Việc còn lại
+- Build thử cả bốn nhóm và LED trạng thái (WS2812 một mắt, vòng LED, LED đơn PWM) trong `C:\x`, rồi thử trên thiết bị.
+- `gpio_validator.py` chưa kiểm tra việc kênh PCA9685 dùng chung cho LED và servo.

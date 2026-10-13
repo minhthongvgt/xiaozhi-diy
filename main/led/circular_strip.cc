@@ -469,13 +469,9 @@ void CircularStrip::OnStateChanged() {
     auto device_state = app.GetDeviceState();
     switch (device_state) {
         case kDeviceStateStarting: {
-#if defined(CONFIG_CUSTOM_LED_FAST_RAINBOW_EFFECT)
-            RainbowChase(20);
-#else
             StripColor low = { 0, 0, 0 };
             StripColor high = { low_brightness_, low_brightness_, default_brightness_ };
             Scroll(low, high, 3, 100);
-#endif
             break;
         }
         case kDeviceStateWifiConfiguring: {
@@ -498,16 +494,8 @@ void CircularStrip::OnStateChanged() {
             break;
         }
         case kDeviceStateSpeaking: {
-#if defined(CONFIG_CUSTOM_LED_FAST_RAINBOW_EFFECT)
-            if (max_leds_ > 1) {
-                RainbowChase(25);
-            } else {
-                Rainbow(25);
-            }
-#else
             StripColor color = { low_brightness_, default_brightness_, low_brightness_ };
             SetAllColor(color);
-#endif
             break;
         }
         case kDeviceStateNotifying: {

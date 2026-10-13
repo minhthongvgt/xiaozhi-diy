@@ -10,12 +10,17 @@
 #include "drivers/periph/w5500_eth.h"
 #include "esp_io_expander.h"
 #include "esp_io_expander_tca9554.h"
+#include "esp_io_expander_tca95xx_16bit.h"
+#include "user_led_group.h"
 #include <esp_log.h>
 #include <sdkconfig.h>
 #include <sys/time.h>
 #include <cstdio>
 #include <ctime>
+#include <algorithm>
+#include <memory>
 #include <string>
+#include <vector>
 
 #define TAG "PeriphController"
 
@@ -50,6 +55,49 @@ rtc_ext_handle_t s_rtc = nullptr;
     j["code"] = esp_err_to_name(err);
     return j;
 }
+
+class __attribute__((unused)) Pca9685LedOutput : public UserLedOutput {
+public:
+    Pca9685LedOutput(pca9685_handle_t handle, uint8_t channel) : handle_(handle), channel_(channel) {}
+    void Write(int percent) override { pca9685_set_duty(handle_, channel_, static_cast<float>(percent)); }
+    bool dimmable() const override { return true; }
+    std::string label() const override { return "PCA9685 channel " + std::to_string(channel_); }
+    int breathe_step_ms() const override { return 40; }
+
+private:
+    pca9685_handle_t handle_;
+    uint8_t channel_;
+};
+
+class __attribute__((unused)) LedIcLedOutput : public UserLedOutput {
+public:
+    LedIcLedOutput(led_ic_handle_t handle, uint8_t channel) : handle_(handle), channel_(channel) {}
+    void Write(int percent) override {
+        led_ic_set_channel(handle_, channel_, static_cast<uint8_t>(static_cast<uint32_t>(percent) * 255 / 100));
+    }
+    bool dimmable() const override { return true; }
+    std::string label() const override { return "channel " + std::to_string(channel_); }
+    int breathe_step_ms() const override { return 40; }
+
+private:
+    led_ic_handle_t handle_;
+    uint8_t channel_;
+};
+
+class __attribute__((unused)) ExpanderLedOutput : public UserLedOutput {
+public:
+    ExpanderLedOutput(esp_io_expander_handle_t handle, uint8_t pin) : handle_(handle), mask_(1u << pin), pin_(pin) {
+        esp_io_expander_set_dir(handle_, mask_, IO_EXPANDER_OUTPUT);
+    }
+    void Write(int percent) override { esp_io_expander_set_level(handle_, mask_, percent > 0 ? 1 : 0); }
+    bool dimmable() const override { return false; }
+    std::string label() const override { return "expander pin " + std::to_string(pin_); }
+
+private:
+    esp_io_expander_handle_t handle_;
+    uint32_t mask_;
+    uint8_t pin_;
+};
 
 [[maybe_unused]] std::string ToHex(const uint8_t* data, size_t len) {
     std::string out;
@@ -294,6 +342,18 @@ void PeripheralController::InitPwm(i2c_master_bus_handle_t i2c_bus) {
         return true;
     });
     ESP_LOGI(TAG, "PCA9685 MCP tools registered");
+    std::vector<std::unique_ptr<UserLedOutput>> pwm_leds;
+    std::vector<int> used_channels;
+    for (int channel : ParseUserLedList(CONFIG_CUSTOM_PCA9685_LED_CHANNELS)) {
+        if (channel > 15 || std::find(used_channels.begin(), used_channels.end(), channel) != used_channels.end()) {
+            ESP_LOGW(TAG, "PCA9685 LED channel %d skipped (out of range or duplicate)", channel);
+            continue;
+        }
+        used_channels.push_back(channel);
+        pwm_leds.push_back(std::make_unique<Pca9685LedOutput>(s_pwm, static_cast<uint8_t>(channel)));
+    }
+    static UserLedGroup pwm_led_group("self.pwm_led", "LEDs on PCA9685 channels", std::move(pwm_leds),
+                                      USER_LED_DEFAULTS(CONFIG_CUSTOM_PCA9685_LED));
 #else
     (void)i2c_bus;
 #endif
@@ -317,36 +377,25 @@ void PeripheralController::InitLedIc(i2c_master_bus_handle_t i2c_bus) {
     if (!kRegisterMcpTools) {
         return;
     }
-    auto& mcp_server = McpServer::GetInstance();
-    std::string desc = std::string("Set the brightness (0-255) of one LED output on the ") +
-                       led_ic_type_name(led_ic_get_type(s_led_ic)) + " LED driver. Valid channels: 0-" +
-                       std::to_string(led_ic_get_channel_count(s_led_ic) - 1) + ".";
-    mcp_server.AddTool("self.led_ic.set_channel", desc,
-                       PropertyList({Property("channel", kPropertyTypeInteger, 0, 0, 35),
-                                     Property("brightness", kPropertyTypeInteger, 255, 0, 255)}),
-                       [](const PropertyList& properties) -> ReturnValue {
-        int channel = properties["channel"].value<int>();
-        int brightness = properties["brightness"].value<int>();
-        if (channel >= led_ic_get_channel_count(s_led_ic)) {
-            return ErrorJson("Channel out of range for this LED driver", ESP_ERR_INVALID_ARG);
+    const int channel_count = led_ic_get_channel_count(s_led_ic);
+    std::vector<int> channels = ParseUserLedList(CONFIG_CUSTOM_LED_IC_LED_CHANNELS);
+    if (channels.empty()) {
+        for (int channel = 0; channel < channel_count; channel++) {
+            channels.push_back(channel);
         }
-        esp_err_t ret = led_ic_set_channel(s_led_ic, static_cast<uint8_t>(channel), static_cast<uint8_t>(brightness));
-        if (ret != ESP_OK) {
-            return ErrorJson("Failed to set LED channel", ret);
+    }
+    std::vector<std::unique_ptr<UserLedOutput>> ic_leds;
+    std::vector<int> used_channels;
+    for (int channel : channels) {
+        if (channel >= channel_count || std::find(used_channels.begin(), used_channels.end(), channel) != used_channels.end()) {
+            ESP_LOGW(TAG, "LED driver IC channel %d skipped (out of range or duplicate)", channel);
+            continue;
         }
-        return true;
-    });
-    mcp_server.AddTool("self.led_ic.set_all",
-                       "Set the same brightness (0-255) on every output of the LED driver IC. 0 turns all LEDs off.",
-                       PropertyList({Property("brightness", kPropertyTypeInteger, 0, 0, 255)}),
-                       [](const PropertyList& properties) -> ReturnValue {
-        int brightness = properties["brightness"].value<int>();
-        esp_err_t ret = led_ic_set_all(s_led_ic, static_cast<uint8_t>(brightness));
-        if (ret != ESP_OK) {
-            return ErrorJson("Failed to set LEDs", ret);
-        }
-        return true;
-    });
+        used_channels.push_back(channel);
+        ic_leds.push_back(std::make_unique<LedIcLedOutput>(s_led_ic, static_cast<uint8_t>(channel)));
+    }
+    static UserLedGroup led_ic_group("self.led_ic", std::string("LEDs on the ") + led_ic_type_name(led_ic_get_type(s_led_ic)) + " LED driver",
+                                     std::move(ic_leds), USER_LED_DEFAULTS(CONFIG_CUSTOM_LED_IC_LED));
     ESP_LOGI(TAG, "LED driver IC (%s) MCP tools registered", led_ic_type_name(led_ic_get_type(s_led_ic)));
 #else
     (void)i2c_bus;
@@ -464,21 +513,50 @@ void PeripheralController::InitExpander() {
     if (!GPIO_IS_VALID_GPIO(exp_sda) || !GPIO_IS_VALID_GPIO(exp_scl)) {
         return;
     }
+#if defined(CONFIG_CUSTOM_EXPANDER_I2C_ADDR)
+    const uint32_t exp_addr = CONFIG_CUSTOM_EXPANDER_I2C_ADDR;
+#else
+    const uint32_t exp_addr = ESP_IO_EXPANDER_I2C_TCA9554_ADDRESS_000;
+#endif
+#if defined(CONFIG_CUSTOM_EXPANDER_CHIP_TCA95XX_16BIT)
+    const int exp_pin_count = 16;
+    const char* exp_chip = "TCA95xx 16-bit";
+#else
+    const int exp_pin_count = 8;
+    const char* exp_chip = "TCA9554";
+#endif
     i2c_master_bus_handle_t bus = periph_i2c_get_bus(exp_sda, exp_scl);
-    if (bus == nullptr ||
-        esp_io_expander_new_i2c_tca9554(bus, ESP_IO_EXPANDER_I2C_TCA9554_ADDRESS_000, &s_expander) != ESP_OK) {
-        ESP_LOGW(TAG, "IO expander configured but TCA9554 not found");
+#if defined(CONFIG_CUSTOM_EXPANDER_CHIP_TCA95XX_16BIT)
+    const esp_err_t exp_ret = bus == nullptr ? ESP_ERR_INVALID_STATE : esp_io_expander_new_i2c_tca95xx_16bit(bus, exp_addr, &s_expander);
+#else
+    const esp_err_t exp_ret = bus == nullptr ? ESP_ERR_INVALID_STATE : esp_io_expander_new_i2c_tca9554(bus, exp_addr, &s_expander);
+#endif
+    if (exp_ret != ESP_OK) {
+        ESP_LOGW(TAG, "IO expander %s not found at I2C address 0x%02X", exp_chip, static_cast<unsigned>(exp_addr));
         return;
+    }
+    std::vector<std::unique_ptr<UserLedOutput>> exp_leds;
+    std::vector<int> used_pins;
+    for (int pin : ParseUserLedList(CONFIG_CUSTOM_EXPANDER_LED_PINS)) {
+        if (pin >= exp_pin_count || std::find(used_pins.begin(), used_pins.end(), pin) != used_pins.end()) {
+            ESP_LOGW(TAG, "Expander LED pin %d skipped (out of range or duplicate)", pin);
+            continue;
+        }
+        used_pins.push_back(pin);
+        exp_leds.push_back(std::make_unique<ExpanderLedOutput>(s_expander, static_cast<uint8_t>(pin)));
     }
     if (!kRegisterMcpTools) {
         return;
     }
+    static UserLedGroup expander_led_group("self.expander_led", std::string("LEDs on the ") + exp_chip + " I/O expander",
+                                           std::move(exp_leds), USER_LED_DEFAULTS(CONFIG_CUSTOM_EXPANDER_LED));
+    const int exp_max_pin = exp_pin_count - 1;
     auto& mcp_server = McpServer::GetInstance();
     mcp_server.AddTool("self.expander.set_pin",
-                       "Set the output level (0 = low, 1 = high) of one pin (0-7) of the TCA9554 I/O expander, which "
+                       "Set the output level (0 = low, 1 = high) of one pin (0-" + std::to_string(exp_max_pin) + ") of the I/O expander, which "
                        "provides extra GPIO for relays, LEDs or enables. Only use it when the user asks to switch an "
                        "expander pin.",
-                       PropertyList({Property("pin", kPropertyTypeInteger, 0, 0, 7),
+                       PropertyList({Property("pin", kPropertyTypeInteger, 0, 0, exp_max_pin),
                                      Property("level", kPropertyTypeInteger, 0, 0, 1)}),
                        [](const PropertyList& properties) -> ReturnValue {
         int pin = properties["pin"].value<int>();
@@ -494,8 +572,8 @@ void PeripheralController::InitExpander() {
         return true;
     });
     mcp_server.AddTool("self.expander.get_pin",
-                       "Read the level (0 or 1) of one pin (0-7) of the TCA9554 I/O expander.",
-                       PropertyList({Property("pin", kPropertyTypeInteger, 0, 0, 7)}),
+                       "Read the level (0 or 1) of one pin (0-" + std::to_string(exp_max_pin) + ") of the I/O expander.",
+                       PropertyList({Property("pin", kPropertyTypeInteger, 0, 0, exp_max_pin)}),
                        [](const PropertyList& properties) -> ReturnValue {
         int pin = properties["pin"].value<int>();
         uint32_t mask = 1u << pin;
@@ -512,7 +590,7 @@ void PeripheralController::InitExpander() {
         j["level"] = (levels & mask) ? 1 : 0;
         return j;
     });
-    ESP_LOGI(TAG, "TCA9554 IO expander MCP tools registered");
+    ESP_LOGI(TAG, "%s IO expander MCP tools registered", exp_chip);
 }
 
 void PeripheralController::InitPmic() {

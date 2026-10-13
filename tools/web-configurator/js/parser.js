@@ -240,8 +240,6 @@ export class SdkconfigParser {
     if (ltype) s.led.type = ltype.replace('CONFIG_','');
     s.led.gpio    = i('CONFIG_CUSTOM_LED_GPIO');
     s.led.count   = i('CONFIG_CUSTOM_LED_COUNT', 1);
-    s.led.rainbow = 'CONFIG_CUSTOM_LED_FAST_RAINBOW_EFFECT' in m
-                    ? y('CONFIG_CUSTOM_LED_FAST_RAINBOW_EFFECT') : true;
     s.mcp.lamp      = y('CONFIG_CUSTOM_MCP_TOOL_LAMP');
     s.mcp.lamp_gpio = i('CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO');
     s.uart.enable     = y('CONFIG_ENABLE_CUSTOM_UART');

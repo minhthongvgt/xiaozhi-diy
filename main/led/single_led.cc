@@ -282,12 +282,8 @@ void SingleLed::OnStateChanged() {
             TurnOn();
             break;
         case kDeviceStateSpeaking:
-#if defined(CONFIG_CUSTOM_LED_FAST_RAINBOW_EFFECT)
-            StartRainbow(25, DEFAULT_BRIGHTNESS);
-#else
             SetColor(0, DEFAULT_BRIGHTNESS, 0);
             TurnOn();
-#endif
             break;
         case kDeviceStateNotifying:
             SetColor(0, DEFAULT_BRIGHTNESS, 0);

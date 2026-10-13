@@ -1652,12 +1652,326 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     Số lượng mắt LED kỹ thuật số WS2812/SK6812 (từ 1 đến 1024 mắt LED).
                     Khi cấu hình trên 24 mắt LED, hệ thống tự động kích hoạt kênh DMA để đảm bảo khung hình mượt mà và không giật lag.
 
-            config CUSTOM_LED_FAST_RAINBOW_EFFECT
-                bool "Hiệu ứng Đổi Màu Cầu Vồng Nhanh (Fast Rainbow Effect khi nói / khởi động)"
-                depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
-                default n
+            config CUSTOM_LED_BRIGHTNESS_NORMAL
+                int "Độ sáng thường (%)"
+                depends on !CUSTOM_LED_NONE && !CUSTOM_LED_USER_CUSTOM
+                range 1 100
+                default 10
                 help
-                    Kích hoạt hiệu ứng LED RGB chuyển màu cầu vồng đa sắc cực nhanh và mượt khi loa phát âm thanh hoặc khi khởi động.
+                    Dùng cho mọi trạng thái, trừ Chờ (độ sáng thấp), Lỗi và Đang nghe khi có tiếng nói (độ sáng cao).
+
+            config CUSTOM_LED_BRIGHTNESS_LOW
+                int "Độ sáng thấp (%) cho trạng thái Chờ"
+                depends on !CUSTOM_LED_NONE && !CUSTOM_LED_USER_CUSTOM
+                range 1 100
+                default 2
+
+            config CUSTOM_LED_BRIGHTNESS_HIGH
+                int "Độ sáng cao (%) cho Lỗi và khi nghe thấy tiếng nói"
+                depends on !CUSTOM_LED_NONE && !CUSTOM_LED_USER_CUSTOM
+                range 1 100
+                default 40
+
+            menu "Màu và hiệu ứng theo trạng thái"
+                depends on !CUSTOM_LED_NONE && !CUSTOM_LED_USER_CUSTOM
+
+                choice CUSTOM_LED_STATE_STARTING_EFFECT
+                    prompt "Khởi động: hiệu ứng"
+                    default CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_FAST
+                    config CUSTOM_LED_STATE_STARTING_EFFECT_OFF
+                        bool "Tắt"
+                    config CUSTOM_LED_STATE_STARTING_EFFECT_STEADY
+                        bool "Sáng đứng yên"
+                    config CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_FAST
+                        bool "Nháy nhanh (100 ms)"
+                    config CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_SLOW
+                        bool "Nháy chậm (500 ms)"
+                    config CUSTOM_LED_STATE_STARTING_EFFECT_BREATHE
+                        bool "Thở (sáng dần, tối dần)"
+                    config CUSTOM_LED_STATE_STARTING_EFFECT_RAINBOW
+                        bool "Cầu vồng đổi màu"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                endchoice
+
+                config CUSTOM_LED_STATE_STARTING_EFFECT_ID
+                    int
+                    default 0 if CUSTOM_LED_STATE_STARTING_EFFECT_OFF
+                    default 1 if CUSTOM_LED_STATE_STARTING_EFFECT_STEADY
+                    default 2 if CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_FAST
+                    default 3 if CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_SLOW
+                    default 4 if CUSTOM_LED_STATE_STARTING_EFFECT_BREATHE
+                    default 5 if CUSTOM_LED_STATE_STARTING_EFFECT_RAINBOW
+                    default 0
+
+                config CUSTOM_LED_STATE_STARTING_COLOR
+                    string "Khởi động: màu (mã RRGGBB)"
+                    depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    default "0000FF"
+
+                choice CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT
+                    prompt "Cấu hình WiFi: hiệu ứng"
+                    default CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_SLOW
+                    config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_OFF
+                        bool "Tắt"
+                    config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_STEADY
+                        bool "Sáng đứng yên"
+                    config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_FAST
+                        bool "Nháy nhanh (100 ms)"
+                    config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_SLOW
+                        bool "Nháy chậm (500 ms)"
+                    config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BREATHE
+                        bool "Thở (sáng dần, tối dần)"
+                    config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_RAINBOW
+                        bool "Cầu vồng đổi màu"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                endchoice
+
+                config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_ID
+                    int
+                    default 0 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_OFF
+                    default 1 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_STEADY
+                    default 2 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_FAST
+                    default 3 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_SLOW
+                    default 4 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BREATHE
+                    default 5 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_RAINBOW
+                    default 0
+
+                config CUSTOM_LED_STATE_WIFI_CONFIG_COLOR
+                    string "Cấu hình WiFi: màu (mã RRGGBB)"
+                    depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    default "0000FF"
+
+                choice CUSTOM_LED_STATE_IDLE_EFFECT
+                    prompt "Chờ: hiệu ứng"
+                    default CUSTOM_LED_STATE_IDLE_EFFECT_OFF
+                    config CUSTOM_LED_STATE_IDLE_EFFECT_OFF
+                        bool "Tắt"
+                    config CUSTOM_LED_STATE_IDLE_EFFECT_STEADY
+                        bool "Sáng đứng yên"
+                    config CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_FAST
+                        bool "Nháy nhanh (100 ms)"
+                    config CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_SLOW
+                        bool "Nháy chậm (500 ms)"
+                    config CUSTOM_LED_STATE_IDLE_EFFECT_BREATHE
+                        bool "Thở (sáng dần, tối dần)"
+                    config CUSTOM_LED_STATE_IDLE_EFFECT_RAINBOW
+                        bool "Cầu vồng đổi màu"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                endchoice
+
+                config CUSTOM_LED_STATE_IDLE_EFFECT_ID
+                    int
+                    default 0 if CUSTOM_LED_STATE_IDLE_EFFECT_OFF
+                    default 1 if CUSTOM_LED_STATE_IDLE_EFFECT_STEADY
+                    default 2 if CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_FAST
+                    default 3 if CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_SLOW
+                    default 4 if CUSTOM_LED_STATE_IDLE_EFFECT_BREATHE
+                    default 5 if CUSTOM_LED_STATE_IDLE_EFFECT_RAINBOW
+                    default 0
+
+                config CUSTOM_LED_STATE_IDLE_COLOR
+                    string "Chờ: màu (mã RRGGBB)"
+                    depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    default "0000FF"
+
+                choice CUSTOM_LED_STATE_CONNECTING_EFFECT
+                    prompt "Đang kết nối: hiệu ứng"
+                    default CUSTOM_LED_STATE_CONNECTING_EFFECT_STEADY
+                    config CUSTOM_LED_STATE_CONNECTING_EFFECT_OFF
+                        bool "Tắt"
+                    config CUSTOM_LED_STATE_CONNECTING_EFFECT_STEADY
+                        bool "Sáng đứng yên"
+                    config CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_FAST
+                        bool "Nháy nhanh (100 ms)"
+                    config CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_SLOW
+                        bool "Nháy chậm (500 ms)"
+                    config CUSTOM_LED_STATE_CONNECTING_EFFECT_BREATHE
+                        bool "Thở (sáng dần, tối dần)"
+                    config CUSTOM_LED_STATE_CONNECTING_EFFECT_RAINBOW
+                        bool "Cầu vồng đổi màu"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                endchoice
+
+                config CUSTOM_LED_STATE_CONNECTING_EFFECT_ID
+                    int
+                    default 0 if CUSTOM_LED_STATE_CONNECTING_EFFECT_OFF
+                    default 1 if CUSTOM_LED_STATE_CONNECTING_EFFECT_STEADY
+                    default 2 if CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_FAST
+                    default 3 if CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_SLOW
+                    default 4 if CUSTOM_LED_STATE_CONNECTING_EFFECT_BREATHE
+                    default 5 if CUSTOM_LED_STATE_CONNECTING_EFFECT_RAINBOW
+                    default 0
+
+                config CUSTOM_LED_STATE_CONNECTING_COLOR
+                    string "Đang kết nối: màu (mã RRGGBB)"
+                    depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    default "0000FF"
+
+                choice CUSTOM_LED_STATE_LISTENING_EFFECT
+                    prompt "Đang nghe: hiệu ứng"
+                    default CUSTOM_LED_STATE_LISTENING_EFFECT_STEADY
+                    config CUSTOM_LED_STATE_LISTENING_EFFECT_OFF
+                        bool "Tắt"
+                    config CUSTOM_LED_STATE_LISTENING_EFFECT_STEADY
+                        bool "Sáng đứng yên"
+                    config CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_FAST
+                        bool "Nháy nhanh (100 ms)"
+                    config CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_SLOW
+                        bool "Nháy chậm (500 ms)"
+                    config CUSTOM_LED_STATE_LISTENING_EFFECT_BREATHE
+                        bool "Thở (sáng dần, tối dần)"
+                    config CUSTOM_LED_STATE_LISTENING_EFFECT_RAINBOW
+                        bool "Cầu vồng đổi màu"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                endchoice
+
+                config CUSTOM_LED_STATE_LISTENING_EFFECT_ID
+                    int
+                    default 0 if CUSTOM_LED_STATE_LISTENING_EFFECT_OFF
+                    default 1 if CUSTOM_LED_STATE_LISTENING_EFFECT_STEADY
+                    default 2 if CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_FAST
+                    default 3 if CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_SLOW
+                    default 4 if CUSTOM_LED_STATE_LISTENING_EFFECT_BREATHE
+                    default 5 if CUSTOM_LED_STATE_LISTENING_EFFECT_RAINBOW
+                    default 0
+
+                config CUSTOM_LED_STATE_LISTENING_COLOR
+                    string "Đang nghe: màu (mã RRGGBB)"
+                    depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    default "FF0000"
+
+                choice CUSTOM_LED_STATE_SPEAKING_EFFECT
+                    prompt "Đang nói: hiệu ứng"
+                    default CUSTOM_LED_STATE_SPEAKING_EFFECT_STEADY
+                    config CUSTOM_LED_STATE_SPEAKING_EFFECT_OFF
+                        bool "Tắt"
+                    config CUSTOM_LED_STATE_SPEAKING_EFFECT_STEADY
+                        bool "Sáng đứng yên"
+                    config CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_FAST
+                        bool "Nháy nhanh (100 ms)"
+                    config CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_SLOW
+                        bool "Nháy chậm (500 ms)"
+                    config CUSTOM_LED_STATE_SPEAKING_EFFECT_BREATHE
+                        bool "Thở (sáng dần, tối dần)"
+                    config CUSTOM_LED_STATE_SPEAKING_EFFECT_RAINBOW
+                        bool "Cầu vồng đổi màu"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                endchoice
+
+                config CUSTOM_LED_STATE_SPEAKING_EFFECT_ID
+                    int
+                    default 0 if CUSTOM_LED_STATE_SPEAKING_EFFECT_OFF
+                    default 1 if CUSTOM_LED_STATE_SPEAKING_EFFECT_STEADY
+                    default 2 if CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_FAST
+                    default 3 if CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_SLOW
+                    default 4 if CUSTOM_LED_STATE_SPEAKING_EFFECT_BREATHE
+                    default 5 if CUSTOM_LED_STATE_SPEAKING_EFFECT_RAINBOW
+                    default 0
+
+                config CUSTOM_LED_STATE_SPEAKING_COLOR
+                    string "Đang nói: màu (mã RRGGBB)"
+                    depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    default "00FF00"
+
+                choice CUSTOM_LED_STATE_UPGRADING_EFFECT
+                    prompt "Nâng cấp firmware: hiệu ứng"
+                    default CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_FAST
+                    config CUSTOM_LED_STATE_UPGRADING_EFFECT_OFF
+                        bool "Tắt"
+                    config CUSTOM_LED_STATE_UPGRADING_EFFECT_STEADY
+                        bool "Sáng đứng yên"
+                    config CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_FAST
+                        bool "Nháy nhanh (100 ms)"
+                    config CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_SLOW
+                        bool "Nháy chậm (500 ms)"
+                    config CUSTOM_LED_STATE_UPGRADING_EFFECT_BREATHE
+                        bool "Thở (sáng dần, tối dần)"
+                    config CUSTOM_LED_STATE_UPGRADING_EFFECT_RAINBOW
+                        bool "Cầu vồng đổi màu"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                endchoice
+
+                config CUSTOM_LED_STATE_UPGRADING_EFFECT_ID
+                    int
+                    default 0 if CUSTOM_LED_STATE_UPGRADING_EFFECT_OFF
+                    default 1 if CUSTOM_LED_STATE_UPGRADING_EFFECT_STEADY
+                    default 2 if CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_FAST
+                    default 3 if CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_SLOW
+                    default 4 if CUSTOM_LED_STATE_UPGRADING_EFFECT_BREATHE
+                    default 5 if CUSTOM_LED_STATE_UPGRADING_EFFECT_RAINBOW
+                    default 0
+
+                config CUSTOM_LED_STATE_UPGRADING_COLOR
+                    string "Nâng cấp firmware: màu (mã RRGGBB)"
+                    depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    default "00FF00"
+
+                choice CUSTOM_LED_STATE_ACTIVATING_EFFECT
+                    prompt "Kích hoạt thiết bị: hiệu ứng"
+                    default CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_SLOW
+                    config CUSTOM_LED_STATE_ACTIVATING_EFFECT_OFF
+                        bool "Tắt"
+                    config CUSTOM_LED_STATE_ACTIVATING_EFFECT_STEADY
+                        bool "Sáng đứng yên"
+                    config CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_FAST
+                        bool "Nháy nhanh (100 ms)"
+                    config CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_SLOW
+                        bool "Nháy chậm (500 ms)"
+                    config CUSTOM_LED_STATE_ACTIVATING_EFFECT_BREATHE
+                        bool "Thở (sáng dần, tối dần)"
+                    config CUSTOM_LED_STATE_ACTIVATING_EFFECT_RAINBOW
+                        bool "Cầu vồng đổi màu"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                endchoice
+
+                config CUSTOM_LED_STATE_ACTIVATING_EFFECT_ID
+                    int
+                    default 0 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_OFF
+                    default 1 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_STEADY
+                    default 2 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_FAST
+                    default 3 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_SLOW
+                    default 4 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_BREATHE
+                    default 5 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_RAINBOW
+                    default 0
+
+                config CUSTOM_LED_STATE_ACTIVATING_COLOR
+                    string "Kích hoạt thiết bị: màu (mã RRGGBB)"
+                    depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    default "00FF00"
+
+                choice CUSTOM_LED_STATE_ERROR_EFFECT
+                    prompt "Lỗi: hiệu ứng"
+                    default CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_FAST
+                    config CUSTOM_LED_STATE_ERROR_EFFECT_OFF
+                        bool "Tắt"
+                    config CUSTOM_LED_STATE_ERROR_EFFECT_STEADY
+                        bool "Sáng đứng yên"
+                    config CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_FAST
+                        bool "Nháy nhanh (100 ms)"
+                    config CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_SLOW
+                        bool "Nháy chậm (500 ms)"
+                    config CUSTOM_LED_STATE_ERROR_EFFECT_BREATHE
+                        bool "Thở (sáng dần, tối dần)"
+                    config CUSTOM_LED_STATE_ERROR_EFFECT_RAINBOW
+                        bool "Cầu vồng đổi màu"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                endchoice
+
+                config CUSTOM_LED_STATE_ERROR_EFFECT_ID
+                    int
+                    default 0 if CUSTOM_LED_STATE_ERROR_EFFECT_OFF
+                    default 1 if CUSTOM_LED_STATE_ERROR_EFFECT_STEADY
+                    default 2 if CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_FAST
+                    default 3 if CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_SLOW
+                    default 4 if CUSTOM_LED_STATE_ERROR_EFFECT_BREATHE
+                    default 5 if CUSTOM_LED_STATE_ERROR_EFFECT_RAINBOW
+                    default 0
+
+                config CUSTOM_LED_STATE_ERROR_COLOR
+                    string "Lỗi: màu (mã RRGGBB)"
+                    depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    default "FF0000"
+            endmenu
         endif
 
         menu "LED đơn GPIO (chatbot điều khiển)"
@@ -1667,6 +1981,37 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 help
                     Mỗi chân là một LED một màu. Chatbot bật/tắt, chỉnh độ sáng và chọn hiệu ứng nháy/thở.
                     Bốn LED đầu dùng PWM (3 nếu LED trạng thái là LED đơn PWM); các LED sau chỉ bật/tắt và nháy.
+
+            config CUSTOM_GPIO_LED_BRIGHTNESS
+                int "Độ sáng mặc định (%)"
+                range 1 100
+                default 100
+
+            choice CUSTOM_GPIO_LED_BOOT_EFFECT
+                prompt "Trạng thái khi khởi động"
+                default CUSTOM_GPIO_LED_BOOT_EFFECT_OFF
+                config CUSTOM_GPIO_LED_BOOT_EFFECT_OFF
+                    bool "Tắt"
+                config CUSTOM_GPIO_LED_BOOT_EFFECT_STEADY
+                    bool "Sáng đứng yên"
+                config CUSTOM_GPIO_LED_BOOT_EFFECT_BLINK
+                    bool "Nháy"
+                config CUSTOM_GPIO_LED_BOOT_EFFECT_BREATHE
+                    bool "Thở (LED không chỉnh độ sáng được sẽ nháy)"
+            endchoice
+
+            config CUSTOM_GPIO_LED_BOOT_EFFECT_ID
+                int
+                default 0 if CUSTOM_GPIO_LED_BOOT_EFFECT_OFF
+                default 1 if CUSTOM_GPIO_LED_BOOT_EFFECT_STEADY
+                default 2 if CUSTOM_GPIO_LED_BOOT_EFFECT_BLINK
+                default 3 if CUSTOM_GPIO_LED_BOOT_EFFECT_BREATHE
+                default 0
+
+            config CUSTOM_GPIO_LED_PERIOD_MS
+                int "Chu kỳ nháy/thở mặc định (ms)"
+                range 200 10000
+                default 1000
         endmenu
 
         menuconfig CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC
@@ -1685,8 +2030,123 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 int "Chân I2C SCL chip điều khiển LED"
                 range -1 48
                 default -1
+
+            config CUSTOM_LED_IC_LED_CHANNELS
+                string "Kênh dùng làm LED (cách nhau dấu phẩy, để trống là tất cả kênh)"
+                default ""
+                help
+                    AW9523B có kênh 0-15, IS31FL3236 có kênh 0-35.
+
+            config CUSTOM_LED_IC_LED_BRIGHTNESS
+                int "Độ sáng mặc định (%)"
+                range 1 100
+                default 100
+
+            choice CUSTOM_LED_IC_LED_BOOT_EFFECT
+                prompt "Trạng thái khi khởi động"
+                default CUSTOM_LED_IC_LED_BOOT_EFFECT_OFF
+                config CUSTOM_LED_IC_LED_BOOT_EFFECT_OFF
+                    bool "Tắt"
+                config CUSTOM_LED_IC_LED_BOOT_EFFECT_STEADY
+                    bool "Sáng đứng yên"
+                config CUSTOM_LED_IC_LED_BOOT_EFFECT_BLINK
+                    bool "Nháy"
+                config CUSTOM_LED_IC_LED_BOOT_EFFECT_BREATHE
+                    bool "Thở (LED không chỉnh độ sáng được sẽ nháy)"
+            endchoice
+
+            config CUSTOM_LED_IC_LED_BOOT_EFFECT_ID
+                int
+                default 0 if CUSTOM_LED_IC_LED_BOOT_EFFECT_OFF
+                default 1 if CUSTOM_LED_IC_LED_BOOT_EFFECT_STEADY
+                default 2 if CUSTOM_LED_IC_LED_BOOT_EFFECT_BLINK
+                default 3 if CUSTOM_LED_IC_LED_BOOT_EFFECT_BREATHE
+                default 0
+
+            config CUSTOM_LED_IC_LED_PERIOD_MS
+                int "Chu kỳ nháy/thở mặc định (ms)"
+                range 200 10000
+                default 1000
         endif
 
+        menu "LED qua PCA9685 (16 kênh PWM)"
+            config CUSTOM_PCA9685_LED_CHANNELS
+                string "Kênh PCA9685 dùng làm LED (0-15, cách nhau dấu phẩy, để trống là không dùng)"
+                default ""
+                help
+                    Bật chip PCA9685 ở mục 4.7. Chip chạy 50 Hz để dùng chung với servo, LED có thể hơi chớp khi độ sáng thấp.
+                    Không gán cùng một kênh cho LED và servo.
+
+            config CUSTOM_PCA9685_LED_BRIGHTNESS
+                int "Độ sáng mặc định (%)"
+                range 1 100
+                default 100
+
+            choice CUSTOM_PCA9685_LED_BOOT_EFFECT
+                prompt "Trạng thái khi khởi động"
+                default CUSTOM_PCA9685_LED_BOOT_EFFECT_OFF
+                config CUSTOM_PCA9685_LED_BOOT_EFFECT_OFF
+                    bool "Tắt"
+                config CUSTOM_PCA9685_LED_BOOT_EFFECT_STEADY
+                    bool "Sáng đứng yên"
+                config CUSTOM_PCA9685_LED_BOOT_EFFECT_BLINK
+                    bool "Nháy"
+                config CUSTOM_PCA9685_LED_BOOT_EFFECT_BREATHE
+                    bool "Thở (LED không chỉnh độ sáng được sẽ nháy)"
+            endchoice
+
+            config CUSTOM_PCA9685_LED_BOOT_EFFECT_ID
+                int
+                default 0 if CUSTOM_PCA9685_LED_BOOT_EFFECT_OFF
+                default 1 if CUSTOM_PCA9685_LED_BOOT_EFFECT_STEADY
+                default 2 if CUSTOM_PCA9685_LED_BOOT_EFFECT_BLINK
+                default 3 if CUSTOM_PCA9685_LED_BOOT_EFFECT_BREATHE
+                default 0
+
+            config CUSTOM_PCA9685_LED_PERIOD_MS
+                int "Chu kỳ nháy/thở mặc định (ms)"
+                range 200 10000
+                default 1000
+        endmenu
+        menu "LED qua IC mở rộng GPIO (TCA9554 / TCA9555 / TCA9539)"
+            config CUSTOM_EXPANDER_LED_PINS
+                string "Chân IC mở rộng dùng làm LED (cách nhau dấu phẩy, để trống là không dùng)"
+                default ""
+                help
+                    Khai báo chân I2C, loại chip và địa chỉ của IC mở rộng ở mục 4.7. Chip 8 chân có chân 0-7, chip 16 chân có chân 0-15.
+                    LED trên IC mở rộng chỉ bật/tắt và nháy.
+
+            config CUSTOM_EXPANDER_LED_BRIGHTNESS
+                int "Độ sáng mặc định (%)"
+                range 1 100
+                default 100
+
+            choice CUSTOM_EXPANDER_LED_BOOT_EFFECT
+                prompt "Trạng thái khi khởi động"
+                default CUSTOM_EXPANDER_LED_BOOT_EFFECT_OFF
+                config CUSTOM_EXPANDER_LED_BOOT_EFFECT_OFF
+                    bool "Tắt"
+                config CUSTOM_EXPANDER_LED_BOOT_EFFECT_STEADY
+                    bool "Sáng đứng yên"
+                config CUSTOM_EXPANDER_LED_BOOT_EFFECT_BLINK
+                    bool "Nháy"
+                config CUSTOM_EXPANDER_LED_BOOT_EFFECT_BREATHE
+                    bool "Thở (LED không chỉnh độ sáng được sẽ nháy)"
+            endchoice
+
+            config CUSTOM_EXPANDER_LED_BOOT_EFFECT_ID
+                int
+                default 0 if CUSTOM_EXPANDER_LED_BOOT_EFFECT_OFF
+                default 1 if CUSTOM_EXPANDER_LED_BOOT_EFFECT_STEADY
+                default 2 if CUSTOM_EXPANDER_LED_BOOT_EFFECT_BLINK
+                default 3 if CUSTOM_EXPANDER_LED_BOOT_EFFECT_BREATHE
+                default 0
+
+            config CUSTOM_EXPANDER_LED_PERIOD_MS
+                int "Chu kỳ nháy/thở mặc định (ms)"
+                range 200 10000
+                default 1000
+        endmenu
         endmenu
 
         menu "4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics)"
@@ -2177,6 +2637,22 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             int "Chân reset RST chip mở rộng GPIO"
             range -1 48
             default -1
+
+        choice CUSTOM_EXPANDER_CHIP
+            prompt "Loại chip mở rộng GPIO"
+            default CUSTOM_EXPANDER_CHIP_TCA9554
+            config CUSTOM_EXPANDER_CHIP_TCA9554
+                bool "TCA9554 / PCA9554 / TCA9554A (8 chân)"
+            config CUSTOM_EXPANDER_CHIP_TCA95XX_16BIT
+                bool "TCA9555 / PCA9555 / TCA9535 / TCA9539 (16 chân)"
+        endchoice
+
+        config CUSTOM_EXPANDER_I2C_ADDR
+            int "Địa chỉ I2C chip mở rộng GPIO (thập phân)"
+            range 32 127
+            default 32
+            help
+                32 = 0x20 (TCA9554/TCA9555, chân A0-A2 nối GND), 56 = 0x38 (TCA9554A), 116 = 0x74 (TCA9539).
 
         config CUSTOM_ENABLE_PERIPH_RTC
             bool "Đồng hồ thời gian thực ngoại vi (RTC I2C DS3231 / PCF8563)"

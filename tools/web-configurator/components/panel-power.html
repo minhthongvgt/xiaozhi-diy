@@ -103,6 +103,18 @@
               <label class="form-label" for="kc_CUSTOM_EXPANDER_RST_PIN">Chân reset RST chip mở rộng GPIO</label>
               <input type="number" class="form-control" id="kc_CUSTOM_EXPANDER_RST_PIN" min="-1" max="48">
             </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_EXPANDER_CHIP">Loại chip mở rộng GPIO</label>
+              <select class="form-control" id="kc_CUSTOM_EXPANDER_CHIP">
+                <option value="CUSTOM_EXPANDER_CHIP_TCA9554">TCA9554 / PCA9554 / TCA9554A (8 chân)</option>
+                <option value="CUSTOM_EXPANDER_CHIP_TCA95XX_16BIT">TCA9555 / PCA9555 / TCA9535 / TCA9539 (16 chân)</option>
+              </select>
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_EXPANDER_I2C_ADDR">Địa chỉ I2C chip mở rộng GPIO (thập phân)</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_EXPANDER_I2C_ADDR" min="32" max="127">
+              <div class="form-hint">32 = 0x20 (TCA9554/TCA9555, chân A0-A2 nối GND), 56 = 0x38 (TCA9554A), 116 = 0x74 (TCA9539).</div>
+            </div>
             <div class="form-item span-2">
               <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_ENABLE_PERIPH_RTC"><span>Đồng hồ thời gian thực ngoại vi (RTC I2C DS3231 / PCF8563)</span></label>
             </div>

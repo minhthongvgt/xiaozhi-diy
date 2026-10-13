@@ -206,15 +206,177 @@
               <input type="number" class="form-control" id="led_count" min="1" max="1024">
               <div class="form-hint">Số lượng mắt LED kỹ thuật số WS2812/SK6812 (từ 1 đến 1024 mắt LED).</div>
             </div>
-            <div class="form-item span-2" data-show-if="led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
-              <label class="form-checkbox"><input type="checkbox" id="led_rainbow"><span>Hiệu ứng Đổi Màu Cầu Vồng Nhanh (Fast Rainbow Effect khi nói / khởi động)</span></label>
-              <div class="form-hint">Kích hoạt hiệu ứng LED RGB chuyển màu cầu vồng đa sắc cực nhanh và mượt khi loa phát âm thanh hoặc khi khởi động.</div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable">
+              <label class="form-label" for="kc_CUSTOM_LED_BRIGHTNESS_NORMAL">Độ sáng thường (%)</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_LED_BRIGHTNESS_NORMAL" min="1" max="100">
+              <div class="form-hint">Dùng cho mọi trạng thái, trừ Chờ (độ sáng thấp), Lỗi và Đang nghe khi có tiếng nói (độ sáng cao).</div>
+            </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable">
+              <label class="form-label" for="kc_CUSTOM_LED_BRIGHTNESS_LOW">Độ sáng thấp (%) cho trạng thái Chờ</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_LED_BRIGHTNESS_LOW" min="1" max="100">
+            </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable">
+              <label class="form-label" for="kc_CUSTOM_LED_BRIGHTNESS_HIGH">Độ sáng cao (%) cho Lỗi và khi nghe thấy tiếng nói</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_LED_BRIGHTNESS_HIGH" min="1" max="100">
+            </div>
+            <div class="span-2 form-subheading"><span>Màu và hiệu ứng theo trạng thái</span></div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable">
+              <label class="form-label" for="kc_CUSTOM_LED_STATE_STARTING_EFFECT">Khởi động: hiệu ứng</label>
+              <select class="form-control" id="kc_CUSTOM_LED_STATE_STARTING_EFFECT">
+                <option value="CUSTOM_LED_STATE_STARTING_EFFECT_OFF">Tắt</option>
+                <option value="CUSTOM_LED_STATE_STARTING_EFFECT_STEADY">Sáng đứng yên</option>
+                <option value="CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_FAST">Nháy nhanh (100 ms)</option>
+                <option value="CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_SLOW">Nháy chậm (500 ms)</option>
+                <option value="CUSTOM_LED_STATE_STARTING_EFFECT_BREATHE">Thở (sáng dần, tối dần)</option>
+                <option value="CUSTOM_LED_STATE_STARTING_EFFECT_RAINBOW">Cầu vồng đổi màu</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
+              <label class="form-label" for="kc_CUSTOM_LED_STATE_STARTING_COLOR">Khởi động: màu (mã RRGGBB)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_LED_STATE_STARTING_COLOR">
+            </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable">
+              <label class="form-label" for="kc_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT">Cấu hình WiFi: hiệu ứng</label>
+              <select class="form-control" id="kc_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT">
+                <option value="CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_OFF">Tắt</option>
+                <option value="CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_STEADY">Sáng đứng yên</option>
+                <option value="CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_FAST">Nháy nhanh (100 ms)</option>
+                <option value="CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_SLOW">Nháy chậm (500 ms)</option>
+                <option value="CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BREATHE">Thở (sáng dần, tối dần)</option>
+                <option value="CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_RAINBOW">Cầu vồng đổi màu</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
+              <label class="form-label" for="kc_CUSTOM_LED_STATE_WIFI_CONFIG_COLOR">Cấu hình WiFi: màu (mã RRGGBB)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_LED_STATE_WIFI_CONFIG_COLOR">
+            </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable">
+              <label class="form-label" for="kc_CUSTOM_LED_STATE_IDLE_EFFECT">Chờ: hiệu ứng</label>
+              <select class="form-control" id="kc_CUSTOM_LED_STATE_IDLE_EFFECT">
+                <option value="CUSTOM_LED_STATE_IDLE_EFFECT_OFF">Tắt</option>
+                <option value="CUSTOM_LED_STATE_IDLE_EFFECT_STEADY">Sáng đứng yên</option>
+                <option value="CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_FAST">Nháy nhanh (100 ms)</option>
+                <option value="CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_SLOW">Nháy chậm (500 ms)</option>
+                <option value="CUSTOM_LED_STATE_IDLE_EFFECT_BREATHE">Thở (sáng dần, tối dần)</option>
+                <option value="CUSTOM_LED_STATE_IDLE_EFFECT_RAINBOW">Cầu vồng đổi màu</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
+              <label class="form-label" for="kc_CUSTOM_LED_STATE_IDLE_COLOR">Chờ: màu (mã RRGGBB)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_LED_STATE_IDLE_COLOR">
+            </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable">
+              <label class="form-label" for="kc_CUSTOM_LED_STATE_CONNECTING_EFFECT">Đang kết nối: hiệu ứng</label>
+              <select class="form-control" id="kc_CUSTOM_LED_STATE_CONNECTING_EFFECT">
+                <option value="CUSTOM_LED_STATE_CONNECTING_EFFECT_OFF">Tắt</option>
+                <option value="CUSTOM_LED_STATE_CONNECTING_EFFECT_STEADY">Sáng đứng yên</option>
+                <option value="CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_FAST">Nháy nhanh (100 ms)</option>
+                <option value="CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_SLOW">Nháy chậm (500 ms)</option>
+                <option value="CUSTOM_LED_STATE_CONNECTING_EFFECT_BREATHE">Thở (sáng dần, tối dần)</option>
+                <option value="CUSTOM_LED_STATE_CONNECTING_EFFECT_RAINBOW">Cầu vồng đổi màu</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
+              <label class="form-label" for="kc_CUSTOM_LED_STATE_CONNECTING_COLOR">Đang kết nối: màu (mã RRGGBB)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_LED_STATE_CONNECTING_COLOR">
+            </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable">
+              <label class="form-label" for="kc_CUSTOM_LED_STATE_LISTENING_EFFECT">Đang nghe: hiệu ứng</label>
+              <select class="form-control" id="kc_CUSTOM_LED_STATE_LISTENING_EFFECT">
+                <option value="CUSTOM_LED_STATE_LISTENING_EFFECT_OFF">Tắt</option>
+                <option value="CUSTOM_LED_STATE_LISTENING_EFFECT_STEADY">Sáng đứng yên</option>
+                <option value="CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_FAST">Nháy nhanh (100 ms)</option>
+                <option value="CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_SLOW">Nháy chậm (500 ms)</option>
+                <option value="CUSTOM_LED_STATE_LISTENING_EFFECT_BREATHE">Thở (sáng dần, tối dần)</option>
+                <option value="CUSTOM_LED_STATE_LISTENING_EFFECT_RAINBOW">Cầu vồng đổi màu</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
+              <label class="form-label" for="kc_CUSTOM_LED_STATE_LISTENING_COLOR">Đang nghe: màu (mã RRGGBB)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_LED_STATE_LISTENING_COLOR">
+            </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable">
+              <label class="form-label" for="kc_CUSTOM_LED_STATE_SPEAKING_EFFECT">Đang nói: hiệu ứng</label>
+              <select class="form-control" id="kc_CUSTOM_LED_STATE_SPEAKING_EFFECT">
+                <option value="CUSTOM_LED_STATE_SPEAKING_EFFECT_OFF">Tắt</option>
+                <option value="CUSTOM_LED_STATE_SPEAKING_EFFECT_STEADY">Sáng đứng yên</option>
+                <option value="CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_FAST">Nháy nhanh (100 ms)</option>
+                <option value="CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_SLOW">Nháy chậm (500 ms)</option>
+                <option value="CUSTOM_LED_STATE_SPEAKING_EFFECT_BREATHE">Thở (sáng dần, tối dần)</option>
+                <option value="CUSTOM_LED_STATE_SPEAKING_EFFECT_RAINBOW">Cầu vồng đổi màu</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
+              <label class="form-label" for="kc_CUSTOM_LED_STATE_SPEAKING_COLOR">Đang nói: màu (mã RRGGBB)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_LED_STATE_SPEAKING_COLOR">
+            </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable">
+              <label class="form-label" for="kc_CUSTOM_LED_STATE_UPGRADING_EFFECT">Nâng cấp firmware: hiệu ứng</label>
+              <select class="form-control" id="kc_CUSTOM_LED_STATE_UPGRADING_EFFECT">
+                <option value="CUSTOM_LED_STATE_UPGRADING_EFFECT_OFF">Tắt</option>
+                <option value="CUSTOM_LED_STATE_UPGRADING_EFFECT_STEADY">Sáng đứng yên</option>
+                <option value="CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_FAST">Nháy nhanh (100 ms)</option>
+                <option value="CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_SLOW">Nháy chậm (500 ms)</option>
+                <option value="CUSTOM_LED_STATE_UPGRADING_EFFECT_BREATHE">Thở (sáng dần, tối dần)</option>
+                <option value="CUSTOM_LED_STATE_UPGRADING_EFFECT_RAINBOW">Cầu vồng đổi màu</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
+              <label class="form-label" for="kc_CUSTOM_LED_STATE_UPGRADING_COLOR">Nâng cấp firmware: màu (mã RRGGBB)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_LED_STATE_UPGRADING_COLOR">
+            </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable">
+              <label class="form-label" for="kc_CUSTOM_LED_STATE_ACTIVATING_EFFECT">Kích hoạt thiết bị: hiệu ứng</label>
+              <select class="form-control" id="kc_CUSTOM_LED_STATE_ACTIVATING_EFFECT">
+                <option value="CUSTOM_LED_STATE_ACTIVATING_EFFECT_OFF">Tắt</option>
+                <option value="CUSTOM_LED_STATE_ACTIVATING_EFFECT_STEADY">Sáng đứng yên</option>
+                <option value="CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_FAST">Nháy nhanh (100 ms)</option>
+                <option value="CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_SLOW">Nháy chậm (500 ms)</option>
+                <option value="CUSTOM_LED_STATE_ACTIVATING_EFFECT_BREATHE">Thở (sáng dần, tối dần)</option>
+                <option value="CUSTOM_LED_STATE_ACTIVATING_EFFECT_RAINBOW">Cầu vồng đổi màu</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
+              <label class="form-label" for="kc_CUSTOM_LED_STATE_ACTIVATING_COLOR">Kích hoạt thiết bị: màu (mã RRGGBB)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_LED_STATE_ACTIVATING_COLOR">
+            </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable">
+              <label class="form-label" for="kc_CUSTOM_LED_STATE_ERROR_EFFECT">Lỗi: hiệu ứng</label>
+              <select class="form-control" id="kc_CUSTOM_LED_STATE_ERROR_EFFECT">
+                <option value="CUSTOM_LED_STATE_ERROR_EFFECT_OFF">Tắt</option>
+                <option value="CUSTOM_LED_STATE_ERROR_EFFECT_STEADY">Sáng đứng yên</option>
+                <option value="CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_FAST">Nháy nhanh (100 ms)</option>
+                <option value="CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_SLOW">Nháy chậm (500 ms)</option>
+                <option value="CUSTOM_LED_STATE_ERROR_EFFECT_BREATHE">Thở (sáng dần, tối dần)</option>
+                <option value="CUSTOM_LED_STATE_ERROR_EFFECT_RAINBOW">Cầu vồng đổi màu</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
+              <label class="form-label" for="kc_CUSTOM_LED_STATE_ERROR_COLOR">Lỗi: màu (mã RRGGBB)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_LED_STATE_ERROR_COLOR">
             </div>
             <div class="span-2 form-subheading"><span>LED đơn GPIO (chatbot điều khiển)</span></div>
             <div class="form-item">
               <label class="form-label" for="kc_CUSTOM_LED_EXTRA_GPIOS">Các chân LED đơn (cách nhau dấu phẩy, để trống là không dùng)</label>
               <input type="text" class="form-control" id="kc_CUSTOM_LED_EXTRA_GPIOS">
               <div class="form-hint">Mỗi chân là một LED một màu.</div>
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_GPIO_LED_BRIGHTNESS">Độ sáng mặc định (%)</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_GPIO_LED_BRIGHTNESS" min="1" max="100">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_GPIO_LED_BOOT_EFFECT">Trạng thái khi khởi động</label>
+              <select class="form-control" id="kc_CUSTOM_GPIO_LED_BOOT_EFFECT">
+                <option value="CUSTOM_GPIO_LED_BOOT_EFFECT_OFF">Tắt</option>
+                <option value="CUSTOM_GPIO_LED_BOOT_EFFECT_STEADY">Sáng đứng yên</option>
+                <option value="CUSTOM_GPIO_LED_BOOT_EFFECT_BLINK">Nháy</option>
+                <option value="CUSTOM_GPIO_LED_BOOT_EFFECT_BREATHE">Thở (LED không chỉnh độ sáng được sẽ nháy)</option>
+              </select>
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_GPIO_LED_PERIOD_MS">Chu kỳ nháy/thở mặc định (ms)</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_GPIO_LED_PERIOD_MS" min="200" max="10000">
             </div>
             <div class="form-item span-2 form-item-master">
               <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC"><span><strong>LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh)</strong></span></label>
@@ -227,6 +389,74 @@
             <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC">
               <label class="form-label" for="kc_CUSTOM_PERIPH_LED_IC_I2C_SCL">Chân I2C SCL chip điều khiển LED</label>
               <input type="number" class="form-control" id="kc_CUSTOM_PERIPH_LED_IC_I2C_SCL" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC">
+              <label class="form-label" for="kc_CUSTOM_LED_IC_LED_CHANNELS">Kênh dùng làm LED (cách nhau dấu phẩy, để trống là tất cả kênh)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_LED_IC_LED_CHANNELS">
+              <div class="form-hint">AW9523B có kênh 0-15, IS31FL3236 có kênh 0-35.</div>
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC">
+              <label class="form-label" for="kc_CUSTOM_LED_IC_LED_BRIGHTNESS">Độ sáng mặc định (%)</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_LED_IC_LED_BRIGHTNESS" min="1" max="100">
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC">
+              <label class="form-label" for="kc_CUSTOM_LED_IC_LED_BOOT_EFFECT">Trạng thái khi khởi động</label>
+              <select class="form-control" id="kc_CUSTOM_LED_IC_LED_BOOT_EFFECT">
+                <option value="CUSTOM_LED_IC_LED_BOOT_EFFECT_OFF">Tắt</option>
+                <option value="CUSTOM_LED_IC_LED_BOOT_EFFECT_STEADY">Sáng đứng yên</option>
+                <option value="CUSTOM_LED_IC_LED_BOOT_EFFECT_BLINK">Nháy</option>
+                <option value="CUSTOM_LED_IC_LED_BOOT_EFFECT_BREATHE">Thở (LED không chỉnh độ sáng được sẽ nháy)</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC">
+              <label class="form-label" for="kc_CUSTOM_LED_IC_LED_PERIOD_MS">Chu kỳ nháy/thở mặc định (ms)</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_LED_IC_LED_PERIOD_MS" min="200" max="10000">
+            </div>
+            <div class="span-2 form-subheading"><span>LED qua PCA9685 (16 kênh PWM)</span></div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_PCA9685_LED_CHANNELS">Kênh PCA9685 dùng làm LED (0-15, cách nhau dấu phẩy, để trống là không dùng)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_PCA9685_LED_CHANNELS">
+              <div class="form-hint">Bật chip PCA9685 ở mục 4.7.</div>
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_PCA9685_LED_BRIGHTNESS">Độ sáng mặc định (%)</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PCA9685_LED_BRIGHTNESS" min="1" max="100">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_PCA9685_LED_BOOT_EFFECT">Trạng thái khi khởi động</label>
+              <select class="form-control" id="kc_CUSTOM_PCA9685_LED_BOOT_EFFECT">
+                <option value="CUSTOM_PCA9685_LED_BOOT_EFFECT_OFF">Tắt</option>
+                <option value="CUSTOM_PCA9685_LED_BOOT_EFFECT_STEADY">Sáng đứng yên</option>
+                <option value="CUSTOM_PCA9685_LED_BOOT_EFFECT_BLINK">Nháy</option>
+                <option value="CUSTOM_PCA9685_LED_BOOT_EFFECT_BREATHE">Thở (LED không chỉnh độ sáng được sẽ nháy)</option>
+              </select>
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_PCA9685_LED_PERIOD_MS">Chu kỳ nháy/thở mặc định (ms)</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_PCA9685_LED_PERIOD_MS" min="200" max="10000">
+            </div>
+            <div class="span-2 form-subheading"><span>LED qua IC mở rộng GPIO (TCA9554 / TCA9555 / TCA9539)</span></div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_EXPANDER_LED_PINS">Chân IC mở rộng dùng làm LED (cách nhau dấu phẩy, để trống là không dùng)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_EXPANDER_LED_PINS">
+              <div class="form-hint">Khai báo chân I2C, loại chip và địa chỉ của IC mở rộng ở mục 4.7.</div>
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_EXPANDER_LED_BRIGHTNESS">Độ sáng mặc định (%)</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_EXPANDER_LED_BRIGHTNESS" min="1" max="100">
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_EXPANDER_LED_BOOT_EFFECT">Trạng thái khi khởi động</label>
+              <select class="form-control" id="kc_CUSTOM_EXPANDER_LED_BOOT_EFFECT">
+                <option value="CUSTOM_EXPANDER_LED_BOOT_EFFECT_OFF">Tắt</option>
+                <option value="CUSTOM_EXPANDER_LED_BOOT_EFFECT_STEADY">Sáng đứng yên</option>
+                <option value="CUSTOM_EXPANDER_LED_BOOT_EFFECT_BLINK">Nháy</option>
+                <option value="CUSTOM_EXPANDER_LED_BOOT_EFFECT_BREATHE">Thở (LED không chỉnh độ sáng được sẽ nháy)</option>
+              </select>
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_CUSTOM_EXPANDER_LED_PERIOD_MS">Chu kỳ nháy/thở mặc định (ms)</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_EXPANDER_LED_PERIOD_MS" min="200" max="10000">
             </div>
           </div>
         </div>
