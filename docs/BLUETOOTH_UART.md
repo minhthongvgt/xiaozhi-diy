@@ -17,6 +17,8 @@ Hai cách không chạy cùng lúc: một module chỉ ghép được với mộ
 
 ESP32-S3 không có Bluetooth Classic, nên phần Bluetooth nội của chip không thay được HC-05/HC-06. Module rời cũng không chiếm sóng Wi-Fi và RAM của chatbot.
 
+Cách cài đặt cả hai module (gõ lệnh AT bằng tay, ghép đôi chủ/tớ, mã mẫu cho vi điều khiển đầu kia): [BLUETOOTH_MODULE_SETUP.md](BLUETOOTH_MODULE_SETUP.md).
+
 Mã nguồn: `main/drivers/periph/bt_uart_module.c` (UART, chân STATE/KEY, lệnh AT), `main/boards/common/bt_uart_bridge.cc` (chia gói và công cụ MCP), `main/boards/esp32s3-n16r8-custom/custom_n16r8_board.cc` (`InitializeBtUartModule`, `InitializeBtUartTools`).
 
 ## Đấu nối
