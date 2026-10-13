@@ -140,7 +140,7 @@ export const DEFAULT_CONFIG = {
     temp_sda:    -1,     temp_scl:      -1,
     bmp280:       false, bmp280_sda:   -1, bmp280_scl: -1,
     bh1750:       false, bh1750_sda:   -1, bh1750_scl: -1,
-    ldr:          false, ldr_ch:        1,
+    ldr:          false, ldr_ch:        -1,
     gas_co2:      false, gas_scd4x:     true,
     gas_sda:     -1,     gas_scl:      -1,
     gas_mq:       false, gas_mq_gpio:  -1,
@@ -158,7 +158,7 @@ export const DEFAULT_CONFIG = {
   },
   power: {
     battery_enable: false,
-    battery_adc:    true,  battery_ch: 0,
+    battery_adc:    true,  battery_ch: -1,
     battery_r1:     100,   battery_r2: 100,
     ina2xx:         false, ina219: true,
     ina_sda:       -1,     ina_scl: -1,

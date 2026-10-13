@@ -284,7 +284,7 @@ export class SdkconfigParser {
     s.sensors.bh1750_sda   = i('CONFIG_CUSTOM_SENSOR_BH1750_I2C_SDA');
     s.sensors.bh1750_scl   = i('CONFIG_CUSTOM_SENSOR_BH1750_I2C_SCL');
     s.sensors.ldr          = y('CONFIG_CUSTOM_ENABLE_SENSOR_LDR');
-    s.sensors.ldr_ch       = i('CONFIG_CUSTOM_SENSOR_LDR_ADC_CHANNEL', 1);
+    s.sensors.ldr_ch       = i('CONFIG_CUSTOM_SENSOR_LDR_ADC_CHANNEL', -1);
     s.sensors.gas_co2      = y('CONFIG_CUSTOM_ENABLE_SENSOR_GAS_CO2');
     s.sensors.gas_scd4x    = 'CONFIG_CUSTOM_SENSOR_GAS_SCD4X' in m
                              ? y('CONFIG_CUSTOM_SENSOR_GAS_SCD4X') : true;
@@ -304,7 +304,7 @@ export class SdkconfigParser {
     s.power.battery_enable = y('CONFIG_CUSTOM_ENABLE_BATTERY_MONITOR');
     s.power.battery_adc    = 'CONFIG_CUSTOM_BATTERY_MONITOR_ADC' in m
                              ? y('CONFIG_CUSTOM_BATTERY_MONITOR_ADC') : true;
-    s.power.battery_ch     = i('CONFIG_CUSTOM_BATTERY_ADC_CHANNEL', 0);
+    s.power.battery_ch     = i('CONFIG_CUSTOM_BATTERY_ADC_CHANNEL', -1);
     s.power.battery_r1     = i('CONFIG_CUSTOM_BATTERY_DIVIDER_R1', 100);
     s.power.battery_r2     = i('CONFIG_CUSTOM_BATTERY_DIVIDER_R2', 100);
     s.power.ina2xx         = y('CONFIG_CUSTOM_ENABLE_SENSOR_INA2XX');

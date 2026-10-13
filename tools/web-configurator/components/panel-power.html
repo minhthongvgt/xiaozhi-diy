@@ -22,8 +22,8 @@
               <label class="form-checkbox"><input type="checkbox" id="battery_adc"><span>Đo qua ADC nội bộ (Bộ chia điện trở Voltage Divider)</span></label>
             </div>
             <div class="form-item" data-show-if="battery_adc&amp;battery_enable">
-              <label class="form-label" for="battery_ch">Kênh ADC1 đo pin (Kênh 0 ứng với chân GPIO 1)</label>
-              <input type="number" class="form-control" id="battery_ch" min="0" max="9">
+              <label class="form-label" for="battery_ch">Kênh ADC1 đo pin (Kênh N ứng với GPIO N+1, -1 chưa chọn)</label>
+              <input type="number" class="form-control" id="battery_ch" min="-1" max="9">
             </div>
             <div class="form-item" data-show-if="battery_adc&amp;battery_enable">
               <label class="form-label" for="battery_r1">Điện trở nhánh trên R1 cầu phân áp (kOhm)</label>

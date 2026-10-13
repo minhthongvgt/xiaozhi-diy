@@ -286,9 +286,9 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_BUTTON_VOL_UP_GPIO` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân GPIO nút tăng âm lượng (Vol Up) | -1 |
 | `CONFIG_CUSTOM_BUTTON_VOL_DOWN_GPIO` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân GPIO nút giảm âm lượng (Vol Down) | -1 |
 | `CONFIG_CUSTOM_ENABLE_TOUCH_SLIDER` | bool | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Thanh trượt cảm ứng điện dung nội bộ ESP32-S3 (Touch Slider) | n |
-| `CONFIG_CUSTOM_TOUCH_SLIDER_PAD1_GPIO` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân Touch Pad 1 của thanh trượt (Mặc định GPIO 1) | -1 |
-| `CONFIG_CUSTOM_TOUCH_SLIDER_PAD2_GPIO` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân Touch Pad 2 của thanh trượt (Mặc định GPIO 2) | -1 |
-| `CONFIG_CUSTOM_TOUCH_SLIDER_PAD3_GPIO` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân Touch Pad 3 của thanh trượt (Mặc định GPIO 3) | -1 |
+| `CONFIG_CUSTOM_TOUCH_SLIDER_PAD1_GPIO` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân Touch Pad 1 của thanh trượt (GPIO 1-14) | -1 |
+| `CONFIG_CUSTOM_TOUCH_SLIDER_PAD2_GPIO` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân Touch Pad 2 của thanh trượt (GPIO 1-14) | -1 |
+| `CONFIG_CUSTOM_TOUCH_SLIDER_PAD3_GPIO` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân Touch Pad 3 của thanh trượt (GPIO 1-14) | -1 |
 | `CONFIG_CUSTOM_ENABLE_PERIPH_ROTARY_ENCODER` | bool | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Núm vặn xoay vô cấp cơ học (Rotary Encoder EC11 qua PCNT) | n |
 | `CONFIG_CUSTOM_PERIPH_ENCODER_PHASE_A` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân xung pha A (CLK) Encoder | -1 |
 | `CONFIG_CUSTOM_PERIPH_ENCODER_PHASE_B` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân xung pha B (DT) Encoder | -1 |
@@ -356,7 +356,7 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_SENSOR_BH1750_I2C_SCL` | int | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Chân I2C SCL cảm biến ánh sáng BH1750 | -1 |
 | `CONFIG_CUSTOM_ENABLE_SENSOR_LDR` | bool | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Cảm biến ánh sáng quang trở (LDR qua cầu phân áp ADC) | n |
 | `CONFIG_CUSTOM_SENSOR_LDR_EXTRA_CHS` | string | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Các kênh ADC quang trở LDR thêm (cách nhau dấu phẩy) | "" |
-| `CONFIG_CUSTOM_SENSOR_LDR_ADC_CHANNEL` | int | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Kênh ADC1 đo quang trở LDR (Kênh 1 ứng với GPIO 2) | 1 |
+| `CONFIG_CUSTOM_SENSOR_LDR_ADC_CHANNEL` | int | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Kênh ADC1 đo quang trở LDR (Kênh N ứng với GPIO N+1, -1 chưa chọn) | -1 |
 | `CONFIG_CUSTOM_ENABLE_SENSOR_GAS_CO2` | bool | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Cảm biến nồng độ Khí độc TVOC & CO2 NDIR (SCD40/41, SGP30/40 I2C) | n |
 | `CONFIG_CUSTOM_SENSOR_GAS_SCD4X` | bool | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Sensirion SCD40 / SCD41 (Cảm biến CO2 NDIR I2C) | y |
 | `CONFIG_CUSTOM_SENSOR_SCD4X_EXTRA_GPIOS` | string | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Các chân GPIO SCD4X thêm (cách nhau dấu phẩy) | "" |
@@ -395,7 +395,7 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_PERIPH_MOTOR_DIRB_PIN` | int | 4.6. Động Cơ, Robot & Cơ Cấu Chấp Hành (Motors, Robotics & Actuators) | Chân hướng quay Động cơ B (DIRB / IN3) | -1 |
 | `CONFIG_CUSTOM_ENABLE_BATTERY_MONITOR` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Mạch đo dung lượng Pin (Battery Level Monitor) | n |
 | `CONFIG_CUSTOM_BATTERY_MONITOR_ADC` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Đo qua ADC nội bộ (Bộ chia điện trở Voltage Divider) | y |
-| `CONFIG_CUSTOM_BATTERY_ADC_CHANNEL` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Kênh ADC1 đo pin (Kênh 0 ứng với chân GPIO 1) | 0 |
+| `CONFIG_CUSTOM_BATTERY_ADC_CHANNEL` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Kênh ADC1 đo pin (Kênh N ứng với GPIO N+1, -1 chưa chọn) | -1 |
 | `CONFIG_CUSTOM_BATTERY_DIVIDER_R1` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Điện trở nhánh trên R1 cầu phân áp (kOhm) | 100 |
 | `CONFIG_CUSTOM_BATTERY_DIVIDER_R2` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Điện trở nhánh dưới R2 cầu phân áp (kOhm) | 100 |
 | `CONFIG_CUSTOM_ENABLE_SENSOR_INA2XX` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Module đo điện áp, dòng điện & công suất tiêu thụ (TI INA219 / INA226 I2C) | n |
@@ -457,7 +457,6 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_PERIPH_4G_PWRKEY_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân bật nguồn PWRKEY module 4G | -1 |
 | `CONFIG_CUSTOM_PERIPH_4G_UART_TX_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân truyền UART TX kết nối module 4G | -1 |
 | `CONFIG_CUSTOM_PERIPH_4G_UART_RX_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân nhận UART RX kết nối module 4G | -1 |
-| `CONFIG_ENABLE_CUSTOM_SENSORS` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) |  | y |
 | `CONFIG_CUSTOM_BATTERY_MONITOR_NONE` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) |  | !CUSTOM_ENABLE_BATTERY_MONITOR |
 | `CONFIG_ESP_MAIN_TASK_STACK_SIZE` | int | ESP-IDF System | Main Task Stack Size | 6584 |
 | `CONFIG_ESP_SYSTEM_EVENT_TASK_STACK_SIZE` | int | ESP-IDF System | Event Task Stack Size | 10096 |

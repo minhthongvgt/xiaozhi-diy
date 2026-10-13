@@ -8099,7 +8099,7 @@
    "name": "CUSTOM_TOUCH_SLIDER_PAD1_GPIO",
    "order": 303,
    "type": "int",
-   "prompt": "Chân Touch Pad 1 của thanh trượt (Mặc định GPIO 1)",
+   "prompt": "Chân Touch Pad 1 của thanh trượt (GPIO 1-14)",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
@@ -8132,7 +8132,7 @@
    "name": "CUSTOM_TOUCH_SLIDER_PAD2_GPIO",
    "order": 304,
    "type": "int",
-   "prompt": "Chân Touch Pad 2 của thanh trượt (Mặc định GPIO 2)",
+   "prompt": "Chân Touch Pad 2 của thanh trượt (GPIO 1-14)",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
@@ -8165,7 +8165,7 @@
    "name": "CUSTOM_TOUCH_SLIDER_PAD3_GPIO",
    "order": 305,
    "type": "int",
-   "prompt": "Chân Touch Pad 3 của thanh trượt (Mặc định GPIO 3)",
+   "prompt": "Chân Touch Pad 3 của thanh trượt (GPIO 1-14)",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
@@ -10237,7 +10237,7 @@
    "name": "CUSTOM_SENSOR_LDR_ADC_CHANNEL",
    "order": 375,
    "type": "int",
-   "prompt": "Kênh ADC1 đo quang trở LDR (Kênh 1 ứng với GPIO 2)",
+   "prompt": "Kênh ADC1 đo quang trở LDR (Kênh N ứng với GPIO N+1, -1 chưa chọn)",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
@@ -10253,13 +10253,13 @@
    ],
    "default": [
     [
-     "1",
+     "-1",
      "y"
     ]
    ],
    "range": [
     [
-     "0",
+     "-1",
      "9",
      "y"
     ]
@@ -11343,7 +11343,7 @@
    "name": "CUSTOM_BATTERY_ADC_CHANNEL",
    "order": 415,
    "type": "int",
-   "prompt": "Kênh ADC1 đo pin (Kênh 0 ứng với chân GPIO 1)",
+   "prompt": "Kênh ADC1 đo pin (Kênh N ứng với GPIO N+1, -1 chưa chọn)",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
@@ -11363,13 +11363,13 @@
    ],
    "default": [
     [
-     "0",
+     "-1",
      "y"
     ]
    ],
    "range": [
     [
-     "0",
+     "-1",
      "9",
      "y"
     ]
@@ -13204,31 +13204,8 @@
    "help": ""
   },
   {
-   "name": "ENABLE_CUSTOM_SENSORS",
-   "order": 477,
-   "type": "bool",
-   "prompt": "",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom)"
-   ],
-   "menuconfig": false,
-   "choice": null,
-   "depends": "IDF_TARGET_ESP32S3",
-   "default": [
-    [
-     "y",
-     "y"
-    ]
-   ],
-   "range": [],
-   "help": ""
-  },
-  {
    "name": "CUSTOM_BATTERY_MONITOR_NONE",
-   "order": 478,
+   "order": 477,
    "type": "bool",
    "prompt": "",
    "menu": [

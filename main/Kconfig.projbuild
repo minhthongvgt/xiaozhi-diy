@@ -1421,19 +1421,19 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 Thanh trượt điều khiển cảm ứng điện dung sử dụng 3 kênh Touch pad nội bộ.
 
         config CUSTOM_TOUCH_SLIDER_PAD1_GPIO
-            int "Chân Touch Pad 1 của thanh trượt (Mặc định GPIO 1)"
+            int "Chân Touch Pad 1 của thanh trượt (GPIO 1-14)"
             depends on CUSTOM_ENABLE_TOUCH_SLIDER
             range -1 48
             default -1
 
         config CUSTOM_TOUCH_SLIDER_PAD2_GPIO
-            int "Chân Touch Pad 2 của thanh trượt (Mặc định GPIO 2)"
+            int "Chân Touch Pad 2 của thanh trượt (GPIO 1-14)"
             depends on CUSTOM_ENABLE_TOUCH_SLIDER
             range -1 48
             default -1
 
         config CUSTOM_TOUCH_SLIDER_PAD3_GPIO
-            int "Chân Touch Pad 3 của thanh trượt (Mặc định GPIO 3)"
+            int "Chân Touch Pad 3 của thanh trượt (GPIO 1-14)"
             depends on CUSTOM_ENABLE_TOUCH_SLIDER
             range -1 48
             default -1
@@ -1809,10 +1809,10 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             default ""
 
         config CUSTOM_SENSOR_LDR_ADC_CHANNEL
-            int "Kênh ADC1 đo quang trở LDR (Kênh 1 ứng với GPIO 2)"
+            int "Kênh ADC1 đo quang trở LDR (Kênh N ứng với GPIO N+1, -1 chưa chọn)"
             depends on CUSTOM_ENABLE_SENSOR_LDR
-            range 0 9
-            default 1
+            range -1 9
+            default -1
 
         config CUSTOM_ENABLE_SENSOR_GAS_CO2
             bool "Cảm biến nồng độ Khí độc TVOC & CO2 NDIR (SCD40/41, SGP30/40 I2C)"
@@ -2036,10 +2036,10 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 default y
 
             config CUSTOM_BATTERY_ADC_CHANNEL
-                int "Kênh ADC1 đo pin (Kênh 0 ứng với chân GPIO 1)"
+                int "Kênh ADC1 đo pin (Kênh N ứng với GPIO N+1, -1 chưa chọn)"
                 depends on CUSTOM_BATTERY_MONITOR_ADC
-                range 0 9
-                default 0
+                range -1 9
+                default -1
 
             config CUSTOM_BATTERY_DIVIDER_R1
                 int "Điện trở nhánh trên R1 cầu phân áp (kOhm)"
@@ -2362,10 +2362,6 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 range -1 48
                 default -1
         endif
-
-        config ENABLE_CUSTOM_SENSORS
-            bool
-            default y
 
         config CUSTOM_BATTERY_MONITOR_NONE
             bool

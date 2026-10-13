@@ -1261,12 +1261,14 @@ private:
     }
 
     void InitializeBattery() {
-#if defined(CONFIG_CUSTOM_BATTERY_MONITOR_ADC)
+#if defined(CONFIG_CUSTOM_BATTERY_MONITOR_ADC) && defined(BATTERY_ADC_CHANNEL)
         battery_monitor_ = new AdcBatteryMonitor(ADC_UNIT_1, BATTERY_ADC_CHANNEL,
                                                  (float)(BATTERY_DIVIDER_R1 * 1000),
                                                  (float)(BATTERY_DIVIDER_R2 * 1000),
                                                  (gpio_num_t)-1);
         ESP_LOGI(TAG, "ADC Battery Monitor initialized");
+#elif defined(CONFIG_CUSTOM_BATTERY_MONITOR_ADC)
+        ESP_LOGW(TAG, "ADC Battery Monitor skipped: ADC channel not selected");
 #endif
     }
 

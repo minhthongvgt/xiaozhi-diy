@@ -51,15 +51,15 @@
               <div class="form-hint">Thanh trượt điều khiển cảm ứng điện dung sử dụng 3 kênh Touch pad nội bộ.</div>
             </div>
             <div class="form-item" data-show-if="buttons_slider">
-              <label class="form-label" for="slider_pad1">Chân Touch Pad 1 của thanh trượt (Mặc định GPIO 1)</label>
+              <label class="form-label" for="slider_pad1">Chân Touch Pad 1 của thanh trượt (GPIO 1-14)</label>
               <input type="number" class="form-control" id="slider_pad1" min="-1" max="48">
             </div>
             <div class="form-item" data-show-if="buttons_slider">
-              <label class="form-label" for="slider_pad2">Chân Touch Pad 2 của thanh trượt (Mặc định GPIO 2)</label>
+              <label class="form-label" for="slider_pad2">Chân Touch Pad 2 của thanh trượt (GPIO 1-14)</label>
               <input type="number" class="form-control" id="slider_pad2" min="-1" max="48">
             </div>
             <div class="form-item" data-show-if="buttons_slider">
-              <label class="form-label" for="slider_pad3">Chân Touch Pad 3 của thanh trượt (Mặc định GPIO 3)</label>
+              <label class="form-label" for="slider_pad3">Chân Touch Pad 3 của thanh trượt (GPIO 1-14)</label>
               <input type="number" class="form-control" id="slider_pad3" min="-1" max="48">
             </div>
             <div class="form-item span-2">
@@ -379,8 +379,8 @@
               <input type="text" class="form-control" id="kc_CUSTOM_SENSOR_LDR_EXTRA_CHS">
             </div>
             <div class="form-item" data-show-if="sensor_ldr">
-              <label class="form-label" for="ldr_ch">Kênh ADC1 đo quang trở LDR (Kênh 1 ứng với GPIO 2)</label>
-              <input type="number" class="form-control" id="ldr_ch" min="0" max="9">
+              <label class="form-label" for="ldr_ch">Kênh ADC1 đo quang trở LDR (Kênh N ứng với GPIO N+1, -1 chưa chọn)</label>
+              <input type="number" class="form-control" id="ldr_ch" min="-1" max="9">
             </div>
             <div class="form-item span-2">
               <label class="form-checkbox"><input type="checkbox" id="sensor_gas_co2"><span>Cảm biến nồng độ Khí độc TVOC &amp; CO2 NDIR (SCD40/41, SGP30/40 I2C)</span></label>

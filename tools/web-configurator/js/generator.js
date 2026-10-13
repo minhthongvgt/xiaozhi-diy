@@ -542,7 +542,6 @@ export class SdkconfigGenerator {
       en('CONFIG_CUSTOM_ENABLE_SENSOR_FLAME');
       set('CONFIG_CUSTOM_SENSOR_FLAME_PIN', s.sensors.flame_gpio);
     } else dis('CONFIG_CUSTOM_ENABLE_SENSOR_FLAME');
-    en('CONFIG_ENABLE_CUSTOM_SENSORS');  
     lines.push('');
     
     lines.push('# Power & Battery');

@@ -32,7 +32,6 @@
                 "CONFIG_CUSTOM_AUDIO_I2S_SIMPLEX=y",
                 "CONFIG_CUSTOM_ENABLE_BUTTON_BOOT=y",
                 "CONFIG_CUSTOM_BUTTON_BOOT_GPIO=-1",
-                "CONFIG_ENABLE_CUSTOM_SENSORS=y",
                 "CONFIG_CUSTOM_ENABLE_SENSOR_DHT11_22=y",
                 "CONFIG_CUSTOM_SENSOR_DHT_GPIO=-1",
                 "CONFIG_CUSTOM_BATTERY_MONITOR_NONE=y",

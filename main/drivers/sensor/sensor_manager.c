@@ -18,10 +18,8 @@
 #include <esp_adc/adc_oneshot.h>
 #include <string.h>
 #define TAG "SensorManager"
-#if defined(CONFIG_CUSTOM_SENSOR_LDR_ADC_CHANNEL)
+#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_LDR) && defined(CONFIG_CUSTOM_SENSOR_LDR_ADC_CHANNEL) && (CONFIG_CUSTOM_SENSOR_LDR_ADC_CHANNEL >= 0)
 #define LDR_ADC_CHANNEL ((adc_channel_t)CONFIG_CUSTOM_SENSOR_LDR_ADC_CHANNEL)
-#else
-#define LDR_ADC_CHANNEL ADC_CHANNEL_1
 #endif
 static adc_oneshot_unit_handle_t s_adc1_handle = NULL;
 static mq_sensor_handle_t s_mq_dev = NULL;
@@ -49,7 +47,7 @@ static gpio_num_t s_hcsr04_echo = (gpio_num_t)-1;
 esp_err_t sensor_manager_init(void)
 {
     ESP_LOGI(TAG, "Initializing Sensors Subsystem...");
-#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_LDR) || defined(CONFIG_CUSTOM_ENABLE_SENSOR_GAS_ANALOG_MQ)
+#if defined(LDR_ADC_CHANNEL) || defined(CONFIG_CUSTOM_ENABLE_SENSOR_GAS_ANALOG_MQ)
     adc_oneshot_unit_init_cfg_t init_config1 = {
         .unit_id = ADC_UNIT_1,
         .ulp_mode = ADC_ULP_MODE_DISABLE,
@@ -60,7 +58,7 @@ esp_err_t sensor_manager_init(void)
                  esp_err_to_name(ret));
         s_adc1_handle = NULL;
     }
-#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_LDR)
+#if defined(LDR_ADC_CHANNEL)
     if (s_adc1_handle != NULL) {
         adc_oneshot_chan_cfg_t chan_cfg = {
             .atten = ADC_ATTEN_DB_12,
@@ -416,6 +414,7 @@ esp_err_t sensor_read_environment(sensor_environment_t *out_env)
             out_env->has_light = true;
         }
     }
+#if defined(LDR_ADC_CHANNEL)
     if (!out_env->has_light && s_ldr_ready) {
         int raw_val = 0;
         if (adc_oneshot_read(s_adc1_handle, LDR_ADC_CHANNEL, &raw_val) == ESP_OK && raw_val > 50 && raw_val < 4050) {
@@ -423,6 +422,7 @@ esp_err_t sensor_read_environment(sensor_environment_t *out_env)
             out_env->has_light = true;
         }
     }
+#endif
     scd4x_handle_t scd = get_scd4x_dev();
     if (scd != NULL) {
         float co2 = 0.0f;

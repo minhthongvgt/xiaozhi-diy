@@ -365,15 +365,13 @@ def extract_pin_assignments(config: Dict[str, str]) -> List[PinAssignment]:
         if int_pin >= 0:
             assignments.append(PinAssignment("IC Quản lý nguồn PMIC (INT)", int_pin))
 
-    sensors_active = _is_yes(config, "CONFIG_ENABLE_CUSTOM_SENSORS")
-
     if _is_yes(config, "CONFIG_CUSTOM_ENABLE_IMU_SENSORS") or _is_yes(config, "CONFIG_CUSTOM_ENABLE_IMU_MPU6050") or _is_yes(config, "CONFIG_CUSTOM_ENABLE_IMU_BMI270"):
         sda = _get_int(config, "CONFIG_CUSTOM_IMU_I2C_SDA", 8)
         scl = _get_int(config, "CONFIG_CUSTOM_IMU_I2C_SCL", 9)
         assignments.append(PinAssignment("Cảm biến IMU 6 trục (SDA)", sda, "I2C_SDA"))
         assignments.append(PinAssignment("Cảm biến IMU 6 trục (SCL)", scl, "I2C_SCL"))
 
-    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SENSOR_DHT11_22") or (sensors_active and "CONFIG_CUSTOM_SENSOR_DHT_GPIO" in config):
+    if _is_yes(config, "CONFIG_CUSTOM_ENABLE_SENSOR_DHT11_22"):
         dht = _get_int(config, "CONFIG_CUSTOM_SENSOR_DHT_GPIO", 14)
         assignments.append(PinAssignment("Cảm biến Nhiệt ẩm DHT11/22", dht))
 
