@@ -1469,7 +1469,7 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
 
         endmenu
 
-        menu "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)"
+        menu "4.2. Hệ thống chính (Main System)"
         menuconfig ENABLE_CUSTOM_CAMERA
             bool "Camera & Thị giác AI (Camera DVP / USB UVC)"
             default n

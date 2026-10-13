@@ -294,7 +294,7 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_PERIPH_ENCODER_PHASE_B` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân xung pha B (DT) Encoder | -1 |
 | `CONFIG_CUSTOM_PERIPH_ENCODER_KEY_PIN` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân phím nhấn SW Encoder (-1 nếu không dùng) | -1 |
 | `CONFIG_CUSTOM_ENABLE_USER_CUSTOM_SENSORS` | bool | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Driver Cảm biến ngoại vi tùy chỉnh (Custom User Sensor Hook) | n |
-| `CONFIG_ENABLE_CUSTOM_CAMERA` | bool | 4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision) | Camera & Thị giác AI (Camera DVP / USB UVC) | n |
+| `CONFIG_ENABLE_CUSTOM_CAMERA` | bool | 4.2. Hệ thống chính (Main System) | Camera & Thị giác AI (Camera DVP / USB UVC) | n |
 | `CONFIG_CUSTOM_CAMERA_OV2640` | bool | Camera & Thị giác AI (Camera DVP / USB UVC) | OmniVision OV2640 (2 Megapixel) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_CAMERA_OV3660` | bool | Camera & Thị giác AI (Camera DVP / USB UVC) | OmniVision OV3660 (3 Megapixel) |  |
 | `CONFIG_CUSTOM_CAMERA_OV5640` | bool | Camera & Thị giác AI (Camera DVP / USB UVC) | OmniVision OV5640 (5 Megapixel) |  |
@@ -321,7 +321,7 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_CAM_PIN_D7` | int | Camera & Thị giác AI (Camera DVP / USB UVC) | Camera Data D7 Pin | -1 |
 | `CONFIG_CUSTOM_CAM_HMIRROR` | bool | Camera & Thị giác AI (Camera DVP / USB UVC) | Lật ảnh theo chiều ngang (Horizontal Mirror) | n |
 | `CONFIG_CUSTOM_CAM_VFLIP` | bool | Camera & Thị giác AI (Camera DVP / USB UVC) | Lật ảnh theo chiều dọc (Vertical Flip) | n |
-| `CONFIG_ENABLE_CUSTOM_LEDS` | bool | 4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision) | Đèn LED trạng thái (Status LED WS2812 / Single LED) | y |
+| `CONFIG_ENABLE_CUSTOM_LEDS` | bool | 4.2. Hệ thống chính (Main System) | Đèn LED trạng thái (Status LED WS2812 / Single LED) | y |
 | `CONFIG_CUSTOM_LED_WS2812` | bool | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Đèn LED RGB kỹ thuật số WS2812 / SK6812 (Giao thức RMT) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_SINGLE_PWM` | bool | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Đèn LED đơn điều chỉnh độ sáng (LEDC PWM) |  |
 | `CONFIG_CUSTOM_LED_CIRCULAR_STRIP` | bool | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Vòng tròn LED xoay trạng thái (Circular LED Strip) |  |

@@ -719,7 +719,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "depends": [
@@ -750,7 +750,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)"
    ],
    "depends": [
@@ -8348,7 +8348,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)"
+    "4.2. Hệ thống chính (Main System)"
    ],
    "menuconfig": true,
    "choice": null,
@@ -8371,7 +8371,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -8390,7 +8390,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -8409,7 +8409,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -8428,7 +8428,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -8447,7 +8447,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -8466,7 +8466,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -8485,7 +8485,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -8526,7 +8526,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -8567,7 +8567,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -8608,7 +8608,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -8649,7 +8649,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -8690,7 +8690,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -8731,7 +8731,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -8766,7 +8766,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -8811,7 +8811,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -8846,7 +8846,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -8891,7 +8891,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -8932,7 +8932,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -8973,7 +8973,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -9014,7 +9014,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -9055,7 +9055,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -9096,7 +9096,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -9137,7 +9137,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -9178,7 +9178,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -9219,7 +9219,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -9254,7 +9254,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Camera & Thị giác AI (Camera DVP / USB UVC)"
    ],
    "menuconfig": false,
@@ -9289,7 +9289,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)"
+    "4.2. Hệ thống chính (Main System)"
    ],
    "menuconfig": true,
    "choice": null,
@@ -9312,7 +9312,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)"
    ],
    "menuconfig": false,
@@ -9331,7 +9331,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)"
    ],
    "menuconfig": false,
@@ -9350,7 +9350,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)"
    ],
    "menuconfig": false,
@@ -9369,7 +9369,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)"
    ],
    "menuconfig": false,
@@ -9388,7 +9388,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)"
    ],
    "menuconfig": false,
@@ -9407,7 +9407,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)"
    ],
    "menuconfig": false,
@@ -9441,7 +9441,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)"
    ],
    "menuconfig": false,
@@ -9469,7 +9469,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)"
    ],
    "menuconfig": false,
@@ -9503,7 +9503,7 @@
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Thị Giác & Ánh Sáng LED (Lighting & Vision)",
+    "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)"
    ],
    "menuconfig": false,
