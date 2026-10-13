@@ -48,7 +48,7 @@ Chọn một trong các cách sau:
 | Trợ lý (Assistant) | Ngôn ngữ, địa chỉ OTA, Wake Word, xử lý âm thanh và khử tiếng vọng (AEC) |
 | Màn hình (Display) | Màn hình, cảm ứng, gói tài nguyên giao diện |
 | Âm thanh (Audio) | Loa và micro |
-| Mạng (Network) | Phương thức cấu hình WiFi, UART mở rộng, MCP Server |
+| Mạng (Network) | Phương thức cấu hình WiFi, UART mở rộng, module Bluetooth UART, MCP Server |
 | Ngoại vi (Peripherals) | Nút bấm, camera, LED, còi, rung, servo, cảm biến, motor, relay |
 | Nguồn & viễn thông (Power) | Pin, bộ sạc, RTC, NFC, thẻ SD, 4G, hồng ngoại |
 | Hệ thống (System) | CPU, Flash, PSRAM, bảng phân vùng |
@@ -87,7 +87,8 @@ Các chân dưới đây là quy tắc bắt buộc cho ESP32-S3-N16R8. Web Conf
 | I2S micro | 4, 5, 6 | SCK, WS, DIN. |
 | I2C (cảm ứng, cảm biến, codec) | 8 (SDA), 9 (SCL) | Dùng chung cho OLED, ToF, codec ES8311. |
 | Cảm ứng màn hình | 8, 9, 3, 10 | I2C + INT (3) + RST (10). |
-| UART màn hình rời | 17 (TX), 18 (RX) | UART_NUM_1. Giao thức: [docs/UART_DISPLAY_PROTOCOL.md](docs/UART_DISPLAY_PROTOCOL.md). |
+| UART màn hình rời | 17 (TX), 18 (RX) | UART_NUM_1. Giao thức: [docs/UART_DISPLAY_PROTOCOL.md](docs/UART_DISPLAY_PROTOCOL.md). Có thể chạy không dây qua module Bluetooth. |
+| Module Bluetooth UART (HC-05/HC-06/HM-10) | TX, RX, STATE, KEY tự chọn (mặc định -1) | Cổng UART riêng (mặc định UART2). Hướng dẫn: [docs/BLUETOOTH_UART.md](docs/BLUETOOTH_UART.md). |
 | Servo PWM | 13 | 50 Hz, LEDC timer 2. |
 | Relay / đèn | 45 | Liên kết với MCP. |
 | Thanh trượt cảm ứng | 1, 2, 3 | Touch pad nội bộ. |

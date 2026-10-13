@@ -55,6 +55,31 @@ t('tab UART (s.uart) thực sự được ghi ra sdkconfig', () => {
   const r = P.parse(txt).uart;
   assert.equal(r.enable, true); assert.equal(r.port, 'CUSTOM_UART_PORT_2'); assert.equal(r.baudrate, 9600);
 });
+t('màn hình rời không dây dùng module Bluetooth, không ghi cổng/chân UART có dây', () => {
+  const s = clone(D);
+  Object.assign(s.display, { enable: true, type: 'CUSTOM_DISPLAY_UART', uart_link: 'CUSTOM_DISPLAY_UART_LINK_BLUETOOTH', uart_tx: 17 });
+  Object.assign(s.kconfig, { ENABLE_BT_UART_MODULE: true, BT_UART_MODULE_TX_PIN: 40, BT_UART_MODULE_RX_PIN: 41 });
+  const txt = text(s);
+  assert.match(txt, /^CONFIG_CUSTOM_DISPLAY_UART_LINK_BLUETOOTH=y$/m);
+  assert.doesNotMatch(txt, /^CONFIG_CUSTOM_DISPLAY_UART_TX_PIN=/m);
+  assert.match(txt, /^CONFIG_BT_UART_MODULE_TX_PIN=40$/m);
+  assert.doesNotMatch(txt, /^CONFIG_BT_UART_MODULE_FRAME_/m);
+  assert.equal(P.parse(txt).display.uart_link, 'CUSTOM_DISPLAY_UART_LINK_BLUETOOTH');
+});
+t('chọn không dây khi chưa bật module Bluetooth thì quay về có dây', () => {
+  const s = clone(D);
+  Object.assign(s.display, { enable: true, type: 'CUSTOM_DISPLAY_UART', uart_link: 'CUSTOM_DISPLAY_UART_LINK_BLUETOOTH', uart_tx: 17 });
+  const txt = text(s);
+  assert.match(txt, /^CONFIG_CUSTOM_DISPLAY_UART_LINK_WIRED=y$/m);
+  assert.match(txt, /^CONFIG_CUSTOM_DISPLAY_UART_TX_PIN=17$/m);
+});
+t('module Bluetooth độc lập ghi định dạng gói và chân riêng', () => {
+  const s = clone(D);
+  Object.assign(s.kconfig, { ENABLE_BT_UART_MODULE: true, BT_UART_MODULE_FRAME: 'BT_UART_MODULE_FRAME_BINARY4' });
+  const txt = text(s);
+  assert.match(txt, /^CONFIG_BT_UART_MODULE_FRAME_BINARY4=y$/m);
+  assert.equal(P.parse(txt).kconfig.BT_UART_MODULE_FRAME, 'BT_UART_MODULE_FRAME_BINARY4');
+});
 t('Wi-Fi BluFi (s.wifi.method của GUI) được ghi ra', () => {
   const s = clone(D); s.wifi.method = 'USE_ESP_BLUFI_WIFI_PROVISIONING';
   assert.match(text(s), /^CONFIG_USE_ESP_BLUFI_WIFI_PROVISIONING=y$/m);

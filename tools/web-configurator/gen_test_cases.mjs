@@ -41,7 +41,7 @@ for (const [id, p, kind] of BINDINGS) {
   const s = maximal();
   let pin = 1;
   for (const f of KCONFIG_FIELDS) {
-    if (f.type === 'int') s.kconfig[f.name] = /CHANNEL|CHS/.test(f.name) ? 3 : (pin = pin % 21 + 1);
+    if (f.type === 'int') s.kconfig[f.name] = /BAUD/.test(f.name) ? 115200 : /CHANNEL|CHS/.test(f.name) ? 3 : (pin = pin % 21 + 1);
     if (f.type === 'string') s.kconfig[f.name] = f.name.includes('UDP') ? '10.0.0.5:9000' : '4,5';
   }
   s.kconfig.XIAOZHI_CAMERA_ALLOW_JPEG_INPUT = false;

@@ -63,6 +63,7 @@ list(APPEND SOURCES
     "boards/common/sensor_controller.cc"
     "boards/common/actuator_controller.cc"
     "boards/common/periph_controller.cc"
+    "boards/common/bt_uart_bridge.cc"
 )
 list(APPEND INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/boards/common)
 
@@ -100,6 +101,7 @@ list(APPEND SOURCES
     "drivers/periph/sy6970.c"
     "drivers/periph/periph_i2c.c"
     "drivers/periph/w5500_eth.c"
+    "drivers/periph/bt_uart_module.c"
     "drivers/actuator/actuator_manager.c"
     "drivers/actuator/actuator_init.c"
     "drivers/storage/storage_manager.c"

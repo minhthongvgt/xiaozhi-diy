@@ -30,6 +30,9 @@ UartDisplay::UartDisplay(uart_port_t uart_num, gpio_num_t tx_pin, gpio_num_t rx_
         ESP_LOGW(TAG, "UART %d driver already installed; reusing existing driver for UartDisplay", static_cast<int>(uart_num_));
         is_initialized_ = true;
         SetStatus("Connected");
+        if (protocol_ == UartDisplayProtocol::JsonStream && GPIO_IS_VALID_GPIO(rx_pin)) {
+            StartRxTask();
+        }
         return;
     }
 
@@ -66,6 +69,7 @@ UartDisplay::UartDisplay(uart_port_t uart_num, gpio_num_t tx_pin, gpio_num_t rx_
     }
 
     is_initialized_ = true;
+    owns_driver_ = true;
     ESP_LOGI(TAG, "UartDisplay initialized on UART %d (TX=%d, RX=%d, baud=%d, proto=%d)",
              static_cast<int>(uart_num_), static_cast<int>(tx_pin), static_cast<int>(rx_pin), baud_rate, static_cast<int>(protocol_));
 
@@ -83,10 +87,10 @@ UartDisplay::~UartDisplay() {
             vTaskDelay(pdMS_TO_TICKS(50));
         }
     }
-    if (is_initialized_) {
+    if (owns_driver_) {
         uart_driver_delete(uart_num_);
-        is_initialized_ = false;
     }
+    is_initialized_ = false;
     if (mutex_ != nullptr) {
         vSemaphoreDelete(mutex_);
         mutex_ = nullptr;

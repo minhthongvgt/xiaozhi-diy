@@ -459,6 +459,18 @@ esp_err_t gpio_safety_validate(void)
 #if defined(CONFIG_CUSTOM_UART_PIN_TX)
         { CONFIG_CUSTOM_UART_PIN_TX, "CUSTOM_UART_PIN_TX", BUS_TYPE_EXCLUSIVE, true },
 #endif
+#if defined(CONFIG_BT_UART_MODULE_TX_PIN)
+        { CONFIG_BT_UART_MODULE_TX_PIN, "BT_UART_MODULE_TX_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_BT_UART_MODULE_RX_PIN)
+        { CONFIG_BT_UART_MODULE_RX_PIN, "BT_UART_MODULE_RX_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_BT_UART_MODULE_STATE_PIN)
+        { CONFIG_BT_UART_MODULE_STATE_PIN, "BT_UART_MODULE_STATE_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
+#if defined(CONFIG_BT_UART_MODULE_KEY_PIN)
+        { CONFIG_BT_UART_MODULE_KEY_PIN, "BT_UART_MODULE_KEY_PIN", BUS_TYPE_EXCLUSIVE, true },
+#endif
     };
     size_t count = sizeof(pins) / sizeof(pins[0]);
     bool has_error = false;

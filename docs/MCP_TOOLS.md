@@ -34,6 +34,7 @@ Người dùng nói  →  Server Xiaozhi (LLM)  →  gọi công cụ MCP  →  
 | Ngoại vi (`self.rtc/nfc/pwm/led_ic/rc522/imu/expander/pmic/ethernet.*`) | RTC, PN532, PCA9685, IC LED, hoặc đặt chân cho RC522, IMU, PMIC, IO Expander, Ethernet |
 | Nhấn để nói (`self.set_press_to_talk`) | Nút BOOT hoặc nút chạm |
 | Đèn (`self.lamp.*`) | Mục 3: "Đèn điều khiển bằng AI qua GPIO" và có chân đèn |
+| Bluetooth UART (`self.bluetooth.*`) | Mục 3: module Bluetooth UART, khi màn hình rời không dùng module này |
 
 Firmware không còn tự dò cảm biến chưa được chọn (trước đây AHT20, BMP280, BH1750, SCD4x, INA219, VL6180X bị dò dù không bật, dễ nhận nhầm chip khác cùng địa chỉ thành cảm biến).
 
@@ -155,6 +156,8 @@ Giá trị: `up`, `down`, `left`, `right`, `none`. Công cụ chờ người dù
 | `self.robot.gesture` | Servo có chân PWM | `action`: `nod`, `shake`, `center`, `relax` |
 
 Các nhóm tự bật theo phần cứng, xem bảng ở mục 1.
+
+**Bluetooth UART** (`self.bluetooth.get_status`, `send_text` hoặc `send_code`, `read_messages`): gửi và nhận dữ liệu với vi điều khiển ở đầu kia qua module HC-05/HC-06/HM-10. Chi tiết ở [BLUETOOTH_UART.md](BLUETOOTH_UART.md).
 
 Motor DC được điều khiển tốc độ bằng PWM 20 kHz. Với L9110S và DRV8833, firmware tự đảo xung khi quay ngược.
 

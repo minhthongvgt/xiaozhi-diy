@@ -97,10 +97,11 @@ def extract_pin_assignments(config: Dict[str, str]) -> List[PinAssignment]:
         is_uart = _is_yes(config, "CONFIG_CUSTOM_DISPLAY_UART")
 
         if is_uart:
-            tx = _get_int(config, "CONFIG_CUSTOM_DISPLAY_UART_TX_PIN", 17)
-            rx = _get_int(config, "CONFIG_CUSTOM_DISPLAY_UART_RX_PIN", 18)
-            assignments.append(PinAssignment("Màn hình UART (TX)", tx))
-            assignments.append(PinAssignment("Màn hình UART (RX)", rx))
+            if not _is_yes(config, "CONFIG_CUSTOM_DISPLAY_UART_LINK_BLUETOOTH"):
+                tx = _get_int(config, "CONFIG_CUSTOM_DISPLAY_UART_TX_PIN", 17)
+                rx = _get_int(config, "CONFIG_CUSTOM_DISPLAY_UART_RX_PIN", 18)
+                assignments.append(PinAssignment("Màn hình UART (TX)", tx))
+                assignments.append(PinAssignment("Màn hình UART (RX)", rx))
         elif is_oled:
             sda = _get_int(config, "CONFIG_CUSTOM_DISPLAY_PIN_I2C_SDA", 8)
             scl = _get_int(config, "CONFIG_CUSTOM_DISPLAY_PIN_I2C_SCL", 9)
@@ -232,6 +233,17 @@ def extract_pin_assignments(config: Dict[str, str]) -> List[PinAssignment]:
             cts = _get_int(config, "CONFIG_CUSTOM_UART_PIN_CTS", 20)
             assignments.append(PinAssignment("Cổng UART mở rộng (RTS)", rts))
             assignments.append(PinAssignment("Cổng UART mở rộng (CTS)", cts))
+
+    if _is_yes(config, "CONFIG_ENABLE_BT_UART_MODULE"):
+        for key, label in (
+            ("CONFIG_BT_UART_MODULE_TX_PIN", "Module Bluetooth UART (TX)"),
+            ("CONFIG_BT_UART_MODULE_RX_PIN", "Module Bluetooth UART (RX)"),
+            ("CONFIG_BT_UART_MODULE_STATE_PIN", "Module Bluetooth UART (STATE)"),
+            ("CONFIG_BT_UART_MODULE_KEY_PIN", "Module Bluetooth UART (KEY)"),
+        ):
+            pin = _get_int(config, key, -1)
+            if pin >= 0:
+                assignments.append(PinAssignment(label, pin))
 
     if _is_yes(config, "CONFIG_ENABLE_CUSTOM_SECONDARY_NETWORK"):
         is_4g = _is_yes(config, "CONFIG_CUSTOM_NETWORK_4G_ML307") or _is_yes(

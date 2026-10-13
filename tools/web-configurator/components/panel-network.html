@@ -65,6 +65,81 @@
               <label class="form-label" for="uart_cts">Chân CTS GPIO (Clear to Send)</label>
               <input type="number" class="form-control" id="uart_cts" min="-1" max="48">
             </div>
+            <div class="form-item span-2 form-item-master">
+              <label class="form-checkbox"><input type="checkbox" id="kc_ENABLE_BT_UART_MODULE"><span><strong>Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)</strong></span></label>
+              <div class="form-hint">Module Bluetooth rời nối vào một cổng UART riêng, làm cầu UART không dây trong suốt tới một vi điều khiển hoặc module Bluetooth khác.</div>
+            </div>
+            <div class="form-item" data-show-if="kc_ENABLE_BT_UART_MODULE">
+              <label class="form-label" for="kc_BT_UART_MODULE_TYPE">Loại module Bluetooth</label>
+              <select class="form-control" id="kc_BT_UART_MODULE_TYPE">
+                <option value="BT_UART_MODULE_HC05">HC-05 (Bluetooth Classic SPP, chủ/tớ, cần chân KEY để vào AT)</option>
+                <option value="BT_UART_MODULE_HC06">HC-06 / linvor (Bluetooth Classic SPP, chỉ làm tớ)</option>
+                <option value="BT_UART_MODULE_HM10">HM-10 / CC2541 (BLE, chủ/tớ)</option>
+                <option value="BT_UART_MODULE_PRECONFIGURED">Module đã cấu hình sẵn (không gửi lệnh AT)</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="kc_ENABLE_BT_UART_MODULE">
+              <label class="form-label" for="kc_BT_UART_MODULE_PORT">Cổng UART phần cứng cho module Bluetooth</label>
+              <select class="form-control" id="kc_BT_UART_MODULE_PORT">
+                <option value="BT_UART_MODULE_PORT_1">UART1</option>
+                <option value="BT_UART_MODULE_PORT_2">UART2</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="kc_ENABLE_BT_UART_MODULE">
+              <label class="form-label" for="kc_BT_UART_MODULE_TX_PIN">Chân TX (nối chân RXD của module)</label>
+              <input type="number" class="form-control" id="kc_BT_UART_MODULE_TX_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_ENABLE_BT_UART_MODULE">
+              <label class="form-label" for="kc_BT_UART_MODULE_RX_PIN">Chân RX (nối chân TXD của module)</label>
+              <input type="number" class="form-control" id="kc_BT_UART_MODULE_RX_PIN" min="-1" max="48">
+            </div>
+            <div class="form-item" data-show-if="kc_ENABLE_BT_UART_MODULE">
+              <label class="form-label" for="kc_BT_UART_MODULE_BAUDRATE">Tốc độ baud dữ liệu của module</label>
+              <input type="number" class="form-control" id="kc_BT_UART_MODULE_BAUDRATE" min="1200" max="1382400">
+              <div class="form-hint">HC-05, HC-06 và HM-10 xuất xưởng ở 9600 baud.</div>
+            </div>
+            <div class="form-item" data-show-if="kc_ENABLE_BT_UART_MODULE">
+              <label class="form-label" for="kc_BT_UART_MODULE_STATE_PIN">Chân STATE / LED (biết đã kết nối, -1 nếu không nối)</label>
+              <input type="number" class="form-control" id="kc_BT_UART_MODULE_STATE_PIN" min="-1" max="48">
+              <div class="form-hint">Mức cao khi module đang kết nối (HC-05 STATE, HM-10 chân LED ở chế độ AT+PIO11).</div>
+            </div>
+            <div class="form-item" data-show-if="kc_ENABLE_BT_UART_MODULE&amp;kc_BT_UART_MODULE_TYPE=BT_UART_MODULE_HC05">
+              <label class="form-label" for="kc_BT_UART_MODULE_KEY_PIN">Chân KEY / EN của HC-05 (-1 nếu không nối)</label>
+              <input type="number" class="form-control" id="kc_BT_UART_MODULE_KEY_PIN" min="-1" max="48">
+              <div class="form-hint">Kéo lên mức cao để gửi lệnh AT.</div>
+            </div>
+            <div class="form-item span-2" data-show-if="kc_BT_UART_MODULE_TYPE!=BT_UART_MODULE_PRECONFIGURED&amp;kc_ENABLE_BT_UART_MODULE">
+              <label class="form-checkbox"><input type="checkbox" id="kc_BT_UART_MODULE_APPLY_SETTINGS"><span>Gửi lệnh AT đặt tên, mã PIN và vai trò khi khởi động</span></label>
+              <div class="form-hint">Chỉ gửi lệnh khi module chưa kết nối.</div>
+            </div>
+            <div class="form-item" data-show-if="kc_BT_UART_MODULE_APPLY_SETTINGS&amp;kc_ENABLE_BT_UART_MODULE">
+              <label class="form-label" for="kc_BT_UART_MODULE_NAME">Tên Bluetooth của module</label>
+              <input type="text" class="form-control" id="kc_BT_UART_MODULE_NAME">
+            </div>
+            <div class="form-item" data-show-if="kc_BT_UART_MODULE_APPLY_SETTINGS&amp;kc_ENABLE_BT_UART_MODULE">
+              <label class="form-label" for="kc_BT_UART_MODULE_PIN_CODE">Mã PIN ghép đôi (HC-05/HC-06: 4 số, HM-10: 6 số, để trống = giữ nguyên)</label>
+              <input type="text" class="form-control" id="kc_BT_UART_MODULE_PIN_CODE">
+            </div>
+            <div class="form-item" data-show-if="kc_BT_UART_MODULE_APPLY_SETTINGS&amp;kc_ENABLE_BT_UART_MODULE&amp;kc_BT_UART_MODULE_TYPE=BT_UART_MODULE_HC05|BT_UART_MODULE_HM10">
+              <label class="form-label" for="kc_BT_UART_MODULE_ROLE">Vai trò của module</label>
+              <select class="form-control" id="kc_BT_UART_MODULE_ROLE">
+                <option value="BT_UART_MODULE_ROLE_SLAVE">Tớ (Slave)</option>
+                <option value="BT_UART_MODULE_ROLE_MASTER">Chủ (Master), tự kết nối tới địa chỉ cố định</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="kc_ENABLE_BT_UART_MODULE&amp;kc_BT_UART_MODULE_ROLE=BT_UART_MODULE_ROLE_MASTER">
+              <label class="form-label" for="kc_BT_UART_MODULE_REMOTE_ADDR">Địa chỉ Bluetooth của module đầu kia (12 chữ số hex)</label>
+              <input type="text" class="form-control" id="kc_BT_UART_MODULE_REMOTE_ADDR">
+              <div class="form-hint">Ví dụ 98D331F5B9E7 hoặc 98:D3:31:F5:B9:E7.</div>
+            </div>
+            <div class="form-item" data-show-if="display_uart_link!=CUSTOM_DISPLAY_UART_LINK_BLUETOOTH&amp;kc_ENABLE_BT_UART_MODULE">
+              <label class="form-label" for="kc_BT_UART_MODULE_FRAME">Định dạng gói dữ liệu</label>
+              <select class="form-control" id="kc_BT_UART_MODULE_FRAME">
+                <option value="BT_UART_MODULE_FRAME_RAW">Thô (gửi nguyên văn, nhận theo khoảng nghỉ)</option>
+                <option value="BT_UART_MODULE_FRAME_LINE">Dòng văn bản (kết thúc bằng ký tự xuống dòng LF)</option>
+                <option value="BT_UART_MODULE_FRAME_BINARY4">Khung nhị phân 4 byte (0xAA, chục, đơn vị, XOR)</option>
+              </select>
+            </div>
             <div class="form-item span-2">
               <label class="form-checkbox"><input type="checkbox" id="mcp_lamp"><span>Đèn điều khiển bằng AI qua GPIO (MCP)</span></label>
               <div class="form-hint">Mỗi chân đèn tạo một bộ công cụ MCP riêng (self.lamp hoặc self.lamp_1, self.lamp_2...).</div>

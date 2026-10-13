@@ -74,6 +74,7 @@ export const BINDINGS = [
   ['display_rgb_d14', 'display.rgb_d14', 'int'],
   ['display_rgb_d15', 'display.rgb_d15', 'int'],
   ['display_uart_secondary', 'display.uart_secondary', 'bool'],
+  ['display_uart_link', 'display.uart_link', 'str'],
   ['display_uart_port', 'display.uart_port', 'int', 1],
   ['display_uart_tx', 'display.uart_tx', 'int'],
   ['display_uart_rx', 'display.uart_rx', 'int'],

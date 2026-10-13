@@ -114,21 +114,28 @@
             </div>
             <div class="span-2 form-subheading"><span>Cấu hình Màn hình rời UART (Nextion / TJC / DWIN)</span></div>
             <div class="form-item" data-show-if="display_uart_secondary&amp;display_enable||display_enable&amp;display_type=CUSTOM_DISPLAY_UART">
+              <label class="form-label" for="display_uart_link">Kiểu kết nối màn hình rời</label>
+              <select class="form-control" id="display_uart_link">
+                <option value="CUSTOM_DISPLAY_UART_LINK_WIRED">Có dây (UART trực tiếp)</option>
+                <option value="CUSTOM_DISPLAY_UART_LINK_BLUETOOTH">Không dây qua module Bluetooth UART</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="display_uart_secondary&amp;display_enable&amp;display_uart_link=CUSTOM_DISPLAY_UART_LINK_WIRED||display_uart_link=CUSTOM_DISPLAY_UART_LINK_WIRED&amp;display_type=CUSTOM_DISPLAY_UART&amp;display_enable">
               <label class="form-label" for="display_uart_port">Cổng UART phần cứng (1: UART1, 2: UART2)</label>
               <input type="number" class="form-control" id="display_uart_port" min="1" max="2">
               <div class="form-hint">Chọn cổng UART để giao tiếp với màn hình rời.</div>
             </div>
-            <div class="form-item" data-show-if="display_uart_secondary&amp;display_enable||display_enable&amp;display_type=CUSTOM_DISPLAY_UART">
+            <div class="form-item" data-show-if="display_uart_secondary&amp;display_enable&amp;display_uart_link=CUSTOM_DISPLAY_UART_LINK_WIRED||display_uart_link=CUSTOM_DISPLAY_UART_LINK_WIRED&amp;display_type=CUSTOM_DISPLAY_UART&amp;display_enable">
               <label class="form-label" for="display_uart_tx">Chân TX kết nối chân RX của Màn hình</label>
               <input type="number" class="form-control" id="display_uart_tx" min="-1" max="48">
               <div class="form-hint">Chân truyền dữ liệu từ ESP32-S3 sang màn hình rời.</div>
             </div>
-            <div class="form-item" data-show-if="display_uart_secondary&amp;display_enable||display_enable&amp;display_type=CUSTOM_DISPLAY_UART">
+            <div class="form-item" data-show-if="display_uart_secondary&amp;display_enable&amp;display_uart_link=CUSTOM_DISPLAY_UART_LINK_WIRED||display_uart_link=CUSTOM_DISPLAY_UART_LINK_WIRED&amp;display_type=CUSTOM_DISPLAY_UART&amp;display_enable">
               <label class="form-label" for="display_uart_rx">Chân RX kết nối chân TX của Màn hình</label>
               <input type="number" class="form-control" id="display_uart_rx" min="-1" max="48">
               <div class="form-hint">Chân nhận dữ liệu từ màn hình rời (ví dụ nhận sự kiện cảm ứng/chạm nút).</div>
             </div>
-            <div class="form-item" data-show-if="display_uart_secondary&amp;display_enable||display_enable&amp;display_type=CUSTOM_DISPLAY_UART">
+            <div class="form-item" data-show-if="display_uart_secondary&amp;display_enable&amp;display_uart_link=CUSTOM_DISPLAY_UART_LINK_WIRED||display_uart_link=CUSTOM_DISPLAY_UART_LINK_WIRED&amp;display_type=CUSTOM_DISPLAY_UART&amp;display_enable">
               <label class="form-label" for="display_uart_baud">Tốc độ truyền dữ liệu (Baudrate)</label>
               <select class="form-control" id="display_uart_baud">
                 <option value="9600">9600 bps (Nextion mặc định khi xuất xưởng)</option>

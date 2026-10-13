@@ -289,9 +289,9 @@
    ]
   },
   {
-   "name": "CUSTOM_DISPLAY_UART_BAUDRATE_CHOICE",
-   "order": 127,
-   "prompt": "Tốc độ truyền dữ liệu (Baudrate)",
+   "name": "CUSTOM_DISPLAY_UART_LINK",
+   "order": 124,
+   "prompt": "Kiểu kết nối màn hình rời",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
@@ -314,6 +314,45 @@
    ],
    "default": [
     [
+     "CUSTOM_DISPLAY_UART_LINK_WIRED",
+     "y"
+    ]
+   ],
+   "members": [
+    "CUSTOM_DISPLAY_UART_LINK_WIRED",
+    "CUSTOM_DISPLAY_UART_LINK_BLUETOOTH"
+   ]
+  },
+  {
+   "name": "CUSTOM_DISPLAY_UART_BAUDRATE_CHOICE",
+   "order": 130,
+   "prompt": "Tốc độ truyền dữ liệu (Baudrate)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "1. Màn hình & Cảm ứng (Display & Touch)",
+    "Màn hình hiển thị (Display Panel)",
+    "Cấu hình Màn hình rời UART (Nextion / TJC / DWIN)"
+   ],
+   "depends": [
+    "and",
+    "CUSTOM_DISPLAY_UART_LINK_WIRED",
+    [
+     "and",
+     [
+      "or",
+      "ENABLE_CUSTOM_SECONDARY_UART_DISPLAY",
+      "CUSTOM_DISPLAY_UART"
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_DISPLAY",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
      "CUSTOM_DISPLAY_UART_BAUDRATE_115200",
      "y"
     ]
@@ -331,7 +370,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_PROTOCOL",
-   "order": 137,
+   "order": 140,
    "prompt": "Giao thức truyền thông màn hình (Protocol)",
    "menu": [
     "Xiaozhi Assistant",
@@ -368,7 +407,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_AMOLED_CHIP",
-   "order": 154,
+   "order": 157,
    "prompt": "Chip điều khiển AMOLED QSPI (AMOLED Controller IC)",
    "menu": [
     "Xiaozhi Assistant",
@@ -399,7 +438,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_TYPE",
-   "order": 193,
+   "order": 196,
    "prompt": "Loại IC Cảm Ứng (Touch Controller)",
    "menu": [
     "Xiaozhi Assistant",
@@ -428,7 +467,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPEAKER_TYPE",
-   "order": 211,
+   "order": 214,
    "prompt": "Loại Mạch DAC / Loa (Audio DAC / Amplifier)",
    "menu": [
     "Xiaozhi Assistant",
@@ -461,7 +500,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_TYPE",
-   "order": 227,
+   "order": 230,
    "prompt": "Loại Microphone (Microphone Type)",
    "menu": [
     "Xiaozhi Assistant",
@@ -493,7 +532,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_I2S_MODE",
-   "order": 241,
+   "order": 244,
    "prompt": "Chế Độ Xung Nhịp I2S (I2S Clock Mode)",
    "menu": [
     "Xiaozhi Assistant",
@@ -522,7 +561,7 @@
   },
   {
    "name": "CUSTOM_UART_PORT_NUM",
-   "order": 246,
+   "order": 249,
    "prompt": "Cổng UART Phần Cứng (Hardware UART Port)",
    "menu": [
     "Xiaozhi Assistant",
@@ -547,8 +586,134 @@
    ]
   },
   {
+   "name": "BT_UART_MODULE_TYPE",
+   "order": 259,
+   "prompt": "Loại module Bluetooth",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "depends": [
+    "and",
+    "ENABLE_BT_UART_MODULE",
+    "IDF_TARGET_ESP32S3"
+   ],
+   "default": [
+    [
+     "BT_UART_MODULE_HC05",
+     "y"
+    ]
+   ],
+   "members": [
+    "BT_UART_MODULE_HC05",
+    "BT_UART_MODULE_HC06",
+    "BT_UART_MODULE_HM10",
+    "BT_UART_MODULE_PRECONFIGURED"
+   ]
+  },
+  {
+   "name": "BT_UART_MODULE_PORT",
+   "order": 264,
+   "prompt": "Cổng UART phần cứng cho module Bluetooth",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "depends": [
+    "and",
+    "ENABLE_BT_UART_MODULE",
+    "IDF_TARGET_ESP32S3"
+   ],
+   "default": [
+    [
+     "BT_UART_MODULE_PORT_2",
+     "y"
+    ]
+   ],
+   "members": [
+    "BT_UART_MODULE_PORT_1",
+    "BT_UART_MODULE_PORT_2"
+   ]
+  },
+  {
+   "name": "BT_UART_MODULE_ROLE",
+   "order": 275,
+   "prompt": "Vai trò của module",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "depends": [
+    "and",
+    [
+     "and",
+     "BT_UART_MODULE_APPLY_SETTINGS",
+     [
+      "or",
+      "BT_UART_MODULE_HC05",
+      "BT_UART_MODULE_HM10"
+     ]
+    ],
+    [
+     "and",
+     "ENABLE_BT_UART_MODULE",
+     "IDF_TARGET_ESP32S3"
+    ]
+   ],
+   "default": [
+    [
+     "BT_UART_MODULE_ROLE_SLAVE",
+     "y"
+    ]
+   ],
+   "members": [
+    "BT_UART_MODULE_ROLE_SLAVE",
+    "BT_UART_MODULE_ROLE_MASTER"
+   ]
+  },
+  {
+   "name": "BT_UART_MODULE_FRAME",
+   "order": 279,
+   "prompt": "Định dạng gói dữ liệu",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "depends": [
+    "and",
+    [
+     "not",
+     "CUSTOM_DISPLAY_UART_LINK_BLUETOOTH"
+    ],
+    [
+     "and",
+     "ENABLE_BT_UART_MODULE",
+     "IDF_TARGET_ESP32S3"
+    ]
+   ],
+   "default": [
+    [
+     "BT_UART_MODULE_FRAME_LINE",
+     "y"
+    ]
+   ],
+   "members": [
+    "BT_UART_MODULE_FRAME_RAW",
+    "BT_UART_MODULE_FRAME_LINE",
+    "BT_UART_MODULE_FRAME_BINARY4"
+   ]
+  },
+  {
    "name": "CUSTOM_CAMERA_SENSOR_TYPE",
-   "order": 283,
+   "order": 312,
    "prompt": "Cảm Biến Camera (Camera Sensor Model)",
    "menu": [
     "Xiaozhi Assistant",
@@ -579,7 +744,7 @@
   },
   {
    "name": "CUSTOM_LED_TYPE",
-   "order": 311,
+   "order": 340,
    "prompt": "Loại Đèn LED Báo Hiệu Trạng Thái",
    "menu": [
     "Xiaozhi Assistant",
@@ -609,7 +774,7 @@
   },
   {
    "name": "CUSTOM_MOTOR_DC_DRIVER_TYPE",
-   "order": 376,
+   "order": 405,
    "prompt": "Loại Mạch Điều Khiển Động Cơ (Motor Driver)",
    "menu": [
     "Xiaozhi Assistant",
@@ -2762,8 +2927,50 @@
    "help": "Bật/tắt trình điều khiển màn hình rời giao tiếp qua UART (Nextion / TJC / DWIN / Serial HMI).\nTính năng này cho phép chạy song song 2 màn hình cùng lúc (Màn hình chính SPI LCD/OLED + Màn hình rời UART)."
   },
   {
+   "name": "CUSTOM_DISPLAY_UART_LINK_WIRED",
+   "order": 125,
+   "type": "bool",
+   "prompt": "Có dây (UART trực tiếp)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "1. Màn hình & Cảm ứng (Display & Touch)",
+    "Màn hình hiển thị (Display Panel)",
+    "Cấu hình Màn hình rời UART (Nextion / TJC / DWIN)"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_DISPLAY_UART_LINK",
+   "depends": "CUSTOM_DISPLAY_UART_LINK",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_DISPLAY_UART_LINK_BLUETOOTH",
+   "order": 126,
+   "type": "bool",
+   "prompt": "Không dây qua module Bluetooth UART",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "1. Màn hình & Cảm ứng (Display & Touch)",
+    "Màn hình hiển thị (Display Panel)",
+    "Cấu hình Màn hình rời UART (Nextion / TJC / DWIN)"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_DISPLAY_UART_LINK",
+   "depends": [
+    "and",
+    "ENABLE_BT_UART_MODULE",
+    "CUSTOM_DISPLAY_UART_LINK"
+   ],
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
    "name": "CUSTOM_DISPLAY_UART_PORT",
-   "order": 124,
+   "order": 127,
    "type": "int",
    "prompt": "Cổng UART phần cứng (1: UART1, 2: UART2)",
    "menu": [
@@ -2777,15 +2984,19 @@
    "choice": null,
    "depends": [
     "and",
-    [
-     "or",
-     "ENABLE_CUSTOM_SECONDARY_UART_DISPLAY",
-     "CUSTOM_DISPLAY_UART"
-    ],
+    "CUSTOM_DISPLAY_UART_LINK_WIRED",
     [
      "and",
-     "ENABLE_CUSTOM_DISPLAY",
-     "IDF_TARGET_ESP32S3"
+     [
+      "or",
+      "ENABLE_CUSTOM_SECONDARY_UART_DISPLAY",
+      "CUSTOM_DISPLAY_UART"
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_DISPLAY",
+      "IDF_TARGET_ESP32S3"
+     ]
     ]
    ],
    "default": [
@@ -2805,7 +3016,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_TX_PIN",
-   "order": 125,
+   "order": 128,
    "type": "int",
    "prompt": "Chân TX kết nối chân RX của Màn hình",
    "menu": [
@@ -2819,15 +3030,19 @@
    "choice": null,
    "depends": [
     "and",
-    [
-     "or",
-     "ENABLE_CUSTOM_SECONDARY_UART_DISPLAY",
-     "CUSTOM_DISPLAY_UART"
-    ],
+    "CUSTOM_DISPLAY_UART_LINK_WIRED",
     [
      "and",
-     "ENABLE_CUSTOM_DISPLAY",
-     "IDF_TARGET_ESP32S3"
+     [
+      "or",
+      "ENABLE_CUSTOM_SECONDARY_UART_DISPLAY",
+      "CUSTOM_DISPLAY_UART"
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_DISPLAY",
+      "IDF_TARGET_ESP32S3"
+     ]
     ]
    ],
    "default": [
@@ -2847,7 +3062,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_RX_PIN",
-   "order": 126,
+   "order": 129,
    "type": "int",
    "prompt": "Chân RX kết nối chân TX của Màn hình",
    "menu": [
@@ -2861,15 +3076,19 @@
    "choice": null,
    "depends": [
     "and",
-    [
-     "or",
-     "ENABLE_CUSTOM_SECONDARY_UART_DISPLAY",
-     "CUSTOM_DISPLAY_UART"
-    ],
+    "CUSTOM_DISPLAY_UART_LINK_WIRED",
     [
      "and",
-     "ENABLE_CUSTOM_DISPLAY",
-     "IDF_TARGET_ESP32S3"
+     [
+      "or",
+      "ENABLE_CUSTOM_SECONDARY_UART_DISPLAY",
+      "CUSTOM_DISPLAY_UART"
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_DISPLAY",
+      "IDF_TARGET_ESP32S3"
+     ]
     ]
    ],
    "default": [
@@ -2889,7 +3108,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_BAUDRATE_9600",
-   "order": 128,
+   "order": 131,
    "type": "bool",
    "prompt": "9600 bps (Nextion mặc định khi xuất xưởng)",
    "menu": [
@@ -2908,7 +3127,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_BAUDRATE_19200",
-   "order": 129,
+   "order": 132,
    "type": "bool",
    "prompt": "19200 bps",
    "menu": [
@@ -2927,7 +3146,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_BAUDRATE_38400",
-   "order": 130,
+   "order": 133,
    "type": "bool",
    "prompt": "38400 bps",
    "menu": [
@@ -2946,7 +3165,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_BAUDRATE_57600",
-   "order": 131,
+   "order": 134,
    "type": "bool",
    "prompt": "57600 bps",
    "menu": [
@@ -2965,7 +3184,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_BAUDRATE_115200",
-   "order": 132,
+   "order": 135,
    "type": "bool",
    "prompt": "115200 bps (Khuyên dùng)",
    "menu": [
@@ -2984,7 +3203,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_BAUDRATE_230400",
-   "order": 133,
+   "order": 136,
    "type": "bool",
    "prompt": "230400 bps",
    "menu": [
@@ -3003,7 +3222,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_BAUDRATE_460800",
-   "order": 134,
+   "order": 137,
    "type": "bool",
    "prompt": "460800 bps",
    "menu": [
@@ -3022,7 +3241,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_BAUDRATE_921600",
-   "order": 135,
+   "order": 138,
    "type": "bool",
    "prompt": "921600 bps (Tốc độ cao)",
    "menu": [
@@ -3041,7 +3260,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_BAUDRATE",
-   "order": 136,
+   "order": 139,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -3109,7 +3328,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_PROTO_NEXTION",
-   "order": 138,
+   "order": 141,
    "type": "bool",
    "prompt": "Nextion / TJC HMI (Lệnh kết thúc 0xFF 0xFF 0xFF)",
    "menu": [
@@ -3128,7 +3347,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_PROTO_JSON",
-   "order": 139,
+   "order": 142,
    "type": "bool",
    "prompt": "JSON Streaming (Chuỗi JSON kèm ký tự xuống dòng n)",
    "menu": [
@@ -3147,7 +3366,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_PROTO_RAW_TEXT",
-   "order": 140,
+   "order": 143,
    "type": "bool",
    "prompt": "Raw Text / ASCII (STATUS:..., EMOTION:..., CHAT:...)",
    "menu": [
@@ -3166,7 +3385,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_PROTO_DWIN",
-   "order": 141,
+   "order": 144,
    "type": "bool",
    "prompt": "DWIN DGUS (Khung truyền nhị phân 0x5A 0xA5)",
    "menu": [
@@ -3185,7 +3404,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_WIDTH",
-   "order": 142,
+   "order": 145,
    "type": "int",
    "prompt": "Độ phân giải ngang (Width Pixels)",
    "menu": [
@@ -3282,7 +3501,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_HEIGHT",
-   "order": 143,
+   "order": 146,
    "type": "int",
    "prompt": "Độ phân giải dọc (Height Pixels)",
    "menu": [
@@ -3379,7 +3598,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_PIN_MOSI",
-   "order": 144,
+   "order": 147,
    "type": "int",
    "prompt": "Chân dữ liệu SPI MOSI (SDA)",
    "menu": [
@@ -3447,7 +3666,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_PIN_CLK",
-   "order": 145,
+   "order": 148,
    "type": "int",
    "prompt": "Chân xung nhịp SPI CLK (SCL)",
    "menu": [
@@ -3515,7 +3734,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_PIN_CS",
-   "order": 146,
+   "order": 149,
    "type": "int",
    "prompt": "Chân chọn chip SPI CS (-1 nếu không dùng)",
    "menu": [
@@ -3548,7 +3767,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_PIN_DC",
-   "order": 147,
+   "order": 150,
    "type": "int",
    "prompt": "Chân lệnh/dữ liệu SPI DC",
    "menu": [
@@ -3581,7 +3800,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_USE_RST",
-   "order": 148,
+   "order": 151,
    "type": "bool",
    "prompt": "Sử dụng chân Reset màn hình (RST)",
    "menu": [
@@ -3608,7 +3827,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_PIN_RST",
-   "order": 149,
+   "order": 152,
    "type": "int",
    "prompt": "Chân Reset màn hình RST GPIO",
    "menu": [
@@ -3645,7 +3864,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_USE_BLK",
-   "order": 150,
+   "order": 153,
    "type": "bool",
    "prompt": "Điều khiển đèn nền màn hình (Backlight BLK)",
    "menu": [
@@ -3672,7 +3891,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_PIN_BLK",
-   "order": 151,
+   "order": 154,
    "type": "int",
    "prompt": "Chân đèn nền BLK GPIO",
    "menu": [
@@ -3709,7 +3928,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_PIN_I2C_SDA",
-   "order": 152,
+   "order": 155,
    "type": "int",
    "prompt": "Chân OLED I2C SDA",
    "menu": [
@@ -3750,7 +3969,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_PIN_I2C_SCL",
-   "order": 153,
+   "order": 156,
    "type": "int",
    "prompt": "Chân OLED I2C SCL",
    "menu": [
@@ -3791,7 +4010,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_AMOLED_SH8601",
-   "order": 155,
+   "order": 158,
    "type": "bool",
    "prompt": "Sino Wealth SH8601",
    "menu": [
@@ -3809,7 +4028,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_AMOLED_CO5300",
-   "order": 156,
+   "order": 159,
    "type": "bool",
    "prompt": "Chipone CO5300",
    "menu": [
@@ -3827,7 +4046,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_AMOLED_SPD2010",
-   "order": 157,
+   "order": 160,
    "type": "bool",
    "prompt": "Solomon SPD2010",
    "menu": [
@@ -3845,7 +4064,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_QSPI_CS",
-   "order": 158,
+   "order": 161,
    "type": "int",
    "prompt": "Chân AMOLED QSPI CS",
    "menu": [
@@ -3882,7 +4101,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_QSPI_CLK",
-   "order": 159,
+   "order": 162,
    "type": "int",
    "prompt": "Chân AMOLED QSPI CLK",
    "menu": [
@@ -3919,7 +4138,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_QSPI_D0",
-   "order": 160,
+   "order": 163,
    "type": "int",
    "prompt": "Chân AMOLED QSPI D0",
    "menu": [
@@ -3956,7 +4175,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_QSPI_D1",
-   "order": 161,
+   "order": 164,
    "type": "int",
    "prompt": "Chân AMOLED QSPI D1",
    "menu": [
@@ -3993,7 +4212,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_QSPI_D2",
-   "order": 162,
+   "order": 165,
    "type": "int",
    "prompt": "Chân AMOLED QSPI D2",
    "menu": [
@@ -4030,7 +4249,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_QSPI_D3",
-   "order": 163,
+   "order": 166,
    "type": "int",
    "prompt": "Chân AMOLED QSPI D3",
    "menu": [
@@ -4067,7 +4286,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_QSPI_RST",
-   "order": 164,
+   "order": 167,
    "type": "int",
    "prompt": "Chân AMOLED QSPI Reset",
    "menu": [
@@ -4104,7 +4323,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_EPAPER_PIN_BUSY",
-   "order": 165,
+   "order": 168,
    "type": "int",
    "prompt": "Chân E-Paper BUSY",
    "menu": [
@@ -4141,7 +4360,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_PCLK",
-   "order": 166,
+   "order": 169,
    "type": "int",
    "prompt": "Chân RGB PCLK",
    "menu": [
@@ -4179,7 +4398,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_DE",
-   "order": 167,
+   "order": 170,
    "type": "int",
    "prompt": "Chân RGB DE (Data Enable)",
    "menu": [
@@ -4217,7 +4436,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_VSYNC",
-   "order": 168,
+   "order": 171,
    "type": "int",
    "prompt": "Chân RGB VSYNC",
    "menu": [
@@ -4255,7 +4474,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_HSYNC",
-   "order": 169,
+   "order": 172,
    "type": "int",
    "prompt": "Chân RGB HSYNC",
    "menu": [
@@ -4293,7 +4512,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D0",
-   "order": 170,
+   "order": 173,
    "type": "int",
    "prompt": "Chân RGB DATA0 (B0)",
    "menu": [
@@ -4331,7 +4550,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D1",
-   "order": 171,
+   "order": 174,
    "type": "int",
    "prompt": "Chân RGB DATA1 (B1)",
    "menu": [
@@ -4369,7 +4588,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D2",
-   "order": 172,
+   "order": 175,
    "type": "int",
    "prompt": "Chân RGB DATA2 (B2)",
    "menu": [
@@ -4407,7 +4626,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D3",
-   "order": 173,
+   "order": 176,
    "type": "int",
    "prompt": "Chân RGB DATA3 (B3)",
    "menu": [
@@ -4445,7 +4664,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D4",
-   "order": 174,
+   "order": 177,
    "type": "int",
    "prompt": "Chân RGB DATA4 (B4)",
    "menu": [
@@ -4483,7 +4702,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D5",
-   "order": 175,
+   "order": 178,
    "type": "int",
    "prompt": "Chân RGB DATA5 (G0)",
    "menu": [
@@ -4521,7 +4740,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D6",
-   "order": 176,
+   "order": 179,
    "type": "int",
    "prompt": "Chân RGB DATA6 (G1)",
    "menu": [
@@ -4559,7 +4778,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D7",
-   "order": 177,
+   "order": 180,
    "type": "int",
    "prompt": "Chân RGB DATA7 (G2)",
    "menu": [
@@ -4597,7 +4816,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D8",
-   "order": 178,
+   "order": 181,
    "type": "int",
    "prompt": "Chân RGB DATA8 (G3)",
    "menu": [
@@ -4635,7 +4854,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D9",
-   "order": 179,
+   "order": 182,
    "type": "int",
    "prompt": "Chân RGB DATA9 (G4)",
    "menu": [
@@ -4673,7 +4892,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D10",
-   "order": 180,
+   "order": 183,
    "type": "int",
    "prompt": "Chân RGB DATA10 (G5)",
    "menu": [
@@ -4711,7 +4930,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D11",
-   "order": 181,
+   "order": 184,
    "type": "int",
    "prompt": "Chân RGB DATA11 (R0)",
    "menu": [
@@ -4749,7 +4968,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D12",
-   "order": 182,
+   "order": 185,
    "type": "int",
    "prompt": "Chân RGB DATA12 (R1)",
    "menu": [
@@ -4787,7 +5006,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D13",
-   "order": 183,
+   "order": 186,
    "type": "int",
    "prompt": "Chân RGB DATA13 (R2)",
    "menu": [
@@ -4825,7 +5044,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D14",
-   "order": 184,
+   "order": 187,
    "type": "int",
    "prompt": "Chân RGB DATA14 (R3)",
    "menu": [
@@ -4863,7 +5082,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D15",
-   "order": 185,
+   "order": 188,
    "type": "int",
    "prompt": "Chân RGB DATA15 (R4)",
    "menu": [
@@ -4901,7 +5120,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_OFFSET_X",
-   "order": 186,
+   "order": 189,
    "type": "int",
    "prompt": "Dịch tọa độ X (Offset X Pixels)",
    "menu": [
@@ -4938,7 +5157,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_OFFSET_Y",
-   "order": 187,
+   "order": 190,
    "type": "int",
    "prompt": "Dịch tọa độ Y (Offset Y Pixels)",
    "menu": [
@@ -4971,7 +5190,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_MIRROR_X",
-   "order": 188,
+   "order": 191,
    "type": "bool",
    "prompt": "Đảo chiều gương trục X (Mirror X)",
    "menu": [
@@ -4998,7 +5217,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_MIRROR_Y",
-   "order": 189,
+   "order": 192,
    "type": "bool",
    "prompt": "Đảo chiều gương trục Y (Mirror Y)",
    "menu": [
@@ -5025,7 +5244,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_SWAP_XY",
-   "order": 190,
+   "order": 193,
    "type": "bool",
    "prompt": "Hoán đổi tọa độ X-Y (X/Y Axes Swapped)",
    "menu": [
@@ -5052,7 +5271,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_INVERT_COLOR",
-   "order": 191,
+   "order": 194,
    "type": "bool",
    "prompt": "Đảo ngược màu sắc hiển thị (Invert Color)",
    "menu": [
@@ -5079,7 +5298,7 @@
   },
   {
    "name": "ENABLE_CUSTOM_TOUCH",
-   "order": 192,
+   "order": 195,
    "type": "bool",
    "prompt": "Màn hình cảm ứng (Touch Screen Panel)",
    "menu": [
@@ -5101,7 +5320,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_CST816S",
-   "order": 194,
+   "order": 197,
    "type": "bool",
    "prompt": "Hynitron CST816S / CST9217 (I2C)",
    "menu": [
@@ -5119,7 +5338,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_GT911",
-   "order": 195,
+   "order": 198,
    "type": "bool",
    "prompt": "Goodix GT911 / GT1151 (I2C)",
    "menu": [
@@ -5137,7 +5356,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_FT5X06",
-   "order": 196,
+   "order": 199,
    "type": "bool",
    "prompt": "FocalTech FT5x06 / FT6336 (I2C)",
    "menu": [
@@ -5155,7 +5374,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_USER_CUSTOM",
-   "order": 197,
+   "order": 200,
    "type": "bool",
    "prompt": "Driver Cảm ứng tùy chỉnh (Custom User Touch Hook)",
    "menu": [
@@ -5173,7 +5392,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_NONE",
-   "order": 198,
+   "order": 201,
    "type": "bool",
    "prompt": "Không sử dụng cảm ứng",
    "menu": [
@@ -5191,7 +5410,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_PIN_SDA",
-   "order": 199,
+   "order": 202,
    "type": "int",
    "prompt": "Chân cảm ứng I2C SDA",
    "menu": [
@@ -5224,7 +5443,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_PIN_SCL",
-   "order": 200,
+   "order": 203,
    "type": "int",
    "prompt": "Chân cảm ứng I2C SCL",
    "menu": [
@@ -5257,7 +5476,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_PIN_INT",
-   "order": 201,
+   "order": 204,
    "type": "int",
    "prompt": "Chân ngắt cảm ứng INT GPIO",
    "menu": [
@@ -5290,7 +5509,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_PIN_RST",
-   "order": 202,
+   "order": 205,
    "type": "int",
    "prompt": "Chân reset cảm ứng RST GPIO (-1 nếu không nối)",
    "menu": [
@@ -5323,7 +5542,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_TOUCH_SCREEN",
-   "order": 203,
+   "order": 206,
    "type": "bool",
    "prompt": "Mở rộng giao tiếp màn cảm ứng ngoại vi (Peripheral Touch Screen Controller)",
    "menu": [
@@ -5345,7 +5564,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_TOUCH_I2C_SDA",
-   "order": 204,
+   "order": 207,
    "type": "int",
    "prompt": "Chân ngoại vi cảm ứng I2C SDA",
    "menu": [
@@ -5377,7 +5596,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_TOUCH_I2C_SCL",
-   "order": 205,
+   "order": 208,
    "type": "int",
    "prompt": "Chân ngoại vi cảm ứng I2C SCL",
    "menu": [
@@ -5409,7 +5628,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_TOUCH_INT_PIN",
-   "order": 206,
+   "order": 209,
    "type": "int",
    "prompt": "Chân ngoại vi cảm ứng ngắt INT",
    "menu": [
@@ -5441,7 +5660,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_TOUCH_RST_PIN",
-   "order": 207,
+   "order": 210,
    "type": "int",
    "prompt": "Chân ngoại vi cảm ứng reset RST",
    "menu": [
@@ -5473,7 +5692,7 @@
   },
   {
    "name": "ENABLE_CUSTOM_AUDIO",
-   "order": 208,
+   "order": 211,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -5503,7 +5722,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_CODEC_USER_CUSTOM",
-   "order": 209,
+   "order": 212,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -5533,7 +5752,7 @@
   },
   {
    "name": "ENABLE_CUSTOM_SPEAKER",
-   "order": 210,
+   "order": 213,
    "type": "bool",
    "prompt": "Loa phát thanh & Mạch DAC (Speaker & Audio Out)",
    "menu": [
@@ -5555,7 +5774,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_DAC_MAX98357A",
-   "order": 212,
+   "order": 215,
    "type": "bool",
    "prompt": "MAX98357A (Mạch công suất I2S Class-D Mono 3W)",
    "menu": [
@@ -5573,7 +5792,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_DAC_MAX98360A",
-   "order": 213,
+   "order": 216,
    "type": "bool",
    "prompt": "MAX98360A / MAX98360B (I2S/PDM Class-D Mono 3W thế hệ mới)",
    "menu": [
@@ -5591,7 +5810,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_DAC_PCM5102A",
-   "order": 214,
+   "order": 217,
    "type": "bool",
    "prompt": "PCM5102A (Mạch giải mã Hi-Fi I2S Stereo DAC 32-bit/384kHz)",
    "menu": [
@@ -5609,7 +5828,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_CODEC_ES8311",
-   "order": 215,
+   "order": 218,
    "type": "bool",
    "prompt": "Everest Semi ES8311 Codec (I2C)",
    "menu": [
@@ -5627,7 +5846,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_CODEC_ES8388",
-   "order": 216,
+   "order": 219,
    "type": "bool",
    "prompt": "Everest Semi ES8388 Stereo Codec (I2C)",
    "menu": [
@@ -5645,7 +5864,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_CODEC_ES8374",
-   "order": 217,
+   "order": 220,
    "type": "bool",
    "prompt": "Everest Semi ES8374 Codec",
    "menu": [
@@ -5663,7 +5882,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_CODEC_ES8389",
-   "order": 218,
+   "order": 221,
    "type": "bool",
    "prompt": "Everest Semi ES8389 Codec",
    "menu": [
@@ -5681,7 +5900,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_CODEC_BOX",
-   "order": 219,
+   "order": 222,
    "type": "bool",
    "prompt": "Box Audio Codec",
    "menu": [
@@ -5699,7 +5918,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_CODEC_USER_CUSTOM",
-   "order": 220,
+   "order": 223,
    "type": "bool",
    "prompt": "Driver Loa / DAC phát tùy chỉnh (Custom User Speaker Hook)",
    "menu": [
@@ -5717,7 +5936,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_GPIO_DOUT",
-   "order": 221,
+   "order": 224,
    "type": "int",
    "prompt": "Chân dữ liệu Loa I2S DOUT (DIN trên module)",
    "menu": [
@@ -5750,7 +5969,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_GPIO_BCLK",
-   "order": 222,
+   "order": 225,
    "type": "int",
    "prompt": "Chân xung nhịp Loa I2S BCLK (BCK)",
    "menu": [
@@ -5783,7 +6002,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_GPIO_LRCK",
-   "order": 223,
+   "order": 226,
    "type": "int",
    "prompt": "Chân xung nhịp Loa I2S LRCK / WS (LCK)",
    "menu": [
@@ -5816,7 +6035,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_CODEC_I2C_SDA",
-   "order": 224,
+   "order": 227,
    "type": "int",
    "prompt": "Chân Codec DAC I2C SDA",
    "menu": [
@@ -5869,7 +6088,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_CODEC_I2C_SCL",
-   "order": 225,
+   "order": 228,
    "type": "int",
    "prompt": "Chân Codec DAC I2C SCL",
    "menu": [
@@ -5922,7 +6141,7 @@
   },
   {
    "name": "ENABLE_CUSTOM_MIC",
-   "order": 226,
+   "order": 229,
    "type": "bool",
    "prompt": "Microphone thu âm (Microphone & Audio In)",
    "menu": [
@@ -5944,7 +6163,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_INMP441",
-   "order": 228,
+   "order": 231,
    "type": "bool",
    "prompt": "INMP441 / MSM261S (Microphone số I2S MEMS Omnidirectional)",
    "menu": [
@@ -5962,7 +6181,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_PDM",
-   "order": 229,
+   "order": 232,
    "type": "bool",
    "prompt": "PDM Microphone (Micro số giao thức PDM)",
    "menu": [
@@ -5980,7 +6199,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_CODEC_ES8311",
-   "order": 230,
+   "order": 233,
    "type": "bool",
    "prompt": "Everest Semi ES8311 ADC (I2C)",
    "menu": [
@@ -5998,7 +6217,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_CODEC_ES8388",
-   "order": 231,
+   "order": 234,
    "type": "bool",
    "prompt": "Everest Semi ES8388 ADC (I2C)",
    "menu": [
@@ -6016,7 +6235,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_CODEC_ES8374",
-   "order": 232,
+   "order": 235,
    "type": "bool",
    "prompt": "Everest Semi ES8374 ADC",
    "menu": [
@@ -6034,7 +6253,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_CODEC_ES8389",
-   "order": 233,
+   "order": 236,
    "type": "bool",
    "prompt": "Everest Semi ES8389 ADC",
    "menu": [
@@ -6052,7 +6271,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_CODEC_BOX",
-   "order": 234,
+   "order": 237,
    "type": "bool",
    "prompt": "Box Audio Codec ADC",
    "menu": [
@@ -6070,7 +6289,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_CODEC_USER_CUSTOM",
-   "order": 235,
+   "order": 238,
    "type": "bool",
    "prompt": "Driver Micro thu âm tùy chỉnh (Custom User Audio Mic Hook)",
    "menu": [
@@ -6088,7 +6307,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_GPIO_DIN",
-   "order": 236,
+   "order": 239,
    "type": "int",
    "prompt": "Chân dữ liệu Micro I2S DIN (SD trên INMP441/MSM261S)",
    "menu": [
@@ -6121,7 +6340,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_GPIO_SCK",
-   "order": 237,
+   "order": 240,
    "type": "int",
    "prompt": "Chân xung nhịp Micro I2S SCK (SCK/BCLK)",
    "menu": [
@@ -6154,7 +6373,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_GPIO_WS",
-   "order": 238,
+   "order": 241,
    "type": "int",
    "prompt": "Chân chọn kênh Micro I2S WS (WS/LRCK)",
    "menu": [
@@ -6187,7 +6406,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_CODEC_I2C_SDA",
-   "order": 239,
+   "order": 242,
    "type": "int",
    "prompt": "Chân Codec ADC I2C SDA",
    "menu": [
@@ -6240,7 +6459,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_CODEC_I2C_SCL",
-   "order": 240,
+   "order": 243,
    "type": "int",
    "prompt": "Chân Codec ADC I2C SCL",
    "menu": [
@@ -6293,7 +6512,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_I2S_SIMPLEX",
-   "order": 242,
+   "order": 245,
    "type": "bool",
    "prompt": "Simplex (Độc lập: Loa và Micro có chân Clock BCLK/WS riêng)",
    "menu": [
@@ -6310,7 +6529,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_I2S_DUPLEX",
-   "order": 243,
+   "order": 246,
    "type": "bool",
    "prompt": "Duplex (Dùng chung: Loa và Micro chia sẻ chung chân BCLK và WS)",
    "menu": [
@@ -6327,7 +6546,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_CODEC_AEC_REFERENCE",
-   "order": 244,
+   "order": 247,
    "type": "bool",
    "prompt": "Kênh tham chiếu khử tiếng vọng từ Codec (AEC Hardware Reference)",
    "menu": [
@@ -6419,7 +6638,7 @@
   },
   {
    "name": "ENABLE_CUSTOM_UART",
-   "order": 245,
+   "order": 248,
    "type": "bool",
    "prompt": "Cổng UART mở rộng (Serial Communication Port)",
    "menu": [
@@ -6441,7 +6660,7 @@
   },
   {
    "name": "CUSTOM_UART_PORT_1",
-   "order": 247,
+   "order": 250,
    "type": "bool",
    "prompt": "UART1 (Cổng serial phần cứng 1)",
    "menu": [
@@ -6459,7 +6678,7 @@
   },
   {
    "name": "CUSTOM_UART_PORT_2",
-   "order": 248,
+   "order": 251,
    "type": "bool",
    "prompt": "UART2 (Cổng serial phần cứng 2)",
    "menu": [
@@ -6477,7 +6696,7 @@
   },
   {
    "name": "CUSTOM_UART_PIN_TX",
-   "order": 249,
+   "order": 252,
    "type": "int",
    "prompt": "Chân phát UART TX GPIO",
    "menu": [
@@ -6510,7 +6729,7 @@
   },
   {
    "name": "CUSTOM_UART_PIN_RX",
-   "order": 250,
+   "order": 253,
    "type": "int",
    "prompt": "Chân nhận UART RX GPIO",
    "menu": [
@@ -6543,7 +6762,7 @@
   },
   {
    "name": "CUSTOM_UART_BAUDRATE",
-   "order": 251,
+   "order": 254,
    "type": "int",
    "prompt": "Tốc độ baud truyền thông (Baudrate)",
    "menu": [
@@ -6576,7 +6795,7 @@
   },
   {
    "name": "CUSTOM_UART_USE_FLOW_CONTROL",
-   "order": 252,
+   "order": 255,
    "type": "bool",
    "prompt": "Kích hoạt điều khiển luồng phần cứng (RTS/CTS Hardware Flow Control)",
    "menu": [
@@ -6603,7 +6822,7 @@
   },
   {
    "name": "CUSTOM_UART_PIN_RTS",
-   "order": 253,
+   "order": 256,
    "type": "int",
    "prompt": "Chân RTS GPIO (Request to Send)",
    "menu": [
@@ -6640,7 +6859,7 @@
   },
   {
    "name": "CUSTOM_UART_PIN_CTS",
-   "order": 254,
+   "order": 257,
    "type": "int",
    "prompt": "Chân CTS GPIO (Clear to Send)",
    "menu": [
@@ -6676,8 +6895,524 @@
    "help": ""
   },
   {
+   "name": "ENABLE_BT_UART_MODULE",
+   "order": 258,
+   "type": "bool",
+   "prompt": "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)"
+   ],
+   "menuconfig": true,
+   "choice": null,
+   "depends": "IDF_TARGET_ESP32S3",
+   "default": [
+    [
+     "n",
+     "y"
+    ]
+   ],
+   "range": [],
+   "help": "Module Bluetooth rời nối vào một cổng UART riêng, làm cầu UART không dây trong suốt\ntới một vi điều khiển hoặc module Bluetooth khác.\nDùng cổng UART riêng, khác cổng UART mở rộng và cổng màn hình rời có dây."
+  },
+  {
+   "name": "BT_UART_MODULE_HC05",
+   "order": 260,
+   "type": "bool",
+   "prompt": "HC-05 (Bluetooth Classic SPP, chủ/tớ, cần chân KEY để vào AT)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "menuconfig": false,
+   "choice": "BT_UART_MODULE_TYPE",
+   "depends": "BT_UART_MODULE_TYPE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "BT_UART_MODULE_HC06",
+   "order": 261,
+   "type": "bool",
+   "prompt": "HC-06 / linvor (Bluetooth Classic SPP, chỉ làm tớ)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "menuconfig": false,
+   "choice": "BT_UART_MODULE_TYPE",
+   "depends": "BT_UART_MODULE_TYPE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "BT_UART_MODULE_HM10",
+   "order": 262,
+   "type": "bool",
+   "prompt": "HM-10 / CC2541 (BLE, chủ/tớ)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "menuconfig": false,
+   "choice": "BT_UART_MODULE_TYPE",
+   "depends": "BT_UART_MODULE_TYPE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "BT_UART_MODULE_PRECONFIGURED",
+   "order": 263,
+   "type": "bool",
+   "prompt": "Module đã cấu hình sẵn (không gửi lệnh AT)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "menuconfig": false,
+   "choice": "BT_UART_MODULE_TYPE",
+   "depends": "BT_UART_MODULE_TYPE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "BT_UART_MODULE_PORT_1",
+   "order": 265,
+   "type": "bool",
+   "prompt": "UART1",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "menuconfig": false,
+   "choice": "BT_UART_MODULE_PORT",
+   "depends": "BT_UART_MODULE_PORT",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "BT_UART_MODULE_PORT_2",
+   "order": 266,
+   "type": "bool",
+   "prompt": "UART2",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "menuconfig": false,
+   "choice": "BT_UART_MODULE_PORT",
+   "depends": "BT_UART_MODULE_PORT",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "BT_UART_MODULE_TX_PIN",
+   "order": 267,
+   "type": "int",
+   "prompt": "Chân TX (nối chân RXD của module)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": [
+    "and",
+    "ENABLE_BT_UART_MODULE",
+    "IDF_TARGET_ESP32S3"
+   ],
+   "default": [
+    [
+     "-1",
+     "y"
+    ]
+   ],
+   "range": [
+    [
+     "-1",
+     "48",
+     "y"
+    ]
+   ],
+   "help": ""
+  },
+  {
+   "name": "BT_UART_MODULE_RX_PIN",
+   "order": 268,
+   "type": "int",
+   "prompt": "Chân RX (nối chân TXD của module)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": [
+    "and",
+    "ENABLE_BT_UART_MODULE",
+    "IDF_TARGET_ESP32S3"
+   ],
+   "default": [
+    [
+     "-1",
+     "y"
+    ]
+   ],
+   "range": [
+    [
+     "-1",
+     "48",
+     "y"
+    ]
+   ],
+   "help": ""
+  },
+  {
+   "name": "BT_UART_MODULE_BAUDRATE",
+   "order": 269,
+   "type": "int",
+   "prompt": "Tốc độ baud dữ liệu của module",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": [
+    "and",
+    "ENABLE_BT_UART_MODULE",
+    "IDF_TARGET_ESP32S3"
+   ],
+   "default": [
+    [
+     "9600",
+     "y"
+    ]
+   ],
+   "range": [
+    [
+     "1200",
+     "1382400",
+     "y"
+    ]
+   ],
+   "help": "HC-05, HC-06 và HM-10 xuất xưởng ở 9600 baud. Hai module ghép đôi có thể chạy baud khác nhau."
+  },
+  {
+   "name": "BT_UART_MODULE_STATE_PIN",
+   "order": 270,
+   "type": "int",
+   "prompt": "Chân STATE / LED (biết đã kết nối, -1 nếu không nối)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": [
+    "and",
+    "ENABLE_BT_UART_MODULE",
+    "IDF_TARGET_ESP32S3"
+   ],
+   "default": [
+    [
+     "-1",
+     "y"
+    ]
+   ],
+   "range": [
+    [
+     "-1",
+     "48",
+     "y"
+    ]
+   ],
+   "help": "Mức cao khi module đang kết nối (HC-05 STATE, HM-10 chân LED ở chế độ AT+PIO11)."
+  },
+  {
+   "name": "BT_UART_MODULE_KEY_PIN",
+   "order": 271,
+   "type": "int",
+   "prompt": "Chân KEY / EN của HC-05 (-1 nếu không nối)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": [
+    "and",
+    "BT_UART_MODULE_HC05",
+    [
+     "and",
+     "ENABLE_BT_UART_MODULE",
+     "IDF_TARGET_ESP32S3"
+    ]
+   ],
+   "default": [
+    [
+     "-1",
+     "y"
+    ]
+   ],
+   "range": [
+    [
+     "-1",
+     "48",
+     "y"
+    ]
+   ],
+   "help": "Kéo lên mức cao để gửi lệnh AT. Thiếu chân này thì không cấu hình được HC-05 từ firmware."
+  },
+  {
+   "name": "BT_UART_MODULE_APPLY_SETTINGS",
+   "order": 272,
+   "type": "bool",
+   "prompt": "Gửi lệnh AT đặt tên, mã PIN và vai trò khi khởi động",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": [
+    "and",
+    [
+     "not",
+     "BT_UART_MODULE_PRECONFIGURED"
+    ],
+    [
+     "and",
+     "ENABLE_BT_UART_MODULE",
+     "IDF_TARGET_ESP32S3"
+    ]
+   ],
+   "default": [
+    [
+     "n",
+     "y"
+    ]
+   ],
+   "range": [],
+   "help": "Chỉ gửi lệnh khi module chưa kết nối. Tắt nếu đã cấu hình module bằng công cụ khác."
+  },
+  {
+   "name": "BT_UART_MODULE_NAME",
+   "order": 273,
+   "type": "string",
+   "prompt": "Tên Bluetooth của module",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": [
+    "and",
+    "BT_UART_MODULE_APPLY_SETTINGS",
+    [
+     "and",
+     "ENABLE_BT_UART_MODULE",
+     "IDF_TARGET_ESP32S3"
+    ]
+   ],
+   "default": [
+    [
+     "Xiaozhi-BT",
+     "y"
+    ]
+   ],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "BT_UART_MODULE_PIN_CODE",
+   "order": 274,
+   "type": "string",
+   "prompt": "Mã PIN ghép đôi (HC-05/HC-06: 4 số, HM-10: 6 số, để trống = giữ nguyên)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": [
+    "and",
+    "BT_UART_MODULE_APPLY_SETTINGS",
+    [
+     "and",
+     "ENABLE_BT_UART_MODULE",
+     "IDF_TARGET_ESP32S3"
+    ]
+   ],
+   "default": [
+    [
+     "",
+     "y"
+    ]
+   ],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "BT_UART_MODULE_ROLE_SLAVE",
+   "order": 276,
+   "type": "bool",
+   "prompt": "Tớ (Slave)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "menuconfig": false,
+   "choice": "BT_UART_MODULE_ROLE",
+   "depends": "BT_UART_MODULE_ROLE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "BT_UART_MODULE_ROLE_MASTER",
+   "order": 277,
+   "type": "bool",
+   "prompt": "Chủ (Master), tự kết nối tới địa chỉ cố định",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "menuconfig": false,
+   "choice": "BT_UART_MODULE_ROLE",
+   "depends": "BT_UART_MODULE_ROLE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "BT_UART_MODULE_REMOTE_ADDR",
+   "order": 278,
+   "type": "string",
+   "prompt": "Địa chỉ Bluetooth của module đầu kia (12 chữ số hex)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": [
+    "and",
+    "BT_UART_MODULE_ROLE_MASTER",
+    [
+     "and",
+     "ENABLE_BT_UART_MODULE",
+     "IDF_TARGET_ESP32S3"
+    ]
+   ],
+   "default": [
+    [
+     "",
+     "y"
+    ]
+   ],
+   "range": [],
+   "help": "Ví dụ 98D331F5B9E7 hoặc 98:D3:31:F5:B9:E7. Đọc bằng lệnh AT+ADDR? trên module đầu kia."
+  },
+  {
+   "name": "BT_UART_MODULE_FRAME_RAW",
+   "order": 280,
+   "type": "bool",
+   "prompt": "Thô (gửi nguyên văn, nhận theo khoảng nghỉ)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "menuconfig": false,
+   "choice": "BT_UART_MODULE_FRAME",
+   "depends": "BT_UART_MODULE_FRAME",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "BT_UART_MODULE_FRAME_LINE",
+   "order": 281,
+   "type": "bool",
+   "prompt": "Dòng văn bản (kết thúc bằng ký tự xuống dòng LF)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "menuconfig": false,
+   "choice": "BT_UART_MODULE_FRAME",
+   "depends": "BT_UART_MODULE_FRAME",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "BT_UART_MODULE_FRAME_BINARY4",
+   "order": 282,
+   "type": "bool",
+   "prompt": "Khung nhị phân 4 byte (0xAA, chục, đơn vị, XOR)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)",
+    "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+   ],
+   "menuconfig": false,
+   "choice": "BT_UART_MODULE_FRAME",
+   "depends": "BT_UART_MODULE_FRAME",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
    "name": "CUSTOM_MCP_TOOL_LAMP",
-   "order": 255,
+   "order": 283,
    "type": "bool",
    "prompt": "Đèn điều khiển bằng AI qua GPIO (MCP)",
    "menu": [
@@ -6699,7 +7434,7 @@
   },
   {
    "name": "CUSTOM_MCP_TOOL_LAMP_GPIO",
-   "order": 256,
+   "order": 284,
    "type": "int",
    "prompt": "Chân GPIO điều khiển Đèn",
    "menu": [
@@ -6731,7 +7466,7 @@
   },
   {
    "name": "CUSTOM_MCP_TOOL_LAMP_EXTRA_GPIOS",
-   "order": 257,
+   "order": 285,
    "type": "string",
    "prompt": "Các chân GPIO Đèn thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -6757,7 +7492,7 @@
   },
   {
    "name": "CUSTOM_MCP_TOOL_SENSOR",
-   "order": 258,
+   "order": 286,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -6839,7 +7574,7 @@
   },
   {
    "name": "CUSTOM_MCP_TOOL_ACTUATOR",
-   "order": 259,
+   "order": 287,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -6877,7 +7612,7 @@
   },
   {
    "name": "CUSTOM_MCP_TOOL_ROBOT",
-   "order": 260,
+   "order": 288,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -6903,7 +7638,7 @@
   },
   {
    "name": "CUSTOM_MCP_TOOL_LED",
-   "order": 261,
+   "order": 289,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -6932,7 +7667,7 @@
   },
   {
    "name": "CUSTOM_MCP_TOOL_PERIPH",
-   "order": 262,
+   "order": 290,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -7006,7 +7741,7 @@
   },
   {
    "name": "CUSTOM_MCP_TOOL_PRESS_TO_TALK",
-   "order": 263,
+   "order": 291,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -7031,8 +7766,37 @@
    "help": ""
   },
   {
+   "name": "CUSTOM_MCP_TOOL_BT_UART",
+   "order": 292,
+   "type": "bool",
+   "prompt": "",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": "IDF_TARGET_ESP32S3",
+   "default": [
+    [
+     "y",
+     [
+      "and",
+      "ENABLE_BT_UART_MODULE",
+      [
+       "not",
+       "CUSTOM_DISPLAY_UART_LINK_BLUETOOTH"
+      ]
+     ]
+    ]
+   ],
+   "range": [],
+   "help": ""
+  },
+  {
    "name": "ENABLE_CUSTOM_MCP_SERVER",
-   "order": 264,
+   "order": 293,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -7064,7 +7828,11 @@
           [
            "or",
            "CUSTOM_MCP_TOOL_PERIPH",
-           "CUSTOM_MCP_TOOL_PRESS_TO_TALK"
+           [
+            "or",
+            "CUSTOM_MCP_TOOL_PRESS_TO_TALK",
+            "CUSTOM_MCP_TOOL_BT_UART"
+           ]
           ]
          ]
         ]
@@ -7078,7 +7846,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_BUTTON_BOOT",
-   "order": 265,
+   "order": 294,
    "type": "bool",
    "prompt": "Nút bấm BOOT Onboard (BOOT Button)",
    "menu": [
@@ -7101,7 +7869,7 @@
   },
   {
    "name": "CUSTOM_BUTTON_BOOT_GPIO",
-   "order": 266,
+   "order": 295,
    "type": "int",
    "prompt": "Chân GPIO nút Boot",
    "menu": [
@@ -7134,7 +7902,7 @@
   },
   {
    "name": "CUSTOM_BUTTON_BOOT_EXTRA_GPIOS",
-   "order": 267,
+   "order": 296,
    "type": "string",
    "prompt": "Các chân GPIO nút Boot thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -7161,7 +7929,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_BUTTON_TOUCH",
-   "order": 268,
+   "order": 297,
    "type": "bool",
    "prompt": "Nút bấm chức năng Action / Chạm (PTT / Touch Key)",
    "menu": [
@@ -7184,7 +7952,7 @@
   },
   {
    "name": "CUSTOM_BUTTON_TOUCH_GPIO",
-   "order": 269,
+   "order": 298,
    "type": "int",
    "prompt": "Chân GPIO nút Action",
    "menu": [
@@ -7217,7 +7985,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_BUTTON_VOLUME",
-   "order": 270,
+   "order": 299,
    "type": "bool",
    "prompt": "Cụm phím vật lý Tăng / Giảm âm lượng (Volume Buttons)",
    "menu": [
@@ -7240,7 +8008,7 @@
   },
   {
    "name": "CUSTOM_BUTTON_VOL_UP_GPIO",
-   "order": 271,
+   "order": 300,
    "type": "int",
    "prompt": "Chân GPIO nút tăng âm lượng (Vol Up)",
    "menu": [
@@ -7273,7 +8041,7 @@
   },
   {
    "name": "CUSTOM_BUTTON_VOL_DOWN_GPIO",
-   "order": 272,
+   "order": 301,
    "type": "int",
    "prompt": "Chân GPIO nút giảm âm lượng (Vol Down)",
    "menu": [
@@ -7306,7 +8074,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_TOUCH_SLIDER",
-   "order": 273,
+   "order": 302,
    "type": "bool",
    "prompt": "Thanh trượt cảm ứng điện dung nội bộ ESP32-S3 (Touch Slider)",
    "menu": [
@@ -7329,7 +8097,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_SLIDER_PAD1_GPIO",
-   "order": 274,
+   "order": 303,
    "type": "int",
    "prompt": "Chân Touch Pad 1 của thanh trượt (Mặc định GPIO 1)",
    "menu": [
@@ -7362,7 +8130,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_SLIDER_PAD2_GPIO",
-   "order": 275,
+   "order": 304,
    "type": "int",
    "prompt": "Chân Touch Pad 2 của thanh trượt (Mặc định GPIO 2)",
    "menu": [
@@ -7395,7 +8163,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_SLIDER_PAD3_GPIO",
-   "order": 276,
+   "order": 305,
    "type": "int",
    "prompt": "Chân Touch Pad 3 của thanh trượt (Mặc định GPIO 3)",
    "menu": [
@@ -7428,7 +8196,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_ROTARY_ENCODER",
-   "order": 277,
+   "order": 306,
    "type": "bool",
    "prompt": "Núm vặn xoay vô cấp cơ học (Rotary Encoder EC11 qua PCNT)",
    "menu": [
@@ -7451,7 +8219,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_ENCODER_PHASE_A",
-   "order": 278,
+   "order": 307,
    "type": "int",
    "prompt": "Chân xung pha A (CLK) Encoder",
    "menu": [
@@ -7484,7 +8252,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_ENCODER_PHASE_B",
-   "order": 279,
+   "order": 308,
    "type": "int",
    "prompt": "Chân xung pha B (DT) Encoder",
    "menu": [
@@ -7517,7 +8285,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_ENCODER_KEY_PIN",
-   "order": 280,
+   "order": 309,
    "type": "int",
    "prompt": "Chân phím nhấn SW Encoder (-1 nếu không dùng)",
    "menu": [
@@ -7550,7 +8318,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_USER_CUSTOM_SENSORS",
-   "order": 281,
+   "order": 310,
    "type": "bool",
    "prompt": "Driver Cảm biến ngoại vi tùy chỉnh (Custom User Sensor Hook)",
    "menu": [
@@ -7573,7 +8341,7 @@
   },
   {
    "name": "ENABLE_CUSTOM_CAMERA",
-   "order": 282,
+   "order": 311,
    "type": "bool",
    "prompt": "Camera & Thị giác AI (Camera DVP / USB UVC)",
    "menu": [
@@ -7596,7 +8364,7 @@
   },
   {
    "name": "CUSTOM_CAMERA_OV2640",
-   "order": 284,
+   "order": 313,
    "type": "bool",
    "prompt": "OmniVision OV2640 (2 Megapixel)",
    "menu": [
@@ -7615,7 +8383,7 @@
   },
   {
    "name": "CUSTOM_CAMERA_OV3660",
-   "order": 285,
+   "order": 314,
    "type": "bool",
    "prompt": "OmniVision OV3660 (3 Megapixel)",
    "menu": [
@@ -7634,7 +8402,7 @@
   },
   {
    "name": "CUSTOM_CAMERA_OV5640",
-   "order": 286,
+   "order": 315,
    "type": "bool",
    "prompt": "OmniVision OV5640 (5 Megapixel)",
    "menu": [
@@ -7653,7 +8421,7 @@
   },
   {
    "name": "CUSTOM_CAMERA_SC030IOT",
-   "order": 287,
+   "order": 316,
    "type": "bool",
    "prompt": "SmartSens SC030IOT",
    "menu": [
@@ -7672,7 +8440,7 @@
   },
   {
    "name": "CUSTOM_CAMERA_USB_UVC",
-   "order": 288,
+   "order": 317,
    "type": "bool",
    "prompt": "USB UVC Web Camera (ESP32-S3 USB Host Port)",
    "menu": [
@@ -7691,7 +8459,7 @@
   },
   {
    "name": "CUSTOM_CAMERA_USER_CUSTOM",
-   "order": 289,
+   "order": 318,
    "type": "bool",
    "prompt": "Driver Camera tùy chỉnh (Custom User Camera Hook)",
    "menu": [
@@ -7710,7 +8478,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_XCLK",
-   "order": 290,
+   "order": 319,
    "type": "int",
    "prompt": "Camera XCLK (Master Clock)",
    "menu": [
@@ -7751,7 +8519,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_PCLK",
-   "order": 291,
+   "order": 320,
    "type": "int",
    "prompt": "Camera PCLK (Pixel Clock)",
    "menu": [
@@ -7792,7 +8560,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_VSYNC",
-   "order": 292,
+   "order": 321,
    "type": "int",
    "prompt": "Camera VSYNC (Vertical Sync)",
    "menu": [
@@ -7833,7 +8601,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_HREF",
-   "order": 293,
+   "order": 322,
    "type": "int",
    "prompt": "Camera HREF (Horizontal Reference)",
    "menu": [
@@ -7874,7 +8642,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_SIOD",
-   "order": 294,
+   "order": 323,
    "type": "int",
    "prompt": "Camera SIOD (SCCB I2C Data)",
    "menu": [
@@ -7915,7 +8683,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_SIOC",
-   "order": 295,
+   "order": 324,
    "type": "int",
    "prompt": "Camera SIOC (SCCB I2C Clock)",
    "menu": [
@@ -7956,7 +8724,7 @@
   },
   {
    "name": "CUSTOM_CAM_USE_RESET",
-   "order": 296,
+   "order": 325,
    "type": "bool",
    "prompt": "Sử dụng chân Reset Camera (RST)",
    "menu": [
@@ -7991,7 +8759,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_RESET",
-   "order": 297,
+   "order": 326,
    "type": "int",
    "prompt": "Chân Camera Reset GPIO",
    "menu": [
@@ -8036,7 +8804,7 @@
   },
   {
    "name": "CUSTOM_CAM_USE_PWDN",
-   "order": 298,
+   "order": 327,
    "type": "bool",
    "prompt": "Sử dụng chân Power-Down Camera (PWDN)",
    "menu": [
@@ -8071,7 +8839,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_PWDN",
-   "order": 299,
+   "order": 328,
    "type": "int",
    "prompt": "Chân Camera PWDN GPIO",
    "menu": [
@@ -8116,7 +8884,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_D0",
-   "order": 300,
+   "order": 329,
    "type": "int",
    "prompt": "Camera Data D0 Pin",
    "menu": [
@@ -8157,7 +8925,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_D1",
-   "order": 301,
+   "order": 330,
    "type": "int",
    "prompt": "Camera Data D1 Pin",
    "menu": [
@@ -8198,7 +8966,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_D2",
-   "order": 302,
+   "order": 331,
    "type": "int",
    "prompt": "Camera Data D2 Pin",
    "menu": [
@@ -8239,7 +9007,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_D3",
-   "order": 303,
+   "order": 332,
    "type": "int",
    "prompt": "Camera Data D3 Pin",
    "menu": [
@@ -8280,7 +9048,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_D4",
-   "order": 304,
+   "order": 333,
    "type": "int",
    "prompt": "Camera Data D4 Pin",
    "menu": [
@@ -8321,7 +9089,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_D5",
-   "order": 305,
+   "order": 334,
    "type": "int",
    "prompt": "Camera Data D5 Pin",
    "menu": [
@@ -8362,7 +9130,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_D6",
-   "order": 306,
+   "order": 335,
    "type": "int",
    "prompt": "Camera Data D6 Pin",
    "menu": [
@@ -8403,7 +9171,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_D7",
-   "order": 307,
+   "order": 336,
    "type": "int",
    "prompt": "Camera Data D7 Pin",
    "menu": [
@@ -8444,7 +9212,7 @@
   },
   {
    "name": "CUSTOM_CAM_HMIRROR",
-   "order": 308,
+   "order": 337,
    "type": "bool",
    "prompt": "Lật ảnh theo chiều ngang (Horizontal Mirror)",
    "menu": [
@@ -8479,7 +9247,7 @@
   },
   {
    "name": "CUSTOM_CAM_VFLIP",
-   "order": 309,
+   "order": 338,
    "type": "bool",
    "prompt": "Lật ảnh theo chiều dọc (Vertical Flip)",
    "menu": [
@@ -8514,7 +9282,7 @@
   },
   {
    "name": "ENABLE_CUSTOM_LEDS",
-   "order": 310,
+   "order": 339,
    "type": "bool",
    "prompt": "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
    "menu": [
@@ -8537,7 +9305,7 @@
   },
   {
    "name": "CUSTOM_LED_WS2812",
-   "order": 312,
+   "order": 341,
    "type": "bool",
    "prompt": "Đèn LED RGB kỹ thuật số WS2812 / SK6812 (Giao thức RMT)",
    "menu": [
@@ -8556,7 +9324,7 @@
   },
   {
    "name": "CUSTOM_LED_SINGLE_PWM",
-   "order": 313,
+   "order": 342,
    "type": "bool",
    "prompt": "Đèn LED đơn điều chỉnh độ sáng (LEDC PWM)",
    "menu": [
@@ -8575,7 +9343,7 @@
   },
   {
    "name": "CUSTOM_LED_CIRCULAR_STRIP",
-   "order": 314,
+   "order": 343,
    "type": "bool",
    "prompt": "Vòng tròn LED xoay trạng thái (Circular LED Strip)",
    "menu": [
@@ -8594,7 +9362,7 @@
   },
   {
    "name": "CUSTOM_LED_USER_CUSTOM",
-   "order": 315,
+   "order": 344,
    "type": "bool",
    "prompt": "Driver Đèn LED tùy chỉnh (Custom User LED Hook)",
    "menu": [
@@ -8613,7 +9381,7 @@
   },
   {
    "name": "CUSTOM_LED_NONE",
-   "order": 316,
+   "order": 345,
    "type": "bool",
    "prompt": "Không sử dụng đèn LED",
    "menu": [
@@ -8632,7 +9400,7 @@
   },
   {
    "name": "CUSTOM_LED_GPIO",
-   "order": 317,
+   "order": 346,
    "type": "int",
    "prompt": "Chân GPIO kết nối Đèn LED (Mặc định chân LED onboard)",
    "menu": [
@@ -8666,7 +9434,7 @@
   },
   {
    "name": "CUSTOM_LED_EXTRA_GPIOS",
-   "order": 318,
+   "order": 347,
    "type": "string",
    "prompt": "Các chân GPIO LED thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -8694,7 +9462,7 @@
   },
   {
    "name": "CUSTOM_LED_COUNT",
-   "order": 319,
+   "order": 348,
    "type": "int",
    "prompt": "Số lượng mắt LED trên dải/vòng (Hỗ trợ tối đa 1024 mắt LED)",
    "menu": [
@@ -8728,7 +9496,7 @@
   },
   {
    "name": "CUSTOM_LED_FAST_RAINBOW_EFFECT",
-   "order": 320,
+   "order": 349,
    "type": "bool",
    "prompt": "Hiệu ứng Đổi Màu Cầu Vồng Nhanh (Fast Rainbow Effect khi nói / khởi động)",
    "menu": [
@@ -8764,7 +9532,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SERVO_DOG",
-   "order": 321,
+   "order": 350,
    "type": "bool",
    "prompt": "Động cơ Servo tương tác qua PWM (Servo Dog Controller)",
    "menu": [
@@ -8787,7 +9555,7 @@
   },
   {
    "name": "CUSTOM_SERVO_DOG_PWM_GPIO",
-   "order": 322,
+   "order": 351,
    "type": "int",
    "prompt": "Chân GPIO cấp xung PWM cho Động cơ Servo",
    "menu": [
@@ -8820,7 +9588,7 @@
   },
   {
    "name": "ENABLE_BUZZER",
-   "order": 323,
+   "order": 352,
    "type": "bool",
    "prompt": "Còi báo động Buzzer (GPIO 41)",
    "menu": [
@@ -8843,7 +9611,7 @@
   },
   {
    "name": "BUZZER_EXTRA_PINS",
-   "order": 324,
+   "order": 353,
    "type": "string",
    "prompt": "Các chân GPIO Còi thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -8870,7 +9638,7 @@
   },
   {
    "name": "BUZZER_PIN",
-   "order": 325,
+   "order": 354,
    "type": "int",
    "prompt": "Chân GPIO Buzzer",
    "menu": [
@@ -8903,7 +9671,7 @@
   },
   {
    "name": "ENABLE_HAPTIC_MOTOR",
-   "order": 326,
+   "order": 355,
    "type": "bool",
    "prompt": "Động cơ rung phản hồi xúc giác (GPIO 42)",
    "menu": [
@@ -8926,7 +9694,7 @@
   },
   {
    "name": "HAPTIC_PIN",
-   "order": 327,
+   "order": 356,
    "type": "int",
    "prompt": "Chân GPIO Động cơ rung",
    "menu": [
@@ -8959,7 +9727,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_DHT11_22",
-   "order": 328,
+   "order": 357,
    "type": "bool",
    "prompt": "Cảm biến Nhiệt độ & Độ ẩm 1 dây (DHT11 / DHT22)",
    "menu": [
@@ -8982,7 +9750,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_DHT_EXTRA_GPIOS",
-   "order": 329,
+   "order": 358,
    "type": "string",
    "prompt": "Các chân GPIO DHT thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -9009,7 +9777,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_DHT_GPIO",
-   "order": 330,
+   "order": 359,
    "type": "int",
    "prompt": "Chân dữ liệu 1-Wire cảm biến DHT GPIO",
    "menu": [
@@ -9042,7 +9810,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_I2C_TEMP_HUMID",
-   "order": 331,
+   "order": 360,
    "type": "bool",
    "prompt": "Cảm biến Nhiệt độ & Độ ẩm kỹ thuật số I2C (AHT20 / SHT3x)",
    "menu": [
@@ -9065,7 +9833,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_AHT20",
-   "order": 332,
+   "order": 361,
    "type": "bool",
    "prompt": "Aosong AHT10 / AHT20 / AHT21 (I2C)",
    "menu": [
@@ -9092,7 +9860,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_AHT20_EXTRA_GPIOS",
-   "order": 333,
+   "order": 362,
    "type": "string",
    "prompt": "Các chân GPIO AHT20 thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -9119,7 +9887,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_I2C_SDA",
-   "order": 334,
+   "order": 363,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến nhiệt ẩm",
    "menu": [
@@ -9152,7 +9920,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_I2C_SCL",
-   "order": 335,
+   "order": 364,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến nhiệt ẩm",
    "menu": [
@@ -9185,7 +9953,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_BMP280",
-   "order": 336,
+   "order": 365,
    "type": "bool",
    "prompt": "Cảm biến Áp suất khí quyển & Độ cao (Bosch BMP280 / BME280 I2C)",
    "menu": [
@@ -9208,7 +9976,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_BMP280_EXTRA_GPIOS",
-   "order": 337,
+   "order": 366,
    "type": "string",
    "prompt": "Các chân GPIO BMP280 thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -9235,7 +10003,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_BMP280_I2C_SDA",
-   "order": 338,
+   "order": 367,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến khí áp BMP280",
    "menu": [
@@ -9268,7 +10036,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_BMP280_I2C_SCL",
-   "order": 339,
+   "order": 368,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến khí áp BMP280",
    "menu": [
@@ -9301,7 +10069,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_BH1750",
-   "order": 340,
+   "order": 369,
    "type": "bool",
    "prompt": "Cảm biến cường độ ánh sáng kỹ thuật số BH1750 (I2C)",
    "menu": [
@@ -9324,7 +10092,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_BH1750_EXTRA_GPIOS",
-   "order": 341,
+   "order": 370,
    "type": "string",
    "prompt": "Các chân GPIO BH1750 thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -9351,7 +10119,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_BH1750_I2C_SDA",
-   "order": 342,
+   "order": 371,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến ánh sáng BH1750",
    "menu": [
@@ -9384,7 +10152,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_BH1750_I2C_SCL",
-   "order": 343,
+   "order": 372,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến ánh sáng BH1750",
    "menu": [
@@ -9417,7 +10185,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_LDR",
-   "order": 344,
+   "order": 373,
    "type": "bool",
    "prompt": "Cảm biến ánh sáng quang trở (LDR qua cầu phân áp ADC)",
    "menu": [
@@ -9440,7 +10208,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_LDR_EXTRA_CHS",
-   "order": 345,
+   "order": 374,
    "type": "string",
    "prompt": "Các kênh ADC quang trở LDR thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -9467,7 +10235,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_LDR_ADC_CHANNEL",
-   "order": 346,
+   "order": 375,
    "type": "int",
    "prompt": "Kênh ADC1 đo quang trở LDR (Kênh 1 ứng với GPIO 2)",
    "menu": [
@@ -9500,7 +10268,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_GAS_CO2",
-   "order": 347,
+   "order": 376,
    "type": "bool",
    "prompt": "Cảm biến nồng độ Khí độc TVOC & CO2 NDIR (SCD40/41, SGP30/40 I2C)",
    "menu": [
@@ -9523,7 +10291,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_GAS_SCD4X",
-   "order": 348,
+   "order": 377,
    "type": "bool",
    "prompt": "Sensirion SCD40 / SCD41 (Cảm biến CO2 NDIR I2C)",
    "menu": [
@@ -9550,7 +10318,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_SCD4X_EXTRA_GPIOS",
-   "order": 349,
+   "order": 378,
    "type": "string",
    "prompt": "Các chân GPIO SCD4X thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -9577,7 +10345,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_GAS_I2C_SDA",
-   "order": 350,
+   "order": 379,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến khí/CO2",
    "menu": [
@@ -9610,7 +10378,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_GAS_I2C_SCL",
-   "order": 351,
+   "order": 380,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến khí/CO2",
    "menu": [
@@ -9643,7 +10411,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_GAS_ANALOG_MQ",
-   "order": 352,
+   "order": 381,
    "type": "bool",
    "prompt": "Cảm biến khói & khí gas dễ cháy (MQ-2 / MQ-135 Analog ADC)",
    "menu": [
@@ -9666,7 +10434,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_MQ_ANALOG_PIN",
-   "order": 353,
+   "order": 382,
    "type": "int",
    "prompt": "Chân analog đọc điện áp cảm biến MQ (kênh ADC1)",
    "menu": [
@@ -9699,7 +10467,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_DS18B20_PIN",
-   "order": 354,
+   "order": 383,
    "type": "int",
    "prompt": "Chân dữ liệu 1-Wire cảm biến nhiệt độ DS18B20",
    "menu": [
@@ -9728,7 +10496,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_FLOW_PULSE_PIN",
-   "order": 355,
+   "order": 384,
    "type": "int",
    "prompt": "Chân đọc xung lưu lượng chất lỏng (Flow Pulse)",
    "menu": [
@@ -9757,7 +10525,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_APDS9960",
-   "order": 356,
+   "order": 385,
    "type": "bool",
    "prompt": "Cảm biến màu sắc, cử chỉ & tiệm cận (Broadcom APDS-9960 I2C)",
    "menu": [
@@ -9780,7 +10548,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_APDS9960_I2C_SDA",
-   "order": 357,
+   "order": 386,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến APDS9960",
    "menu": [
@@ -9813,7 +10581,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_APDS9960_I2C_SCL",
-   "order": 358,
+   "order": 387,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến APDS9960",
    "menu": [
@@ -9846,7 +10614,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_APDS9960_INT_PIN",
-   "order": 359,
+   "order": 388,
    "type": "int",
    "prompt": "Chân ngắt INT cảm biến APDS9960",
    "menu": [
@@ -9879,7 +10647,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_VL53LX",
-   "order": 360,
+   "order": 389,
    "type": "bool",
    "prompt": "Cảm biến khoảng cách laser ToF (STMicroelectronics VL53L0X / VL53L1X I2C)",
    "menu": [
@@ -9902,7 +10670,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_VL53LX_I2C_SDA",
-   "order": 361,
+   "order": 390,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến laser VL53L",
    "menu": [
@@ -9935,7 +10703,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_VL53LX_I2C_SCL",
-   "order": 362,
+   "order": 391,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến laser VL53L",
    "menu": [
@@ -9968,7 +10736,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_VL53LX_XSHUT_PIN",
-   "order": 363,
+   "order": 392,
    "type": "int",
    "prompt": "Chân tắt nguồn XSHUT cảm biến laser VL53L",
    "menu": [
@@ -10001,7 +10769,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_HCSR04",
-   "order": 364,
+   "order": 393,
    "type": "bool",
    "prompt": "Cảm biến khoảng cách siêu âm (HC-SR04 / US-100)",
    "menu": [
@@ -10024,7 +10792,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_HCSR04_TRIG_GPIO",
-   "order": 365,
+   "order": 394,
    "type": "int",
    "prompt": "Chân phát xung siêu âm Trig GPIO",
    "menu": [
@@ -10057,7 +10825,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_HCSR04_ECHO_GPIO",
-   "order": 366,
+   "order": 395,
    "type": "int",
    "prompt": "Chân nhận tín hiệu siêu âm Echo GPIO",
    "menu": [
@@ -10090,7 +10858,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_PIR",
-   "order": 367,
+   "order": 396,
    "type": "bool",
    "prompt": "Cảm biến phát hiện người chuyển động PIR (HC-SR501 / RCWL-0516)",
    "menu": [
@@ -10113,7 +10881,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_PIR_GPIO",
-   "order": 368,
+   "order": 397,
    "type": "int",
    "prompt": "Chân tín hiệu cảm biến PIR GPIO",
    "menu": [
@@ -10146,7 +10914,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_VIBRATION_SW420",
-   "order": 369,
+   "order": 398,
    "type": "bool",
    "prompt": "Cảm biến cảnh báo chấn động / Rung tiếp điểm (SW-420 GPIO Interrupt)",
    "menu": [
@@ -10169,7 +10937,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_VIBRATION_PIN",
-   "order": 370,
+   "order": 399,
    "type": "int",
    "prompt": "Chân tín hiệu Digital Out cảm biến rung",
    "menu": [
@@ -10202,7 +10970,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_FLAME",
-   "order": 371,
+   "order": 400,
    "type": "bool",
    "prompt": "Cảm biến cảnh báo hỏa hoạn / Ngọn lửa (Flame Sensor IR)",
    "menu": [
@@ -10225,7 +10993,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_FLAME_PIN",
-   "order": 372,
+   "order": 401,
    "type": "int",
    "prompt": "Chân tín hiệu Digital báo lửa",
    "menu": [
@@ -10258,7 +11026,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RELAY_ENABLE",
-   "order": 373,
+   "order": 402,
    "type": "bool",
    "prompt": "Rơ-le đóng cắt thiết bị độc lập (Relay Switch)",
    "menu": [
@@ -10281,7 +11049,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RELAY_GPIO",
-   "order": 374,
+   "order": 403,
    "type": "int",
    "prompt": "Chân GPIO kích hoạt Relay đóng cắt",
    "menu": [
@@ -10314,7 +11082,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE",
-   "order": 375,
+   "order": 404,
    "type": "bool",
    "prompt": "Mạch cầu H Động cơ DC 2 chiều cho xe robot (TB6612FNG / L9110S / DRV8833)",
    "menu": [
@@ -10337,7 +11105,7 @@
   },
   {
    "name": "CUSTOM_MOTOR_DRIVER_TB6612",
-   "order": 377,
+   "order": 406,
    "type": "bool",
    "prompt": "Toshiba TB6612FNG (Hiệu suất cao MOSFET H-Bridge)",
    "menu": [
@@ -10355,7 +11123,7 @@
   },
   {
    "name": "CUSTOM_MOTOR_DRIVER_L9110S",
-   "order": 378,
+   "order": 407,
    "type": "bool",
    "prompt": "L9110S / HG7881 (Mạch 2 kênh DC mini giá rẻ)",
    "menu": [
@@ -10373,7 +11141,7 @@
   },
   {
    "name": "CUSTOM_MOTOR_DRIVER_DRV8833",
-   "order": 379,
+   "order": 408,
    "type": "bool",
    "prompt": "TI DRV8833 (Cầu H kép bảo vệ quá dòng)",
    "menu": [
@@ -10391,7 +11159,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_MOTOR_PWMA_PIN",
-   "order": 380,
+   "order": 409,
    "type": "int",
    "prompt": "Chân điều tốc PWM Động cơ A (PWMA)",
    "menu": [
@@ -10424,7 +11192,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_MOTOR_DIRA_PIN",
-   "order": 381,
+   "order": 410,
    "type": "int",
    "prompt": "Chân hướng quay Động cơ A (DIRA / IN1)",
    "menu": [
@@ -10457,7 +11225,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_MOTOR_PWMB_PIN",
-   "order": 382,
+   "order": 411,
    "type": "int",
    "prompt": "Chân điều tốc PWM Động cơ B (PWMB)",
    "menu": [
@@ -10490,7 +11258,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_MOTOR_DIRB_PIN",
-   "order": 383,
+   "order": 412,
    "type": "int",
    "prompt": "Chân hướng quay Động cơ B (DIRB / IN3)",
    "menu": [
@@ -10523,7 +11291,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_BATTERY_MONITOR",
-   "order": 384,
+   "order": 413,
    "type": "bool",
    "prompt": "Mạch đo dung lượng Pin (Battery Level Monitor)",
    "menu": [
@@ -10546,7 +11314,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_MONITOR_ADC",
-   "order": 385,
+   "order": 414,
    "type": "bool",
    "prompt": "Đo qua ADC nội bộ (Bộ chia điện trở Voltage Divider)",
    "menu": [
@@ -10573,7 +11341,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_ADC_CHANNEL",
-   "order": 386,
+   "order": 415,
    "type": "int",
    "prompt": "Kênh ADC1 đo pin (Kênh 0 ứng với chân GPIO 1)",
    "menu": [
@@ -10610,7 +11378,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_DIVIDER_R1",
-   "order": 387,
+   "order": 416,
    "type": "int",
    "prompt": "Điện trở nhánh trên R1 cầu phân áp (kOhm)",
    "menu": [
@@ -10647,7 +11415,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_DIVIDER_R2",
-   "order": 388,
+   "order": 417,
    "type": "int",
    "prompt": "Điện trở nhánh dưới R2 cầu phân áp (kOhm)",
    "menu": [
@@ -10684,7 +11452,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_INA2XX",
-   "order": 389,
+   "order": 418,
    "type": "bool",
    "prompt": "Module đo điện áp, dòng điện & công suất tiêu thụ (TI INA219 / INA226 I2C)",
    "menu": [
@@ -10707,7 +11475,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_INA219",
-   "order": 390,
+   "order": 419,
    "type": "bool",
    "prompt": "Texas Instruments INA219 (Điện áp tối đa 26V, độ phân giải 12-bit)",
    "menu": [
@@ -10734,7 +11502,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_INA2XX_I2C_SDA",
-   "order": 391,
+   "order": 420,
    "type": "int",
    "prompt": "Chân I2C SDA module đo dòng INA",
    "menu": [
@@ -10767,7 +11535,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_INA2XX_I2C_SCL",
-   "order": 392,
+   "order": 421,
    "type": "int",
    "prompt": "Chân I2C SCL module đo dòng INA",
    "menu": [
@@ -10800,7 +11568,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_BATTERY_CHARGING_DETECT",
-   "order": 393,
+   "order": 422,
    "type": "bool",
    "prompt": "Giám sát trạng thái sạc pin (TP4056 CHRG / STDBY Pin)",
    "menu": [
@@ -10823,7 +11591,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_BATTERY_CHRG_PIN",
-   "order": 394,
+   "order": 423,
    "type": "int",
    "prompt": "Chân đọc tín hiệu sạc (kéo trở Pull-up)",
    "menu": [
@@ -10856,7 +11624,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_MONITOR_BQ27220",
-   "order": 395,
+   "order": 424,
    "type": "bool",
    "prompt": "Mạch giám sát pin chuyên dụng I2C (TI BQ27220)",
    "menu": [
@@ -10879,7 +11647,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_BQ27220_I2C_SDA",
-   "order": 396,
+   "order": 425,
    "type": "int",
    "prompt": "Chân I2C SDA IC đo pin BQ27220",
    "menu": [
@@ -10912,7 +11680,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_BQ27220_I2C_SCL",
-   "order": 397,
+   "order": 426,
    "type": "int",
    "prompt": "Chân I2C SCL IC đo pin BQ27220",
    "menu": [
@@ -10945,7 +11713,7 @@
   },
   {
    "name": "CUSTOM_PMIC_I2C_SDA",
-   "order": 398,
+   "order": 427,
    "type": "int",
    "prompt": "Chân I2C SDA chip quản lý nguồn PMIC",
    "menu": [
@@ -10974,7 +11742,7 @@
   },
   {
    "name": "CUSTOM_PMIC_I2C_SCL",
-   "order": 399,
+   "order": 428,
    "type": "int",
    "prompt": "Chân I2C SCL chip quản lý nguồn PMIC",
    "menu": [
@@ -11003,7 +11771,7 @@
   },
   {
    "name": "CUSTOM_PMIC_INT_PIN",
-   "order": 400,
+   "order": 429,
    "type": "int",
    "prompt": "Chân ngắt INT chip quản lý nguồn PMIC",
    "menu": [
@@ -11032,7 +11800,7 @@
   },
   {
    "name": "CUSTOM_IMU_I2C_SDA",
-   "order": 401,
+   "order": 430,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến chuyển động IMU",
    "menu": [
@@ -11061,7 +11829,7 @@
   },
   {
    "name": "CUSTOM_IMU_I2C_SCL",
-   "order": 402,
+   "order": 431,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến chuyển động IMU",
    "menu": [
@@ -11090,7 +11858,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_I2C_SDA",
-   "order": 403,
+   "order": 432,
    "type": "int",
    "prompt": "Chân I2C SDA chip mở rộng GPIO (IO Expander)",
    "menu": [
@@ -11119,7 +11887,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_I2C_SCL",
-   "order": 404,
+   "order": 433,
    "type": "int",
    "prompt": "Chân I2C SCL chip mở rộng GPIO (IO Expander)",
    "menu": [
@@ -11148,7 +11916,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_INT_PIN",
-   "order": 405,
+   "order": 434,
    "type": "int",
    "prompt": "Chân ngắt INT chip mở rộng GPIO",
    "menu": [
@@ -11177,7 +11945,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_RST_PIN",
-   "order": 406,
+   "order": 435,
    "type": "int",
    "prompt": "Chân reset RST chip mở rộng GPIO",
    "menu": [
@@ -11206,7 +11974,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_RTC",
-   "order": 407,
+   "order": 436,
    "type": "bool",
    "prompt": "Đồng hồ thời gian thực ngoại vi (RTC I2C DS3231 / PCF8563)",
    "menu": [
@@ -11229,7 +11997,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RTC_I2C_SDA",
-   "order": 408,
+   "order": 437,
    "type": "int",
    "prompt": "Chân I2C SDA module RTC",
    "menu": [
@@ -11262,7 +12030,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RTC_I2C_SCL",
-   "order": 409,
+   "order": 438,
    "type": "int",
    "prompt": "Chân I2C SCL module RTC",
    "menu": [
@@ -11295,7 +12063,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RTC_INT_PIN",
-   "order": 410,
+   "order": 439,
    "type": "int",
    "prompt": "Chân ngắt báo thức INT module RTC",
    "menu": [
@@ -11328,7 +12096,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_NFC_PN532",
-   "order": 411,
+   "order": 440,
    "type": "bool",
    "prompt": "Đầu đọc thẻ từ giao tiếp gần NFC (NXP PN532 I2C)",
    "menu": [
@@ -11351,7 +12119,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_NFC_I2C_SDA",
-   "order": 412,
+   "order": 441,
    "type": "int",
    "prompt": "Chân I2C SDA module NFC",
    "menu": [
@@ -11384,7 +12152,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_NFC_I2C_SCL",
-   "order": 413,
+   "order": 442,
    "type": "int",
    "prompt": "Chân I2C SCL module NFC",
    "menu": [
@@ -11417,7 +12185,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_NFC_IRQ_PIN",
-   "order": 414,
+   "order": 443,
    "type": "int",
    "prompt": "Chân ngắt IRQ module NFC",
    "menu": [
@@ -11450,7 +12218,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_NFC_RST_PIN",
-   "order": 415,
+   "order": 444,
    "type": "int",
    "prompt": "Chân reset RST module NFC",
    "menu": [
@@ -11483,7 +12251,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_PCA9685",
-   "order": 416,
+   "order": 445,
    "type": "bool",
    "prompt": "Mạch mở rộng 16 kênh PWM I2C (NXP PCA9685)",
    "menu": [
@@ -11506,7 +12274,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_PCA9685_I2C_SDA",
-   "order": 417,
+   "order": 446,
    "type": "int",
    "prompt": "Chân I2C SDA module PCA9685",
    "menu": [
@@ -11539,7 +12307,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_PCA9685_I2C_SCL",
-   "order": 418,
+   "order": 447,
    "type": "int",
    "prompt": "Chân I2C SCL module PCA9685",
    "menu": [
@@ -11572,7 +12340,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_PCA9685_OE_PIN",
-   "order": 419,
+   "order": 448,
    "type": "int",
    "prompt": "Chân cho phép đầu ra OE module PCA9685",
    "menu": [
@@ -11605,7 +12373,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC",
-   "order": 420,
+   "order": 449,
    "type": "bool",
    "prompt": "IC điều khiển LED chuyên dụng I2C (AW9523 / IS31FL)",
    "menu": [
@@ -11628,7 +12396,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_LED_IC_I2C_SDA",
-   "order": 421,
+   "order": 450,
    "type": "int",
    "prompt": "Chân I2C SDA chip điều khiển LED",
    "menu": [
@@ -11661,7 +12429,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_LED_IC_I2C_SCL",
-   "order": 422,
+   "order": 451,
    "type": "int",
    "prompt": "Chân I2C SCL chip điều khiển LED",
    "menu": [
@@ -11694,7 +12462,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_SDCARD_SPI",
-   "order": 423,
+   "order": 452,
    "type": "bool",
    "prompt": "Đầu đọc thẻ nhớ MicroSD qua giao tiếp SPI",
    "menu": [
@@ -11717,7 +12485,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_SDCARD_SPI_SCK",
-   "order": 424,
+   "order": 453,
    "type": "int",
    "prompt": "Chân xung nhịp SPI SCK thẻ nhớ",
    "menu": [
@@ -11750,7 +12518,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_SDCARD_SPI_MOSI",
-   "order": 425,
+   "order": 454,
    "type": "int",
    "prompt": "Chân dữ liệu SPI MOSI thẻ nhớ",
    "menu": [
@@ -11783,7 +12551,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_SDCARD_SPI_MISO",
-   "order": 426,
+   "order": 455,
    "type": "int",
    "prompt": "Chân dữ liệu SPI MISO thẻ nhớ",
    "menu": [
@@ -11816,7 +12584,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_SDCARD_SPI_CS",
-   "order": 427,
+   "order": 456,
    "type": "int",
    "prompt": "Chân chọn chip SPI CS thẻ nhớ",
    "menu": [
@@ -11849,7 +12617,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RC522_SPI_SCK",
-   "order": 428,
+   "order": 457,
    "type": "int",
    "prompt": "Chân xung nhịp SPI SCK module RFID RC522",
    "menu": [
@@ -11878,7 +12646,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RC522_SPI_MOSI",
-   "order": 429,
+   "order": 458,
    "type": "int",
    "prompt": "Chân dữ liệu SPI MOSI module RFID RC522",
    "menu": [
@@ -11907,7 +12675,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RC522_SPI_MISO",
-   "order": 430,
+   "order": 459,
    "type": "int",
    "prompt": "Chân dữ liệu SPI MISO module RFID RC522",
    "menu": [
@@ -11936,7 +12704,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RC522_SPI_CS",
-   "order": 431,
+   "order": 460,
    "type": "int",
    "prompt": "Chân chọn chip SPI CS module RFID RC522",
    "menu": [
@@ -11965,7 +12733,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RC522_RST_PIN",
-   "order": 432,
+   "order": 461,
    "type": "int",
    "prompt": "Chân reset RST module RFID RC522",
    "menu": [
@@ -11994,7 +12762,7 @@
   },
   {
    "name": "CUSTOM_ETH_SPI_SCK_PIN",
-   "order": 433,
+   "order": 462,
    "type": "int",
    "prompt": "Chân SCK SPI module Ethernet (W5500)",
    "menu": [
@@ -12023,7 +12791,7 @@
   },
   {
    "name": "CUSTOM_ETH_SPI_MOSI_PIN",
-   "order": 434,
+   "order": 463,
    "type": "int",
    "prompt": "Chân MOSI SPI module Ethernet (W5500)",
    "menu": [
@@ -12052,7 +12820,7 @@
   },
   {
    "name": "CUSTOM_ETH_SPI_MISO_PIN",
-   "order": 435,
+   "order": 464,
    "type": "int",
    "prompt": "Chân MISO SPI module Ethernet (W5500)",
    "menu": [
@@ -12081,7 +12849,7 @@
   },
   {
    "name": "CUSTOM_ETH_SPI_CS_PIN",
-   "order": 436,
+   "order": 465,
    "type": "int",
    "prompt": "Chân chọn chip SPI CS module Ethernet (W5500)",
    "menu": [
@@ -12110,7 +12878,7 @@
   },
   {
    "name": "CUSTOM_ETH_SPI_INT_PIN",
-   "order": 437,
+   "order": 466,
    "type": "int",
    "prompt": "Chân ngắt INT module Ethernet",
    "menu": [
@@ -12139,7 +12907,7 @@
   },
   {
    "name": "CUSTOM_ETH_SPI_RST_PIN",
-   "order": 438,
+   "order": 467,
    "type": "int",
    "prompt": "Chân reset RST module Ethernet",
    "menu": [
@@ -12168,7 +12936,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_IR_REMOTE",
-   "order": 439,
+   "order": 468,
    "type": "bool",
    "prompt": "Module truyền nhận hồng ngoại điều khiển từ xa (IR Remote) - CHƯA HỖ TRỢ, chưa có driver",
    "menu": [
@@ -12191,7 +12959,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_IR_TX_PIN",
-   "order": 440,
+   "order": 469,
    "type": "int",
    "prompt": "Chân phát hồng ngoại IR TX (38kHz)",
    "menu": [
@@ -12224,7 +12992,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_IR_RX_PIN",
-   "order": 441,
+   "order": 470,
    "type": "int",
    "prompt": "Chân thu hồng ngoại IR RX (VS1838B)",
    "menu": [
@@ -12257,7 +13025,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_TWAI_TX_PIN",
-   "order": 442,
+   "order": 471,
    "type": "int",
    "prompt": "Chân phát mạng CAN / TWAI TX",
    "menu": [
@@ -12286,7 +13054,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_TWAI_RX_PIN",
-   "order": 443,
+   "order": 472,
    "type": "int",
    "prompt": "Chân nhận mạng CAN / TWAI RX",
    "menu": [
@@ -12315,7 +13083,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE",
-   "order": 444,
+   "order": 473,
    "type": "bool",
    "prompt": "Module truyền thông dữ liệu mạng di động 4G LTE (A7670 / SIM7600) - CHƯA HỖ TRỢ, chưa có driver",
    "menu": [
@@ -12338,7 +13106,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_4G_PWRKEY_PIN",
-   "order": 445,
+   "order": 474,
    "type": "int",
    "prompt": "Chân bật nguồn PWRKEY module 4G",
    "menu": [
@@ -12371,7 +13139,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_4G_UART_TX_PIN",
-   "order": 446,
+   "order": 475,
    "type": "int",
    "prompt": "Chân truyền UART TX kết nối module 4G",
    "menu": [
@@ -12404,7 +13172,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_4G_UART_RX_PIN",
-   "order": 447,
+   "order": 476,
    "type": "int",
    "prompt": "Chân nhận UART RX kết nối module 4G",
    "menu": [
@@ -12437,7 +13205,7 @@
   },
   {
    "name": "ENABLE_CUSTOM_SENSORS",
-   "order": 448,
+   "order": 477,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -12460,7 +13228,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_MONITOR_NONE",
-   "order": 449,
+   "order": 478,
    "type": "bool",
    "prompt": "",
    "menu": [

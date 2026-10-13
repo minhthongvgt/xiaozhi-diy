@@ -120,6 +120,8 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_DISPLAY_USER_CUSTOM` | bool | Màn hình hiển thị (Display Panel) | Driver Màn hình tùy chỉnh (Custom User Display Hook) |  |
 | `CONFIG_CUSTOM_DISPLAY_NONE` | bool | Màn hình hiển thị (Display Panel) | Không sử dụng màn hình (Audio Only / Headless) |  |
 | `CONFIG_ENABLE_CUSTOM_SECONDARY_UART_DISPLAY` | bool | Màn hình hiển thị (Display Panel) | Màn hình rời UART mở rộng / Chạy song song 2 màn hình (Secondary UART Display) | n |
+| `CONFIG_CUSTOM_DISPLAY_UART_LINK_WIRED` | bool | Cấu hình Màn hình rời UART (Nextion / TJC / DWIN) | Có dây (UART trực tiếp) | y (mặc định của choice) |
+| `CONFIG_CUSTOM_DISPLAY_UART_LINK_BLUETOOTH` | bool | Cấu hình Màn hình rời UART (Nextion / TJC / DWIN) | Không dây qua module Bluetooth UART |  |
 | `CONFIG_CUSTOM_DISPLAY_UART_PORT` | int | Cấu hình Màn hình rời UART (Nextion / TJC / DWIN) | Cổng UART phần cứng (1: UART1, 2: UART2) | 1 |
 | `CONFIG_CUSTOM_DISPLAY_UART_TX_PIN` | int | Cấu hình Màn hình rời UART (Nextion / TJC / DWIN) | Chân TX kết nối chân RX của Màn hình | -1 |
 | `CONFIG_CUSTOM_DISPLAY_UART_RX_PIN` | int | Cấu hình Màn hình rời UART (Nextion / TJC / DWIN) | Chân RX kết nối chân TX của Màn hình | -1 |
@@ -243,6 +245,27 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_UART_USE_FLOW_CONTROL` | bool | Cổng UART mở rộng (Serial Communication Port) | Kích hoạt điều khiển luồng phần cứng (RTS/CTS Hardware Flow Control) | n |
 | `CONFIG_CUSTOM_UART_PIN_RTS` | int | Cổng UART mở rộng (Serial Communication Port) | Chân RTS GPIO (Request to Send) | -1 |
 | `CONFIG_CUSTOM_UART_PIN_CTS` | int | Cổng UART mở rộng (Serial Communication Port) | Chân CTS GPIO (Clear to Send) | -1 |
+| `CONFIG_ENABLE_BT_UART_MODULE` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | n |
+| `CONFIG_BT_UART_MODULE_HC05` | bool | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | HC-05 (Bluetooth Classic SPP, chủ/tớ, cần chân KEY để vào AT) | y (mặc định của choice) |
+| `CONFIG_BT_UART_MODULE_HC06` | bool | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | HC-06 / linvor (Bluetooth Classic SPP, chỉ làm tớ) |  |
+| `CONFIG_BT_UART_MODULE_HM10` | bool | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | HM-10 / CC2541 (BLE, chủ/tớ) |  |
+| `CONFIG_BT_UART_MODULE_PRECONFIGURED` | bool | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | Module đã cấu hình sẵn (không gửi lệnh AT) |  |
+| `CONFIG_BT_UART_MODULE_PORT_1` | bool | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | UART1 |  |
+| `CONFIG_BT_UART_MODULE_PORT_2` | bool | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | UART2 | y (mặc định của choice) |
+| `CONFIG_BT_UART_MODULE_TX_PIN` | int | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | Chân TX (nối chân RXD của module) | -1 |
+| `CONFIG_BT_UART_MODULE_RX_PIN` | int | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | Chân RX (nối chân TXD của module) | -1 |
+| `CONFIG_BT_UART_MODULE_BAUDRATE` | int | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | Tốc độ baud dữ liệu của module | 9600 |
+| `CONFIG_BT_UART_MODULE_STATE_PIN` | int | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | Chân STATE / LED (biết đã kết nối, -1 nếu không nối) | -1 |
+| `CONFIG_BT_UART_MODULE_KEY_PIN` | int | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | Chân KEY / EN của HC-05 (-1 nếu không nối) | -1 |
+| `CONFIG_BT_UART_MODULE_APPLY_SETTINGS` | bool | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | Gửi lệnh AT đặt tên, mã PIN và vai trò khi khởi động | n |
+| `CONFIG_BT_UART_MODULE_NAME` | string | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | Tên Bluetooth của module | "Xiaozhi-BT" |
+| `CONFIG_BT_UART_MODULE_PIN_CODE` | string | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | Mã PIN ghép đôi (HC-05/HC-06: 4 số, HM-10: 6 số, để trống = giữ nguyên) | "" |
+| `CONFIG_BT_UART_MODULE_ROLE_SLAVE` | bool | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | Tớ (Slave) | y (mặc định của choice) |
+| `CONFIG_BT_UART_MODULE_ROLE_MASTER` | bool | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | Chủ (Master), tự kết nối tới địa chỉ cố định |  |
+| `CONFIG_BT_UART_MODULE_REMOTE_ADDR` | string | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | Địa chỉ Bluetooth của module đầu kia (12 chữ số hex) | "" |
+| `CONFIG_BT_UART_MODULE_FRAME_RAW` | bool | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | Thô (gửi nguyên văn, nhận theo khoảng nghỉ) |  |
+| `CONFIG_BT_UART_MODULE_FRAME_LINE` | bool | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | Dòng văn bản (kết thúc bằng ký tự xuống dòng LF) | y (mặc định của choice) |
+| `CONFIG_BT_UART_MODULE_FRAME_BINARY4` | bool | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | Khung nhị phân 4 byte (0xAA, chục, đơn vị, XOR) |  |
 | `CONFIG_CUSTOM_MCP_TOOL_LAMP` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) | Đèn điều khiển bằng AI qua GPIO (MCP) | n |
 | `CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO` | int | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) | Chân GPIO điều khiển Đèn | -1 |
 | `CONFIG_CUSTOM_MCP_TOOL_LAMP_EXTRA_GPIOS` | string | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) | Các chân GPIO Đèn thêm (cách nhau dấu phẩy) | "" |
@@ -252,7 +275,8 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_MCP_TOOL_LED` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if ENABLE_CUSTOM_LEDS && !CUSTOM_LED_NONE |
 | `CONFIG_CUSTOM_MCP_TOOL_PERIPH` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_ENABLE_PERIPH_RTC \|\| CUSTOM_ENABLE_PERIPH_NFC_PN532 \|\| CUSTOM_ENABLE_PERIPH_PCA9685 \|\| CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC \|\| CUSTOM_PERIPH_RC522_SPI_CS >= 0 \|\| CUSTOM_IMU_I2C_SDA >= 0 \|\| CUSTOM_PMIC_I2C_SDA >= 0 \|\| CUSTOM_EXPANDER_I2C_SDA >= 0 \|\| CUSTOM_ETH_SPI_CS_PIN >= 0 |
 | `CONFIG_CUSTOM_MCP_TOOL_PRESS_TO_TALK` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_ENABLE_BUTTON_BOOT \|\| CUSTOM_ENABLE_BUTTON_TOUCH |
-| `CONFIG_ENABLE_CUSTOM_MCP_SERVER` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_MCP_TOOL_LAMP \|\| CUSTOM_MCP_TOOL_SENSOR \|\| CUSTOM_MCP_TOOL_ACTUATOR \|\| CUSTOM_MCP_TOOL_ROBOT \|\| CUSTOM_MCP_TOOL_LED \|\| CUSTOM_MCP_TOOL_PERIPH \|\| CUSTOM_MCP_TOOL_PRESS_TO_TALK |
+| `CONFIG_CUSTOM_MCP_TOOL_BT_UART` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if ENABLE_BT_UART_MODULE && !CUSTOM_DISPLAY_UART_LINK_BLUETOOTH |
+| `CONFIG_ENABLE_CUSTOM_MCP_SERVER` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_MCP_TOOL_LAMP \|\| CUSTOM_MCP_TOOL_SENSOR \|\| CUSTOM_MCP_TOOL_ACTUATOR \|\| CUSTOM_MCP_TOOL_ROBOT \|\| CUSTOM_MCP_TOOL_LED \|\| CUSTOM_MCP_TOOL_PERIPH \|\| CUSTOM_MCP_TOOL_PRESS_TO_TALK \|\| CUSTOM_MCP_TOOL_BT_UART |
 | `CONFIG_CUSTOM_ENABLE_BUTTON_BOOT` | bool | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Nút bấm BOOT Onboard (BOOT Button) | y |
 | `CONFIG_CUSTOM_BUTTON_BOOT_GPIO` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân GPIO nút Boot | 0 |
 | `CONFIG_CUSTOM_BUTTON_BOOT_EXTRA_GPIOS` | string | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Các chân GPIO nút Boot thêm (cách nhau dấu phẩy) | "" |

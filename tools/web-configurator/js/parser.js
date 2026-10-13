@@ -139,6 +139,8 @@ export class SdkconfigParser {
     s.display.rgb_hsync = i('CONFIG_CUSTOM_DISPLAY_RGB_HSYNC');
     for (let n=0;n<=15;n++) s.display[`rgb_d${n}`]=i(`CONFIG_CUSTOM_DISPLAY_RGB_D${n}`);
     s.display.uart_secondary = y('CONFIG_ENABLE_CUSTOM_SECONDARY_UART_DISPLAY');
+    s.display.uart_link  = y('CONFIG_CUSTOM_DISPLAY_UART_LINK_BLUETOOTH')
+      ? 'CUSTOM_DISPLAY_UART_LINK_BLUETOOTH' : 'CUSTOM_DISPLAY_UART_LINK_WIRED';
     s.display.uart_port  = i('CONFIG_CUSTOM_DISPLAY_UART_PORT', 1);
     s.display.uart_tx    = i('CONFIG_CUSTOM_DISPLAY_UART_TX_PIN');
     s.display.uart_rx    = i('CONFIG_CUSTOM_DISPLAY_UART_RX_PIN');

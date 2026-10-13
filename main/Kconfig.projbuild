@@ -546,8 +546,24 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             menu "Cấu hình Màn hình rời UART (Nextion / TJC / DWIN)"
                 depends on ENABLE_CUSTOM_SECONDARY_UART_DISPLAY || CUSTOM_DISPLAY_UART
 
+                choice CUSTOM_DISPLAY_UART_LINK
+                    prompt "Kiểu kết nối màn hình rời"
+                    default CUSTOM_DISPLAY_UART_LINK_WIRED
+                    help
+                        Có dây: nối thẳng TX/RX tới màn hình.
+                        Không dây: dùng module Bluetooth UART (mục 3); đầu màn hình cần một module Bluetooth đã ghép đôi.
+                        Module Bluetooth khi đó chỉ phục vụ màn hình, không tạo công cụ MCP.
+
+                    config CUSTOM_DISPLAY_UART_LINK_WIRED
+                        bool "Có dây (UART trực tiếp)"
+                    config CUSTOM_DISPLAY_UART_LINK_BLUETOOTH
+                        bool "Không dây qua module Bluetooth UART"
+                        depends on ENABLE_BT_UART_MODULE
+                endchoice
+
                 config CUSTOM_DISPLAY_UART_PORT
                     int "Cổng UART phần cứng (1: UART1, 2: UART2)"
+                    depends on CUSTOM_DISPLAY_UART_LINK_WIRED
                     range 1 2
                     default 1
                     help
@@ -555,6 +571,7 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
 
                 config CUSTOM_DISPLAY_UART_TX_PIN
                     int "Chân TX kết nối chân RX của Màn hình"
+                    depends on CUSTOM_DISPLAY_UART_LINK_WIRED
                     range -1 48
                     default -1
 
@@ -563,6 +580,7 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
 
                 config CUSTOM_DISPLAY_UART_RX_PIN
                     int "Chân RX kết nối chân TX của Màn hình"
+                    depends on CUSTOM_DISPLAY_UART_LINK_WIRED
                     range -1 48
                     default -1
 
@@ -571,6 +589,7 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
 
                 choice CUSTOM_DISPLAY_UART_BAUDRATE_CHOICE
                     prompt "Tốc độ truyền dữ liệu (Baudrate)"
+                    depends on CUSTOM_DISPLAY_UART_LINK_WIRED
                     default CUSTOM_DISPLAY_UART_BAUDRATE_115200
                     help
                         Chọn tốc độ truyền thông số khớp với cài đặt của màn hình HMI.
@@ -1172,6 +1191,128 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             default -1
         endif
 
+        menuconfig ENABLE_BT_UART_MODULE
+            bool "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)"
+            default n
+            help
+                Module Bluetooth rời nối vào một cổng UART riêng, làm cầu UART không dây trong suốt
+                tới một vi điều khiển hoặc module Bluetooth khác.
+                Dùng cổng UART riêng, khác cổng UART mở rộng và cổng màn hình rời có dây.
+
+        if ENABLE_BT_UART_MODULE
+            choice BT_UART_MODULE_TYPE
+                prompt "Loại module Bluetooth"
+                default BT_UART_MODULE_HC05
+                help
+                    Quyết định bộ lệnh AT dùng để cấu hình module khi khởi động.
+
+                config BT_UART_MODULE_HC05
+                    bool "HC-05 (Bluetooth Classic SPP, chủ/tớ, cần chân KEY để vào AT)"
+                config BT_UART_MODULE_HC06
+                    bool "HC-06 / linvor (Bluetooth Classic SPP, chỉ làm tớ)"
+                config BT_UART_MODULE_HM10
+                    bool "HM-10 / CC2541 (BLE, chủ/tớ)"
+                config BT_UART_MODULE_PRECONFIGURED
+                    bool "Module đã cấu hình sẵn (không gửi lệnh AT)"
+            endchoice
+
+            choice BT_UART_MODULE_PORT
+                prompt "Cổng UART phần cứng cho module Bluetooth"
+                default BT_UART_MODULE_PORT_2
+                help
+                    Phải khác cổng của UART mở rộng và của màn hình rời có dây.
+
+                config BT_UART_MODULE_PORT_1
+                    bool "UART1"
+                config BT_UART_MODULE_PORT_2
+                    bool "UART2"
+            endchoice
+
+            config BT_UART_MODULE_TX_PIN
+                int "Chân TX (nối chân RXD của module)"
+                range -1 48
+                default -1
+
+            config BT_UART_MODULE_RX_PIN
+                int "Chân RX (nối chân TXD của module)"
+                range -1 48
+                default -1
+
+            config BT_UART_MODULE_BAUDRATE
+                int "Tốc độ baud dữ liệu của module"
+                range 1200 1382400
+                default 9600
+                help
+                    HC-05, HC-06 và HM-10 xuất xưởng ở 9600 baud. Hai module ghép đôi có thể chạy baud khác nhau.
+
+            config BT_UART_MODULE_STATE_PIN
+                int "Chân STATE / LED (biết đã kết nối, -1 nếu không nối)"
+                range -1 48
+                default -1
+                help
+                    Mức cao khi module đang kết nối (HC-05 STATE, HM-10 chân LED ở chế độ AT+PIO11).
+
+            config BT_UART_MODULE_KEY_PIN
+                int "Chân KEY / EN của HC-05 (-1 nếu không nối)"
+                depends on BT_UART_MODULE_HC05
+                range -1 48
+                default -1
+                help
+                    Kéo lên mức cao để gửi lệnh AT. Thiếu chân này thì không cấu hình được HC-05 từ firmware.
+
+            config BT_UART_MODULE_APPLY_SETTINGS
+                bool "Gửi lệnh AT đặt tên, mã PIN và vai trò khi khởi động"
+                depends on !BT_UART_MODULE_PRECONFIGURED
+                default n
+                help
+                    Chỉ gửi lệnh khi module chưa kết nối. Tắt nếu đã cấu hình module bằng công cụ khác.
+
+            config BT_UART_MODULE_NAME
+                string "Tên Bluetooth của module"
+                depends on BT_UART_MODULE_APPLY_SETTINGS
+                default "Xiaozhi-BT"
+
+            config BT_UART_MODULE_PIN_CODE
+                string "Mã PIN ghép đôi (HC-05/HC-06: 4 số, HM-10: 6 số, để trống = giữ nguyên)"
+                depends on BT_UART_MODULE_APPLY_SETTINGS
+                default ""
+
+            choice BT_UART_MODULE_ROLE
+                prompt "Vai trò của module"
+                depends on BT_UART_MODULE_APPLY_SETTINGS && (BT_UART_MODULE_HC05 || BT_UART_MODULE_HM10)
+                default BT_UART_MODULE_ROLE_SLAVE
+                help
+                    Tớ: chờ thiết bị khác kết nối. Chủ: tự kết nối tới module ở đầu kia theo địa chỉ.
+
+                config BT_UART_MODULE_ROLE_SLAVE
+                    bool "Tớ (Slave)"
+                config BT_UART_MODULE_ROLE_MASTER
+                    bool "Chủ (Master), tự kết nối tới địa chỉ cố định"
+            endchoice
+
+            config BT_UART_MODULE_REMOTE_ADDR
+                string "Địa chỉ Bluetooth của module đầu kia (12 chữ số hex)"
+                depends on BT_UART_MODULE_ROLE_MASTER
+                default ""
+                help
+                    Ví dụ 98D331F5B9E7 hoặc 98:D3:31:F5:B9:E7. Đọc bằng lệnh AT+ADDR? trên module đầu kia.
+
+            choice BT_UART_MODULE_FRAME
+                prompt "Định dạng gói dữ liệu"
+                depends on !CUSTOM_DISPLAY_UART_LINK_BLUETOOTH
+                default BT_UART_MODULE_FRAME_LINE
+                help
+                    Cách chia luồng byte thành từng gói khi gửi và nhận qua công cụ MCP.
+
+                config BT_UART_MODULE_FRAME_RAW
+                    bool "Thô (gửi nguyên văn, nhận theo khoảng nghỉ)"
+                config BT_UART_MODULE_FRAME_LINE
+                    bool "Dòng văn bản (kết thúc bằng ký tự xuống dòng LF)"
+                config BT_UART_MODULE_FRAME_BINARY4
+                    bool "Khung nhị phân 4 byte (0xAA, chục, đơn vị, XOR)"
+            endchoice
+        endif
+
         config CUSTOM_MCP_TOOL_LAMP
             bool "Đèn điều khiển bằng AI qua GPIO (MCP)"
             default n
@@ -1215,9 +1356,13 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             bool
             default y if CUSTOM_ENABLE_BUTTON_BOOT || CUSTOM_ENABLE_BUTTON_TOUCH
 
+        config CUSTOM_MCP_TOOL_BT_UART
+            bool
+            default y if ENABLE_BT_UART_MODULE && !CUSTOM_DISPLAY_UART_LINK_BLUETOOTH
+
         config ENABLE_CUSTOM_MCP_SERVER
             bool
-            default y if CUSTOM_MCP_TOOL_LAMP || CUSTOM_MCP_TOOL_SENSOR || CUSTOM_MCP_TOOL_ACTUATOR || CUSTOM_MCP_TOOL_ROBOT || CUSTOM_MCP_TOOL_LED || CUSTOM_MCP_TOOL_PERIPH || CUSTOM_MCP_TOOL_PRESS_TO_TALK
+            default y if CUSTOM_MCP_TOOL_LAMP || CUSTOM_MCP_TOOL_SENSOR || CUSTOM_MCP_TOOL_ACTUATOR || CUSTOM_MCP_TOOL_ROBOT || CUSTOM_MCP_TOOL_LED || CUSTOM_MCP_TOOL_PERIPH || CUSTOM_MCP_TOOL_PRESS_TO_TALK || CUSTOM_MCP_TOOL_BT_UART
     endmenu
 
     menu "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)"

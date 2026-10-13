@@ -37,6 +37,7 @@ private:
     UartDisplayProtocol protocol_;
     SemaphoreHandle_t mutex_ = nullptr;
     bool is_initialized_ = false;
+    bool owns_driver_ = false;
     std::string last_status_;
     std::string last_emotion_;
     std::string last_user_message_;

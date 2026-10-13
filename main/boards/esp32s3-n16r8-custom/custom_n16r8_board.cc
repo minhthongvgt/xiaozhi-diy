@@ -30,6 +30,8 @@
 #include "boards/common/led_mcp_controller.h"
 #include "boards/common/robot_mcp_controller.h"
 #include "boards/common/press_to_talk_mcp_tool.h"
+#include "boards/common/bt_uart_bridge.h"
+#include "drivers/periph/bt_uart_module.h"
 #include "led/single_led.h"
 #include "led/circular_strip.h"
 #include "led/gpio_led.h"
@@ -65,6 +67,15 @@
 
 #if defined(CONFIG_CUSTOM_DISPLAY_ILI9341)
 #include "esp_lcd_ili9341.h"
+#endif
+
+#if defined(CONFIG_ENABLE_BT_UART_MODULE) && defined(CONFIG_ENABLE_CUSTOM_UART)
+static_assert(BT_UART_MODULE_PORT != CUSTOM_UART_PORT,
+              "Bluetooth UART module and the extension UART use the same port; choose another port in menuconfig");
+#endif
+#if defined(CONFIG_ENABLE_BT_UART_MODULE) && defined(CONFIG_CUSTOM_DISPLAY_UART_LINK_WIRED)
+static_assert(BT_UART_MODULE_PORT != DISPLAY_UART_PORT,
+              "Bluetooth UART module and the wired UART display use the same port; choose another port in menuconfig");
 #endif
 
 #if defined(CONFIG_CUSTOM_DISPLAY_GC9A01) || defined(CONFIG_CUSTOM_DISPLAY_GC9107)
@@ -764,9 +775,22 @@ private:
 #endif
 
 #if defined(CONFIG_ENABLE_CUSTOM_SECONDARY_UART_DISPLAY) || defined(CONFIG_CUSTOM_DISPLAY_UART)
-        if (GPIO_IS_VALID_GPIO(DISPLAY_UART_TX_PIN)) {
+#if defined(CONFIG_CUSTOM_DISPLAY_UART_LINK_BLUETOOTH)
+        const bool uart_link_ready = InitializeBtUartModule();
+        const uart_port_t uart_link_port = BT_UART_MODULE_PORT;
+        const gpio_num_t uart_link_tx = BT_UART_MODULE_TX_PIN;
+        const gpio_num_t uart_link_rx = BT_UART_MODULE_RX_PIN;
+        const int uart_link_baud = BT_UART_MODULE_BAUDRATE;
+#else
+        const bool uart_link_ready = GPIO_IS_VALID_GPIO(DISPLAY_UART_TX_PIN);
+        const uart_port_t uart_link_port = DISPLAY_UART_PORT;
+        const gpio_num_t uart_link_tx = DISPLAY_UART_TX_PIN;
+        const gpio_num_t uart_link_rx = DISPLAY_UART_RX_PIN;
+        const int uart_link_baud = DISPLAY_UART_BAUDRATE;
+#endif
+        if (uart_link_ready) {
             ESP_LOGI(TAG, "Initializing Secondary External UART Display (Port: %d, TX: %d, RX: %d, Baud: %d)",
-                     (int)DISPLAY_UART_PORT, (int)DISPLAY_UART_TX_PIN, (int)DISPLAY_UART_RX_PIN, DISPLAY_UART_BAUDRATE);
+                     (int)uart_link_port, (int)uart_link_tx, (int)uart_link_rx, uart_link_baud);
             UartDisplayProtocol proto = UartDisplayProtocol::NextionTjc;
 #if defined(CONFIG_CUSTOM_DISPLAY_UART_PROTO_JSON)
             proto = UartDisplayProtocol::JsonStream;
@@ -775,8 +799,8 @@ private:
 #elif defined(CONFIG_CUSTOM_DISPLAY_UART_PROTO_DWIN)
             proto = UartDisplayProtocol::DwinDgus;
 #endif
-            UartDisplay* secondary_uart = new UartDisplay(DISPLAY_UART_PORT, DISPLAY_UART_TX_PIN, DISPLAY_UART_RX_PIN,
-                                                           DISPLAY_UART_BAUDRATE, proto);
+            UartDisplay* secondary_uart = new UartDisplay(uart_link_port, uart_link_tx, uart_link_rx,
+                                                           uart_link_baud, proto);
             if (secondary_uart->IsInitialized()) {
                 if (display_ == nullptr) {
                     display_ = secondary_uart;
@@ -788,7 +812,7 @@ private:
                 delete secondary_uart;
             }
         } else {
-            ESP_LOGW(TAG, "Secondary UART Display enabled but TX pin is NC; skipping init");
+            ESP_LOGW(TAG, "Secondary UART Display enabled but its UART link is not available; skipping init");
         }
 #endif
     }
@@ -1077,6 +1101,69 @@ private:
 #endif
     }
 
+    static constexpr bt_uart_type_t ConfiguredBtUartType() {
+#if defined(CONFIG_BT_UART_MODULE_HC06)
+        return BT_UART_TYPE_HC06;
+#elif defined(CONFIG_BT_UART_MODULE_HM10)
+        return BT_UART_TYPE_HM10;
+#elif defined(CONFIG_BT_UART_MODULE_PRECONFIGURED)
+        return BT_UART_TYPE_PRECONFIGURED;
+#else
+        return BT_UART_TYPE_HC05;
+#endif
+    }
+
+    bool InitializeBtUartModule() {
+#if defined(CONFIG_ENABLE_BT_UART_MODULE)
+        const bt_uart_type_t module_type = ConfiguredBtUartType();
+#if defined(CONFIG_BT_UART_MODULE_APPLY_SETTINGS)
+        const bool apply_settings = true;
+#else
+        const bool apply_settings = false;
+#endif
+#if defined(CONFIG_BT_UART_MODULE_ROLE_MASTER)
+        const bt_uart_role_t role = BT_UART_ROLE_MASTER;
+#else
+        const bt_uart_role_t role = BT_UART_ROLE_SLAVE;
+#endif
+        const bt_uart_module_config_t config = {
+            .port = BT_UART_MODULE_PORT,
+            .tx_pin = BT_UART_MODULE_TX_PIN,
+            .rx_pin = BT_UART_MODULE_RX_PIN,
+            .state_pin = BT_UART_MODULE_STATE_PIN,
+            .key_pin = BT_UART_MODULE_KEY_PIN,
+            .baud_rate = BT_UART_MODULE_BAUDRATE,
+            .type = module_type,
+            .apply_settings = apply_settings,
+            .name = BT_UART_MODULE_NAME,
+            .pin_code = BT_UART_MODULE_PIN_CODE,
+            .role = role,
+            .remote_addr = BT_UART_MODULE_REMOTE_ADDR,
+        };
+        return bt_uart_module_init(&config) == ESP_OK;
+#else
+        return false;
+#endif
+    }
+
+    void InitializeBtUartTools() {
+#if defined(CONFIG_CUSTOM_MCP_TOOL_BT_UART)
+        if (!InitializeBtUartModule()) {
+            ESP_LOGW(TAG, "Bluetooth UART module unavailable; bluetooth MCP tools not registered");
+            return;
+        }
+        const bt_uart_type_t module_type = ConfiguredBtUartType();
+#if defined(CONFIG_BT_UART_MODULE_FRAME_RAW)
+        const BtUartFrame frame = BtUartFrame::Raw;
+#elif defined(CONFIG_BT_UART_MODULE_FRAME_BINARY4)
+        const BtUartFrame frame = BtUartFrame::Binary4;
+#else
+        const BtUartFrame frame = BtUartFrame::Line;
+#endif
+        static BtUartBridge bt_uart_bridge __attribute__((unused)) (module_type, frame);
+#endif
+    }
+
     void InitializeUart() {
 #if defined(CONFIG_ENABLE_CUSTOM_UART)
         uart_port_t port = static_cast<uart_port_t>(CUSTOM_UART_PORT);
@@ -1231,6 +1318,9 @@ private:
 #endif
 #if defined(CONFIG_CUSTOM_MCP_TOOL_ROBOT)
         static RobotMcpController robot_ctrl __attribute__((unused));
+#endif
+#if defined(CONFIG_CUSTOM_MCP_TOOL_BT_UART)
+        InitializeBtUartTools();
 #endif
 #endif
 #if defined(CONFIG_CUSTOM_ENABLE_PERIPH_RTC) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_NFC_PN532) || \

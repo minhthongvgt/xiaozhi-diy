@@ -224,6 +224,7 @@
   "display_rgb_d14": "CUSTOM_DISPLAY_RGB_D14",
   "display_rgb_d15": "CUSTOM_DISPLAY_RGB_D15",
   "display_uart_secondary": "ENABLE_CUSTOM_SECONDARY_UART_DISPLAY",
+  "display_uart_link": "choice:CUSTOM_DISPLAY_UART_LINK",
   "display_uart_port": "CUSTOM_DISPLAY_UART_PORT",
   "display_uart_tx": "CUSTOM_DISPLAY_UART_TX_PIN",
   "display_uart_rx": "CUSTOM_DISPLAY_UART_RX_PIN",

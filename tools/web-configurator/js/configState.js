@@ -36,6 +36,7 @@ export const DEFAULT_CONFIG = {
     offset_x: 0,  offset_y: 0,
     mirror_x: false, mirror_y: false, swap_xy: false, invert_color: false,
     uart_secondary:  false,
+    uart_link:       "CUSTOM_DISPLAY_UART_LINK_WIRED",
     uart_port:       1,
     uart_tx:        -1,   uart_rx: -1,
     uart_baud:       115200,

@@ -212,15 +212,23 @@ export class SdkconfigGenerator {
       if (s.display.uart_secondary) en('CONFIG_ENABLE_CUSTOM_SECONDARY_UART_DISPLAY');
       else dis('CONFIG_ENABLE_CUSTOM_SECONDARY_UART_DISPLAY');
       if (showUart) {
-        set('CONFIG_CUSTOM_DISPLAY_UART_PORT',    s.display.uart_port);
-        set('CONFIG_CUSTOM_DISPLAY_UART_TX_PIN',  s.display.uart_tx);
-        set('CONFIG_CUSTOM_DISPLAY_UART_RX_PIN',  s.display.uart_rx);
-        const baudChoices = ['9600','19200','38400','57600','115200','230400','460800','921600'];
-        const curBaud = String(s.display.uart_baud || 115200);
-        const matchedBaud = baudChoices.includes(curBaud) ? curBaud : '115200';
-        choice(`CUSTOM_DISPLAY_UART_BAUDRATE_${matchedBaud}`,
-               baudChoices.map(b => `CUSTOM_DISPLAY_UART_BAUDRATE_${b}`));
-        set('CONFIG_CUSTOM_DISPLAY_UART_BAUDRATE', matchedBaud);
+        const btReady = Boolean(s.kconfig && s.kconfig.ENABLE_BT_UART_MODULE);
+        const link = btReady && s.display.uart_link === 'CUSTOM_DISPLAY_UART_LINK_BLUETOOTH'
+          ? 'CUSTOM_DISPLAY_UART_LINK_BLUETOOTH' : 'CUSTOM_DISPLAY_UART_LINK_WIRED';
+        choice(link, ['CUSTOM_DISPLAY_UART_LINK_WIRED', 'CUSTOM_DISPLAY_UART_LINK_BLUETOOTH']);
+        if (link === 'CUSTOM_DISPLAY_UART_LINK_WIRED') {
+          set('CONFIG_CUSTOM_DISPLAY_UART_PORT',    s.display.uart_port);
+          set('CONFIG_CUSTOM_DISPLAY_UART_TX_PIN',  s.display.uart_tx);
+          set('CONFIG_CUSTOM_DISPLAY_UART_RX_PIN',  s.display.uart_rx);
+          const baudChoices = ['9600','19200','38400','57600','115200','230400','460800','921600'];
+          const curBaud = String(s.display.uart_baud || 115200);
+          const matchedBaud = baudChoices.includes(curBaud) ? curBaud : '115200';
+          choice(`CUSTOM_DISPLAY_UART_BAUDRATE_${matchedBaud}`,
+                 baudChoices.map(b => `CUSTOM_DISPLAY_UART_BAUDRATE_${b}`));
+          set('CONFIG_CUSTOM_DISPLAY_UART_BAUDRATE', matchedBaud);
+        } else {
+          set('CONFIG_CUSTOM_DISPLAY_UART_BAUDRATE', 115200);
+        }
         choice(s.display.uart_proto,
                ['CUSTOM_DISPLAY_UART_PROTO_NEXTION','CUSTOM_DISPLAY_UART_PROTO_JSON',
                 'CUSTOM_DISPLAY_UART_PROTO_RAW_TEXT','CUSTOM_DISPLAY_UART_PROTO_DWIN']);

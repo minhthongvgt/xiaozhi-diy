@@ -1,6 +1,6 @@
 # Giao thức màn hình rời UART – Xiaozhi ESP32
 
-Cập nhật: 2026-10-12
+Cập nhật: 2026-10-13
 
 ## Tổng quan
 
@@ -10,6 +10,8 @@ Có hai cách dùng:
 
 - **Màn hình chính là UART** (`CUSTOM_DISPLAY_UART`): mọi nội dung hiển thị chỉ đi ra UART.
 - **Song song 2 màn hình** (`ENABLE_CUSTOM_SECONDARY_UART_DISPLAY`): màn LCD/OLED trên board vẫn chạy, và mọi lệnh hiển thị được sao chép ra UART qua lớp `DualDisplay`.
+
+Kiểu kết nối (`CUSTOM_DISPLAY_UART_LINK`): **có dây** (mặc định, các tuỳ chọn bên dưới) hoặc **không dây qua module Bluetooth UART**. Không dây thì màn hình dùng cổng, chân và baud của module Bluetooth, giao thức không đổi; xem [BLUETOOTH_UART.md](BLUETOOTH_UART.md).
 
 Mỗi khi ứng dụng đổi trạng thái (chờ, nghe, nói…), nhận câu nói (STT), câu trả lời (TTS) hay cảm xúc từ server, firmware gọi một hàm hiển thị. `UartDisplay` dịch lời gọi đó thành một khung dữ liệu theo giao thức đã chọn: **Nextion/TJC**, **JSON**, **Raw text** hoặc **DWIN DGUS**.
 
@@ -22,6 +24,7 @@ Chỉ cần 3 dây: **TX của ESP32 → RX của màn hình**, GND chung, và n
 | Tuỳ chọn menuconfig | Giá trị | Ghi chú |
 | --- | --- | --- |
 | `CUSTOM_DISPLAY_UART` hoặc `ENABLE_CUSTOM_SECONDARY_UART_DISPLAY` | bật | UART là màn chính, hoặc chạy song song màn LCD/OLED |
+| Kiểu kết nối | Có dây / Không dây qua module Bluetooth | Không dây thì bốn dòng cổng, TX, RX, baud bên dưới bị ẩn |
 | `CUSTOM_DISPLAY_UART_PORT` | 1 hoặc 2 (mặc định 1) | Không dùng UART0 (nạp firmware và log). Khi màn hình dùng UART1, cổng UART tùy biến khác tự chuyển sang UART2 |
 | `CUSTOM_DISPLAY_UART_TX_PIN` | GPIO (mặc định -1) | **Bắt buộc**. -1 thì firmware bỏ qua màn hình UART. Tránh GPIO 26–37 (Flash/PSRAM Octal) |
 | `CUSTOM_DISPLAY_UART_RX_PIN` | GPIO hoặc -1 | Cần cho chiều màn hình → Xiaozhi (chỉ giao thức JSON). -1 thì chỉ gửi một chiều |
