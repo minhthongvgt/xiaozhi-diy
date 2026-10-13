@@ -29,7 +29,5 @@ CONFIG_SR_WN_WN9_NIHAOXIAOZHI_TTS=y
 CONFIG_ESP_VIDEO_ENABLE_ISP_PIPELINE_CONTROLLER=y
 CONFIG_USB_HOST_CONTROL_TRANSFER_MAX_SIZE=1024
 CONFIG_LV_USE_SNAPSHOT=y
-# assets.bin text fonts (noto common) need >1 MB glyph bitmaps: 16-byte glyph descriptors
 CONFIG_LV_FONT_FMT_TXT_LARGE=y
-# assets.bin emoji collections are PNG files
 CONFIG_LV_USE_LODEPNG=y

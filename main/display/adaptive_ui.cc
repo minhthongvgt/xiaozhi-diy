@@ -166,8 +166,6 @@ namespace {
 
 constexpr int kAvatarMinSize = 40;
 
-// Plain container: drops the default LVGL theme styles (padding, border, background,
-// scrollbars) so children are placed exactly where the layout puts them.
 lv_obj_t* CreateBox(lv_obj_t* parent) {
     lv_obj_t* obj = lv_obj_create(parent);
     lv_obj_remove_style_all(obj);
@@ -183,7 +181,6 @@ void StyleCard(lv_obj_t* obj, lv_color_t bg, lv_color_t border, int radius, int 
     lv_obj_set_style_border_color(obj, border, 0);
 }
 
-// Single-line label that scrolls instead of overflowing into its neighbours.
 lv_obj_t* CreateLineLabel(lv_obj_t* parent, int width, lv_color_t color, const char* text) {
     lv_obj_t* label = lv_label_create(parent);
     lv_obj_set_width(label, width);
@@ -203,7 +200,6 @@ lv_obj_t* CreateWrapLabel(lv_obj_t* parent, lv_color_t color, const char* text) 
     return label;
 }
 
-// Vertical scroll area whose children stack top to bottom.
 lv_obj_t* CreateScrollColumn(lv_obj_t* parent, int pad, int gap) {
     lv_obj_t* area = CreateBox(parent);
     lv_obj_add_flag(area, LV_OBJ_FLAG_SCROLLABLE);
@@ -229,7 +225,7 @@ lv_obj_t* CreateWaveBar(lv_obj_t* parent, int width, lv_color_t track, lv_color_
     return bar;
 }
 
-}  // namespace
+}
 
 void AdaptiveUiEngine::Destroy() {
     if (clock_timer_ != nullptr) {
@@ -282,8 +278,6 @@ void AdaptiveUiEngine::Initialize(lv_obj_t* parent_screen, int width, int height
         return;
     }
 
-    // Full-screen background layer, then a content layer inset by the round-screen safe area.
-    // Builders lay out inside the content layer, so every style gets the same safe margin.
     container_root_ = CreateBox(root_screen_);
     lv_obj_set_size(container_root_, metrics_.width, metrics_.height);
     lv_obj_align(container_root_, LV_ALIGN_CENTER, 0, 0);
@@ -355,8 +349,6 @@ void AdaptiveUiEngine::UpdateClock() {
     }
 }
 
-// Status and notification share one slot: LvglDisplay shows one and hides the other,
-// so they must sit on top of each other instead of on top of other widgets.
 void AdaptiveUiEngine::BuildStatusPill(lv_obj_t* parent, int y, int height, lv_color_t bg,
                                        lv_color_t border, int radius, lv_color_t dot_color,
                                        lv_color_t text_color) {
@@ -381,7 +373,6 @@ void AdaptiveUiEngine::BuildStatusPill(lv_obj_t* parent, int y, int height, lv_c
     lv_obj_add_flag(label_notification_, LV_OBJ_FLAG_HIDDEN);
 }
 
-// Smallest chat card that still shows the role caption plus one line of text.
 int AdaptiveUiEngine::ChatMinHeight() const { return 2 * line_h_ + 16; }
 
 void AdaptiveUiEngine::BuildAvatarPanel(lv_obj_t* parent, int x, int y, int width, int height,
@@ -402,7 +393,6 @@ void AdaptiveUiEngine::BuildAvatarPanel(lv_obj_t* parent, int x, int y, int widt
     lv_obj_add_flag(bar_ota_progress_, LV_OBJ_FLAG_HIDDEN);
 }
 
-// Scrollable chat card: a role caption followed by the wrapped message text.
 void AdaptiveUiEngine::BuildChatCard(lv_obj_t* parent, int x, int y, int width, int height,
                                      lv_color_t bg, lv_color_t border, int radius,
                                      const char* role, lv_color_t role_color,
@@ -415,7 +405,6 @@ void AdaptiveUiEngine::BuildChatCard(lv_obj_t* parent, int x, int y, int width, 
 
     label_chat_role_ = CreateWrapLabel(panel_chat_, role_color, role);
     if (height < ChatMinHeight()) {
-        // Too short for a caption: give the single visible line to the message.
         lv_obj_add_flag(label_chat_role_, LV_OBJ_FLAG_HIDDEN);
     }
     label_chat_ = CreateWrapLabel(panel_chat_, text_color, greeting);
@@ -437,9 +426,6 @@ void AdaptiveUiEngine::BuildBottomBar(lv_obj_t* parent, int height, const char* 
     }
 }
 
-// Layout rule shared by the stacked styles: the status row and the chat always stay; the
-// prompt bar, weather card and avatar are only added while the chat keeps ChatMinHeight().
-// Landscape screens put the avatar beside the chat instead of above it.
 void AdaptiveUiEngine::BuildSmartDashboard(lv_obj_t* parent) {
     const int w = metrics_.content_width;
     const int inner_h = metrics_.height - 2 * metrics_.safe_inset;
@@ -616,7 +602,7 @@ void AdaptiveUiEngine::BuildChatBubble(lv_obj_t* parent) {
     const int pill_h = line_h_ + 6;
     const int bottom_bar_h = line_h_ + 10;
     const int gap = 4;
-    const int bubble_min = 2 * line_h_ + 18;  // bubble padding + caption + one line
+    const int bubble_min = 2 * line_h_ + 18;
     const int bubble_w = metrics_.is_landscape ? w * 70 / 100 : w * 85 / 100;
 
     int y = metrics_.pad_y;
@@ -648,8 +634,6 @@ void AdaptiveUiEngine::BuildChatBubble(lv_obj_t* parent) {
     const bool show_bottom = avail >= bubble_min + bottom_bar_h + gap;
     if (show_bottom) avail -= bottom_bar_h + gap;
 
-    // Conversation column: the user's bubble (right) and Xiaozhi's reply (left) stack
-    // in order and scroll together, so a long reply can never cover the other bubble.
     chat_scroll_ = CreateScrollColumn(parent, 0, 6);
     lv_obj_set_size(chat_scroll_, w, std::max(avail, line_h_ + 16));
     lv_obj_align(chat_scroll_, LV_ALIGN_TOP_MID, 0, y);
@@ -714,8 +698,6 @@ void AdaptiveUiEngine::BuildClassicAvatar(lv_obj_t* parent) {
     lv_obj_align(label_battery_, LV_ALIGN_RIGHT_MID, -2, 0);
     lv_obj_set_style_text_color(label_battery_, lv_color_hex(0xA6E3A1), 0);
 
-    // Status gets its own slot between the icons; it used to share the chat label,
-    // so every status update wiped the conversation text.
     int status_w = w - 2 * (icon_h_ + 8);
     label_status_ = CreateLineLabel(panel_top_bar_, status_w, GetTextColor(), "Sẵn sàng");
     lv_obj_align(label_status_, LV_ALIGN_CENTER, 0, 0);
@@ -766,9 +748,6 @@ void AdaptiveUiEngine::BuildMinimalZen(lv_obj_t* parent) {
     lv_obj_align(label_battery_, LV_ALIGN_RIGHT_MID, 0, 0);
     lv_obj_set_style_text_color(label_battery_, lv_color_hex(0xFFFFFF), 0);
 
-    // Clock, divider and status form one block that sits just above the middle of the
-    // screen; the chat text gets everything below it. The clock is the first thing
-    // dropped when the screen is too short for the block plus one line of chat.
     const int top = metrics_.pad_y + top_bar_h + 4;
     const int chat_min = line_h_ + 4;
     bool show_time = true;
@@ -900,7 +879,6 @@ void AdaptiveUiEngine::SetChatMessage(const char* role, const char* content) {
 
     if (config_.style == UiStyle::ChatBubble) {
         if (role && strcmp(role, "user") == 0) {
-            // A new question starts a new exchange: show it and wait for the reply.
             lv_label_set_text(label_user_chat_, text);
             if (text[0] != '\0') {
                 lv_obj_remove_flag(panel_user_bubble_, LV_OBJ_FLAG_HIDDEN);
@@ -1017,8 +995,6 @@ void AdaptiveUiEngine::ApplyTheme(LvglTheme* theme) {
         if (label_weather_desc_) lv_obj_set_style_text_font(label_weather_desc_, text_font, 0);
     }
 
-    // network/battery labels receive Material icon glyphs from LvglDisplay::UpdateStatusBar,
-    // so they must use the icon font; a text font renders those glyphs as broken boxes.
     auto icon_font_wrapper = theme->icon_font();
     const lv_font_t* icon_font = icon_font_wrapper ? icon_font_wrapper->font() : nullptr;
     if (icon_font != nullptr) {

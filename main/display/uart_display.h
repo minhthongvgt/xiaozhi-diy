@@ -37,7 +37,6 @@ private:
     UartDisplayProtocol protocol_;
     SemaphoreHandle_t mutex_ = nullptr;
     bool is_initialized_ = false;
-    // Last values sent, replayed when a JSON display announces itself with "hello".
     std::string last_status_;
     std::string last_emotion_;
     std::string last_user_message_;

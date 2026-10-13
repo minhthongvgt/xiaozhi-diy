@@ -42,7 +42,6 @@ struct AdaptiveUiConfig {
     bool voice_wave_enabled = true;
     bool round_screen_safe_area = false;
     bool auto_scale = true;
-    // Fonts the layout is sized for; row heights follow their line heights.
     const lv_font_t* text_font = nullptr;
     const lv_font_t* icon_font = nullptr;
 };
@@ -61,14 +60,12 @@ public:
     void SetOtaProgress(int percent, const char* speed_str = nullptr);
     void ShowNotification(const char* notification, int duration_ms = 3000);
     void ApplyTheme(LvglTheme* theme);
-    // True when the theme's fonts no longer match the line heights the layout was built for.
     bool NeedsRelayout(LvglTheme* theme) const;
     UiStyle GetCurrentStyle() const { return config_.style; }
     const AdaptiveUiConfig& GetConfig() const { return config_; }
     const ScreenMetrics& GetMetrics() const { return metrics_; }
     lv_color_t GetAccentColor() const;
     lv_obj_t* GetRoot() const { return container_root_; }
-    // Panel that hosts the emoji / GIF emotion (nullptr when the style has no avatar area).
     lv_obj_t* GetEmotionContainer() const { return panel_avatar_; }
     lv_obj_t* GetStatusLabel() const { return label_status_; }
     lv_obj_t* GetBatteryLabel() const { return label_battery_; }

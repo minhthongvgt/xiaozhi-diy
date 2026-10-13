@@ -27,7 +27,7 @@ protected:
     esp_timer_handle_t preview_timer_ = nullptr;
     std::unique_ptr<LvglImage> preview_image_cached_ = nullptr;
     bool hide_subtitle_ = false;
-    int emoji_max_size_ = 0;  // >0: emoji images are scaled down to fit this many pixels
+    int emoji_max_size_ = 0;
     void InitializeLcdThemes();
     bool SetupAdaptiveUi();
     void FitEmojiImage(const lv_image_dsc_t* dsc);

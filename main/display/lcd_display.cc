@@ -382,8 +382,6 @@ void LcdDisplay::Unlock() { lvgl_port_unlock(); }
 #define LCD_DISPLAY_ADAPTIVE_UI 1
 #endif
 
-// Builds (or rebuilds) the adaptive layout and binds LvglDisplay's widgets to it. Emotions keep
-// using the regular emoji / GIF pipeline, hosted inside the style's avatar panel.
 bool LcdDisplay::SetupAdaptiveUi() {
 #ifdef LCD_DISPLAY_ADAPTIVE_UI
     auto lvgl_theme = static_cast<LvglTheme*>(current_theme_);
@@ -448,7 +446,6 @@ bool LcdDisplay::SetupAdaptiveUi() {
     ui_config.text_font = lvgl_theme->text_font()->font();
     ui_config.icon_font = lvgl_theme->icon_font()->font();
 
-    // Widgets of a previous layout are about to be deleted.
     if (gif_controller_) {
         gif_controller_->Stop();
         gif_controller_.reset();
@@ -1231,7 +1228,7 @@ void LcdDisplay::ClearChatMessages() {
 
 void LcdDisplay::SetEmotion(const char* emotion) {
     if (AdaptiveUiEngine::GetInstance().IsInitialized() && emoji_image_ == nullptr) {
-        return;  // this adaptive style has no avatar area
+        return;
     }
     if (!setup_ui_called_) {
         ESP_LOGW(TAG, "SetEmotion('%s') called before SetupUI() - emotion will not be displayed!",
@@ -1325,8 +1322,6 @@ void LcdDisplay::SetTheme(Theme* theme) {
     auto& adaptive_ui = AdaptiveUiEngine::GetInstance();
     if (adaptive_ui.IsInitialized()) {
         Display::SetTheme(lvgl_theme);
-        // A font with a different size (e.g. from assets.bin) needs new row heights,
-        // otherwise text spills over the neighbouring widgets.
         if (adaptive_ui.NeedsRelayout(lvgl_theme)) {
             SetupAdaptiveUi();
         } else {

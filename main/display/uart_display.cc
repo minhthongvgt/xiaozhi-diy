@@ -12,8 +12,6 @@
 
 #define TAG "UartDisplay"
 
-// JSON protocol only: how often the status-bar data is pushed, and the longest
-// line accepted from the display (longer lines are dropped).
 #define SYSINFO_INTERVAL_MS 30000
 #define RX_LINE_MAX 256
 
@@ -73,7 +71,6 @@ UartDisplay::UartDisplay(uart_port_t uart_num, gpio_num_t tx_pin, gpio_num_t rx_
 
     SetStatus("Connected");
 
-    // Commands from the display (two-way) are only defined for the JSON protocol.
     if (protocol_ == UartDisplayProtocol::JsonStream && rx != UART_PIN_NO_CHANGE) {
         StartRxTask();
     }
@@ -301,8 +298,6 @@ void UartDisplay::ClearChatMessages() {
     }
 }
 
-// Called every second by the application clock; JSON displays get a sysinfo
-// message every SYSINFO_INTERVAL_MS and keep their own clock running in between.
 void UartDisplay::UpdateStatusBar(bool update_all) {
     if (protocol_ != UartDisplayProtocol::JsonStream || !is_initialized_) return;
     TickType_t now = xTaskGetTickCount();
@@ -314,7 +309,6 @@ void UartDisplay::UpdateStatusBar(bool update_all) {
     SendSysInfo();
 }
 
-// Caller holds the display lock.
 void UartDisplay::SendSysInfo() {
     last_sysinfo_tick_ = xTaskGetTickCount();
     auto& board = Board::GetInstance();
@@ -324,7 +318,7 @@ void UartDisplay::SendSysInfo() {
     time_t now = time(nullptr);
     struct tm tm_now;
     localtime_r(&now, &tm_now);
-    if (tm_now.tm_year >= 2025 - 1900) {  // only once the clock has been synced
+    if (tm_now.tm_year >= 2025 - 1900) {
         char buf[16];
         strftime(buf, sizeof(buf), "%H:%M:%S", &tm_now);
         j["time"] = buf;
@@ -332,7 +326,6 @@ void UartDisplay::SendSysInfo() {
         j["date"] = buf;
     }
 
-    // Wi-Fi boards report "rssi" in their board JSON; other network types omit it.
     auto board_json = nlohmann::json::parse(board.GetBoardJson(), nullptr, false);
     if (board_json.is_object() && board_json.contains("rssi") && board_json["rssi"].is_number()) {
         j["wifi"] = board_json["rssi"];
@@ -352,7 +345,6 @@ void UartDisplay::SendSysInfo() {
     SendRawString(j.dump() + "\n");
 }
 
-// Caller holds the display lock. Sends what a freshly booted display has missed.
 void UartDisplay::ReplayState() {
     if (!last_status_.empty()) {
         SendRawString(nlohmann::json{{"type", "status"}, {"val", last_status_}}.dump() + "\n");
@@ -380,7 +372,6 @@ void UartDisplay::StartRxTask() {
     }
 }
 
-// Reads newline-terminated JSON events from the display.
 void UartDisplay::RxTask(void* arg) {
     auto self = static_cast<UartDisplay*>(arg);
     std::string line;
@@ -409,7 +400,6 @@ void UartDisplay::RxTask(void* arg) {
     vTaskDelete(nullptr);
 }
 
-// Events run on the application task, like every other state change.
 void UartDisplay::HandleDisplayEvent(const std::string& line) {
     auto j = nlohmann::json::parse(line, nullptr, false);
     if (!j.is_object() || !j.contains("event") || !j["event"].is_string()) {
@@ -444,7 +434,6 @@ void UartDisplay::HandleDisplayEvent(const std::string& line) {
             SendSysInfo();
         });
     }
-    // Other events (screen_changed, ...) carry nothing for the firmware.
 }
 
 void UartDisplay::SetPowerSaveMode(bool on) {
