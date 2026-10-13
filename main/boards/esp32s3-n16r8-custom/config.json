@@ -6,9 +6,6 @@
             "name": "esp32s3-n16r8-custom",
             "sdkconfig_append": [
                 "CONFIG_BOARD_TYPE_ESP32_S3_N16R8_CUSTOM=y",
-                "CONFIG_PARTITION_TABLE_CUSTOM=y",
-                "CONFIG_PARTITION_TABLE_CUSTOM_FILENAME=\"partitions/16m.csv\"",
-                "CONFIG_PARTITION_TABLE_FILENAME=\"partitions/16m.csv\"",
                 "CONFIG_ENABLE_CUSTOM_DISPLAY=y",
                 "CONFIG_CUSTOM_DISPLAY_ST7796=y",
                 "CONFIG_CUSTOM_DISPLAY_WIDTH=320",

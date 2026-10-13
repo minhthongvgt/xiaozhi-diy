@@ -147,7 +147,7 @@ Hai mục sau có trong Kconfig nhưng **chưa có driver**, nên firmware khôn
 | Mục Kconfig | Tình trạng |
 | :--- | :--- |
 | IR Remote (hồng ngoại) | Chưa có driver phát/thu tín hiệu. Không có công cụ `self.ir.*`. |
-| 4G LTE (A7670 / SIM7600) | Chưa có driver AT cho module. Không có công cụ `self.cellular.*`. Mạng 4G hiện chỉ dùng qua board ML307 (`ml307_board.cc`), không phải mục này. |
+| 4G LTE (A7670 / SIM7600) | Chưa có driver AT cho module. Không có công cụ `self.cellular.*`. Các board mạng 4G/Ethernet/RNDIS (`ml307_board`, `nt26_board`, `dual_network_board`, `rndis_board`, `ethernet_board`) đã xoá ngày 2026-10-13 vì không board nào dùng. |
 
 Hai mục này đã được ghi chú "CHƯA HỖ TRỢ" trong Web Configurator, để không bật nhầm.
 

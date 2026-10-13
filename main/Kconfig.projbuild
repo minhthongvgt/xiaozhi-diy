@@ -105,12 +105,12 @@ choice BOARD_TYPE
         bool "ESP32-S3 N16R8 Custom DIY Board (Bo mach tuy bien toan dien - Khuyen nghi)"
         depends on IDF_TARGET_ESP32S3
 
-    config BOARD_TYPE_WAVESHARE_ESP32_P4_DEV_KIT
-        bool "Waveshare ESP32-P4-Module-DEV-KIT"
-        depends on IDF_TARGET_ESP32P4
-
     config BOARD_TYPE_ESP32_P4_FUNCTION_EV_BOARD
         bool "Espressif ESP32-P4-Function-EV-Board"
+        depends on IDF_TARGET_ESP32P4
+
+    config BOARD_TYPE_WAVESHARE_ESP32_P4_DEV_KIT
+        bool "Waveshare ESP32-P4-Module-DEV-KIT"
         depends on IDF_TARGET_ESP32P4
 endchoice
 

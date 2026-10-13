@@ -11,13 +11,11 @@ engine.
 
 | Target | Engine | Wake word | Uplink processing |
 | --- | --- | --- | --- |
-| ESP32-S3 / ESP32-P4 / ESP32-S31 | `AfeAudioEngine` | WakeNet inside AFE, or MultiNet fed from AFE output | FD AEC + VAD when audio processing is enabled |
-| ESP32 / ESP32-C3 / ESP32-C5 / ESP32-C6 | `LiteAudioEngine` | Standalone WakeNet when configured | Raw mono PCM |
+| ESP32-S3 / ESP32-P4 | `AfeAudioEngine` | WakeNet inside AFE, or MultiNet fed from AFE output | FD AEC + VAD when audio processing is enabled |
 
 `AfeAudioEngine` owns a single FD AFE instance. WakeNet and voice uplink share
 that instance, so enabling both no longer creates two AFE pipelines. For custom
-MultiNet wake words, AFE fetch output is passed to `CustomWakeWord`; MultiNet is
-not created on the smaller targets.
+MultiNet wake words, AFE fetch output is passed to `CustomWakeWord`.
 
 The AFE configuration currently uses `FD_LOW_COST` AEC with
 `AEC_NLP_LEVEL_VERYAGGR`. WebRTC/NSNet noise suppression is intentionally
@@ -86,7 +84,7 @@ flowchart LR
 - `AudioInputTask` reads codec input and feeds the selected engine.
 - `AudioOutputTask` drains decoded PCM to the codec output.
 - `OpusCodecTask` encodes uplink PCM and decodes downlink packets.
-- `AfeAudioEngine` has its own AFE fetch task on S3/P4/S31.
+- `AfeAudioEngine` has its own AFE fetch task on S3/P4.
 
 The audio power timer still enables and disables codec ADC/DAC channels based on
 activity; the engine refactor does not change that policy.

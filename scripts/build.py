@@ -415,10 +415,10 @@ def _kconfig_choice(
 ) -> dict[str, Any]:
     """Read a named project choice without trying to reimplement Kconfig."""
     content = kconfig_path.read_text(encoding="utf-8")
-    start = re.search(rf"^choice\s+{re.escape(name)}\s*$", content, re.MULTILINE)
+    start = re.search(rf"^\s*choice\s+{re.escape(name)}\s*$", content, re.MULTILINE)
     if not start:
         raise ValueError(f"Kconfig choice {name} was not found in {kconfig_path}")
-    end = re.search(r"^endchoice\s*$", content[start.end():], re.MULTILINE)
+    end = re.search(r"^\s*endchoice\s*$", content[start.end():], re.MULTILINE)
     if not end:
         raise ValueError(f"Kconfig choice {name} has no endchoice")
     block = content[start.end():start.end() + end.start()]

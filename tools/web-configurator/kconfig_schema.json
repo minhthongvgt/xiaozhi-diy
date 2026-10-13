@@ -78,8 +78,8 @@
    ],
    "members": [
     "BOARD_TYPE_ESP32_S3_N16R8_CUSTOM",
-    "BOARD_TYPE_WAVESHARE_ESP32_P4_DEV_KIT",
-    "BOARD_TYPE_ESP32_P4_FUNCTION_EV_BOARD"
+    "BOARD_TYPE_ESP32_P4_FUNCTION_EV_BOARD",
+    "BOARD_TYPE_WAVESHARE_ESP32_P4_DEV_KIT"
    ]
   },
   {
@@ -1276,10 +1276,10 @@
    "help": ""
   },
   {
-   "name": "BOARD_TYPE_WAVESHARE_ESP32_P4_DEV_KIT",
+   "name": "BOARD_TYPE_ESP32_P4_FUNCTION_EV_BOARD",
    "order": 45,
    "type": "bool",
-   "prompt": "Waveshare ESP32-P4-Module-DEV-KIT",
+   "prompt": "Espressif ESP32-P4-Function-EV-Board",
    "menu": [
     "Xiaozhi Assistant"
    ],
@@ -1295,10 +1295,10 @@
    "help": ""
   },
   {
-   "name": "BOARD_TYPE_ESP32_P4_FUNCTION_EV_BOARD",
+   "name": "BOARD_TYPE_WAVESHARE_ESP32_P4_DEV_KIT",
    "order": 46,
    "type": "bool",
-   "prompt": "Espressif ESP32-P4-Function-EV-Board",
+   "prompt": "Waveshare ESP32-P4-Module-DEV-KIT",
    "menu": [
     "Xiaozhi Assistant"
    ],

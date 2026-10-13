@@ -1022,7 +1022,6 @@ void Application::StartNotification(std::string audio_url, std::vector<NotifySub
     board.SetPowerSaveLevel(PowerSaveLevel::PERFORMANCE);
     audio_service_.EnableVoiceProcessing(false);
     audio_service_.EnableWakeWordDetection(audio_service_.IsAfeWakeWord());
-    audio_service_.ReleaseWakeWordResources();
     while (audio_service_.PopPacketFromSendQueue()) {
     }
 

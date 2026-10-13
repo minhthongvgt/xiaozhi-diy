@@ -29,7 +29,7 @@ Trước 2026-10-13, `CMakeLists.txt` gốc có một bản sao y hệt của ha
 | --- | --- |
 | Nhánh `BOARD_TYPE_*` → `BOARD_DIR` | Gắn symbol Kconfig của board với thư mục mã nguồn; `scripts/build.py` đọc nhánh này để kiểm tra và chuẩn hoá cấu hình board. |
 | `BOARD_TYPE`, `BOARD_MANUFACTURER` | Firmware báo lên server. Lấy từ `config.json` của board; thiếu thì suy ra từ tên thư mục board. `BOARD_NAME` rỗng thì dùng `BOARD_TYPE`; chỉ cho phép chữ thường, số, `.` và `-`. |
-| Một audio engine cho mỗi họ chip | S3/P4: `AfeAudioEngine` + `CustomWakeWord`; chip khác: `LiteAudioEngine` + `EspWakeWord`. |
+| Một audio engine duy nhất | Dự án chỉ hỗ trợ ESP32-S3 và ESP32-P4: `AfeAudioEngine` + `CustomWakeWord`. Engine cho chip khác (`LiteAudioEngine`, `EspWakeWord`) đã xoá ngày 2026-10-13. |
 | Âm thanh ngôn ngữ dự phòng | Nếu ngôn ngữ đang chọn thiếu file `.ogg` nào thì lấy bản `en-US` cùng tên. |
 | `-std=gnu++23` cho C++ của `main` | ESP-IDF 6 có thể đổi chuẩn C++ mặc định; cố định để code của dự án không phụ thuộc vào đó. |
 | `LV_MEM_POOL_INCLUDE` cho LVGL trên ESP32-S3 | Board có PSRAM cấp bộ nhớ LVGL từ PSRAM (`lvgl_psram_pool.h`). Board `CONFIG_SPIRAM=n` không được giữ pool 1 MB mặc định trong `.dram0.bss` (`lvgl_no_psram_pool.h`); `scripts/build.py` chuyển các biến thể đó về `CLIB malloc`. |

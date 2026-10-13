@@ -48,8 +48,8 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_LANGUAGE_SV_SE` | bool | Xiaozhi Assistant | Swedish |  |
 | `CONFIG_LANGUAGE_SR_RS` | bool | Xiaozhi Assistant | Serbian |  |
 | `CONFIG_BOARD_TYPE_ESP32_S3_N16R8_CUSTOM` | bool | Xiaozhi Assistant | ESP32-S3 N16R8 Custom DIY Board (Bo mach tuy bien toan dien - Khuyen nghi) | y (mặc định của choice) |
-| `CONFIG_BOARD_TYPE_WAVESHARE_ESP32_P4_DEV_KIT` | bool | Xiaozhi Assistant | Waveshare ESP32-P4-Module-DEV-KIT |  |
 | `CONFIG_BOARD_TYPE_ESP32_P4_FUNCTION_EV_BOARD` | bool | Xiaozhi Assistant | Espressif ESP32-P4-Function-EV-Board |  |
+| `CONFIG_BOARD_TYPE_WAVESHARE_ESP32_P4_DEV_KIT` | bool | Xiaozhi Assistant | Waveshare ESP32-P4-Module-DEV-KIT |  |
 | `CONFIG_USE_DEFAULT_MESSAGE_STYLE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Mặc định (Chữ chạy ngang) | y (mặc định của choice) |
 | `CONFIG_USE_WECHAT_MESSAGE_STYLE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | WeChat (Bong bóng chat) |  |
 | `CONFIG_USE_EMOTE_MESSAGE_STYLE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Emote (Biểu cảm khuôn mặt emoji) |  |
@@ -64,7 +64,7 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_UI_ACCENT_AMBER` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Warm Amber (Vàng hổ phách) |  |
 | `CONFIG_CUSTOM_UI_ACCENT_MONO` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Monochrome (Đơn sắc trắng đen) |  |
 | `CONFIG_CUSTOM_UI_AUTO_SCALE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Tự động căn chỉnh kích thước UI theo độ phân giải màn hình | n |
-| `CONFIG_CUSTOM_UI_ROUND_SCREEN_SAFE_AREA` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Vùng hiển thị an toàn cho màn hình tròn (Round Screen Safe Area) | n |
+| `CONFIG_CUSTOM_UI_ROUND_SCREEN_SAFE_AREA` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Vùng hiển thị an toàn cho màn hình tròn (Round Screen Safe Area) | y if CUSTOM_DISPLAY_GC9A01 \|\| CUSTOM_DISPLAY_AMOLED_CO5300 \|\| CUSTOM_DISPLAY_AMOLED_SPD2010 |
 | `CONFIG_CUSTOM_UI_VOICE_WAVE_ENABLE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Hiển thị sóng âm thanh động khi đàm thoại (Voice Waveform) | n |
 | `CONFIG_CUSTOM_UI_WEATHER_ENABLE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Hiển thị thời tiết trên màn hình (Weather Widget) | n |
 | `CONFIG_CUSTOM_UI_WEATHER_CITY` | string | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Thành phố lấy dữ liệu thời tiết | "Hanoi" |

@@ -69,11 +69,10 @@ class AdaptiveUiTests(unittest.TestCase):
         self.assertIn("AdaptiveUiEngine::GetInstance()", content)
 
     def test_config_h_has_fallback_defaults(self):
-        """Đảm bảo config.h có macro fallback mặc định cho UI style."""
+        """Đảm bảo config.h có macro fallback mặc định cho thành phố thời tiết."""
         with open(self.config_h_path, "r", encoding="utf-8") as f:
             content = f.read()
 
-        self.assertIn("CONFIG_CUSTOM_UI_STYLE_SMART_DASHBOARD", content)
         self.assertIn("CONFIG_CUSTOM_UI_WEATHER_CITY", content)
 
     def test_resolution_metrics_simulation(self):

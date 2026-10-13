@@ -1,5 +1,4 @@
 #include "sdkconfig.h"
-#ifndef CONFIG_IDF_TARGET_ESP32
 #include <esp_err.h>
 #ifdef __cplusplus
 extern "C" {
@@ -9,4 +8,3 @@ esp_err_t jpeg_to_image(const uint8_t* src, size_t src_len, uint8_t** out, size_
 #ifdef __cplusplus
 }
 #endif
-#endif  

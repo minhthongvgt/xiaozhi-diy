@@ -51,24 +51,6 @@ dependencies:
       registry_url: https://components.espressif.com/
       type: service
     version: 1.0.1
-  78/uart-eth-modem:
-    component_hash: c7a256cd4d80c455a7d7c7d3a3ca14564b0b54238be18f1d0d9931e65fed39a3
-    dependencies:
-    - name: 78/uart-uhci
-      registry_url: https://components.espressif.com
-      require: private
-      version: ^0.3.2
-    - name: espressif/iot_eth
-      registry_url: https://components.espressif.com
-      require: private
-      version: ^1.1.0
-    - name: idf
-      require: private
-      version: '>=6.0.1'
-    source:
-      registry_url: https://components.espressif.com/
-      type: service
-    version: 0.6.5
   78/uart-uhci:
     component_hash: 0e391c695621ac725506166b908146a02e9cff26e6d36f8e43e7e63b5b1d200f
     dependencies:
@@ -750,72 +732,6 @@ dependencies:
       registry_url: https://components.espressif.com
       type: service
     version: 1.5.2
-  espressif/iot_eth:
-    component_hash: 3be03ff933e27e17887becbed16305a561b35b66a5a4978ac51ae7f9f2ec70ea
-    dependencies:
-    - name: espressif/cmake_utilities
-      registry_url: https://components.espressif.com
-      require: private
-      version: '*'
-    - name: idf
-      require: private
-      version: '>=4.4'
-    source:
-      registry_url: https://components.espressif.com
-      type: service
-    version: 1.1.0
-  espressif/iot_usbh_cdc:
-    component_hash: e924a79e9b7926b38bee52234d9f90101d8926f5e560dd5edf51c395546eac87
-    dependencies:
-    - name: espressif/cmake_utilities
-      registry_url: https://components.espressif.com
-      require: private
-      version: '*'
-    - name: espressif/usb
-      registry_url: https://components.espressif.com
-      require: public
-      rules:
-      - if: idf_version >=6.0
-      - if: target not in ["linux"]
-      version: ^1.4.0
-    - name: idf
-      require: private
-      version: '>=5.1'
-    source:
-      registry_url: https://components.espressif.com
-      type: service
-    targets:
-    - esp32s2
-    - esp32s3
-    - esp32s31
-    - esp32p4
-    version: 3.1.0
-  espressif/iot_usbh_rndis:
-    component_hash: 0d91d9c79980fe0d2b59ecae9341d91852b7eb3356cc0e708f76425a3604ff5b
-    dependencies:
-    - name: espressif/cmake_utilities
-      registry_url: https://components.espressif.com
-      require: private
-      version: '*'
-    - name: espressif/iot_eth
-      registry_url: https://components.espressif.com
-      require: public
-      version: '*'
-    - name: espressif/iot_usbh_cdc
-      registry_url: https://components.espressif.com
-      require: public
-      version: ^3.0
-    - name: idf
-      require: private
-      version: '>=5.2'
-    source:
-      registry_url: https://components.espressif.com/
-      type: service
-    targets:
-    - esp32s2
-    - esp32s3
-    - esp32p4
-    version: 0.3.1
   espressif/knob:
     component_hash: b56694054cd34a683ac2a6f3661963ba00b1dab741a4f3bb59ed6666cbc9f3fb
     dependencies:
@@ -1146,7 +1062,6 @@ direct_dependencies:
 - 78/esp-ml307
 - 78/esp-wifi-connect
 - 78/esp_lcd_nv3023
-- 78/uart-eth-modem
 - 78/xiaozhi-fonts
 - esphome/esp-hub75
 - espressif/adc_battery_estimation
@@ -1181,7 +1096,6 @@ direct_dependencies:
 - espressif/esp_mmap_assets
 - espressif/esp_new_jpeg
 - espressif/esp_video
-- espressif/iot_usbh_rndis
 - espressif/knob
 - espressif/led_strip
 - espressif/w5500
@@ -1198,6 +1112,6 @@ direct_dependencies:
 - waveshare/esp_lcd_sh8601
 - waveshare/esp_lcd_touch_cst9217
 - wvirgil123/sscma_client
-manifest_hash: 98dce733cf0d88b508407a3bd24bd419466efae0b7339b24c4e3f77d465022b8
+manifest_hash: 3f95574b1eee8816c2171f35dc379646bfe8efb6c7f2e302199ae9554719411a
 target: esp32s3
 version: 3.0.0

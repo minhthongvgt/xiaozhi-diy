@@ -37,15 +37,19 @@ class VersionTests(unittest.TestCase):
         options = config["builds"][0]["sdkconfig_append"]
 
         self.assertNotIn("CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y", options)
-        self.assertNotIn(
-            'CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions.csv"',
-            options,
+        effective = {}
+        for path in (ROOT / "sdkconfig.defaults", ROOT / f"sdkconfig.defaults.{config['target']}"):
+            for line in path.read_text(encoding="utf-8").splitlines():
+                if line.startswith("CONFIG_") and "=" in line:
+                    key, value = line.split("=", 1)
+                    effective[key] = value
+        effective.update(build._sdkconfig_assignments(options))
+        self.assertEqual(effective["CONFIG_PARTITION_TABLE_CUSTOM"], "y")
+        self.assertEqual(
+            effective["CONFIG_PARTITION_TABLE_CUSTOM_FILENAME"],
+            '"partitions/16m.csv"',
         )
-        self.assertIn("CONFIG_PARTITION_TABLE_CUSTOM=y", options)
-        self.assertIn(
-            'CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions/16m.csv"',
-            options,
-        )
+        self.assertTrue((ROOT / "partitions/16m.csv").is_file())
 
     def test_parse_and_match(self):
         self.assertEqual(build._parse_version("ESP-IDF v6.0.1"), (6, 0, 1))
@@ -54,12 +58,17 @@ class VersionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             build._version_matches((6, 0, 1), "~=6.0")
 
-    def test_only_n16r8_variant_is_buildable(self):
+    def test_buildable_variants_are_n16r8_and_p4(self):
         for idf_version in ((6, 0, 1), (6, 1, 0)):
             variants = build._collect_variants(idf_version=idf_version)
             self.assertEqual(
-                [(item["board"], item["name"]) for item in variants],
-                [("esp32s3-n16r8-custom", "esp32s3-n16r8-custom")],
+                sorted((item["board"], item["name"]) for item in variants),
+                [
+                    ("esp32-p4", "esp32-p4-function-ev-board"),
+                    ("esp32-p4", "esp32-p4x-function-ev-board"),
+                    ("esp32-p4", "waveshare-esp32-p4-module-dev-kit"),
+                    ("esp32s3-n16r8-custom", "esp32s3-n16r8-custom"),
+                ],
             )
 
         config = json.loads(ACTIVE_BOARD_CONFIG.read_text(encoding="utf-8"))
@@ -188,26 +197,27 @@ class VersionTests(unittest.TestCase):
         )
         self.assertEqual(
             base_defaults["CONFIG_PARTITION_TABLE_CUSTOM_FILENAME"],
-            '"partitions.csv"',
+            '"partitions/16m.csv"',
         )
 
-        target_defaults = read_defaults(ROOT / "sdkconfig.defaults.esp32s3")
-        duplicate_values = {
-            key
-            for key, value in target_defaults.items()
-            if base_defaults.get(key) == value
-        }
-        self.assertFalse(duplicate_values, f"duplicate ESP32-S3 defaults: {sorted(duplicate_values)}")
-        effective_defaults = dict(base_defaults)
-        effective_defaults.update(target_defaults)
-        self.assertEqual(
-            effective_defaults["CONFIG_PARTITION_TABLE_CUSTOM_FILENAME"],
-            '"partitions.csv"',
-        )
-        self.assertNotIn(
-            "CONFIG_ESPTOOLPY_FLASHSIZE_16MB",
-            target_defaults,
-        )
+        for target in ("esp32s3", "esp32p4"):
+            target_defaults = read_defaults(ROOT / f"sdkconfig.defaults.{target}")
+            duplicate_values = {
+                key
+                for key, value in target_defaults.items()
+                if base_defaults.get(key) == value
+            }
+            self.assertFalse(duplicate_values, f"duplicate {target} defaults: {sorted(duplicate_values)}")
+            effective_defaults = dict(base_defaults)
+            effective_defaults.update(target_defaults)
+            self.assertEqual(
+                effective_defaults["CONFIG_PARTITION_TABLE_CUSTOM_FILENAME"],
+                '"partitions/16m.csv"',
+            )
+            self.assertNotIn(
+                "CONFIG_ESPTOOLPY_FLASHSIZE_16MB",
+                target_defaults,
+            )
 
 
 class BoardSelectionTests(unittest.TestCase):

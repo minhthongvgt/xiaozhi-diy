@@ -1,6 +1,5 @@
 #pragma once
 #include "sdkconfig.h"
-#ifndef CONFIG_IDF_TARGET_ESP32
 #include <stdint.h>
 #include <stddef.h>
 #ifndef V4L2_PIX_FMT_RGB565
@@ -27,4 +26,3 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
-#endif 
