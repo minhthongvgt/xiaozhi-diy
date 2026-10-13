@@ -304,6 +304,22 @@ class GpioValidatorTests(unittest.TestCase):
             f"Không phát hiện xung đột chân GPIO 7: {conflict_errors}",
         )
 
+    def test_single_led_gpio_list_is_checked_for_conflicts(self):
+        cfg = {
+            "CONFIG_BOARD_TYPE_ESP32_S3_N16R8_CUSTOM": "y",
+            "CONFIG_ENABLE_CUSTOM_LEDS": "y",
+            "CONFIG_CUSTOM_LED_WS2812": "y",
+            "CONFIG_CUSTOM_LED_GPIO": "48",
+            "CONFIG_CUSTOM_LED_EXTRA_GPIOS": "4, 5,-1",
+        }
+        errors, _ = validate_sdkconfig(cfg, is_n16r8=True)
+        self.assertEqual(errors, [], f"Danh sách LED đơn hợp lệ bị báo lỗi: {errors}")
+
+        bad_cfg = dict(cfg, CONFIG_CUSTOM_LED_EXTRA_GPIOS="4,48,30")
+        bad_errors, _ = validate_sdkconfig(bad_cfg, is_n16r8=True)
+        self.assertTrue(any("Xung đột GPIO 48" in err for err in bad_errors), bad_errors)
+        self.assertTrue(any("GPIO 30 bị CẤM" in err for err in bad_errors), bad_errors)
+
 
 if __name__ == "__main__":
     unittest.main()

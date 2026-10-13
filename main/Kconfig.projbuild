@@ -1348,6 +1348,10 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             bool
             default y if ENABLE_CUSTOM_LEDS && !CUSTOM_LED_NONE
 
+        config CUSTOM_MCP_TOOL_GPIO_LED
+            bool
+            default y if ENABLE_CUSTOM_LEDS && CUSTOM_LED_EXTRA_GPIOS != ""
+
         config CUSTOM_MCP_TOOL_PERIPH
             bool
             default y if CUSTOM_ENABLE_PERIPH_RTC || CUSTOM_ENABLE_PERIPH_NFC_PN532 || CUSTOM_ENABLE_PERIPH_PCA9685 || CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC || CUSTOM_PERIPH_RC522_SPI_CS >= 0 || CUSTOM_IMU_I2C_SDA >= 0 || CUSTOM_PMIC_I2C_SDA >= 0 || CUSTOM_EXPANDER_I2C_SDA >= 0 || CUSTOM_ETH_SPI_CS_PIN >= 0
@@ -1362,7 +1366,7 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
 
         config ENABLE_CUSTOM_MCP_SERVER
             bool
-            default y if CUSTOM_MCP_TOOL_LAMP || CUSTOM_MCP_TOOL_SENSOR || CUSTOM_MCP_TOOL_ACTUATOR || CUSTOM_MCP_TOOL_ROBOT || CUSTOM_MCP_TOOL_LED || CUSTOM_MCP_TOOL_PERIPH || CUSTOM_MCP_TOOL_PRESS_TO_TALK || CUSTOM_MCP_TOOL_BT_UART
+            default y if CUSTOM_MCP_TOOL_LAMP || CUSTOM_MCP_TOOL_SENSOR || CUSTOM_MCP_TOOL_ACTUATOR || CUSTOM_MCP_TOOL_ROBOT || CUSTOM_MCP_TOOL_LED || CUSTOM_MCP_TOOL_GPIO_LED || CUSTOM_MCP_TOOL_PERIPH || CUSTOM_MCP_TOOL_PRESS_TO_TALK || CUSTOM_MCP_TOOL_BT_UART
     endmenu
 
     menu "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)"
@@ -1641,8 +1645,11 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 default 48
 
             config CUSTOM_LED_EXTRA_GPIOS
-                string "Các chân GPIO LED thêm (cách nhau dấu phẩy)"
+                string "Các chân LED đơn do chatbot điều khiển (cách nhau dấu phẩy)"
                 default ""
+                help
+                    Mỗi chân là một LED một màu. Chatbot bật/tắt, chỉnh độ sáng và chọn hiệu ứng nháy/thở.
+                    Bốn LED đầu dùng PWM (3 nếu LED trạng thái là LED đơn PWM); các LED sau chỉ bật/tắt và nháy.
 
             config CUSTOM_LED_COUNT
                 int "Số lượng mắt LED trên dải/vòng (Hỗ trợ tối đa 1024 mắt LED)"

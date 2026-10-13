@@ -14,7 +14,7 @@ Mỗi bước làm theo cùng một quy trình:
 | # | Việc | Trạng thái |
 |---|---|---|
 | 1 | Đổi tên mục 4.2 thành "Hệ thống chính (Main System)", giữ nguyên vị trí và nội dung | xong |
-| 2 | Nối `CUSTOM_LED_EXTRA_GPIOS` thành LED đơn (PWM LEDC) cho chatbot điều khiển | chưa làm |
+| 2 | Nối `CUSTOM_LED_EXTRA_GPIOS` thành LED đơn (PWM LEDC) cho chatbot điều khiển | xong |
 | 3 | Tách các nhóm LED trong 4.2 thành menu con riêng (xem bảng nhóm) | chưa làm |
 | 4a | LED trạng thái: độ sáng thấp/thường/cao, màu và hiệu ứng cho từng trạng thái | chưa làm |
 | 4b | LED đơn GPIO: độ sáng mặc định, hiệu ứng nháy/thở, MCP bật/tắt/độ sáng/hiệu ứng | chưa làm |
@@ -34,6 +34,13 @@ Mỗi bước làm theo cùng một quy trình:
 
 ## Hiện trạng trước khi làm
 - Màu và độ sáng của LED trạng thái đang gán cứng trong `main/led/single_led.cc` và `main/led/circular_strip.cc`.
-- `CUSTOM_LED_EXTRA_GPIOS` có trên menuconfig và Web nhưng không có mã nào đọc.
+- `CUSTOM_LED_EXTRA_GPIOS` có trên menuconfig và Web nhưng không có mã nào đọc (đã nối ở bước 2).
 - Đèn MCP (`CUSTOM_MCP_TOOL_LAMP*`) chỉ có bật/tắt.
 - Công cụ MCP hiện có: PCA9685 `self.pwm.*`, IC LED `self.led_ic.*`, IC mở rộng `self.expander.*`.
+
+## Bước 2 đã làm
+- `boards/common/gpio_led_controller.h`: `GpioUserLed` (một LED) và `GpioLedController` (đăng ký MCP).
+- Công cụ MCP: `self.gpio_led.get_state`, `turn_on`, `turn_off`, `set_brightness` (0–100), `set_effect` (`steady`/`blink`/`breathe`, `period_ms`). `index` = 0 chọn tất cả.
+- Kênh LEDC cho LED đơn: 1, 3, 6, 7 (bỏ kênh 1 khi LED trạng thái là LED đơn PWM). Hết kênh thì LED chỉ bật/tắt và nháy; hiệu ứng thở chuyển thành nháy. Hiệu ứng chạy bằng `esp_timer`.
+- Bảng kênh LEDC: đèn nền kênh 0 (timer 0); LED trạng thái PWM và LED đơn kênh 1/3/6/7 (timer 1, 4 kHz, 13 bit); servo kênh 2 (timer 2); motor kênh 4/5 (timer 3).
+- Ký hiệu ẩn `CUSTOM_MCP_TOOL_GPIO_LED` tự bật khi danh sách chân không rỗng. Chân trùng LED trạng thái, trùng nhau hoặc không hợp lệ bị bỏ qua và ghi log. `gpio_validator.py` kiểm tra trùng chân và vùng cấm cho danh sách này.

@@ -273,10 +273,11 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_MCP_TOOL_ACTUATOR` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_PERIPH_RELAY_ENABLE \|\| CUSTOM_ENABLE_SERVO_DOG \|\| CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE \|\| ENABLE_BUZZER \|\| ENABLE_HAPTIC_MOTOR |
 | `CONFIG_CUSTOM_MCP_TOOL_ROBOT` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE \|\| CUSTOM_ENABLE_SERVO_DOG |
 | `CONFIG_CUSTOM_MCP_TOOL_LED` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if ENABLE_CUSTOM_LEDS && !CUSTOM_LED_NONE |
+| `CONFIG_CUSTOM_MCP_TOOL_GPIO_LED` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if ENABLE_CUSTOM_LEDS && CUSTOM_LED_EXTRA_GPIOS != "" |
 | `CONFIG_CUSTOM_MCP_TOOL_PERIPH` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_ENABLE_PERIPH_RTC \|\| CUSTOM_ENABLE_PERIPH_NFC_PN532 \|\| CUSTOM_ENABLE_PERIPH_PCA9685 \|\| CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC \|\| CUSTOM_PERIPH_RC522_SPI_CS >= 0 \|\| CUSTOM_IMU_I2C_SDA >= 0 \|\| CUSTOM_PMIC_I2C_SDA >= 0 \|\| CUSTOM_EXPANDER_I2C_SDA >= 0 \|\| CUSTOM_ETH_SPI_CS_PIN >= 0 |
 | `CONFIG_CUSTOM_MCP_TOOL_PRESS_TO_TALK` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_ENABLE_BUTTON_BOOT \|\| CUSTOM_ENABLE_BUTTON_TOUCH |
 | `CONFIG_CUSTOM_MCP_TOOL_BT_UART` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if ENABLE_BT_UART_MODULE && !CUSTOM_DISPLAY_UART_LINK_BLUETOOTH |
-| `CONFIG_ENABLE_CUSTOM_MCP_SERVER` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_MCP_TOOL_LAMP \|\| CUSTOM_MCP_TOOL_SENSOR \|\| CUSTOM_MCP_TOOL_ACTUATOR \|\| CUSTOM_MCP_TOOL_ROBOT \|\| CUSTOM_MCP_TOOL_LED \|\| CUSTOM_MCP_TOOL_PERIPH \|\| CUSTOM_MCP_TOOL_PRESS_TO_TALK \|\| CUSTOM_MCP_TOOL_BT_UART |
+| `CONFIG_ENABLE_CUSTOM_MCP_SERVER` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_MCP_TOOL_LAMP \|\| CUSTOM_MCP_TOOL_SENSOR \|\| CUSTOM_MCP_TOOL_ACTUATOR \|\| CUSTOM_MCP_TOOL_ROBOT \|\| CUSTOM_MCP_TOOL_LED \|\| CUSTOM_MCP_TOOL_GPIO_LED \|\| CUSTOM_MCP_TOOL_PERIPH \|\| CUSTOM_MCP_TOOL_PRESS_TO_TALK \|\| CUSTOM_MCP_TOOL_BT_UART |
 | `CONFIG_CUSTOM_ENABLE_BUTTON_BOOT` | bool | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Nút bấm BOOT Onboard (BOOT Button) | y |
 | `CONFIG_CUSTOM_BUTTON_BOOT_GPIO` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân GPIO nút Boot | 0 |
 | `CONFIG_CUSTOM_BUTTON_BOOT_EXTRA_GPIOS` | string | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Các chân GPIO nút Boot thêm (cách nhau dấu phẩy) | "" |
@@ -328,7 +329,7 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_LED_USER_CUSTOM` | bool | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Driver Đèn LED tùy chỉnh (Custom User LED Hook) |  |
 | `CONFIG_CUSTOM_LED_NONE` | bool | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Không sử dụng đèn LED |  |
 | `CONFIG_CUSTOM_LED_GPIO` | int | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Chân GPIO kết nối Đèn LED (Mặc định chân LED onboard) | 48 |
-| `CONFIG_CUSTOM_LED_EXTRA_GPIOS` | string | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Các chân GPIO LED thêm (cách nhau dấu phẩy) | "" |
+| `CONFIG_CUSTOM_LED_EXTRA_GPIOS` | string | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Các chân LED đơn do chatbot điều khiển (cách nhau dấu phẩy) | "" |
 | `CONFIG_CUSTOM_LED_COUNT` | int | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Số lượng mắt LED trên dải/vòng (Hỗ trợ tối đa 1024 mắt LED) | 1 |
 | `CONFIG_CUSTOM_LED_FAST_RAINBOW_EFFECT` | bool | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Hiệu ứng Đổi Màu Cầu Vồng Nhanh (Fast Rainbow Effect khi nói / khởi động) | n |
 | `CONFIG_CUSTOM_ENABLE_SERVO_DOG` | bool | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Động cơ Servo tương tác qua PWM (Servo Dog Controller) | n |

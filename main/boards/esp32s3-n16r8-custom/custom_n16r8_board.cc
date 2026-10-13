@@ -24,6 +24,7 @@
 #include <algorithm>
 #include "mcp_server.h"
 #include "lamp_controller.h"
+#include "boards/common/gpio_led_controller.h"
 #include "sensor_controller.h"
 #include "actuator_controller.h"
 #include "periph_controller.h"
@@ -1272,6 +1273,31 @@ private:
 #endif
     }
 
+    void InitializeGpioUserLeds() {
+        std::vector<gpio_num_t> pins;
+        for (int value : ParseIntList(GPIO_USER_LED_PINS)) {
+            gpio_num_t pin = static_cast<gpio_num_t>(value);
+            if (!GPIO_IS_VALID_OUTPUT_GPIO(pin) || pin == BUILTIN_LED_GPIO ||
+                std::find(pins.begin(), pins.end(), pin) != pins.end()) {
+                ESP_LOGW(TAG, "Single LED GPIO %d skipped (invalid, duplicate or used by status LED)", value);
+                continue;
+            }
+            pins.push_back(pin);
+        }
+        if (pins.empty()) {
+            ESP_LOGW(TAG, "Single LED GPIO list has no usable pin, MCP tools not registered");
+            return;
+        }
+        std::vector<int> ledc_channels;
+#if !defined(CONFIG_CUSTOM_LED_SINGLE_PWM)
+        ledc_channels.push_back(LEDC_CHANNEL_1);
+#endif
+        ledc_channels.push_back(LEDC_CHANNEL_3);
+        ledc_channels.push_back(LEDC_CHANNEL_6);
+        ledc_channels.push_back(LEDC_CHANNEL_7);
+        static GpioLedController gpio_led_controller(pins, ledc_channels);
+    }
+
     void InitializeLampTools() {
         std::vector<gpio_num_t> lamp_pins;
         if (GPIO_IS_VALID_OUTPUT_GPIO(LAMP_GPIO)) {
@@ -1312,6 +1338,9 @@ private:
     (defined(CONFIG_CUSTOM_ENABLE_BUTTON_BOOT) || defined(CONFIG_CUSTOM_ENABLE_BUTTON_TOUCH))
         static PressToTalkMcpTool press_to_talk_tool __attribute__((unused));
         press_to_talk_tool.Initialize();
+#endif
+#if defined(CONFIG_CUSTOM_MCP_TOOL_GPIO_LED)
+        InitializeGpioUserLeds();
 #endif
 #if defined(CONFIG_CUSTOM_MCP_TOOL_LED)
         if (GetLed() != nullptr) {
@@ -1432,7 +1461,7 @@ public:
             return &led;
         }
 #elif defined(CONFIG_CUSTOM_LED_SINGLE_PWM)
-        static GpioLed led __attribute__((unused)) (BUILTIN_LED_GPIO);
+        static GpioLed led __attribute__((unused)) (BUILTIN_LED_GPIO, 0, LEDC_TIMER_1, LEDC_CHANNEL_1);
         return &led;
 #elif defined(CONFIG_CUSTOM_LED_USER_CUSTOM)
         static Led* user_led = CreateUserCustomLedDriver();
