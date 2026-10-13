@@ -256,9 +256,9 @@ def extract_pin_assignments(config: Dict[str, str]) -> List[PinAssignment]:
             assignments.append(PinAssignment("Ethernet SPI (INT)", int_pin))
             assignments.append(PinAssignment("Ethernet SPI (RST)", rst))
 
-    if _is_yes(config, "CONFIG_ENABLE_CUSTOM_MCP_SERVER") and _is_yes(config, "CONFIG_CUSTOM_MCP_TOOL_LAMP"):
-        lamp = _get_int(config, "CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO", 13)
-        assignments.append(PinAssignment("Đèn thông minh MCP (Relay)", lamp))
+    if _is_yes(config, "CONFIG_CUSTOM_MCP_TOOL_LAMP"):
+        lamp = _get_int(config, "CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO", -1)
+        assignments.append(PinAssignment("Đèn MCP", lamp))
 
     if _is_yes(config, "CONFIG_ENABLE_CUSTOM_CAMERA"):
         if _is_yes(config, "CONFIG_CUSTOM_CAMERA_USB_UVC"):

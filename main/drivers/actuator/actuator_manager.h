@@ -9,6 +9,11 @@ extern "C" {
 esp_err_t actuator_manager_init(void);
 void actuator_set_relay(bool state);
 bool actuator_get_relay(void);
+bool actuator_has_relay(void);
+bool actuator_has_servo(void);
+bool actuator_has_motor(int motor_id);
+bool actuator_has_buzzer(void);
+bool actuator_has_haptic(void);
 void actuator_set_servo_angle(uint8_t angle_deg);
 uint8_t actuator_get_servo_angle(void);
 void actuator_servo_detach(void);

@@ -363,11 +363,6 @@ export class SdkconfigGenerator {
       dis('CONFIG_ENABLE_CUSTOM_UART');
     }
     
-    if (s.mcp.enable) {
-      en('CONFIG_ENABLE_CUSTOM_MCP_SERVER');
-    } else {
-      dis('CONFIG_ENABLE_CUSTOM_MCP_SERVER');
-    }
     lines.push('');
 
     lines.push('# Buttons & Input');
@@ -448,17 +443,11 @@ export class SdkconfigGenerator {
     
     lines.push('# Actuators (Servo / Buzzer / Haptic)');
     
-    if (s.mcp.enable) {
-      if (s.mcp.lamp) {
-        en('CONFIG_CUSTOM_MCP_TOOL_LAMP');
-        set('CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO', s.mcp.lamp_gpio);
-      } else {
-        dis('CONFIG_CUSTOM_MCP_TOOL_LAMP');
-      }
-      if (s.mcp.sensor) en('CONFIG_CUSTOM_MCP_TOOL_SENSOR');
-      else dis('CONFIG_CUSTOM_MCP_TOOL_SENSOR');
-      if (s.mcp.actuator) en('CONFIG_CUSTOM_MCP_TOOL_ACTUATOR');
-      else dis('CONFIG_CUSTOM_MCP_TOOL_ACTUATOR');
+    if (s.mcp.lamp) {
+      en('CONFIG_CUSTOM_MCP_TOOL_LAMP');
+      set('CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO', s.mcp.lamp_gpio);
+    } else {
+      dis('CONFIG_CUSTOM_MCP_TOOL_LAMP');
     }
     if (s.actuators.servo_enable) {
       en('CONFIG_CUSTOM_ENABLE_SERVO_DOG');

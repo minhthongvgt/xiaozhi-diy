@@ -1,5 +1,4 @@
 #include "drivers/actuator/actuator_manager.h"
-#include "pin_config.h"
 #include "utils/config_utils.h"
 #include <esp_log.h>
 #include <sdkconfig.h>
@@ -26,9 +25,6 @@ static bool s_motor_pwm_ready = false;
 static gpio_num_t s_relay_pin = (gpio_num_t)-1;
 static bool s_relay_state = false;
 static gpio_num_t s_buzzer_pin = (gpio_num_t)-1;
-#define MAX_EXTRA_LAMPS 4
-static extra_gpio_config_t s_extra_lamps[MAX_EXTRA_LAMPS];
-static int s_num_extra_lamps = 0;
 #define MAX_EXTRA_BUZZERS 4
 static extra_gpio_config_t s_extra_buzzers[MAX_EXTRA_BUZZERS];
 static int s_num_extra_buzzers = 0;
@@ -49,23 +45,47 @@ static inline uint32_t servo_pulse_us_to_duty(uint32_t pulse_us)
 }
 void actuator_set_relay(bool state)
 {
-    bool valid = false;
-    if (GPIO_IS_VALID_GPIO(s_relay_pin)) {
-        s_relay_state = state;
-        gpio_set_level(s_relay_pin, state ? 1 : 0);
-        valid = true;
+    if (!GPIO_IS_VALID_GPIO(s_relay_pin)) {
+        ESP_LOGW(TAG, "Relay hardware not configured/invalid pin, action ignored");
+        return;
     }
-    for (int i = 0; i < s_num_extra_lamps; i++) {
-        if (GPIO_IS_VALID_GPIO(s_extra_lamps[i].pin1)) {
-            gpio_set_level(s_extra_lamps[i].pin1, state ? 1 : 0);
-            valid = true;
+    s_relay_state = state;
+    gpio_set_level(s_relay_pin, state ? 1 : 0);
+    ESP_LOGI(TAG, "Relay state changed to: %s", state ? "ON" : "OFF");
+}
+bool actuator_has_relay(void)
+{
+    return GPIO_IS_VALID_GPIO(s_relay_pin);
+}
+bool actuator_has_servo(void)
+{
+    return s_servo_initialized && GPIO_IS_VALID_GPIO(s_servo_pin);
+}
+bool actuator_has_motor(int motor_id)
+{
+    if (motor_id == 1) {
+        return GPIO_IS_VALID_GPIO(s_motor_pwma) && GPIO_IS_VALID_GPIO(s_motor_dira);
+    }
+    if (motor_id == 2) {
+        return GPIO_IS_VALID_GPIO(s_motor_pwmb) && GPIO_IS_VALID_GPIO(s_motor_dirb);
+    }
+    return false;
+}
+bool actuator_has_buzzer(void)
+{
+    if (GPIO_IS_VALID_GPIO(s_buzzer_pin)) {
+        return true;
+    }
+    for (int i = 0; i < s_num_extra_buzzers; i++) {
+        if (GPIO_IS_VALID_GPIO(s_extra_buzzers[i].pin1)) {
+            return true;
         }
     }
-    if (valid) {
-        ESP_LOGI(TAG, "Relay/Lamp state changed to: %s", state ? "ON" : "OFF");
-    } else {
-        ESP_LOGW(TAG, "Relay hardware not configured/invalid pin, action ignored");
-    }
+    return false;
+}
+bool actuator_has_haptic(void)
+{
+    return GPIO_IS_VALID_GPIO(s_haptic_pin);
 }
 bool actuator_get_relay(void)
 {
@@ -257,10 +277,8 @@ esp_err_t actuator_manager_init(void)
 {
     ESP_LOGI(TAG, "Initializing Actuators Subsystem (Relay, Servo, DC Motor, Buzzer)...");
 #if defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE)
-#if defined(CONFIG_CUSTOM_PERIPH_RELAY_GPIO) && (CONFIG_CUSTOM_PERIPH_RELAY_GPIO >= 0)
+#if defined(CONFIG_CUSTOM_PERIPH_RELAY_GPIO)
     s_relay_pin = (gpio_num_t)CONFIG_CUSTOM_PERIPH_RELAY_GPIO;
-#elif defined(CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO) && (CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO >= 0)
-    s_relay_pin = (gpio_num_t)CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO;
 #else
     s_relay_pin = (gpio_num_t)-1;
 #endif
@@ -286,14 +304,6 @@ esp_err_t actuator_manager_init(void)
         }
     }
 #endif
-#if defined(CONFIG_CUSTOM_MCP_TOOL_LAMP_EXTRA_GPIOS)
-    s_num_extra_lamps = parse_extra_gpios(CONFIG_CUSTOM_MCP_TOOL_LAMP_EXTRA_GPIOS, s_extra_lamps, MAX_EXTRA_LAMPS);
-    for (int i = 0; i < s_num_extra_lamps; i++) {
-        if (GPIO_IS_VALID_GPIO(s_extra_lamps[i].pin1)) {
-            init_output_pin(s_extra_lamps[i].pin1, s_extra_lamps[i].label[0] ? s_extra_lamps[i].label : "Extra Lamp");
-        }
-    }
-#endif
 #if defined(CONFIG_ENABLE_HAPTIC_MOTOR)
 #if defined(CONFIG_HAPTIC_PIN) && (CONFIG_HAPTIC_PIN >= 0)
     s_haptic_pin = (gpio_num_t)CONFIG_HAPTIC_PIN;
@@ -305,10 +315,8 @@ esp_err_t actuator_manager_init(void)
     }
 #endif
 #if defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG)
-#if defined(CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO) && (CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO >= 0)
+#if defined(CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO)
     s_servo_pin = (gpio_num_t)CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO;
-#elif defined(PIN_SERVO_PWM) && (PIN_SERVO_PWM >= 0)
-    s_servo_pin = PIN_SERVO_PWM;
 #else
     s_servo_pin = (gpio_num_t)-1;
 #endif

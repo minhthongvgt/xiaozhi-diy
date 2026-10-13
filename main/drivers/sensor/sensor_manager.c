@@ -1,5 +1,4 @@
 #include "drivers/sensor/sensor_manager.h"
-#include "drivers/sensor/vl6180x.h"
 #include "drivers/sensor/dht.h"
 #include "drivers/sensor/mq_sensor.h"
 #include "drivers/sensor/scd4x.h"
@@ -25,14 +24,14 @@
 #define LDR_ADC_CHANNEL ADC_CHANNEL_1
 #endif
 static adc_oneshot_unit_handle_t s_adc1_handle = NULL;
-static vl6180x_handle_t s_vl6180x_dev = NULL;
 static mq_sensor_handle_t s_mq_dev = NULL;
-static scd4x_handle_t s_scd4x_dev = NULL;
-static bmp280_handle_t s_bmp280_dev = NULL;
-static aht20_handle_t s_aht20_dev = NULL;
-static bh1750_handle_t s_bh1750_dev = NULL;
+static scd4x_handle_t __attribute__((unused)) s_scd4x_dev = NULL;
+static bmp280_handle_t __attribute__((unused)) s_bmp280_dev = NULL;
+static aht20_handle_t __attribute__((unused)) s_aht20_dev = NULL;
+static bh1750_handle_t __attribute__((unused)) s_bh1750_dev = NULL;
+static bool s_ldr_ready = false;
 static hcsr04_handle_t s_hcsr04_dev = NULL;
-static ina219_handle_t s_ina219_dev = NULL;
+static ina219_handle_t __attribute__((unused)) s_ina219_dev = NULL;
 static vl53lx_handle_t __attribute__((unused)) s_vl53lx_dev = NULL;
 static apds9960_handle_t __attribute__((unused)) s_apds9960_dev = NULL;
 static bq27220_handle_t __attribute__((unused)) s_bq27220_dev = NULL;
@@ -50,26 +49,31 @@ static gpio_num_t s_hcsr04_echo = (gpio_num_t)-1;
 esp_err_t sensor_manager_init(void)
 {
     ESP_LOGI(TAG, "Initializing Sensors Subsystem...");
+#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_LDR) || defined(CONFIG_CUSTOM_ENABLE_SENSOR_GAS_ANALOG_MQ)
     adc_oneshot_unit_init_cfg_t init_config1 = {
         .unit_id = ADC_UNIT_1,
         .ulp_mode = ADC_ULP_MODE_DISABLE,
     };
     esp_err_t ret = adc_oneshot_new_unit(&init_config1, &s_adc1_handle);
-    if (ret == ESP_OK) {
-        ESP_LOGI(TAG, "ADC1 Oneshot Unit initialized successfully for analog sensors.");
+    if (ret != ESP_OK) {
+        ESP_LOGW(TAG, "ADC1 Oneshot Unit init returned: %s - analog sensors will not be available",
+                 esp_err_to_name(ret));
+        s_adc1_handle = NULL;
+    }
+#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_LDR)
+    if (s_adc1_handle != NULL) {
         adc_oneshot_chan_cfg_t chan_cfg = {
             .atten = ADC_ATTEN_DB_12,
             .bitwidth = ADC_BITWIDTH_DEFAULT,
         };
         esp_err_t ch_ret = adc_oneshot_config_channel(s_adc1_handle, LDR_ADC_CHANNEL, &chan_cfg);
-        if (ch_ret != ESP_OK) {
-            ESP_LOGW(TAG, "ADC1 CH1 (LDR) config failed: %s", esp_err_to_name(ch_ret));
+        s_ldr_ready = (ch_ret == ESP_OK);
+        if (!s_ldr_ready) {
+            ESP_LOGW(TAG, "LDR ADC channel config failed: %s", esp_err_to_name(ch_ret));
         }
-    } else {
-        ESP_LOGW(TAG, "ADC1 Oneshot Unit init returned: %s — analog sensors will not be available",
-                 esp_err_to_name(ret));
-        s_adc1_handle = NULL;
     }
+#endif
+#endif
 #if defined(CONFIG_CUSTOM_ENABLE_SENSOR_GAS_ANALOG_MQ)
 #if defined(CONFIG_CUSTOM_SENSOR_MQ_ANALOG_PIN) && (CONFIG_CUSTOM_SENSOR_MQ_ANALOG_PIN >= 0)
     s_mq_pin = (gpio_num_t)CONFIG_CUSTOM_SENSOR_MQ_ANALOG_PIN;
@@ -282,33 +286,65 @@ static bq27220_handle_t get_bq27220_dev(void)
     return NULL;
 #endif
 }
-static vl6180x_handle_t get_vl6180x_dev(void)
+static aht20_handle_t get_aht20_dev(void)
 {
-#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_VL53LX)
+#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_AHT20)
+    i2c_master_bus_handle_t i2c_bus = bus_manager_get_i2c_bus();
+    if (s_aht20_dev == NULL && i2c_bus != NULL) {
+        aht20_init(i2c_bus, &s_aht20_dev);
+    }
+    return s_aht20_dev;
+#else
     return NULL;
 #endif
-    if (s_vl6180x_dev != NULL) {
-        return s_vl6180x_dev;
-    }
+}
+static bmp280_handle_t get_bmp280_dev(void)
+{
+#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_BMP280)
     i2c_master_bus_handle_t i2c_bus = bus_manager_get_i2c_bus();
-    if (i2c_bus == NULL) {
-        return NULL;
+    if (s_bmp280_dev == NULL && i2c_bus != NULL) {
+        bmp280_init(i2c_bus, &s_bmp280_dev);
     }
-    vl6180x_config_t cfg = {
-        .i2c_bus = i2c_bus,
-        .i2c_addr = 0x29,
-        .xshut_pin = (gpio_num_t)-1,
-        .gpio1_pin = (gpio_num_t)-1,
-        .scaling = 1,
-    };
-    esp_err_t ret = vl6180x_init(&cfg, &s_vl6180x_dev);
-    if (ret == ESP_OK) {
-        ESP_LOGI(TAG, "VL6180X Laser ToF Sensor initialized via shared I2C bus.");
-    } else {
-        ESP_LOGD(TAG, "VL6180X not detected on I2C bus: %s", esp_err_to_name(ret));
-        s_vl6180x_dev = NULL;
+    return s_bmp280_dev;
+#else
+    return NULL;
+#endif
+}
+static bh1750_handle_t get_bh1750_dev(void)
+{
+#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_BH1750)
+    i2c_master_bus_handle_t i2c_bus = bus_manager_get_i2c_bus();
+    if (s_bh1750_dev == NULL && i2c_bus != NULL) {
+        bh1750_init(i2c_bus, &s_bh1750_dev);
     }
-    return s_vl6180x_dev;
+    return s_bh1750_dev;
+#else
+    return NULL;
+#endif
+}
+static scd4x_handle_t get_scd4x_dev(void)
+{
+#if defined(CONFIG_CUSTOM_SENSOR_GAS_SCD4X)
+    i2c_master_bus_handle_t i2c_bus = bus_manager_get_i2c_bus();
+    if (s_scd4x_dev == NULL && i2c_bus != NULL) {
+        scd4x_init(i2c_bus, &s_scd4x_dev);
+    }
+    return s_scd4x_dev;
+#else
+    return NULL;
+#endif
+}
+static ina219_handle_t get_ina219_dev(void)
+{
+#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_INA2XX)
+    i2c_master_bus_handle_t i2c_bus = bus_manager_get_i2c_bus();
+    if (s_ina219_dev == NULL && i2c_bus != NULL) {
+        ina219_init(i2c_bus, &s_ina219_dev);
+    }
+    return s_ina219_dev;
+#else
+    return NULL;
+#endif
 }
 void sensor_set_dht_pin(gpio_num_t pin)
 {
@@ -324,180 +360,126 @@ gpio_num_t sensor_get_dht_pin(void)
 {
     return s_dht_pin;
 }
+static void set_temperature_humidity(sensor_environment_t *out_env, float temperature_c, float humidity_pct, bool has_humidity)
+{
+    if (!out_env->has_temperature) {
+        out_env->temperature_c = temperature_c;
+        out_env->has_temperature = true;
+    }
+    if (has_humidity && !out_env->has_humidity) {
+        out_env->humidity_pct = humidity_pct;
+        out_env->has_humidity = true;
+    }
+}
 esp_err_t sensor_read_environment(sensor_environment_t *out_env)
 {
     if (!out_env) return ESP_ERR_INVALID_ARG;
     memset(out_env, 0, sizeof(sensor_environment_t));
-    out_env->valid = false;
-    bool has_real_data = false;
-    i2c_master_bus_handle_t i2c_bus = bus_manager_get_i2c_bus();
-    if (i2c_bus != NULL) {
-        if (s_aht20_dev == NULL) {
-            aht20_init(i2c_bus, &s_aht20_dev);
-        }
-        if (s_aht20_dev != NULL) {
-            float aht_t = 0.0f;
-            float aht_h = 0.0f;
-            if (aht20_read(s_aht20_dev, &aht_t, &aht_h) == ESP_OK) {
-                out_env->temperature_c = aht_t;
-                out_env->humidity_pct = aht_h;
-                has_real_data = true;
-                ESP_LOGD(TAG, "AHT20 read OK: Temp=%.1f C, Hum=%.1f%%", aht_t, aht_h);
-            }
+    aht20_handle_t aht = get_aht20_dev();
+    if (aht != NULL) {
+        float aht_t = 0.0f;
+        float aht_h = 0.0f;
+        if (aht20_read(aht, &aht_t, &aht_h) == ESP_OK) {
+            set_temperature_humidity(out_env, aht_t, aht_h, true);
         }
     }
-    if (out_env->temperature_c == 0.0f && GPIO_IS_VALID_GPIO(s_dht_pin)) {
+    if (!out_env->has_temperature && GPIO_IS_VALID_GPIO(s_dht_pin)) {
         float dht_temp = 0.0f;
         float dht_hum = 0.0f;
         if (dht_read_data(s_dht_pin, &dht_temp, &dht_hum) == ESP_OK) {
-            out_env->temperature_c = dht_temp;
-            out_env->humidity_pct = dht_hum;
-            has_real_data = true;
-            ESP_LOGD(TAG, "DHT read OK on GPIO %d: Temp=%.1f C, Hum=%.1f%%", s_dht_pin, dht_temp, dht_hum);
+            set_temperature_humidity(out_env, dht_temp, dht_hum, true);
         }
     }
-    if (i2c_bus != NULL) {
-        if (s_bmp280_dev == NULL) {
-            bmp280_init(i2c_bus, &s_bmp280_dev);
-        }
-        if (s_bmp280_dev != NULL) {
-            float bmp_press = 0.0f;
-            float bmp_temp = 0.0f;
-            if (bmp280_read(s_bmp280_dev, &bmp_press, &bmp_temp) == ESP_OK) {
-                out_env->pressure_hpa = bmp_press;
-                has_real_data = true;
-                if (out_env->temperature_c == 0.0f && bmp_temp != 0.0f) {
-                    out_env->temperature_c = bmp_temp;
-                }
-                ESP_LOGD(TAG, "BMP280 read OK: Press=%.2f hPa, Temp=%.1f C", bmp_press, bmp_temp);
-            }
+    bmp280_handle_t bmp = get_bmp280_dev();
+    if (bmp != NULL) {
+        float bmp_press = 0.0f;
+        float bmp_temp = 0.0f;
+        if (bmp280_read(bmp, &bmp_press, &bmp_temp) == ESP_OK) {
+            out_env->pressure_hpa = bmp_press;
+            out_env->has_pressure = true;
+            set_temperature_humidity(out_env, bmp_temp, 0.0f, false);
         }
     }
-    bool lux_read_ok = false;
-    if (i2c_bus != NULL) {
-        if (s_bh1750_dev == NULL) {
-            bh1750_init(i2c_bus, &s_bh1750_dev);
-        }
-        if (s_bh1750_dev != NULL) {
-            float bh_lux = 0.0f;
-            if (bh1750_read_lux(s_bh1750_dev, &bh_lux) == ESP_OK) {
-                out_env->light_lux = bh_lux;
-                lux_read_ok = true;
-                has_real_data = true;
-                ESP_LOGD(TAG, "BH1750 read OK: Lux=%.1f", bh_lux);
-            }
+    bh1750_handle_t bh = get_bh1750_dev();
+    if (bh != NULL) {
+        float bh_lux = 0.0f;
+        if (bh1750_read_lux(bh, &bh_lux) == ESP_OK) {
+            out_env->light_lux = bh_lux;
+            out_env->has_light = true;
         }
     }
-    if (!lux_read_ok) {
+    if (!out_env->has_light) {
         apds9960_handle_t apds = get_apds9960_dev();
         apds9960_color_t color;
         if (apds != NULL && apds9960_read_color(apds, &color) == ESP_OK) {
             out_env->light_lux = apds9960_color_to_lux(&color);
-            lux_read_ok = true;
-            has_real_data = true;
+            out_env->has_light = true;
         }
     }
-    if (!lux_read_ok) {
-        vl6180x_handle_t tof = get_vl6180x_dev();
-        if (tof != NULL) {
-            float tof_lux = 0.0f;
-            if (vl6180x_read_ambient_lux(tof, &tof_lux) == ESP_OK) {
-                out_env->light_lux = tof_lux;
-                lux_read_ok = true;
-                has_real_data = true;
-            }
-        }
-    }
-    if (!lux_read_ok && s_adc1_handle) {
+    if (!out_env->has_light && s_ldr_ready) {
         int raw_val = 0;
-        if (adc_oneshot_read(s_adc1_handle, LDR_ADC_CHANNEL, &raw_val) == ESP_OK) {
-            if (raw_val > 50 && raw_val < 4050) {
-                out_env->light_lux = (float)raw_val * (1000.0f / 4095.0f);
-                has_real_data = true;
-            }
+        if (adc_oneshot_read(s_adc1_handle, LDR_ADC_CHANNEL, &raw_val) == ESP_OK && raw_val > 50 && raw_val < 4050) {
+            out_env->light_lux = (float)raw_val * (1000.0f / 4095.0f);
+            out_env->has_light = true;
         }
     }
-    if (i2c_bus != NULL) {
-        if (s_scd4x_dev == NULL) {
-            scd4x_init(i2c_bus, &s_scd4x_dev);
-        }
-        if (s_scd4x_dev != NULL) {
-            float co2 = 0.0f;
-            float scd_t = 0.0f;
-            float scd_h = 0.0f;
-            if (scd4x_read_measurement(s_scd4x_dev, &co2, &scd_t, &scd_h) == ESP_OK) {
-                out_env->co2_ppm = co2;
-                has_real_data = true;
-                if (out_env->temperature_c == 0.0f && scd_t != 0.0f) {
-                    out_env->temperature_c = scd_t;
-                    out_env->humidity_pct = scd_h;
-                }
-                ESP_LOGD(TAG, "SCD40 read OK: CO2=%.0f PPM, Temp=%.1f C, Hum=%.1f%%", co2, scd_t, scd_h);
-            }
+    scd4x_handle_t scd = get_scd4x_dev();
+    if (scd != NULL) {
+        float co2 = 0.0f;
+        float scd_t = 0.0f;
+        float scd_h = 0.0f;
+        if (scd4x_read_measurement(scd, &co2, &scd_t, &scd_h) == ESP_OK) {
+            out_env->co2_ppm = co2;
+            out_env->has_co2 = true;
+            set_temperature_humidity(out_env, scd_t, scd_h, true);
         }
     }
-    out_env->valid = has_real_data;
-    if (!has_real_data) {
-        ESP_LOGD(TAG, "No real environmental sensor data available.");
-    }
+    out_env->valid = out_env->has_temperature || out_env->has_humidity || out_env->has_pressure ||
+                     out_env->has_light || out_env->has_co2;
     return ESP_OK;
 }
 esp_err_t sensor_read_distance(sensor_distance_t *out_dist)
 {
     if (!out_dist) return ESP_ERR_INVALID_ARG;
     memset(out_dist, 0, sizeof(sensor_distance_t));
-    out_dist->valid = false;
     vl53lx_handle_t vl53 = get_vl53lx_dev();
     if (vl53 != NULL) {
         float mm = 0.0f;
         esp_err_t vl_ret = vl53lx_read_distance_mm(vl53, &mm);
         if (vl_ret == ESP_OK) {
             out_dist->distance_laser_mm = mm;
-            out_dist->valid = true;
+            out_dist->has_laser = true;
         } else {
             ESP_LOGD(TAG, "%s distance read failed: %s", vl53lx_type_name(vl53lx_get_type(vl53)),
                      esp_err_to_name(vl_ret));
-        }
-    }
-    vl6180x_handle_t tof = get_vl6180x_dev();
-    if (tof != NULL) {
-        float real_dist_mm = 0.0f;
-        if (vl6180x_read_distance_mm(tof, &real_dist_mm) == ESP_OK) {
-            out_dist->distance_laser_mm = real_dist_mm;
-            out_dist->valid = true;
-        } else {
-            ESP_LOGD(TAG, "VL6180X distance read failed");
         }
     }
     if (s_hcsr04_dev != NULL) {
         float real_dist_cm = 0.0f;
         if (hcsr04_read_distance(s_hcsr04_dev, &real_dist_cm) == ESP_OK) {
             out_dist->distance_ultrasonic_cm = real_dist_cm;
-            out_dist->valid = true;
-            ESP_LOGD(TAG, "HC-SR04 read OK: Dist=%.1f cm", real_dist_cm);
+            out_dist->has_ultrasonic = true;
         }
     }
+    out_dist->valid = out_dist->has_laser || out_dist->has_ultrasonic;
     return ESP_OK;
 }
 esp_err_t sensor_read_security(sensor_security_t *out_sec)
 {
     if (!out_sec) return ESP_ERR_INVALID_ARG;
     memset(out_sec, 0, sizeof(sensor_security_t));
-    bool has_real_data = false;
     if (GPIO_IS_VALID_GPIO(s_pir_pin)) {
         out_sec->motion_detected = (gpio_get_level(s_pir_pin) == 1);
-        has_real_data = true;
+        out_sec->has_motion = true;
     }
     if (GPIO_IS_VALID_GPIO(s_vib_pin)) {
         out_sec->vibration_detected = (gpio_get_level(s_vib_pin) == 1);
-        has_real_data = true;
+        out_sec->has_vibration = true;
     }
     if (GPIO_IS_VALID_GPIO(s_flame_pin)) {
-        out_sec->flame_detected = (gpio_get_level(s_flame_pin) == 0); 
-        has_real_data = true;
+        out_sec->flame_detected = (gpio_get_level(s_flame_pin) == 0);
+        out_sec->has_flame = true;
     }
-    out_sec->gas_level_ppm = 0.0f;
-    out_sec->gas_leak_alert = false;
     if (s_mq_dev != NULL) {
         float real_ppm = 0.0f;
         float real_mv = 0.0f;
@@ -505,24 +487,21 @@ esp_err_t sensor_read_security(sensor_security_t *out_sec)
         if (mq_ret == ESP_OK) {
             out_sec->gas_level_ppm = real_ppm;
             out_sec->gas_leak_alert = mq_sensor_is_leak_alert(s_mq_dev, real_ppm);
-            has_real_data = true;
-            ESP_LOGD(TAG, "MQ Gas real reading: %.1f PPM (%.1f mV), Alert=%d",
-                     real_ppm, real_mv, out_sec->gas_leak_alert);
+            out_sec->has_gas = true;
         } else {
-            ESP_LOGD(TAG, "MQ Gas sensor not detected or disconnected: %s", esp_err_to_name(mq_ret));
+            ESP_LOGD(TAG, "MQ Gas sensor read failed: %s", esp_err_to_name(mq_ret));
         }
     }
-    out_sec->valid = has_real_data;
+    out_sec->valid = out_sec->has_motion || out_sec->has_vibration || out_sec->has_flame || out_sec->has_gas;
     return ESP_OK;
 }
 esp_err_t sensor_read_power(sensor_power_t *out_pwr)
 {
     if (!out_pwr) return ESP_ERR_INVALID_ARG;
     memset(out_pwr, 0, sizeof(sensor_power_t));
-    out_pwr->valid = false;
     if (GPIO_IS_VALID_GPIO(s_chrg_pin)) {
         out_pwr->is_charging = (gpio_get_level(s_chrg_pin) == 0);
-        out_pwr->valid = true;
+        out_pwr->has_charging = true;
     }
     bq27220_handle_t gauge = get_bq27220_dev();
     if (gauge != NULL) {
@@ -533,53 +512,49 @@ esp_err_t sensor_read_power(sensor_power_t *out_pwr)
             out_pwr->bus_current_ma = gd.current_ma;
             out_pwr->bus_power_mw = gd.voltage_v * gd.current_ma;
             out_pwr->is_charging = out_pwr->is_charging || gd.is_charging;
-            out_pwr->valid = true;
-            return ESP_OK;
+            out_pwr->has_voltage = true;
+            out_pwr->has_percentage = true;
+            out_pwr->has_current = true;
+            out_pwr->has_charging = true;
         }
     }
-#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_PCA9685) && !defined(CONFIG_CUSTOM_ENABLE_SENSOR_INA2XX)
-    i2c_master_bus_handle_t i2c_bus = NULL;
-#else
-    i2c_master_bus_handle_t i2c_bus = bus_manager_get_i2c_bus();
-#endif
-    if (i2c_bus != NULL) {
-        if (s_ina219_dev == NULL) {
-            ina219_init(i2c_bus, &s_ina219_dev);
-        }
-        if (s_ina219_dev != NULL) {
-            float v_bus = 0.0f;
-            float cur_ma = 0.0f;
-            float pwr_mw = 0.0f;
-            if (ina219_read(s_ina219_dev, &v_bus, &cur_ma, &pwr_mw) == ESP_OK) {
-                out_pwr->battery_voltage = v_bus;
-                out_pwr->bus_current_ma = cur_ma;
-                out_pwr->bus_power_mw = pwr_mw;
-                out_pwr->valid = true;
-                ESP_LOGD(TAG, "INA219 read OK: Voltage=%.2f V, Current=%.1f mA, Power=%.1f mW",
-                         v_bus, cur_ma, pwr_mw);
-            }
+    ina219_handle_t ina = get_ina219_dev();
+    if (ina != NULL && !out_pwr->has_voltage) {
+        float v_bus = 0.0f;
+        float cur_ma = 0.0f;
+        float pwr_mw = 0.0f;
+        if (ina219_read(ina, &v_bus, &cur_ma, &pwr_mw) == ESP_OK) {
+            out_pwr->battery_voltage = v_bus;
+            out_pwr->bus_current_ma = cur_ma;
+            out_pwr->bus_power_mw = pwr_mw;
+            out_pwr->has_voltage = true;
+            out_pwr->has_current = true;
         }
     }
+    out_pwr->valid = out_pwr->has_voltage || out_pwr->has_percentage || out_pwr->has_charging || out_pwr->has_current;
     return ESP_OK;
 }
-esp_err_t sensor_manager_read_all(sensor_data_t *out_data)
+bool sensor_environment_available(void)
 {
-    if (!out_data) return ESP_ERR_INVALID_ARG;
-    sensor_environment_t env;
-    sensor_security_t sec;
-    sensor_power_t pwr;
-    sensor_read_environment(&env);
-    sensor_read_security(&sec);
-    sensor_read_power(&pwr);
-    out_data->temperature_c = env.temperature_c;
-    out_data->humidity_pct = env.humidity_pct;
-    out_data->light_lux = env.light_lux;
-    out_data->co2_ppm = env.co2_ppm;
-    out_data->battery_voltage = pwr.battery_voltage;
-    out_data->motion_detected = sec.motion_detected;
-    out_data->vibration_detected = sec.vibration_detected;
-    out_data->flame_detected = sec.flame_detected;
-    return ESP_OK;
+    return GPIO_IS_VALID_GPIO(s_dht_pin) || s_ldr_ready || get_aht20_dev() != NULL || get_bmp280_dev() != NULL ||
+           get_bh1750_dev() != NULL || get_scd4x_dev() != NULL || get_apds9960_dev() != NULL;
+}
+bool sensor_distance_available(void)
+{
+    return s_hcsr04_dev != NULL || get_vl53lx_dev() != NULL;
+}
+bool sensor_security_available(void)
+{
+    return GPIO_IS_VALID_GPIO(s_pir_pin) || GPIO_IS_VALID_GPIO(s_vib_pin) || GPIO_IS_VALID_GPIO(s_flame_pin) ||
+           s_mq_dev != NULL;
+}
+bool sensor_power_available(void)
+{
+    return GPIO_IS_VALID_GPIO(s_chrg_pin) || get_bq27220_dev() != NULL || get_ina219_dev() != NULL;
+}
+bool sensor_color_available(void)
+{
+    return get_apds9960_dev() != NULL;
 }
 void sensor_set_mq_pin(gpio_num_t pin)
 {

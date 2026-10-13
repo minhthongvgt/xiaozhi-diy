@@ -6,12 +6,12 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <string>
-#define TAG_ROBOT_MCP "RobotMcpController"
 class RobotMcpController {
 public:
     RobotMcpController() {
         [[maybe_unused]] auto& mcp_server = McpServer::GetInstance();
 #if defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE)
+        if (actuator_has_motor(1) && actuator_has_motor(2)) {
         mcp_server.AddTool(
             "self.robot.move",
             "Control robot car movement (directions: 'forward', 'backward', 'left', 'right', 'stop')",
@@ -47,8 +47,10 @@ public:
                 return true;
             }
         );
+        }
 #endif
 #if defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG)
+        if (actuator_has_servo()) {
         mcp_server.AddTool(
             "self.robot.gesture",
             "Perform robot interactive physical gesture (gestures: 'nod', 'shake', 'center', 'relax')",
@@ -77,8 +79,8 @@ public:
                 return true;
             }
         );
+        }
 #endif
-        ESP_LOGI(TAG_ROBOT_MCP, "RobotMcpController registered active MCP tools based on user config");
     }
 };
 #endif 

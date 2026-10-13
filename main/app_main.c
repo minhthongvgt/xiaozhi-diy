@@ -12,7 +12,6 @@
 #include "drivers/sensor/sensor_init.h"
 #include "drivers/actuator/actuator_init.h"
 #include "drivers/storage/storage_init.h"
-#include "protocols/mcp_device.h"
 static const char *TAG = "XIAOZHI_MAIN";
 static esp_err_t init_nvs(void)
 {
@@ -106,7 +105,6 @@ esp_err_t app_main_hardware_init(void)
     } else {
         ESP_LOGI(TAG, "     ✅ Storage initialized");
     }
-    mcp_device_init();
     ESP_LOGI(TAG, "[7/7] 🎉 Hardware Subsystem Ready!");
     ESP_LOGI(TAG, "");
     ESP_LOGI(TAG, "╔════════════════════════════════════════════════════════╗");

@@ -53,9 +53,8 @@ await t('ẩn/hiện theo depends on: camera, UART, MCP, AMOLED, Adaptive UI', (
   setv('camera_enable', false); assert.equal(vis('cam_xclk'), false);
   setv('camera_enable', true);  assert.equal(vis('cam_xclk'), true);
   setv('camera_sensor', 'CUSTOM_CAMERA_USB_UVC'); assert.equal(vis('cam_xclk'), false, 'UVC ẩn chân DVP');
-  setv('mcp_enable', false); assert.equal(vis('mcp_lamp'), false);
-  setv('mcp_enable', true);  assert.equal(vis('mcp_lamp'), true);
   setv('mcp_lamp', false); assert.equal(vis('mcp_lamp_gpio'), false);
+  setv('mcp_lamp', true);  assert.equal(vis('mcp_lamp_gpio'), true);
   setv('uart_enable', true); setv('uart_flow', false); assert.equal(vis('uart_rts'), false);
   setv('uart_flow', true); assert.equal(vis('uart_rts'), true);
   setv('display_enable', true); setv('display_type', 'CUSTOM_DISPLAY_QSPI_AMOLED');
@@ -69,12 +68,12 @@ await t('ẩn/hiện theo depends on: camera, UART, MCP, AMOLED, Adaptive UI', (
 await t('đổi ô trên giao diện -> generator ghi đúng symbol', () => {
   window.configState = clone(DEFAULT_CONFIG); G.syncStateToUI();
   setv('camera_enable', true); setv('camera_sensor', 'CUSTOM_CAMERA_OV5640'); setv('cam_d0', 33);
-  setv('mcp_enable', true); setv('uart_enable', true); setv('uart_tx', 17); setv('uart_baud', 57600);
+  setv('mcp_lamp', true); setv('mcp_lamp_gpio', 10); setv('uart_enable', true); setv('uart_tx', 17); setv('uart_baud', 57600);
   setv('spk_bclk', 15); setv('speaker_enable', true);
   G.syncUIToState();
   const txt = SdkconfigGenerator.build(window.configState).join('\n');
   for (const re of [/^CONFIG_ENABLE_CUSTOM_CAMERA=y$/m, /^CONFIG_CUSTOM_CAMERA_OV5640=y$/m, /^CONFIG_CUSTOM_CAM_PIN_D0=33$/m,
-    /^CONFIG_ENABLE_CUSTOM_MCP_SERVER=y$/m, /^CONFIG_ENABLE_CUSTOM_UART=y$/m, /^CONFIG_CUSTOM_UART_PIN_TX=17$/m,
+    /^CONFIG_CUSTOM_MCP_TOOL_LAMP=y$/m, /^CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO=10$/m, /^CONFIG_ENABLE_CUSTOM_UART=y$/m, /^CONFIG_CUSTOM_UART_PIN_TX=17$/m,
     /^CONFIG_CUSTOM_UART_BAUDRATE=57600$/m, /^CONFIG_CUSTOM_AUDIO_SPK_GPIO_BCLK=15$/m]) assert.match(txt, re);
   const back = SdkconfigParser.parse(txt);
   assert.equal(back.camera.pin_d0, 33); assert.equal(back.uart.baudrate, 57600);

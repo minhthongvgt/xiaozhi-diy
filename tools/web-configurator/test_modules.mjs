@@ -59,9 +59,15 @@ t('Wi-Fi BluFi (s.wifi.method của GUI) được ghi ra', () => {
   const s = clone(D); s.wifi.method = 'USE_ESP_BLUFI_WIFI_PROVISIONING';
   assert.match(text(s), /^CONFIG_USE_ESP_BLUFI_WIFI_PROVISIONING=y$/m);
 });
-t('MCP server (s.mcp.enable của GUI) được ghi ra', () => {
-  const s = clone(D); s.mcp.enable = true;
-  assert.match(text(s), /^CONFIG_ENABLE_CUSTOM_MCP_SERVER=y$/m);
+t('MCP tự động: không ghi công tắc MCP ẩn, chỉ ghi đèn khi chọn', () => {
+  const off = text(clone(D));
+  assert.doesNotMatch(off, /CONFIG_ENABLE_CUSTOM_MCP_SERVER|CONFIG_CUSTOM_MCP_TOOL_(SENSOR|ACTUATOR|ROBOT|LED|PERIPH|PRESS_TO_TALK)=/);
+  assert.match(off, /^# CONFIG_CUSTOM_MCP_TOOL_LAMP is not set$/m);
+  const s = clone(D); s.mcp.lamp = true; s.mcp.lamp_gpio = 10;
+  const on = text(s);
+  assert.match(on, /^CONFIG_CUSTOM_MCP_TOOL_LAMP=y$/m);
+  assert.match(on, /^CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO=10$/m);
+  assert.equal(P.parse(on).mcp.lamp, true);
 });
 t('log level / baud console đang dùng trong file được giữ nguyên', () => {
   const r = P.parse('CONFIG_LOG_DEFAULT_LEVEL_DEBUG=y\nCONFIG_ESP_CONSOLE_UART_BAUDRATE=921600\n');
@@ -236,7 +242,7 @@ t('mục menuconfig chung (state.kconfig) ghi ra rồi đọc lại đúng', () 
 });
 t('mục chung bị ẩn khi mục cha tắt (giống menuconfig)', () => {
   const s = clone(D); s.kconfig.CUSTOM_ENABLE_PERIPH_RTC = false; s.kconfig.CUSTOM_PERIPH_RTC_I2C_SDA = 8;
-  s.mcp.enable = false; s.kconfig.CUSTOM_MCP_TOOL_PRESS_TO_TALK = true;
+  s.kconfig.CUSTOM_MCP_TOOL_PRESS_TO_TALK = true;
   const txt = text(s);
   assert.doesNotMatch(txt, /CUSTOM_PERIPH_RTC_I2C_SDA/);
   assert.doesNotMatch(txt, /CUSTOM_MCP_TOOL_PRESS_TO_TALK/);

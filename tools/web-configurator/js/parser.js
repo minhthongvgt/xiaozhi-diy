@@ -240,14 +240,8 @@ export class SdkconfigParser {
     s.led.count   = i('CONFIG_CUSTOM_LED_COUNT', 1);
     s.led.rainbow = 'CONFIG_CUSTOM_LED_FAST_RAINBOW_EFFECT' in m
                     ? y('CONFIG_CUSTOM_LED_FAST_RAINBOW_EFFECT') : true;
-    s.mcp.enable    = y('CONFIG_ENABLE_CUSTOM_MCP_SERVER');
-    s.mcp.lamp      = 'CONFIG_CUSTOM_MCP_TOOL_LAMP' in m
-                      ? y('CONFIG_CUSTOM_MCP_TOOL_LAMP') : true;
+    s.mcp.lamp      = y('CONFIG_CUSTOM_MCP_TOOL_LAMP');
     s.mcp.lamp_gpio = i('CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO');
-    s.mcp.sensor    = 'CONFIG_CUSTOM_MCP_TOOL_SENSOR' in m
-                      ? y('CONFIG_CUSTOM_MCP_TOOL_SENSOR') : true;
-    s.mcp.actuator  = 'CONFIG_CUSTOM_MCP_TOOL_ACTUATOR' in m
-                      ? y('CONFIG_CUSTOM_MCP_TOOL_ACTUATOR') : true;
     s.uart.enable     = y('CONFIG_ENABLE_CUSTOM_UART');
     s.uart.port       = y('CONFIG_CUSTOM_UART_PORT_2')
                         ? 'CUSTOM_UART_PORT_2'

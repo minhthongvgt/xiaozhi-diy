@@ -1172,39 +1172,52 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             default -1
         endif
 
-        menuconfig ENABLE_CUSTOM_MCP_SERVER
-            bool "Giao thức IoT & Tính năng MCP Server (Model Context Protocol)"
+        config CUSTOM_MCP_TOOL_LAMP
+            bool "Đèn điều khiển bằng AI qua GPIO (MCP)"
             default n
             help
-                Cho phép AI Xiaozhi điều khiển các thiết bị ngoại vi và cảm biến qua giao thức MCP Server.
+                Mỗi chân đèn tạo một bộ công cụ MCP riêng (self.lamp hoặc self.lamp_1, self.lamp_2...).
+                Các công cụ MCP khác tự bật theo phần cứng được chọn ở mục 4, không cần bật tay.
+                Relay 220V được điều khiển qua nhóm Cơ cấu chấp hành.
 
-        if ENABLE_CUSTOM_MCP_SERVER
-            config CUSTOM_MCP_TOOL_LAMP
-                bool "Công cụ MCP: Điều khiển Đèn thông minh / Relay bật tắt qua AI"
-                default y
-
-            config CUSTOM_MCP_TOOL_LAMP_EXTRA_GPIOS
-                string "Các chân GPIO Đèn (Lamp) thêm (cách nhau dấu phẩy)"
-                default ""
-
-            config CUSTOM_MCP_TOOL_LAMP_GPIO
-                int "Chân GPIO điều khiển Đèn / Relay thông minh"
-                depends on CUSTOM_MCP_TOOL_LAMP
-                range -1 48
+        config CUSTOM_MCP_TOOL_LAMP_GPIO
+            int "Chân GPIO điều khiển Đèn"
+            depends on CUSTOM_MCP_TOOL_LAMP
+            range -1 48
             default -1
 
-            config CUSTOM_MCP_TOOL_SENSOR
-                bool "Công cụ MCP: Đọc dữ liệu Cảm biến môi trường, khoảng cách, an ninh qua AI"
-                default y
+        config CUSTOM_MCP_TOOL_LAMP_EXTRA_GPIOS
+            string "Các chân GPIO Đèn thêm (cách nhau dấu phẩy)"
+            depends on CUSTOM_MCP_TOOL_LAMP
+            default ""
 
-            config CUSTOM_MCP_TOOL_ACTUATOR
-                bool "Công cụ MCP: Điều khiển Động cơ Servo, Động cơ DC, Còi Buzzer qua AI"
-                default y
+        config CUSTOM_MCP_TOOL_SENSOR
+            bool
+            default y if CUSTOM_ENABLE_SENSOR_DHT11_22 || CUSTOM_ENABLE_SENSOR_AHT20 || CUSTOM_ENABLE_SENSOR_BMP280 || CUSTOM_ENABLE_SENSOR_BH1750 || CUSTOM_ENABLE_SENSOR_LDR || CUSTOM_SENSOR_GAS_SCD4X || CUSTOM_ENABLE_SENSOR_GAS_ANALOG_MQ || CUSTOM_ENABLE_SENSOR_APDS9960 || CUSTOM_ENABLE_SENSOR_VL53LX || CUSTOM_ENABLE_SENSOR_HCSR04 || CUSTOM_ENABLE_SENSOR_PIR || CUSTOM_ENABLE_SENSOR_VIBRATION_SW420 || CUSTOM_ENABLE_SENSOR_FLAME || CUSTOM_ENABLE_SENSOR_INA2XX || CUSTOM_ENABLE_PERIPH_BATTERY_CHARGING_DETECT || CUSTOM_BATTERY_MONITOR_BQ27220
 
-            config CUSTOM_MCP_TOOL_PRESS_TO_TALK
-                bool "Công cụ MCP: Nhấn để nói qua AI (Push to Talk tool)"
-                default y
-        endif
+        config CUSTOM_MCP_TOOL_ACTUATOR
+            bool
+            default y if CUSTOM_PERIPH_RELAY_ENABLE || CUSTOM_ENABLE_SERVO_DOG || CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE || ENABLE_BUZZER || ENABLE_HAPTIC_MOTOR
+
+        config CUSTOM_MCP_TOOL_ROBOT
+            bool
+            default y if CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE || CUSTOM_ENABLE_SERVO_DOG
+
+        config CUSTOM_MCP_TOOL_LED
+            bool
+            default y if ENABLE_CUSTOM_LEDS && !CUSTOM_LED_NONE
+
+        config CUSTOM_MCP_TOOL_PERIPH
+            bool
+            default y if CUSTOM_ENABLE_PERIPH_RTC || CUSTOM_ENABLE_PERIPH_NFC_PN532 || CUSTOM_ENABLE_PERIPH_PCA9685 || CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC || CUSTOM_PERIPH_RC522_SPI_CS >= 0 || CUSTOM_IMU_I2C_SDA >= 0 || CUSTOM_PMIC_I2C_SDA >= 0 || CUSTOM_EXPANDER_I2C_SDA >= 0 || CUSTOM_ETH_SPI_CS_PIN >= 0
+
+        config CUSTOM_MCP_TOOL_PRESS_TO_TALK
+            bool
+            default y if CUSTOM_ENABLE_BUTTON_BOOT || CUSTOM_ENABLE_BUTTON_TOUCH
+
+        config ENABLE_CUSTOM_MCP_SERVER
+            bool
+            default y if CUSTOM_MCP_TOOL_LAMP || CUSTOM_MCP_TOOL_SENSOR || CUSTOM_MCP_TOOL_ACTUATOR || CUSTOM_MCP_TOOL_ROBOT || CUSTOM_MCP_TOOL_LED || CUSTOM_MCP_TOOL_PERIPH || CUSTOM_MCP_TOOL_PRESS_TO_TALK
     endmenu
 
     menu "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)"

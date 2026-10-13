@@ -2,13 +2,14 @@
 #define __LAMP_CONTROLLER_H__
 #include "mcp_server.h"
 #include <driver/gpio.h>
+#include <string>
 class LampController {
 private:
     bool power_ = false;
     gpio_num_t gpio_num_;
 public:
-    LampController(gpio_num_t gpio_num) : gpio_num_(gpio_num) {
-        if (!GPIO_IS_VALID_GPIO(gpio_num_)) {
+    LampController(gpio_num_t gpio_num, const std::string& tool_prefix, const std::string& lamp_name) : gpio_num_(gpio_num) {
+        if (!GPIO_IS_VALID_OUTPUT_GPIO(gpio_num_)) {
             return;
         }
         gpio_config_t config = {
@@ -21,21 +22,21 @@ public:
         ESP_ERROR_CHECK(gpio_config(&config));
         gpio_set_level(gpio_num_, 0);
         auto& mcp_server = McpServer::GetInstance();
-        mcp_server.AddTool("self.lamp.get_state", "Get the power state of the lamp", PropertyList(), [this](const PropertyList& properties) -> ReturnValue {
+        mcp_server.AddTool(tool_prefix + ".get_state", "Get the power state of " + lamp_name, PropertyList(), [this](const PropertyList& properties) -> ReturnValue {
             nlohmann::json j;
             j["power"] = power_;
             return j;
         });
-        mcp_server.AddTool("self.lamp.turn_on", "Turn on the lamp", PropertyList(), [this](const PropertyList& properties) -> ReturnValue {
+        mcp_server.AddTool(tool_prefix + ".turn_on", "Turn on " + lamp_name, PropertyList(), [this](const PropertyList& properties) -> ReturnValue {
             power_ = true;
             gpio_set_level(gpio_num_, 1);
             return true;
         });
-        mcp_server.AddTool("self.lamp.turn_off", "Turn off the lamp", PropertyList(), [this](const PropertyList& properties) -> ReturnValue {
+        mcp_server.AddTool(tool_prefix + ".turn_off", "Turn off " + lamp_name, PropertyList(), [this](const PropertyList& properties) -> ReturnValue {
             power_ = false;
             gpio_set_level(gpio_num_, 0);
             return true;
         });
     }
 };
-#endif 
+#endif

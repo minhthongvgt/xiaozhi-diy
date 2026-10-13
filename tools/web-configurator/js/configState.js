@@ -112,10 +112,7 @@ export const DEFAULT_CONFIG = {
     rainbow: true,
   },
   mcp: {
-    enable:   false,
-    lamp:     true, lamp_gpio: -1,
-    sensor:   true,
-    actuator: true,
+    lamp:     false, lamp_gpio: -1,
   },
   uart: {
     enable:       false,

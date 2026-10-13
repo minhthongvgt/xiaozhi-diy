@@ -523,12 +523,8 @@
 #define VOLUME_UP_BUTTON_GPIO ((gpio_num_t)-1)
 #define VOLUME_DOWN_BUTTON_GPIO ((gpio_num_t)-1)
 #endif
-#if defined(CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO) && (CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO >= 0)
+#if defined(CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO)
 #define LAMP_GPIO ((gpio_num_t)CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO)
-#elif defined(CONFIG_CUSTOM_PERIPH_RELAY_GPIO) && (CONFIG_CUSTOM_PERIPH_RELAY_GPIO >= 0)
-#define LAMP_GPIO ((gpio_num_t)CONFIG_CUSTOM_PERIPH_RELAY_GPIO)
-#elif defined(PIN_RELAY) && (PIN_RELAY >= 0)
-#define LAMP_GPIO PIN_RELAY
 #else
 #define LAMP_GPIO ((gpio_num_t)-1)
 #endif

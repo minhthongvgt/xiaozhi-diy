@@ -21,6 +21,7 @@
 #include "button.h"
 #include "boards/common/knob.h"
 #include "config.h"
+#include <algorithm>
 #include "mcp_server.h"
 #include "lamp_controller.h"
 #include "sensor_controller.h"
@@ -1182,53 +1183,54 @@ private:
 #endif
     }
 
-    void InitializeMcpTools() {
-#if defined(CONFIG_ENABLE_CUSTOM_MCP_SERVER) || defined(CONFIG_ENABLE_CUSTOM_SENSORS) || \
-    defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE) || \
-    defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE) || \
-    defined(CONFIG_CUSTOM_LED_WS2812) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_IR_REMOTE) || \
-    defined(CONFIG_CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE) || defined(CONFIG_ENABLE_ROBOT_CONTROLLER) || \
-    defined(CONFIG_ENABLE_BUZZER) || defined(CONFIG_ENABLE_HAPTIC_MOTOR) || \
-    defined(CONFIG_CUSTOM_ENABLE_BUTTON_BOOT) || defined(CONFIG_CUSTOM_ENABLE_BUTTON_TOUCH)
-#if defined(CONFIG_CUSTOM_MCP_TOOL_LAMP) || defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE)
-
-        if (GPIO_IS_VALID_GPIO(LAMP_GPIO)) {
-            static LampController lamp __attribute__((unused)) (LAMP_GPIO);
-            ESP_LOGI(TAG, "MCP Lamp Controller registered on GPIO %d", LAMP_GPIO);
+    void InitializeLampTools() {
+        std::vector<gpio_num_t> lamp_pins;
+        if (GPIO_IS_VALID_OUTPUT_GPIO(LAMP_GPIO)) {
+            lamp_pins.push_back(LAMP_GPIO);
         }
-        std::vector<int> extra_lamps = ParseIntList(LAMP_EXTRA_GPIOS);
-        static std::vector<std::unique_ptr<LampController>> extra_lamp_instances_;
-        for (int p : extra_lamps) {
-            gpio_num_t pin = (gpio_num_t)p;
-            if (GPIO_IS_VALID_GPIO(pin)) {
-                extra_lamp_instances_.push_back(std::make_unique<LampController>(pin));
-                ESP_LOGI(TAG, "Extra MCP Lamp Controller registered on GPIO %d", pin);
+        for (int value : ParseIntList(LAMP_EXTRA_GPIOS)) {
+            gpio_num_t pin = static_cast<gpio_num_t>(value);
+            if (GPIO_IS_VALID_OUTPUT_GPIO(pin) && std::find(lamp_pins.begin(), lamp_pins.end(), pin) == lamp_pins.end()) {
+                lamp_pins.push_back(pin);
             }
         }
+        if (lamp_pins.empty()) {
+            ESP_LOGW(TAG, "MCP lamp tool enabled but no lamp GPIO configured, not registered");
+            return;
+        }
+        static std::vector<std::unique_ptr<LampController>> lamps;
+        for (size_t i = 0; i < lamp_pins.size(); i++) {
+            const bool single = lamp_pins.size() == 1;
+            const std::string prefix = single ? std::string("self.lamp") : "self.lamp_" + std::to_string(i + 1);
+            const std::string name = (single ? std::string("the lamp") : "lamp " + std::to_string(i + 1)) +
+                                     " (GPIO " + std::to_string(static_cast<int>(lamp_pins[i])) + ")";
+            lamps.push_back(std::make_unique<LampController>(lamp_pins[i], prefix, name));
+        }
+    }
 
+    void InitializeMcpTools() {
+#if defined(CONFIG_ENABLE_CUSTOM_MCP_SERVER)
+#if defined(CONFIG_CUSTOM_MCP_TOOL_LAMP)
+        InitializeLampTools();
 #endif
-#if defined(CONFIG_CUSTOM_MCP_TOOL_SENSOR) || defined(CONFIG_ENABLE_CUSTOM_SENSORS)
+#if defined(CONFIG_CUSTOM_MCP_TOOL_SENSOR)
         static SensorController sensor_ctrl __attribute__((unused));
-        ESP_LOGI(TAG, "MCP Sensor Tools registered successfully");
 #endif
-#if defined(CONFIG_CUSTOM_MCP_TOOL_ACTUATOR) || defined(CONFIG_CUSTOM_PERIPH_RELAY_ENABLE) || \
-    defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE) || \
-    defined(CONFIG_ENABLE_BUZZER) || defined(CONFIG_ENABLE_HAPTIC_MOTOR)
+#if defined(CONFIG_CUSTOM_MCP_TOOL_ACTUATOR)
         static ActuatorController actuator_ctrl __attribute__((unused));
-        ESP_LOGI(TAG, "MCP Actuator Tools (Beep/Vibrate/Servo/Motor/Relay) registered successfully");
 #endif
-#if defined(CONFIG_CUSTOM_ENABLE_BUTTON_BOOT) || defined(CONFIG_CUSTOM_ENABLE_BUTTON_TOUCH) || defined(CONFIG_CUSTOM_MCP_TOOL_PRESS_TO_TALK)
+#if defined(CONFIG_CUSTOM_MCP_TOOL_PRESS_TO_TALK) && \
+    (defined(CONFIG_CUSTOM_ENABLE_BUTTON_BOOT) || defined(CONFIG_CUSTOM_ENABLE_BUTTON_TOUCH))
         static PressToTalkMcpTool press_to_talk_tool __attribute__((unused));
         press_to_talk_tool.Initialize();
-        ESP_LOGI(TAG, "MCP Press-to-Talk Tool registered successfully");
 #endif
-#if defined(CONFIG_CUSTOM_LED_WS2812) || defined(CONFIG_ENABLE_CUSTOM_LEDS)
-        static LedMcpController led_ctrl __attribute__((unused));
-        ESP_LOGI(TAG, "MCP LED Controller registered successfully");
+#if defined(CONFIG_CUSTOM_MCP_TOOL_LED)
+        if (GetLed() != nullptr) {
+            static LedMcpController led_ctrl __attribute__((unused));
+        }
 #endif
-#if defined(CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE) || defined(CONFIG_CUSTOM_ENABLE_SERVO_DOG)
+#if defined(CONFIG_CUSTOM_MCP_TOOL_ROBOT)
         static RobotMcpController robot_ctrl __attribute__((unused));
-        ESP_LOGI(TAG, "MCP Robot Controller registered successfully");
 #endif
 #endif
 #if defined(CONFIG_CUSTOM_ENABLE_PERIPH_RTC) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_NFC_PN532) || \

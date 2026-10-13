@@ -21,9 +21,14 @@
 
 namespace {
 constexpr gpio_num_t kNoPin = static_cast<gpio_num_t>(-1);
-gpio_num_t PinFromConfig(int value) {
-    return value >= 0 ? static_cast<gpio_num_t>(value) : kNoPin;
+[[maybe_unused]] gpio_num_t PinFromConfig(int value) {
+    return static_cast<gpio_num_t>(value);
 }
+#if defined(CONFIG_ENABLE_CUSTOM_MCP_SERVER) && defined(CONFIG_CUSTOM_MCP_TOOL_PERIPH)
+constexpr bool kRegisterMcpTools = true;
+#else
+constexpr bool kRegisterMcpTools = false;
+#endif
 }
 
 namespace {
@@ -104,6 +109,9 @@ void PeripheralController::InitRtc(i2c_master_bus_handle_t i2c_bus) {
         esp_timer_start_periodic(rtc_sync_timer_, 60LL * 1000 * 1000);
     }
 
+    if (!kRegisterMcpTools) {
+        return;
+    }
     auto& mcp_server = McpServer::GetInstance();
     mcp_server.AddTool("self.rtc.get_time",
                        "Read the date and time stored in the external real-time clock (DS3231 / PCF8563), which keeps time "
@@ -196,6 +204,9 @@ void PeripheralController::InitNfc(i2c_master_bus_handle_t i2c_bus) {
         ESP_LOGW(TAG, "NFC enabled but PN532 did not respond (check I2C mode switches and wiring)");
         return;
     }
+    if (!kRegisterMcpTools) {
+        return;
+    }
     auto& mcp_server = McpServer::GetInstance();
     mcp_server.AddTool("self.nfc.read_card",
                        "Wait for an NFC / RFID card or tag (ISO14443A: MIFARE, NTAG, contactless cards) to be held near "
@@ -240,6 +251,9 @@ void PeripheralController::InitPwm(i2c_master_bus_handle_t i2c_bus) {
     };
     if (pca9685_init(&cfg, &s_pwm) != ESP_OK) {
         ESP_LOGW(TAG, "PCA9685 enabled but not found at I2C address 0x%02X", PCA9685_I2C_ADDR_DEFAULT);
+        return;
+    }
+    if (!kRegisterMcpTools) {
         return;
     }
     auto& mcp_server = McpServer::GetInstance();
@@ -298,6 +312,9 @@ void PeripheralController::InitLedIc(i2c_master_bus_handle_t i2c_bus) {
     };
     if (led_ic_init(&cfg, &s_led_ic) != ESP_OK) {
         ESP_LOGW(TAG, "LED driver IC enabled but no AW9523B / IS31FL3236 found");
+        return;
+    }
+    if (!kRegisterMcpTools) {
         return;
     }
     auto& mcp_server = McpServer::GetInstance();
@@ -366,6 +383,9 @@ void PeripheralController::InitRc522() {
         ESP_LOGW(TAG, "RC522 RFID reader configured but not responding");
         return;
     }
+    if (!kRegisterMcpTools) {
+        return;
+    }
     auto& mcp_server = McpServer::GetInstance();
     mcp_server.AddTool("self.rc522.read_card",
                        "Wait for an RFID card (MIFARE Classic, NTAG, Ultralight, or other ISO14443A card) held in front of "
@@ -407,6 +427,9 @@ void PeripheralController::InitImu() {
         ESP_LOGW(TAG, "IMU configured but QMI8658 not found");
         return;
     }
+    if (!kRegisterMcpTools) {
+        return;
+    }
     auto& mcp_server = McpServer::GetInstance();
     mcp_server.AddTool("self.imu.get_motion",
                        "Read the motion sensor (QMI8658 accelerometer and gyroscope): acceleration in g for x/y/z, angular "
@@ -445,6 +468,9 @@ void PeripheralController::InitExpander() {
     if (bus == nullptr ||
         esp_io_expander_new_i2c_tca9554(bus, ESP_IO_EXPANDER_I2C_TCA9554_ADDRESS_000, &s_expander) != ESP_OK) {
         ESP_LOGW(TAG, "IO expander configured but TCA9554 not found");
+        return;
+    }
+    if (!kRegisterMcpTools) {
         return;
     }
     auto& mcp_server = McpServer::GetInstance();
@@ -505,6 +531,9 @@ void PeripheralController::InitPmic() {
         ESP_LOGW(TAG, "PMIC configured but SY6970 charger not found");
         return;
     }
+    if (!kRegisterMcpTools) {
+        return;
+    }
     auto& mcp_server = McpServer::GetInstance();
     mcp_server.AddTool("self.pmic.get_status",
                        "Read the power management chip (SY6970 charger): whether the battery is charging, whether external "
@@ -559,6 +588,9 @@ void PeripheralController::InitEthernet() {
     };
     if (w5500_eth_init(&cfg) != ESP_OK) {
         ESP_LOGW(TAG, "W5500 Ethernet configured but failed to start (check wiring and CS pin)");
+        return;
+    }
+    if (!kRegisterMcpTools) {
         return;
     }
     auto& mcp_server = McpServer::GetInstance();

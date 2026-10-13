@@ -105,7 +105,6 @@ list(APPEND SOURCES
     "drivers/storage/storage_manager.c"
     "drivers/storage/storage_init.c"
     "utils/config_utils.c"
-    "protocols/mcp_device.c"
 )
 list(APPEND INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}

@@ -65,29 +65,17 @@
               <label class="form-label" for="uart_cts">Chân CTS GPIO (Clear to Send)</label>
               <input type="number" class="form-control" id="uart_cts" min="-1" max="48">
             </div>
-            <div class="form-item span-2 form-item-master">
-              <label class="form-checkbox"><input type="checkbox" id="mcp_enable"><span><strong>Giao thức IoT &amp; Tính năng MCP Server (Model Context Protocol)</strong></span></label>
-              <div class="form-hint">Cho phép AI Xiaozhi điều khiển các thiết bị ngoại vi và cảm biến qua giao thức MCP Server.</div>
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="mcp_lamp"><span>Đèn điều khiển bằng AI qua GPIO (MCP)</span></label>
+              <div class="form-hint">Mỗi chân đèn tạo một bộ công cụ MCP riêng (self.lamp hoặc self.lamp_1, self.lamp_2...).</div>
             </div>
-            <div class="form-item span-2" data-show-if="mcp_enable">
-              <label class="form-checkbox"><input type="checkbox" id="mcp_lamp"><span>Công cụ MCP: Điều khiển Đèn thông minh / Relay bật tắt qua AI</span></label>
-            </div>
-            <div class="form-item" data-show-if="mcp_enable">
-              <label class="form-label" for="kc_CUSTOM_MCP_TOOL_LAMP_EXTRA_GPIOS">Các chân GPIO Đèn (Lamp) thêm (cách nhau dấu phẩy)</label>
-              <input type="text" class="form-control" id="kc_CUSTOM_MCP_TOOL_LAMP_EXTRA_GPIOS">
-            </div>
-            <div class="form-item" data-show-if="mcp_lamp&amp;mcp_enable">
-              <label class="form-label" for="mcp_lamp_gpio">Chân GPIO điều khiển Đèn / Relay thông minh</label>
+            <div class="form-item" data-show-if="mcp_lamp">
+              <label class="form-label" for="mcp_lamp_gpio">Chân GPIO điều khiển Đèn</label>
               <input type="number" class="form-control" id="mcp_lamp_gpio" min="-1" max="48">
             </div>
-            <div class="form-item span-2" data-show-if="mcp_enable">
-              <label class="form-checkbox"><input type="checkbox" id="mcp_sensor"><span>Công cụ MCP: Đọc dữ liệu Cảm biến môi trường, khoảng cách, an ninh qua AI</span></label>
-            </div>
-            <div class="form-item span-2" data-show-if="mcp_enable">
-              <label class="form-checkbox"><input type="checkbox" id="mcp_actuator"><span>Công cụ MCP: Điều khiển Động cơ Servo, Động cơ DC, Còi Buzzer qua AI</span></label>
-            </div>
-            <div class="form-item span-2" data-show-if="mcp_enable">
-              <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_MCP_TOOL_PRESS_TO_TALK"><span>Công cụ MCP: Nhấn để nói qua AI (Push to Talk tool)</span></label>
+            <div class="form-item" data-show-if="mcp_lamp">
+              <label class="form-label" for="kc_CUSTOM_MCP_TOOL_LAMP_EXTRA_GPIOS">Các chân GPIO Đèn thêm (cách nhau dấu phẩy)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_MCP_TOOL_LAMP_EXTRA_GPIOS">
             </div>
           </div>
         </div>
