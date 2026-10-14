@@ -83,6 +83,11 @@ PCA9685 và TCA9554 còn phục vụ servo và IO chung, nên chip vẫn ở 4.7
 - IC mở rộng: thêm `choice CUSTOM_EXPANDER_CHIP` (TCA9554/PCA9554/TCA9554A 8 chân; TCA9555/PCA9555/TCA9535/TCA9539 16 chân, driver `esp_io_expander_tca95xx_16bit` đã có sẵn) và `CUSTOM_EXPANDER_I2C_ADDR` (thập phân, mặc định 32 = 0x20). `self.expander.set_pin/get_pin` nhận chân theo số chân của chip.
 - Menu LED PCA9685 và IC mở rộng không có `depends on`, vì chip được khai báo sau, ở mục 4.7. Firmware chỉ tạo LED khi chip đã bật và được tìm thấy.
 
+### Trùng kênh PCA9685 giữa LED và servo (2026-10-14)
+- Kênh servo trên PCA9685 không khai báo trong Kconfig mà do chatbot chọn lúc chạy, nên việc kiểm tra nằm trong firmware (`InitPwm` trong `periph_controller.cc`):
+  - `self.pwm.set_servo` và `self.pwm.set_duty` từ chối kênh có trong `CUSTOM_PCA9685_LED_CHANNELS` và báo dùng `self.pwm_led`. Mô tả công cụ liệt kê các kênh này để chatbot không chọn.
+  - `self.pwm.all_off` chỉ tắt các kênh không phải LED; LED tắt bằng `self.pwm_led.turn_off`.
+- Đã build trong `C:\x` (WS2812 một mắt, LED đơn GPIO 4/5, IC LED, PCA9685 kênh LED 0/1): không lỗi, không cảnh báo.
+
 ### Việc còn lại
-- Build thử cả bốn nhóm và LED trạng thái (WS2812 một mắt, vòng LED, LED đơn PWM) trong `C:\x`, rồi thử trên thiết bị.
-- `gpio_validator.py` chưa kiểm tra việc kênh PCA9685 dùng chung cho LED và servo.
+- Build thử LED trạng thái loại vòng LED và LED đơn PWM, nhóm IC mở rộng; thử trên thiết bị.

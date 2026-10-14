@@ -301,18 +301,39 @@ void PeripheralController::InitPwm(i2c_master_bus_handle_t i2c_bus) {
         ESP_LOGW(TAG, "PCA9685 enabled but not found at I2C address 0x%02X", PCA9685_I2C_ADDR_DEFAULT);
         return;
     }
+    static std::vector<int> led_channels;
+    for (int channel : ParseUserLedList(CONFIG_CUSTOM_PCA9685_LED_CHANNELS)) {
+        if (channel > 15 || std::find(led_channels.begin(), led_channels.end(), channel) != led_channels.end()) {
+            ESP_LOGW(TAG, "PCA9685 LED channel %d skipped (out of range or duplicate)", channel);
+            continue;
+        }
+        led_channels.push_back(channel);
+    }
     if (!kRegisterMcpTools) {
         return;
     }
+    std::string led_channel_text;
+    for (int channel : led_channels) {
+        led_channel_text += (led_channel_text.empty() ? "" : ", ") + std::to_string(channel);
+    }
+    const std::string reserved_hint = led_channels.empty()
+        ? std::string()
+        : " Channels " + led_channel_text + " drive LEDs and are refused here; use self.pwm_led for them.";
+    auto is_led_channel = [](int channel) {
+        return std::find(led_channels.begin(), led_channels.end(), channel) != led_channels.end();
+    };
     auto& mcp_server = McpServer::GetInstance();
     mcp_server.AddTool("self.pwm.set_servo",
                        "Move a servo connected to the PCA9685 16-channel PWM board. channel is the output number printed on "
-                       "the board (0-15), angle is 0-180 degrees (90 = center).",
+                       "the board (0-15), angle is 0-180 degrees (90 = center)." + reserved_hint,
                        PropertyList({Property("channel", kPropertyTypeInteger, 0, 0, 15),
                                      Property("angle", kPropertyTypeInteger, 90, 0, 180)}),
-                       [](const PropertyList& properties) -> ReturnValue {
+                       [is_led_channel](const PropertyList& properties) -> ReturnValue {
         int channel = properties["channel"].value<int>();
         int angle = properties["angle"].value<int>();
+        if (is_led_channel(channel)) {
+            return ErrorJson("Channel is used by an LED, use self.pwm_led instead", ESP_ERR_INVALID_ARG);
+        }
         esp_err_t ret = pca9685_set_servo_angle(s_pwm, static_cast<uint8_t>(channel), static_cast<float>(angle), 500, 2500);
         if (ret != ESP_OK) {
             return ErrorJson("Failed to set servo", ret);
@@ -321,21 +342,38 @@ void PeripheralController::InitPwm(i2c_master_bus_handle_t i2c_bus) {
     });
     mcp_server.AddTool("self.pwm.set_duty",
                        "Set the PWM duty cycle (0-100 percent) of one PCA9685 channel (0-15), for dimming LEDs or driving "
-                       "small loads. 0 turns the channel fully off, 100 fully on. Note: the board runs at 50 Hz for servos.",
+                       "small loads. 0 turns the channel fully off, 100 fully on. Note: the board runs at 50 Hz for servos." +
+                           reserved_hint,
                        PropertyList({Property("channel", kPropertyTypeInteger, 0, 0, 15),
                                      Property("percent", kPropertyTypeInteger, 0, 0, 100)}),
-                       [](const PropertyList& properties) -> ReturnValue {
+                       [is_led_channel](const PropertyList& properties) -> ReturnValue {
         int channel = properties["channel"].value<int>();
         int percent = properties["percent"].value<int>();
+        if (is_led_channel(channel)) {
+            return ErrorJson("Channel is used by an LED, use self.pwm_led instead", ESP_ERR_INVALID_ARG);
+        }
         esp_err_t ret = pca9685_set_duty(s_pwm, static_cast<uint8_t>(channel), static_cast<float>(percent));
         if (ret != ESP_OK) {
             return ErrorJson("Failed to set PWM duty", ret);
         }
         return true;
     });
-    mcp_server.AddTool("self.pwm.all_off", "Turn off all 16 PCA9685 outputs (servos go limp, LEDs off).",
-                       PropertyList(), [](const PropertyList& properties) -> ReturnValue {
-        esp_err_t ret = pca9685_all_off(s_pwm);
+    mcp_server.AddTool("self.pwm.all_off",
+                       led_channels.empty()
+                           ? std::string("Turn off all 16 PCA9685 outputs (servos go limp).")
+                           : "Turn off every PCA9685 output except the LED channels " + led_channel_text +
+                                 " (servos go limp). Use self.pwm_led.turn_off for the LEDs.",
+                       PropertyList(), [is_led_channel](const PropertyList& properties) -> ReturnValue {
+        esp_err_t ret = ESP_OK;
+        if (led_channels.empty()) {
+            ret = pca9685_all_off(s_pwm);
+        } else {
+            for (int channel = 0; channel < 16 && ret == ESP_OK; channel++) {
+                if (!is_led_channel(channel)) {
+                    ret = pca9685_set_duty(s_pwm, static_cast<uint8_t>(channel), 0.0f);
+                }
+            }
+        }
         if (ret != ESP_OK) {
             return ErrorJson("Failed to turn off PWM outputs", ret);
         }
@@ -343,13 +381,7 @@ void PeripheralController::InitPwm(i2c_master_bus_handle_t i2c_bus) {
     });
     ESP_LOGI(TAG, "PCA9685 MCP tools registered");
     std::vector<std::unique_ptr<UserLedOutput>> pwm_leds;
-    std::vector<int> used_channels;
-    for (int channel : ParseUserLedList(CONFIG_CUSTOM_PCA9685_LED_CHANNELS)) {
-        if (channel > 15 || std::find(used_channels.begin(), used_channels.end(), channel) != used_channels.end()) {
-            ESP_LOGW(TAG, "PCA9685 LED channel %d skipped (out of range or duplicate)", channel);
-            continue;
-        }
-        used_channels.push_back(channel);
+    for (int channel : led_channels) {
         pwm_leds.push_back(std::make_unique<Pca9685LedOutput>(s_pwm, static_cast<uint8_t>(channel)));
     }
     static UserLedGroup pwm_led_group("self.pwm_led", "LEDs on PCA9685 channels", std::move(pwm_leds),
