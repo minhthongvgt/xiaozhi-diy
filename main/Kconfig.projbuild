@@ -1360,13 +1360,17 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
             bool
             default y if CUSTOM_ENABLE_BUTTON_BOOT || CUSTOM_ENABLE_BUTTON_TOUCH
 
+        config CUSTOM_MCP_TOOL_UART
+            bool
+            default y if ENABLE_CUSTOM_UART && CUSTOM_UART_PIN_TX >= 0
+
         config CUSTOM_MCP_TOOL_BT_UART
             bool
             default y if ENABLE_BT_UART_MODULE && !CUSTOM_DISPLAY_UART_LINK_BLUETOOTH
 
         config ENABLE_CUSTOM_MCP_SERVER
             bool
-            default y if CUSTOM_MCP_TOOL_LAMP || CUSTOM_MCP_TOOL_SENSOR || CUSTOM_MCP_TOOL_ACTUATOR || CUSTOM_MCP_TOOL_ROBOT || CUSTOM_MCP_TOOL_LED || CUSTOM_MCP_TOOL_GPIO_LED || CUSTOM_MCP_TOOL_PERIPH || CUSTOM_MCP_TOOL_PRESS_TO_TALK || CUSTOM_MCP_TOOL_BT_UART
+            default y if CUSTOM_MCP_TOOL_LAMP || CUSTOM_MCP_TOOL_SENSOR || CUSTOM_MCP_TOOL_ACTUATOR || CUSTOM_MCP_TOOL_ROBOT || CUSTOM_MCP_TOOL_LED || CUSTOM_MCP_TOOL_GPIO_LED || CUSTOM_MCP_TOOL_PERIPH || CUSTOM_MCP_TOOL_PRESS_TO_TALK || CUSTOM_MCP_TOOL_UART || CUSTOM_MCP_TOOL_BT_UART
     endmenu
 
     menu "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)"

@@ -25,6 +25,7 @@
 #include "mcp_server.h"
 #include "lamp_controller.h"
 #include "boards/common/user_led_group.h"
+#include "boards/common/uart_code_bridge.h"
 #include "boards/common/configurable_status_led.h"
 #include "sensor_controller.h"
 #include "actuator_controller.h"
@@ -182,6 +183,7 @@ private:
     i2c_master_bus_handle_t i2c_bus_ = nullptr;
     Display* display_ = nullptr;
     Backlight* backlight_ = nullptr;
+    bool custom_uart_installed_ = false;
     Button boot_button_;
     std::vector<std::unique_ptr<Button>> extra_boot_buttons_;
     
@@ -1212,6 +1214,7 @@ private:
             return;
         }
 
+        custom_uart_installed_ = true;
         ESP_LOGI(TAG, "Custom UART initialized successfully on port %d, TX: %d, RX: %d at %d bps",
                  (int)port, CUSTOM_UART_TX_PIN, CUSTOM_UART_RX_PIN, CUSTOM_UART_BAUDRATE);
 #endif
@@ -1359,6 +1362,11 @@ private:
 #endif
 #if defined(CONFIG_CUSTOM_MCP_TOOL_BT_UART)
         InitializeBtUartTools();
+#endif
+#if defined(CONFIG_CUSTOM_MCP_TOOL_UART)
+        if (custom_uart_installed_) {
+            static UartCodeBridge uart_code_bridge __attribute__((unused)) (static_cast<uart_port_t>(CUSTOM_UART_PORT));
+        }
 #endif
 #endif
 #if defined(CONFIG_CUSTOM_ENABLE_PERIPH_RTC) || defined(CONFIG_CUSTOM_ENABLE_PERIPH_NFC_PN532) || \
