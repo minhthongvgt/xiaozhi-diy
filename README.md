@@ -82,7 +82,8 @@ Các chân dưới đây là quy tắc bắt buộc cho ESP32-S3-N16R8. Web Conf
 | Octal Flash & Octal PSRAM | **26 – 37** | **Không được dùng.** Dùng nội bộ cho bộ nhớ, Web Configurator sẽ khoá. |
 | USB Serial/JTAG | 19, 20 | Dùng cho nạp và debug. Hạn chế dùng làm chân thường. |
 | Strapping | 0, 3, 45, 46 | Ảnh hưởng chế độ khởi động. GPIO 0 là nút BOOT. |
-| LED WS2812 tích hợp | 48 | Đèn trạng thái, bật sẵn. |
+| LED WS2812 tích hợp | 48 | Đèn trạng thái, bật sẵn. Màu và hiệu ứng theo từng trạng thái chọn trong menuconfig mục 4.2. |
+| LED đơn do chatbot điều khiển | Tự chọn (danh sách chân) | Mục 4.2 → "LED đơn GPIO". 4 LED đầu chỉnh được độ sáng (LEDC kênh 1, 3, 6, 7). Thêm LED qua PCA9685, IC LED hoặc IC mở rộng: [docs/MCP_TOOLS.md](docs/MCP_TOOLS.md) mục 6.1. |
 | I2S loa | 14, 15, 7, 2 | BCLK, WS, DOUT, PA (bật amply). |
 | I2S micro | 4, 5, 6 | SCK, WS, DIN. |
 | I2C (cảm ứng, cảm biến, codec) | 8 (SDA), 9 (SCL) | Dùng chung cho OLED, ToF, codec ES8311. |
@@ -192,6 +193,7 @@ Nếu nạp không được (xem mục 5), giữ nút **BOOT** (GPIO 0), nhấn 
 | Tài liệu | Nội dung |
 | :--- | :--- |
 | [docs/MCP_TOOLS.md](docs/MCP_TOOLS.md) | Danh sách công cụ MCP: chatbot đọc cảm biến và điều khiển phần cứng bằng hàm nào, tham số, dữ liệu trả về, địa chỉ I2C. |
+| [docs/LED_GROUPS_PLAN.md](docs/LED_GROUPS_PLAN.md) | Các nhóm LED: LED trạng thái, LED đơn GPIO, PCA9685, IC LED, IC mở rộng; bảng phân kênh LEDC. |
 | [docs/PROMPT_XIAOZHI.md](docs/PROMPT_XIAOZHI.md) | Prompt mẫu để dán vào ô mô tả vai trò trên xiaozhi.me. |
 | [Danh_Sach_Kconfig_WebUI.md](Danh_Sach_Kconfig_WebUI.md) | Danh sách đầy đủ các mục cấu hình hiển thị trên Web Configurator. |
 | [partitions/README.md](partitions/README.md) | Cách bố trí bảng phân vùng Flash. |

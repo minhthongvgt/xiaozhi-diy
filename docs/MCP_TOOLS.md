@@ -31,7 +31,11 @@ Người dùng nói  →  Server Xiaozhi (LLM)  →  gọi công cụ MCP  →  
 | Cơ cấu chấp hành (`self.actuator.*`) | Relay, Servo, Motor DC, Còi, Motor rung |
 | Robot (`self.robot.*`) | Motor DC hoặc Servo |
 | LED (`self.led.*`) | LED trạng thái khác "Không có LED" |
-| Ngoại vi (`self.rtc/nfc/pwm/led_ic/rc522/imu/expander/pmic/ethernet.*`) | RTC, PN532, PCA9685, IC LED, hoặc đặt chân cho RC522, IMU, PMIC, IO Expander, Ethernet |
+| LED đơn GPIO (`self.gpio_led.*`) | Mục 4.2 → "LED đơn GPIO": danh sách chân không để trống |
+| LED qua PCA9685 (`self.pwm_led.*`) | Bật PCA9685 (4.7) và nhập kênh LED ở mục 4.2 → "LED qua PCA9685" |
+| LED qua IC LED (`self.led_ic.*`) | Mục 4.2 → "LED qua IC điều khiển LED I2C", chip được tìm thấy |
+| LED qua IC mở rộng (`self.expander_led.*`) | Đặt chân I2C cho IO Expander (4.7) và nhập chân LED ở mục 4.2 → "LED qua IC mở rộng GPIO" |
+| Ngoại vi (`self.rtc/nfc/pwm/rc522/imu/expander/pmic/ethernet.*`) | RTC, PN532, PCA9685, IC LED, hoặc đặt chân cho RC522, IMU, PMIC, IO Expander, Ethernet |
 | Nhấn để nói (`self.set_press_to_talk`) | Nút BOOT hoặc nút chạm |
 | Đèn (`self.lamp.*`) | Mục 3: "Đèn điều khiển bằng AI qua GPIO" và có chân đèn |
 | Bluetooth UART (`self.bluetooth.*`) | Mục 3: module Bluetooth UART, khi màn hình rời không dùng module này |
@@ -122,11 +126,12 @@ Giá trị: `up`, `down`, `left`, `right`, `none`. Công cụ chờ người dù
 | `self.rtc.get_time` | RTC DS3231 / PCF8563 | — | `{"rtc_type": "DS3231", "time": "2026-10-10 19:30:00", "valid": true, "temperature_c": 29.25}` |
 | `self.rtc.sync_from_system` | RTC DS3231 / PCF8563 | — | `{"success": true}` hoặc lỗi nếu chưa có giờ mạng |
 | `self.nfc.read_card` | NFC PN532 | `timeout_ms` 500–15000 (mặc định 5000) | `{"found": true, "uid": "04A1B2C3D4E5F6", "uid_length": 7, "atqa": "0044", "sak": "00", "card_type": "MIFARE Ultralight / NTAG"}` |
-| `self.pwm.set_servo` | PCA9685 | `channel` 0–15, `angle` 0–180 | `true` |
-| `self.pwm.set_duty` | PCA9685 | `channel` 0–15, `percent` 0–100 | `true` |
-| `self.pwm.all_off` | PCA9685 | — | `true` |
-| `self.led_ic.set_channel` | IC LED AW9523B / IS31FL3236 | `channel` (AW9523B: 0–15, IS31FL3236: 0–35), `brightness` 0–255 | `true` |
-| `self.led_ic.set_all` | IC LED AW9523B / IS31FL3236 | `brightness` 0–255 | `true` |
+| `self.pwm.set_servo` | PCA9685 | `channel` 0–15, `angle` 0–180 | `true`; kênh đã gán cho LED bị từ chối |
+| `self.pwm.set_duty` | PCA9685 | `channel` 0–15, `percent` 0–100 | `true`; kênh đã gán cho LED bị từ chối |
+| `self.pwm.all_off` | PCA9685 | — | `true`; chỉ tắt các kênh không phải LED |
+| `self.expander.set_pin` / `get_pin` | IO Expander TCA9554 (8 chân) hoặc TCA9555/PCA9555/TCA9535/TCA9539 (16 chân) | `pin` theo số chân của chip, `level` 0/1 | `true` / `{"pin": 3, "level": 1}` |
+
+Các công cụ LED của PCA9685, IC LED và IC mở rộng ở mục 6.1.
 
 **RTC tự đồng bộ:** khi khởi động mà chưa có mạng, thiết bị lấy giờ từ RTC. Khi đã nhận giờ từ server, thiết bị ghi lại vào RTC (mỗi 6 giờ một lần). `valid: false` nghĩa là RTC mất pin nuôi và chưa được đặt lại giờ.
 
@@ -156,6 +161,32 @@ Giá trị: `up`, `down`, `left`, `right`, `none`. Công cụ chờ người dù
 | `self.robot.gesture` | Servo có chân PWM | `action`: `nod`, `shake`, `center`, `relax` |
 
 Các nhóm tự bật theo phần cứng, xem bảng ở mục 1.
+
+### 6.1 Nhóm LED do chatbot điều khiển
+
+Bốn nhóm dùng chung 5 công cụ, chỉ khác tiền tố: `self.gpio_led`, `self.pwm_led` (PCA9685), `self.led_ic` (AW9523B / IS31FL3236), `self.expander_led` (IC mở rộng).
+
+| Công cụ | Tham số | Kết quả |
+| :--- | :--- | :--- |
+| `<nhóm>.get_state` | — | `[{"index": 1, "output": "GPIO 4", "power": true, "brightness": 80, "effect": "blink", "period_ms": 1000, "dimmable": true}]` |
+| `<nhóm>.turn_on` / `turn_off` | `index`: 1..N chọn một LED, 0 chọn tất cả | `true` |
+| `<nhóm>.set_brightness` | `index`, `brightness` 0–100 (0 = tắt) | `true` |
+| `<nhóm>.set_effect` | `index`, `effect`: `steady`, `blink`, `breathe`, `off`; `period_ms` 200–10000 | `true` |
+
+- Mô tả công cụ liệt kê LED nào ứng với chân/kênh nào, nên chatbot hiểu "đèn số 2" là LED nào.
+- LED không chỉnh độ sáng được (IC mở rộng, LED GPIO vượt số kênh PWM) chỉ bật/tắt; hiệu ứng `breathe` thành `blink`.
+- Trong menuconfig, mỗi nhóm có độ sáng mặc định, trạng thái khi khởi động (tắt/sáng/nháy/thở) và chu kỳ nháy/thở.
+- LED đơn GPIO: 4 LED đầu chỉnh được độ sáng (kênh LEDC 1, 3, 6, 7; còn 3 nếu LED trạng thái là LED đơn PWM).
+
+### 6.2 LED trạng thái theo từng trạng thái
+
+LED trạng thái (`self.led.*`) tự đổi màu và hiệu ứng theo trạng thái của chatbot: khởi động, cấu hình WiFi, chờ, kết nối, nghe, nói, nâng cấp, kích hoạt, lỗi. Mỗi trạng thái chọn được hiệu ứng và màu trong menuconfig (mục 4.2 → LED trạng thái → "Màu và hiệu ứng theo trạng thái"):
+- Mọi loại LED: tắt, đứng yên, nháy nhanh/chậm, thở, sáng theo nhịp tiếng nói.
+- LED có màu (WS2812 / vòng LED): thêm cầu vồng, chạy vòng, quét, tô dần, cầu vồng xoay, thanh dâng theo tiếng nói, loang hai phía theo tiếng nói.
+- Ba mức độ sáng: thấp cho trạng thái Chờ; cao cho Lỗi và khi đang nghe thấy tiếng nói; thường cho các trạng thái còn lại.
+- "Độ trễ hiệu ứng theo âm thanh" (mặc định 200 ms) để LED khớp với tiếng ra loa.
+
+`self.led.set_effect` với `effect: auto` trả LED về chế độ tự đổi theo trạng thái.
 
 **Bluetooth UART** (`self.bluetooth.get_status`, `send_text` hoặc `send_code`, `read_messages`): gửi và nhận dữ liệu với vi điều khiển ở đầu kia qua module HC-05/HC-06/HM-10. Chi tiết ở [BLUETOOTH_UART.md](BLUETOOTH_UART.md).
 
@@ -193,6 +224,9 @@ Tất cả thiết bị I2C dùng chung một bus. Hai thiết bị trùng đị
 | APDS-9960 | 0x39 | |
 | IS31FL3236 | 0x3C–0x3F | 0x3C/0x3D trùng màn OLED, không được dò khi dùng OLED |
 | INA219 / PCA9685 | 0x40 | Trùng nhau; INA219 chỉ được dò khi bật INA2xx |
+| TCA9554 / TCA9555 / PCA9555 / TCA9535 (IO Expander) | 0x20–0x27 | Đặt trong "Địa chỉ I2C chip mở rộng GPIO" (thập phân, 32 = 0x20) |
+| TCA9554A (IO Expander) | 0x38–0x3F | 0x38 trùng AHT20 / FT5x06, 0x3C–0x3F trùng IS31FL3236 / OLED |
+| TCA9539 (IO Expander) | 0x74–0x77 | |
 | PCF8563 | 0x51 | |
 | BQ27220 | 0x55 | |
 | AW9523B | 0x58–0x5B | |
