@@ -333,12 +333,21 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_LED_BRIGHTNESS_NORMAL` | int | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Độ sáng thường (%) | 10 |
 | `CONFIG_CUSTOM_LED_BRIGHTNESS_LOW` | int | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Độ sáng thấp (%) cho trạng thái Chờ | 2 |
 | `CONFIG_CUSTOM_LED_BRIGHTNESS_HIGH` | int | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Độ sáng cao (%) cho Lỗi và khi nghe thấy tiếng nói | 40 |
+| `CONFIG_CUSTOM_LED_EFFECT_SPEED_MS` | int | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Tốc độ hiệu ứng vòng LED (ms mỗi bước) | 50 |
+| `CONFIG_CUSTOM_LED_AUDIO_DELAY_MS` | int | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Độ trễ hiệu ứng theo âm thanh (ms) | 200 |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_OFF` | bool | Màu và hiệu ứng theo trạng thái | Tắt |  |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_STEADY` | bool | Màu và hiệu ứng theo trạng thái | Sáng đứng yên |  |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_FAST` | bool | Màu và hiệu ứng theo trạng thái | Nháy nhanh (100 ms) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_SLOW` | bool | Màu và hiệu ứng theo trạng thái | Nháy chậm (500 ms) |  |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_BREATHE` | bool | Màu và hiệu ứng theo trạng thái | Thở (sáng dần, tối dần) |  |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_RAINBOW` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng đổi màu |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_SCROLL` | bool | Màu và hiệu ứng theo trạng thái | Chạy vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_SCANNER` | bool | Màu và hiệu ứng theo trạng thái | Quét qua lại (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_WIPE` | bool | Màu và hiệu ứng theo trạng thái | Tô dần quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_RAINBOW_CHASE` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng xoay (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_BAR` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: thanh dâng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_MIRROR` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: loang hai phía (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_PULSE` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: sáng theo nhịp |  |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_ID` | int | Màu và hiệu ứng theo trạng thái |  | 0 if CUSTOM_LED_STATE_STARTING_EFFECT_OFF |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_COLOR` | string | Màu và hiệu ứng theo trạng thái | Khởi động: màu (mã RRGGBB) | "0000FF" |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_OFF` | bool | Màu và hiệu ứng theo trạng thái | Tắt |  |
@@ -347,6 +356,13 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_SLOW` | bool | Màu và hiệu ứng theo trạng thái | Nháy chậm (500 ms) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BREATHE` | bool | Màu và hiệu ứng theo trạng thái | Thở (sáng dần, tối dần) |  |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_RAINBOW` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng đổi màu |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_SCROLL` | bool | Màu và hiệu ứng theo trạng thái | Chạy vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_SCANNER` | bool | Màu và hiệu ứng theo trạng thái | Quét qua lại (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_WIPE` | bool | Màu và hiệu ứng theo trạng thái | Tô dần quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_RAINBOW_CHASE` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng xoay (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_BAR` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: thanh dâng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_MIRROR` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: loang hai phía (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_PULSE` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: sáng theo nhịp |  |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_ID` | int | Màu và hiệu ứng theo trạng thái |  | 0 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_OFF |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_COLOR` | string | Màu và hiệu ứng theo trạng thái | Cấu hình WiFi: màu (mã RRGGBB) | "0000FF" |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_OFF` | bool | Màu và hiệu ứng theo trạng thái | Tắt | y (mặc định của choice) |
@@ -355,6 +371,13 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_SLOW` | bool | Màu và hiệu ứng theo trạng thái | Nháy chậm (500 ms) |  |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_BREATHE` | bool | Màu và hiệu ứng theo trạng thái | Thở (sáng dần, tối dần) |  |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_RAINBOW` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng đổi màu |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_SCROLL` | bool | Màu và hiệu ứng theo trạng thái | Chạy vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_SCANNER` | bool | Màu và hiệu ứng theo trạng thái | Quét qua lại (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_WIPE` | bool | Màu và hiệu ứng theo trạng thái | Tô dần quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_RAINBOW_CHASE` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng xoay (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_BAR` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: thanh dâng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_MIRROR` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: loang hai phía (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_PULSE` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: sáng theo nhịp |  |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_ID` | int | Màu và hiệu ứng theo trạng thái |  | 0 if CUSTOM_LED_STATE_IDLE_EFFECT_OFF |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_COLOR` | string | Màu và hiệu ứng theo trạng thái | Chờ: màu (mã RRGGBB) | "0000FF" |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_OFF` | bool | Màu và hiệu ứng theo trạng thái | Tắt |  |
@@ -363,6 +386,13 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_SLOW` | bool | Màu và hiệu ứng theo trạng thái | Nháy chậm (500 ms) |  |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_BREATHE` | bool | Màu và hiệu ứng theo trạng thái | Thở (sáng dần, tối dần) |  |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_RAINBOW` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng đổi màu |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_SCROLL` | bool | Màu và hiệu ứng theo trạng thái | Chạy vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_SCANNER` | bool | Màu và hiệu ứng theo trạng thái | Quét qua lại (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_WIPE` | bool | Màu và hiệu ứng theo trạng thái | Tô dần quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_RAINBOW_CHASE` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng xoay (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_BAR` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: thanh dâng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_MIRROR` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: loang hai phía (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_PULSE` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: sáng theo nhịp |  |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_ID` | int | Màu và hiệu ứng theo trạng thái |  | 0 if CUSTOM_LED_STATE_CONNECTING_EFFECT_OFF |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_COLOR` | string | Màu và hiệu ứng theo trạng thái | Đang kết nối: màu (mã RRGGBB) | "0000FF" |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_OFF` | bool | Màu và hiệu ứng theo trạng thái | Tắt |  |
@@ -371,6 +401,13 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_SLOW` | bool | Màu và hiệu ứng theo trạng thái | Nháy chậm (500 ms) |  |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_BREATHE` | bool | Màu và hiệu ứng theo trạng thái | Thở (sáng dần, tối dần) |  |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_RAINBOW` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng đổi màu |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_SCROLL` | bool | Màu và hiệu ứng theo trạng thái | Chạy vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_SCANNER` | bool | Màu và hiệu ứng theo trạng thái | Quét qua lại (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_WIPE` | bool | Màu và hiệu ứng theo trạng thái | Tô dần quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_RAINBOW_CHASE` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng xoay (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_BAR` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: thanh dâng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_MIRROR` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: loang hai phía (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_PULSE` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: sáng theo nhịp |  |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_ID` | int | Màu và hiệu ứng theo trạng thái |  | 0 if CUSTOM_LED_STATE_LISTENING_EFFECT_OFF |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_COLOR` | string | Màu và hiệu ứng theo trạng thái | Đang nghe: màu (mã RRGGBB) | "FF0000" |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_OFF` | bool | Màu và hiệu ứng theo trạng thái | Tắt |  |
@@ -379,6 +416,13 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_SLOW` | bool | Màu và hiệu ứng theo trạng thái | Nháy chậm (500 ms) |  |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_BREATHE` | bool | Màu và hiệu ứng theo trạng thái | Thở (sáng dần, tối dần) |  |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_RAINBOW` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng đổi màu |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_SCROLL` | bool | Màu và hiệu ứng theo trạng thái | Chạy vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_SCANNER` | bool | Màu và hiệu ứng theo trạng thái | Quét qua lại (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_WIPE` | bool | Màu và hiệu ứng theo trạng thái | Tô dần quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_RAINBOW_CHASE` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng xoay (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_BAR` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: thanh dâng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_MIRROR` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: loang hai phía (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_PULSE` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: sáng theo nhịp |  |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_ID` | int | Màu và hiệu ứng theo trạng thái |  | 0 if CUSTOM_LED_STATE_SPEAKING_EFFECT_OFF |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_COLOR` | string | Màu và hiệu ứng theo trạng thái | Đang nói: màu (mã RRGGBB) | "00FF00" |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_OFF` | bool | Màu và hiệu ứng theo trạng thái | Tắt |  |
@@ -387,6 +431,13 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_SLOW` | bool | Màu và hiệu ứng theo trạng thái | Nháy chậm (500 ms) |  |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_BREATHE` | bool | Màu và hiệu ứng theo trạng thái | Thở (sáng dần, tối dần) |  |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_RAINBOW` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng đổi màu |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_SCROLL` | bool | Màu và hiệu ứng theo trạng thái | Chạy vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_SCANNER` | bool | Màu và hiệu ứng theo trạng thái | Quét qua lại (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_WIPE` | bool | Màu và hiệu ứng theo trạng thái | Tô dần quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_RAINBOW_CHASE` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng xoay (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_BAR` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: thanh dâng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_MIRROR` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: loang hai phía (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_PULSE` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: sáng theo nhịp |  |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_ID` | int | Màu và hiệu ứng theo trạng thái |  | 0 if CUSTOM_LED_STATE_UPGRADING_EFFECT_OFF |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_COLOR` | string | Màu và hiệu ứng theo trạng thái | Nâng cấp firmware: màu (mã RRGGBB) | "00FF00" |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_OFF` | bool | Màu và hiệu ứng theo trạng thái | Tắt |  |
@@ -395,6 +446,13 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_SLOW` | bool | Màu và hiệu ứng theo trạng thái | Nháy chậm (500 ms) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_BREATHE` | bool | Màu và hiệu ứng theo trạng thái | Thở (sáng dần, tối dần) |  |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_RAINBOW` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng đổi màu |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_SCROLL` | bool | Màu và hiệu ứng theo trạng thái | Chạy vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_SCANNER` | bool | Màu và hiệu ứng theo trạng thái | Quét qua lại (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_WIPE` | bool | Màu và hiệu ứng theo trạng thái | Tô dần quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_RAINBOW_CHASE` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng xoay (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_BAR` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: thanh dâng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_MIRROR` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: loang hai phía (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_PULSE` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: sáng theo nhịp |  |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_ID` | int | Màu và hiệu ứng theo trạng thái |  | 0 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_OFF |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_COLOR` | string | Màu và hiệu ứng theo trạng thái | Kích hoạt thiết bị: màu (mã RRGGBB) | "00FF00" |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_OFF` | bool | Màu và hiệu ứng theo trạng thái | Tắt |  |
@@ -403,6 +461,13 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_SLOW` | bool | Màu và hiệu ứng theo trạng thái | Nháy chậm (500 ms) |  |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_BREATHE` | bool | Màu và hiệu ứng theo trạng thái | Thở (sáng dần, tối dần) |  |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_RAINBOW` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng đổi màu |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_SCROLL` | bool | Màu và hiệu ứng theo trạng thái | Chạy vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_SCANNER` | bool | Màu và hiệu ứng theo trạng thái | Quét qua lại (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_WIPE` | bool | Màu và hiệu ứng theo trạng thái | Tô dần quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_RAINBOW_CHASE` | bool | Màu và hiệu ứng theo trạng thái | Cầu vồng xoay (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_BAR` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: thanh dâng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_MIRROR` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: loang hai phía (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_PULSE` | bool | Màu và hiệu ứng theo trạng thái | Theo âm thanh: sáng theo nhịp |  |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_ID` | int | Màu và hiệu ứng theo trạng thái |  | 0 if CUSTOM_LED_STATE_ERROR_EFFECT_OFF |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_COLOR` | string | Màu và hiệu ứng theo trạng thái | Lỗi: màu (mã RRGGBB) | "FF0000" |
 | `CONFIG_CUSTOM_LED_EXTRA_GPIOS` | string | LED đơn GPIO (chatbot điều khiển) | Các chân LED đơn (cách nhau dấu phẩy, để trống là không dùng) | "" |

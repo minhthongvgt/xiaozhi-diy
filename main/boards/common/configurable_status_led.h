@@ -9,8 +9,25 @@
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
+#include <functional>
+#include <mutex>
+#include <vector>
 
-enum class StatusLedEffect : int { kOff = 0, kSteady = 1, kBlinkFast = 2, kBlinkSlow = 3, kBreathe = 4, kRainbow = 5 };
+enum class StatusLedEffect : int {
+    kOff = 0,
+    kSteady = 1,
+    kBlinkFast = 2,
+    kBlinkSlow = 3,
+    kBreathe = 4,
+    kRainbow = 5,
+    kScroll = 6,
+    kScanner = 7,
+    kWipe = 8,
+    kRainbowChase = 9,
+    kAudioBar = 10,
+    kAudioMirror = 11,
+    kAudioPulse = 12,
+};
 
 typedef struct StatusLedStyle {
     uint8_t red;
@@ -34,6 +51,17 @@ typedef struct StatusLedStyle {
 #define STATUS_LED_LEVEL_HIGH CONFIG_CUSTOM_LED_BRIGHTNESS_HIGH
 #else
 #define STATUS_LED_LEVEL_HIGH 40
+#endif
+
+#if defined(CONFIG_CUSTOM_LED_EFFECT_SPEED_MS)
+#define STATUS_LED_SPEED_MS CONFIG_CUSTOM_LED_EFFECT_SPEED_MS
+#else
+#define STATUS_LED_SPEED_MS 50
+#endif
+#if defined(CONFIG_CUSTOM_LED_AUDIO_DELAY_MS)
+#define STATUS_LED_AUDIO_DELAY_MS CONFIG_CUSTOM_LED_AUDIO_DELAY_MS
+#else
+#define STATUS_LED_AUDIO_DELAY_MS 200
 #endif
 
 #define STATUS_LED_EFFECT_OF(state, fallback) STATUS_LED_EFFECT_##state(fallback)
@@ -148,7 +176,7 @@ inline uint32_t ParseStatusLedColor(const char* text, uint32_t fallback) {
 
 inline StatusLedStyle MakeStatusLedStyle(const char* color, uint32_t fallback_color, int effect_id, uint8_t level) {
     const uint32_t rgb = ParseStatusLedColor(color, fallback_color);
-    const bool known = effect_id >= static_cast<int>(StatusLedEffect::kOff) && effect_id <= static_cast<int>(StatusLedEffect::kRainbow);
+    const bool known = effect_id >= static_cast<int>(StatusLedEffect::kOff) && effect_id <= static_cast<int>(StatusLedEffect::kAudioPulse);
     return StatusLedStyle{
         static_cast<uint8_t>((rgb >> 16) & 0xFF),
         static_cast<uint8_t>((rgb >> 8) & 0xFF),
@@ -204,6 +232,80 @@ inline int StatusLedBlinkInterval(StatusLedEffect effect) {
     return effect == StatusLedEffect::kBlinkFast ? 100 : 500;
 }
 
+inline bool IsStatusLedAudioEffect(StatusLedEffect effect) {
+    return effect == StatusLedEffect::kAudioBar || effect == StatusLedEffect::kAudioMirror || effect == StatusLedEffect::kAudioPulse;
+}
+
+class StatusLedAudioFollower {
+public:
+    using DrawCallback = std::function<void(uint8_t)>;
+
+    StatusLedAudioFollower() {
+        const esp_timer_create_args_t args = {
+            .callback = [](void* arg) { static_cast<StatusLedAudioFollower*>(arg)->OnTick(); },
+            .arg = this,
+            .dispatch_method = ESP_TIMER_TASK,
+            .name = "led_audio",
+            .skip_unhandled_events = true,
+        };
+        if (esp_timer_create(&args, &timer_) != ESP_OK) {
+            timer_ = nullptr;
+        }
+    }
+
+    void Start(DrawCallback draw) {
+        Stop();
+        std::lock_guard<std::mutex> lock(mutex_);
+        draw_ = std::move(draw);
+        history_.assign(kHistorySize, 0);
+        index_ = 0;
+        shown_ = 0;
+        if (timer_ != nullptr) {
+            esp_timer_start_periodic(timer_, static_cast<uint64_t>(kTickMs) * 1000);
+        }
+    }
+
+    void Stop() {
+        if (timer_ != nullptr) {
+            esp_timer_stop(timer_);
+        }
+        std::lock_guard<std::mutex> lock(mutex_);
+        draw_ = nullptr;
+    }
+
+private:
+    static constexpr int kTickMs = 30;
+    static constexpr size_t kHistorySize = 32;
+    static constexpr int32_t kFullScalePeak = 24000;
+    esp_timer_handle_t timer_ = nullptr;
+    std::mutex mutex_;
+    DrawCallback draw_;
+    std::vector<uint8_t> history_;
+    size_t index_ = 0;
+    int shown_ = 0;
+
+    void OnTick() {
+        std::lock_guard<std::mutex> lock(mutex_);
+        if (!draw_) {
+            return;
+        }
+        const int32_t peak = Application::GetInstance().GetAudioService().GetOutputLevel();
+        const int32_t level = peak >= kFullScalePeak ? 255 : peak * 255 / kFullScalePeak;
+        history_[index_] = static_cast<uint8_t>(level);
+        const size_t delay_steps = static_cast<size_t>(STATUS_LED_AUDIO_DELAY_MS / kTickMs);
+        const size_t steps = delay_steps < kHistorySize ? delay_steps : kHistorySize - 1;
+        const uint8_t delayed = history_[(index_ + kHistorySize - steps) % kHistorySize];
+        index_ = (index_ + 1) % kHistorySize;
+        shown_ = delayed > shown_ ? delayed : shown_ * 4 / 5;
+        draw_(static_cast<uint8_t>(shown_));
+    }
+};
+
+inline StripColor ScaleStripColor(uint8_t red, uint8_t green, uint8_t blue, uint32_t scale) {
+    return StripColor{static_cast<uint8_t>(red * scale / 255), static_cast<uint8_t>(green * scale / 255),
+                      static_cast<uint8_t>(blue * scale / 255)};
+}
+
 class ConfigurableSingleLed : public SingleLed {
 public:
     explicit ConfigurableSingleLed(gpio_num_t gpio) : SingleLed(gpio) {}
@@ -213,27 +315,45 @@ public:
         if (IsCustomMode() || !CurrentStatusLedStyle(style)) {
             return;
         }
+        follower_.Stop();
         SetColor(style.red, style.green, style.blue);
         SetBrightness(StatusLedPercentTo255(style.level));
+        if (IsStatusLedAudioEffect(style.effect)) {
+            const uint8_t full = StatusLedPercentTo255(style.level);
+            follower_.Start([this, full](uint8_t level) {
+                SetBrightness(static_cast<uint8_t>(static_cast<uint32_t>(full) * level / 255));
+                TurnOn();
+            });
+            return;
+        }
         switch (style.effect) {
             case StatusLedEffect::kOff:
                 TurnOff();
-                break;
-            case StatusLedEffect::kSteady:
-                TurnOn();
                 break;
             case StatusLedEffect::kBlinkFast:
             case StatusLedEffect::kBlinkSlow:
                 StartContinuousBlink(StatusLedBlinkInterval(style.effect));
                 break;
+            case StatusLedEffect::kScroll:
+            case StatusLedEffect::kScanner:
+            case StatusLedEffect::kWipe:
+                StartContinuousBlink(500);
+                break;
             case StatusLedEffect::kBreathe:
                 SingleLed::StartBreathe(20);
                 break;
             case StatusLedEffect::kRainbow:
+            case StatusLedEffect::kRainbowChase:
                 SingleLed::StartRainbow(25, StatusLedPercentTo255(style.level));
+                break;
+            default:
+                TurnOn();
                 break;
         }
     }
+
+private:
+    StatusLedAudioFollower follower_;
 };
 
 class ConfigurableCircularStrip : public CircularStrip {
@@ -245,18 +365,13 @@ public:
         if (IsCustomMode() || !CurrentStatusLedStyle(style)) {
             return;
         }
+        follower_.Stop();
         const uint8_t level = StatusLedPercentTo255(style.level);
-        const StripColor color = {
-            static_cast<uint8_t>(static_cast<uint32_t>(style.red) * level / 255),
-            static_cast<uint8_t>(static_cast<uint32_t>(style.green) * level / 255),
-            static_cast<uint8_t>(static_cast<uint32_t>(style.blue) * level / 255),
-        };
+        const StripColor color = ScaleStripColor(style.red, style.green, style.blue, level);
+        const int speed = STATUS_LED_SPEED_MS;
         switch (style.effect) {
             case StatusLedEffect::kOff:
                 FadeOut(50);
-                break;
-            case StatusLedEffect::kSteady:
-                SetAllColor(color);
                 break;
             case StatusLedEffect::kBlinkFast:
             case StatusLedEffect::kBlinkSlow:
@@ -267,13 +382,70 @@ public:
                 break;
             case StatusLedEffect::kRainbow:
                 CircularStrip::SetBrightness(level, static_cast<uint8_t>(level / 8));
-                if (GetLedCount() > 1) {
-                    RainbowChase(25);
-                } else {
-                    Rainbow(25);
-                }
+                Rainbow(speed);
+                break;
+            case StatusLedEffect::kRainbowChase:
+                CircularStrip::SetBrightness(level, static_cast<uint8_t>(level / 8));
+                RainbowChase(speed);
+                break;
+            case StatusLedEffect::kScroll:
+                Scroll({0, 0, 0}, color, 3, speed);
+                break;
+            case StatusLedEffect::kScanner:
+                Scanner(color, 3, speed);
+                break;
+            case StatusLedEffect::kWipe:
+                ColorWipe(color, speed);
+                break;
+            case StatusLedEffect::kAudioBar:
+            case StatusLedEffect::kAudioMirror:
+            case StatusLedEffect::kAudioPulse:
+                StartAudioEffect(style, level);
+                break;
+            default:
+                SetAllColor(color);
                 break;
         }
+    }
+
+private:
+    StatusLedAudioFollower follower_;
+    std::vector<StripColor> frame_;
+
+    void StartAudioEffect(const StatusLedStyle& style, uint8_t full) {
+        const int count = GetLedCount();
+        frame_.assign(count, StripColor{});
+        const StatusLedEffect effect = style.effect;
+        const uint8_t red = style.red;
+        const uint8_t green = style.green;
+        const uint8_t blue = style.blue;
+        follower_.Start([this, effect, red, green, blue, full, count](uint8_t level) {
+            for (int i = 0; i < count; i++) {
+                frame_[i] = StripColor{};
+            }
+            if (effect == StatusLedEffect::kAudioPulse) {
+                const StripColor color = ScaleStripColor(red, green, blue, static_cast<uint32_t>(full) * level / 255);
+                for (int i = 0; i < count; i++) {
+                    frame_[i] = color;
+                }
+            } else if (effect == StatusLedEffect::kAudioBar) {
+                const int lit = level * count / 255;
+                for (int i = 0; i < lit; i++) {
+                    const int position = count > 1 ? i * 255 / (count - 1) : 0;
+                    const uint8_t r = static_cast<uint8_t>(position < 128 ? position * 2 : 255);
+                    const uint8_t g = static_cast<uint8_t>(position < 128 ? 255 : (255 - position) * 2);
+                    frame_[i] = ScaleStripColor(r, g, 0, full);
+                }
+            } else {
+                const int half = (level * count / 255 + 1) / 2;
+                const StripColor color = ScaleStripColor(red, green, blue, full);
+                for (int i = 0; i < half; i++) {
+                    frame_[i % count] = color;
+                    frame_[(count - 1 - i + count) % count] = color;
+                }
+            }
+            SetMultiColors(frame_);
+        });
     }
 };
 
@@ -286,23 +458,39 @@ public:
         if (IsCustomMode() || !CurrentStatusLedStyle(style)) {
             return;
         }
-        GpioLed::SetBrightness(StatusLedPercentTo255(style.level));
+        follower_.Stop();
+        const uint8_t full = StatusLedPercentTo255(style.level);
+        GpioLed::SetBrightness(full);
+        if (IsStatusLedAudioEffect(style.effect)) {
+            follower_.Start([this, full](uint8_t level) {
+                GpioLed::SetBrightness(static_cast<uint8_t>(static_cast<uint32_t>(full) * level / 255));
+                TurnOn();
+            });
+            return;
+        }
         switch (style.effect) {
             case StatusLedEffect::kOff:
                 TurnOff();
-                break;
-            case StatusLedEffect::kSteady:
-            case StatusLedEffect::kRainbow:
-                TurnOn();
                 break;
             case StatusLedEffect::kBlinkFast:
             case StatusLedEffect::kBlinkSlow:
                 GpioLed::StartBlink(StatusLedBlinkInterval(style.effect));
                 break;
+            case StatusLedEffect::kScroll:
+            case StatusLedEffect::kScanner:
+            case StatusLedEffect::kWipe:
+                GpioLed::StartBlink(500);
+                break;
             case StatusLedEffect::kBreathe:
                 GpioLed::StartBreathe();
                 break;
+            default:
+                TurnOn();
+                break;
         }
     }
+
+private:
+    StatusLedAudioFollower follower_;
 };
 #endif

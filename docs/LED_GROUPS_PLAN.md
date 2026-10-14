@@ -89,5 +89,20 @@ PCA9685 và TCA9554 còn phục vụ servo và IO chung, nên chip vẫn ở 4.7
   - `self.pwm.all_off` chỉ tắt các kênh không phải LED; LED tắt bằng `self.pwm_led.turn_off`.
 - Đã build trong `C:\x` (WS2812 một mắt, LED đơn GPIO 4/5, IC LED, PCA9685 kênh LED 0/1): không lỗi, không cảnh báo.
 
+### Hiệu ứng vòng LED và theo âm thanh (2026-10-14)
+- Mỗi trạng thái có thêm các hiệu ứng:
+  - Chỉ cho LED có màu (WS2812 / vòng LED): chạy vòng (6), quét qua lại (7), tô dần (8), cầu vồng xoay (9), thanh dâng theo âm thanh (10), loang hai phía theo âm thanh (11).
+  - Cho mọi loại LED: sáng theo nhịp âm thanh (12).
+- Hai ô chung:
+  - `CUSTOM_LED_EFFECT_SPEED_MS` (10–500, mặc định 50): tốc độ của chạy vòng, quét, tô dần và cầu vồng.
+  - `CUSTOM_LED_AUDIO_DELAY_MS` (0–900, mặc định 200): độ trễ để LED khớp tiếng ra loa, bù cho bộ đệm DMA.
+- Mức âm lượng: `AudioService::GetOutputLevel()` trả về đỉnh biên độ (0–32767) của khung PCM vừa đưa ra codec. Đây là thay đổi nhỏ trong mã lõi `main/audio/audio_service.{h,cc}`, đã được người dùng đồng ý.
+- `StatusLedAudioFollower` (`configurable_status_led.h`):
+  - Đọc mức âm lượng mỗi 30 ms và giữ 32 mẫu gần nhất để tạo độ trễ.
+  - Mức hiển thị tăng ngay theo âm thanh và giảm dần 20 % mỗi bước.
+- Khi chạy trên LED không phải vòng LED:
+  - WS2812 1 mắt và LED đơn PWM: chạy vòng, quét, tô dần chuyển thành nháy chậm; cầu vồng xoay chuyển thành cầu vồng.
+  - Thanh dâng và loang hai phía trên 1 LED thì sáng theo nhịp.
+
 ### Việc còn lại
-- Build thử LED trạng thái loại vòng LED và LED đơn PWM, nhóm IC mở rộng; thử trên thiết bị.
+- Build thử LED trạng thái loại LED đơn PWM, nhóm IC mở rộng; thử trên thiết bị (kiểm tra độ trễ 200 ms có khớp tiếng không).

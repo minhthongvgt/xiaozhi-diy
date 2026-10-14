@@ -1672,6 +1672,20 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 range 1 100
                 default 40
 
+            config CUSTOM_LED_EFFECT_SPEED_MS
+                int "Tốc độ hiệu ứng vòng LED (ms mỗi bước)"
+                depends on !CUSTOM_LED_NONE && !CUSTOM_LED_USER_CUSTOM
+                range 10 500
+                default 50
+
+            config CUSTOM_LED_AUDIO_DELAY_MS
+                int "Độ trễ hiệu ứng theo âm thanh (ms)"
+                depends on !CUSTOM_LED_NONE && !CUSTOM_LED_USER_CUSTOM
+                range 0 900
+                default 200
+                help
+                    Âm thanh nằm trong bộ đệm DMA khoảng 160-240 ms trước khi ra loa; LED chờ đúng khoảng này để khớp tiếng nói.
+
             menu "Màu và hiệu ứng theo trạng thái"
                 depends on !CUSTOM_LED_NONE && !CUSTOM_LED_USER_CUSTOM
 
@@ -1691,6 +1705,26 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     config CUSTOM_LED_STATE_STARTING_EFFECT_RAINBOW
                         bool "Cầu vồng đổi màu"
                         depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_STARTING_EFFECT_SCROLL
+                        bool "Chạy vòng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_STARTING_EFFECT_SCANNER
+                        bool "Quét qua lại (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_STARTING_EFFECT_WIPE
+                        bool "Tô dần quanh vòng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_STARTING_EFFECT_RAINBOW_CHASE
+                        bool "Cầu vồng xoay (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_BAR
+                        bool "Theo âm thanh: thanh dâng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_MIRROR
+                        bool "Theo âm thanh: loang hai phía (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_PULSE
+                        bool "Theo âm thanh: sáng theo nhịp"
                 endchoice
 
                 config CUSTOM_LED_STATE_STARTING_EFFECT_ID
@@ -1701,6 +1735,13 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     default 3 if CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_SLOW
                     default 4 if CUSTOM_LED_STATE_STARTING_EFFECT_BREATHE
                     default 5 if CUSTOM_LED_STATE_STARTING_EFFECT_RAINBOW
+                    default 6 if CUSTOM_LED_STATE_STARTING_EFFECT_SCROLL
+                    default 7 if CUSTOM_LED_STATE_STARTING_EFFECT_SCANNER
+                    default 8 if CUSTOM_LED_STATE_STARTING_EFFECT_WIPE
+                    default 9 if CUSTOM_LED_STATE_STARTING_EFFECT_RAINBOW_CHASE
+                    default 10 if CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_BAR
+                    default 11 if CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_MIRROR
+                    default 12 if CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_PULSE
                     default 0
 
                 config CUSTOM_LED_STATE_STARTING_COLOR
@@ -1724,6 +1765,26 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_RAINBOW
                         bool "Cầu vồng đổi màu"
                         depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_SCROLL
+                        bool "Chạy vòng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_SCANNER
+                        bool "Quét qua lại (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_WIPE
+                        bool "Tô dần quanh vòng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_RAINBOW_CHASE
+                        bool "Cầu vồng xoay (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_BAR
+                        bool "Theo âm thanh: thanh dâng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_MIRROR
+                        bool "Theo âm thanh: loang hai phía (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_PULSE
+                        bool "Theo âm thanh: sáng theo nhịp"
                 endchoice
 
                 config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_ID
@@ -1734,6 +1795,13 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     default 3 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_SLOW
                     default 4 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BREATHE
                     default 5 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_RAINBOW
+                    default 6 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_SCROLL
+                    default 7 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_SCANNER
+                    default 8 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_WIPE
+                    default 9 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_RAINBOW_CHASE
+                    default 10 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_BAR
+                    default 11 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_MIRROR
+                    default 12 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_PULSE
                     default 0
 
                 config CUSTOM_LED_STATE_WIFI_CONFIG_COLOR
@@ -1757,6 +1825,26 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     config CUSTOM_LED_STATE_IDLE_EFFECT_RAINBOW
                         bool "Cầu vồng đổi màu"
                         depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_IDLE_EFFECT_SCROLL
+                        bool "Chạy vòng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_IDLE_EFFECT_SCANNER
+                        bool "Quét qua lại (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_IDLE_EFFECT_WIPE
+                        bool "Tô dần quanh vòng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_IDLE_EFFECT_RAINBOW_CHASE
+                        bool "Cầu vồng xoay (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_BAR
+                        bool "Theo âm thanh: thanh dâng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_MIRROR
+                        bool "Theo âm thanh: loang hai phía (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_PULSE
+                        bool "Theo âm thanh: sáng theo nhịp"
                 endchoice
 
                 config CUSTOM_LED_STATE_IDLE_EFFECT_ID
@@ -1767,6 +1855,13 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     default 3 if CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_SLOW
                     default 4 if CUSTOM_LED_STATE_IDLE_EFFECT_BREATHE
                     default 5 if CUSTOM_LED_STATE_IDLE_EFFECT_RAINBOW
+                    default 6 if CUSTOM_LED_STATE_IDLE_EFFECT_SCROLL
+                    default 7 if CUSTOM_LED_STATE_IDLE_EFFECT_SCANNER
+                    default 8 if CUSTOM_LED_STATE_IDLE_EFFECT_WIPE
+                    default 9 if CUSTOM_LED_STATE_IDLE_EFFECT_RAINBOW_CHASE
+                    default 10 if CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_BAR
+                    default 11 if CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_MIRROR
+                    default 12 if CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_PULSE
                     default 0
 
                 config CUSTOM_LED_STATE_IDLE_COLOR
@@ -1790,6 +1885,26 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     config CUSTOM_LED_STATE_CONNECTING_EFFECT_RAINBOW
                         bool "Cầu vồng đổi màu"
                         depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_CONNECTING_EFFECT_SCROLL
+                        bool "Chạy vòng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_CONNECTING_EFFECT_SCANNER
+                        bool "Quét qua lại (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_CONNECTING_EFFECT_WIPE
+                        bool "Tô dần quanh vòng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_CONNECTING_EFFECT_RAINBOW_CHASE
+                        bool "Cầu vồng xoay (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_BAR
+                        bool "Theo âm thanh: thanh dâng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_MIRROR
+                        bool "Theo âm thanh: loang hai phía (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_PULSE
+                        bool "Theo âm thanh: sáng theo nhịp"
                 endchoice
 
                 config CUSTOM_LED_STATE_CONNECTING_EFFECT_ID
@@ -1800,6 +1915,13 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     default 3 if CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_SLOW
                     default 4 if CUSTOM_LED_STATE_CONNECTING_EFFECT_BREATHE
                     default 5 if CUSTOM_LED_STATE_CONNECTING_EFFECT_RAINBOW
+                    default 6 if CUSTOM_LED_STATE_CONNECTING_EFFECT_SCROLL
+                    default 7 if CUSTOM_LED_STATE_CONNECTING_EFFECT_SCANNER
+                    default 8 if CUSTOM_LED_STATE_CONNECTING_EFFECT_WIPE
+                    default 9 if CUSTOM_LED_STATE_CONNECTING_EFFECT_RAINBOW_CHASE
+                    default 10 if CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_BAR
+                    default 11 if CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_MIRROR
+                    default 12 if CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_PULSE
                     default 0
 
                 config CUSTOM_LED_STATE_CONNECTING_COLOR
@@ -1823,6 +1945,26 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     config CUSTOM_LED_STATE_LISTENING_EFFECT_RAINBOW
                         bool "Cầu vồng đổi màu"
                         depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_LISTENING_EFFECT_SCROLL
+                        bool "Chạy vòng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_LISTENING_EFFECT_SCANNER
+                        bool "Quét qua lại (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_LISTENING_EFFECT_WIPE
+                        bool "Tô dần quanh vòng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_LISTENING_EFFECT_RAINBOW_CHASE
+                        bool "Cầu vồng xoay (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_BAR
+                        bool "Theo âm thanh: thanh dâng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_MIRROR
+                        bool "Theo âm thanh: loang hai phía (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_PULSE
+                        bool "Theo âm thanh: sáng theo nhịp"
                 endchoice
 
                 config CUSTOM_LED_STATE_LISTENING_EFFECT_ID
@@ -1833,6 +1975,13 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     default 3 if CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_SLOW
                     default 4 if CUSTOM_LED_STATE_LISTENING_EFFECT_BREATHE
                     default 5 if CUSTOM_LED_STATE_LISTENING_EFFECT_RAINBOW
+                    default 6 if CUSTOM_LED_STATE_LISTENING_EFFECT_SCROLL
+                    default 7 if CUSTOM_LED_STATE_LISTENING_EFFECT_SCANNER
+                    default 8 if CUSTOM_LED_STATE_LISTENING_EFFECT_WIPE
+                    default 9 if CUSTOM_LED_STATE_LISTENING_EFFECT_RAINBOW_CHASE
+                    default 10 if CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_BAR
+                    default 11 if CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_MIRROR
+                    default 12 if CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_PULSE
                     default 0
 
                 config CUSTOM_LED_STATE_LISTENING_COLOR
@@ -1856,6 +2005,26 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     config CUSTOM_LED_STATE_SPEAKING_EFFECT_RAINBOW
                         bool "Cầu vồng đổi màu"
                         depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_SPEAKING_EFFECT_SCROLL
+                        bool "Chạy vòng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_SPEAKING_EFFECT_SCANNER
+                        bool "Quét qua lại (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_SPEAKING_EFFECT_WIPE
+                        bool "Tô dần quanh vòng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_SPEAKING_EFFECT_RAINBOW_CHASE
+                        bool "Cầu vồng xoay (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_BAR
+                        bool "Theo âm thanh: thanh dâng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_MIRROR
+                        bool "Theo âm thanh: loang hai phía (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_PULSE
+                        bool "Theo âm thanh: sáng theo nhịp"
                 endchoice
 
                 config CUSTOM_LED_STATE_SPEAKING_EFFECT_ID
@@ -1866,6 +2035,13 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     default 3 if CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_SLOW
                     default 4 if CUSTOM_LED_STATE_SPEAKING_EFFECT_BREATHE
                     default 5 if CUSTOM_LED_STATE_SPEAKING_EFFECT_RAINBOW
+                    default 6 if CUSTOM_LED_STATE_SPEAKING_EFFECT_SCROLL
+                    default 7 if CUSTOM_LED_STATE_SPEAKING_EFFECT_SCANNER
+                    default 8 if CUSTOM_LED_STATE_SPEAKING_EFFECT_WIPE
+                    default 9 if CUSTOM_LED_STATE_SPEAKING_EFFECT_RAINBOW_CHASE
+                    default 10 if CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_BAR
+                    default 11 if CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_MIRROR
+                    default 12 if CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_PULSE
                     default 0
 
                 config CUSTOM_LED_STATE_SPEAKING_COLOR
@@ -1889,6 +2065,26 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     config CUSTOM_LED_STATE_UPGRADING_EFFECT_RAINBOW
                         bool "Cầu vồng đổi màu"
                         depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_UPGRADING_EFFECT_SCROLL
+                        bool "Chạy vòng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_UPGRADING_EFFECT_SCANNER
+                        bool "Quét qua lại (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_UPGRADING_EFFECT_WIPE
+                        bool "Tô dần quanh vòng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_UPGRADING_EFFECT_RAINBOW_CHASE
+                        bool "Cầu vồng xoay (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_BAR
+                        bool "Theo âm thanh: thanh dâng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_MIRROR
+                        bool "Theo âm thanh: loang hai phía (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_PULSE
+                        bool "Theo âm thanh: sáng theo nhịp"
                 endchoice
 
                 config CUSTOM_LED_STATE_UPGRADING_EFFECT_ID
@@ -1899,6 +2095,13 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     default 3 if CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_SLOW
                     default 4 if CUSTOM_LED_STATE_UPGRADING_EFFECT_BREATHE
                     default 5 if CUSTOM_LED_STATE_UPGRADING_EFFECT_RAINBOW
+                    default 6 if CUSTOM_LED_STATE_UPGRADING_EFFECT_SCROLL
+                    default 7 if CUSTOM_LED_STATE_UPGRADING_EFFECT_SCANNER
+                    default 8 if CUSTOM_LED_STATE_UPGRADING_EFFECT_WIPE
+                    default 9 if CUSTOM_LED_STATE_UPGRADING_EFFECT_RAINBOW_CHASE
+                    default 10 if CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_BAR
+                    default 11 if CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_MIRROR
+                    default 12 if CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_PULSE
                     default 0
 
                 config CUSTOM_LED_STATE_UPGRADING_COLOR
@@ -1922,6 +2125,26 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     config CUSTOM_LED_STATE_ACTIVATING_EFFECT_RAINBOW
                         bool "Cầu vồng đổi màu"
                         depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_ACTIVATING_EFFECT_SCROLL
+                        bool "Chạy vòng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_ACTIVATING_EFFECT_SCANNER
+                        bool "Quét qua lại (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_ACTIVATING_EFFECT_WIPE
+                        bool "Tô dần quanh vòng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_ACTIVATING_EFFECT_RAINBOW_CHASE
+                        bool "Cầu vồng xoay (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_BAR
+                        bool "Theo âm thanh: thanh dâng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_MIRROR
+                        bool "Theo âm thanh: loang hai phía (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_PULSE
+                        bool "Theo âm thanh: sáng theo nhịp"
                 endchoice
 
                 config CUSTOM_LED_STATE_ACTIVATING_EFFECT_ID
@@ -1932,6 +2155,13 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     default 3 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_SLOW
                     default 4 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_BREATHE
                     default 5 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_RAINBOW
+                    default 6 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_SCROLL
+                    default 7 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_SCANNER
+                    default 8 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_WIPE
+                    default 9 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_RAINBOW_CHASE
+                    default 10 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_BAR
+                    default 11 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_MIRROR
+                    default 12 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_PULSE
                     default 0
 
                 config CUSTOM_LED_STATE_ACTIVATING_COLOR
@@ -1955,6 +2185,26 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     config CUSTOM_LED_STATE_ERROR_EFFECT_RAINBOW
                         bool "Cầu vồng đổi màu"
                         depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_ERROR_EFFECT_SCROLL
+                        bool "Chạy vòng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_ERROR_EFFECT_SCANNER
+                        bool "Quét qua lại (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_ERROR_EFFECT_WIPE
+                        bool "Tô dần quanh vòng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_ERROR_EFFECT_RAINBOW_CHASE
+                        bool "Cầu vồng xoay (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_BAR
+                        bool "Theo âm thanh: thanh dâng (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_MIRROR
+                        bool "Theo âm thanh: loang hai phía (vòng LED)"
+                        depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                    config CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_PULSE
+                        bool "Theo âm thanh: sáng theo nhịp"
                 endchoice
 
                 config CUSTOM_LED_STATE_ERROR_EFFECT_ID
@@ -1965,6 +2215,13 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                     default 3 if CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_SLOW
                     default 4 if CUSTOM_LED_STATE_ERROR_EFFECT_BREATHE
                     default 5 if CUSTOM_LED_STATE_ERROR_EFFECT_RAINBOW
+                    default 6 if CUSTOM_LED_STATE_ERROR_EFFECT_SCROLL
+                    default 7 if CUSTOM_LED_STATE_ERROR_EFFECT_SCANNER
+                    default 8 if CUSTOM_LED_STATE_ERROR_EFFECT_WIPE
+                    default 9 if CUSTOM_LED_STATE_ERROR_EFFECT_RAINBOW_CHASE
+                    default 10 if CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_BAR
+                    default 11 if CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_MIRROR
+                    default 12 if CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_PULSE
                     default 0
 
                 config CUSTOM_LED_STATE_ERROR_COLOR

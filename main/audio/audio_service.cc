@@ -336,6 +336,14 @@ void AudioService::AudioOutputTask() {
             callbacks_.on_playback_progress(task.playback_id, task.media_position_ms);
         }
 
+        {
+            int32_t peak = 0;
+            for (int16_t sample : task.pcm) {
+                const int32_t magnitude = sample < 0 ? -static_cast<int32_t>(sample) : sample;
+                peak = magnitude > peak ? magnitude : peak;
+            }
+            output_level_.store(static_cast<uint16_t>(peak > 32767 ? 32767 : peak), std::memory_order_relaxed);
+        }
         codec_->OutputData(task.pcm);
 
         last_output_time_ = std::chrono::steady_clock::now();

@@ -116,6 +116,7 @@ public:
     bool ReadAudioData(std::vector<int16_t>& data, int sample_rate, int samples);
     void ResetDecoder();
     void SetModelsList(srmodel_list_t* models_list);
+    uint16_t GetOutputLevel() const { return output_level_.load(std::memory_order_relaxed); }
 private:
     AudioCodec* codec_ = nullptr;
     AudioServiceCallbacks callbacks_;
@@ -166,6 +167,7 @@ private:
     bool device_aec_enabled_ = false;
 #endif
     std::atomic<bool> service_stopped_{true};
+    std::atomic<uint16_t> output_level_{0};
     std::atomic<bool> audio_input_need_warmup_{false};
     esp_timer_handle_t audio_power_timer_ = nullptr;
     std::chrono::steady_clock::time_point last_input_time_;

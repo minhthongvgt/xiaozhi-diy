@@ -219,6 +219,15 @@
               <label class="form-label" for="kc_CUSTOM_LED_BRIGHTNESS_HIGH">Độ sáng cao (%) cho Lỗi và khi nghe thấy tiếng nói</label>
               <input type="number" class="form-control" id="kc_CUSTOM_LED_BRIGHTNESS_HIGH" min="1" max="100">
             </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable">
+              <label class="form-label" for="kc_CUSTOM_LED_EFFECT_SPEED_MS">Tốc độ hiệu ứng vòng LED (ms mỗi bước)</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_LED_EFFECT_SPEED_MS" min="10" max="500">
+            </div>
+            <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable">
+              <label class="form-label" for="kc_CUSTOM_LED_AUDIO_DELAY_MS">Độ trễ hiệu ứng theo âm thanh (ms)</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_LED_AUDIO_DELAY_MS" min="0" max="900">
+              <div class="form-hint">Âm thanh nằm trong bộ đệm DMA khoảng 160-240 ms trước khi ra loa; LED chờ đúng khoảng này để khớp tiếng nói.</div>
+            </div>
             <div class="span-2 form-subheading"><span>Màu và hiệu ứng theo trạng thái</span></div>
             <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable">
               <label class="form-label" for="kc_CUSTOM_LED_STATE_STARTING_EFFECT">Khởi động: hiệu ứng</label>
@@ -229,6 +238,13 @@
                 <option value="CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_SLOW">Nháy chậm (500 ms)</option>
                 <option value="CUSTOM_LED_STATE_STARTING_EFFECT_BREATHE">Thở (sáng dần, tối dần)</option>
                 <option value="CUSTOM_LED_STATE_STARTING_EFFECT_RAINBOW">Cầu vồng đổi màu</option>
+                <option value="CUSTOM_LED_STATE_STARTING_EFFECT_SCROLL">Chạy vòng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_STARTING_EFFECT_SCANNER">Quét qua lại (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_STARTING_EFFECT_WIPE">Tô dần quanh vòng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_STARTING_EFFECT_RAINBOW_CHASE">Cầu vồng xoay (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_BAR">Theo âm thanh: thanh dâng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_MIRROR">Theo âm thanh: loang hai phía (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_PULSE">Theo âm thanh: sáng theo nhịp</option>
               </select>
             </div>
             <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
@@ -244,6 +260,13 @@
                 <option value="CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_SLOW">Nháy chậm (500 ms)</option>
                 <option value="CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BREATHE">Thở (sáng dần, tối dần)</option>
                 <option value="CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_RAINBOW">Cầu vồng đổi màu</option>
+                <option value="CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_SCROLL">Chạy vòng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_SCANNER">Quét qua lại (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_WIPE">Tô dần quanh vòng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_RAINBOW_CHASE">Cầu vồng xoay (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_BAR">Theo âm thanh: thanh dâng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_MIRROR">Theo âm thanh: loang hai phía (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_PULSE">Theo âm thanh: sáng theo nhịp</option>
               </select>
             </div>
             <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
@@ -259,6 +282,13 @@
                 <option value="CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_SLOW">Nháy chậm (500 ms)</option>
                 <option value="CUSTOM_LED_STATE_IDLE_EFFECT_BREATHE">Thở (sáng dần, tối dần)</option>
                 <option value="CUSTOM_LED_STATE_IDLE_EFFECT_RAINBOW">Cầu vồng đổi màu</option>
+                <option value="CUSTOM_LED_STATE_IDLE_EFFECT_SCROLL">Chạy vòng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_IDLE_EFFECT_SCANNER">Quét qua lại (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_IDLE_EFFECT_WIPE">Tô dần quanh vòng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_IDLE_EFFECT_RAINBOW_CHASE">Cầu vồng xoay (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_BAR">Theo âm thanh: thanh dâng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_MIRROR">Theo âm thanh: loang hai phía (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_PULSE">Theo âm thanh: sáng theo nhịp</option>
               </select>
             </div>
             <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
@@ -274,6 +304,13 @@
                 <option value="CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_SLOW">Nháy chậm (500 ms)</option>
                 <option value="CUSTOM_LED_STATE_CONNECTING_EFFECT_BREATHE">Thở (sáng dần, tối dần)</option>
                 <option value="CUSTOM_LED_STATE_CONNECTING_EFFECT_RAINBOW">Cầu vồng đổi màu</option>
+                <option value="CUSTOM_LED_STATE_CONNECTING_EFFECT_SCROLL">Chạy vòng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_CONNECTING_EFFECT_SCANNER">Quét qua lại (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_CONNECTING_EFFECT_WIPE">Tô dần quanh vòng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_CONNECTING_EFFECT_RAINBOW_CHASE">Cầu vồng xoay (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_BAR">Theo âm thanh: thanh dâng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_MIRROR">Theo âm thanh: loang hai phía (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_PULSE">Theo âm thanh: sáng theo nhịp</option>
               </select>
             </div>
             <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
@@ -289,6 +326,13 @@
                 <option value="CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_SLOW">Nháy chậm (500 ms)</option>
                 <option value="CUSTOM_LED_STATE_LISTENING_EFFECT_BREATHE">Thở (sáng dần, tối dần)</option>
                 <option value="CUSTOM_LED_STATE_LISTENING_EFFECT_RAINBOW">Cầu vồng đổi màu</option>
+                <option value="CUSTOM_LED_STATE_LISTENING_EFFECT_SCROLL">Chạy vòng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_LISTENING_EFFECT_SCANNER">Quét qua lại (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_LISTENING_EFFECT_WIPE">Tô dần quanh vòng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_LISTENING_EFFECT_RAINBOW_CHASE">Cầu vồng xoay (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_BAR">Theo âm thanh: thanh dâng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_MIRROR">Theo âm thanh: loang hai phía (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_PULSE">Theo âm thanh: sáng theo nhịp</option>
               </select>
             </div>
             <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
@@ -304,6 +348,13 @@
                 <option value="CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_SLOW">Nháy chậm (500 ms)</option>
                 <option value="CUSTOM_LED_STATE_SPEAKING_EFFECT_BREATHE">Thở (sáng dần, tối dần)</option>
                 <option value="CUSTOM_LED_STATE_SPEAKING_EFFECT_RAINBOW">Cầu vồng đổi màu</option>
+                <option value="CUSTOM_LED_STATE_SPEAKING_EFFECT_SCROLL">Chạy vòng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_SPEAKING_EFFECT_SCANNER">Quét qua lại (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_SPEAKING_EFFECT_WIPE">Tô dần quanh vòng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_SPEAKING_EFFECT_RAINBOW_CHASE">Cầu vồng xoay (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_BAR">Theo âm thanh: thanh dâng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_MIRROR">Theo âm thanh: loang hai phía (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_PULSE">Theo âm thanh: sáng theo nhịp</option>
               </select>
             </div>
             <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
@@ -319,6 +370,13 @@
                 <option value="CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_SLOW">Nháy chậm (500 ms)</option>
                 <option value="CUSTOM_LED_STATE_UPGRADING_EFFECT_BREATHE">Thở (sáng dần, tối dần)</option>
                 <option value="CUSTOM_LED_STATE_UPGRADING_EFFECT_RAINBOW">Cầu vồng đổi màu</option>
+                <option value="CUSTOM_LED_STATE_UPGRADING_EFFECT_SCROLL">Chạy vòng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_UPGRADING_EFFECT_SCANNER">Quét qua lại (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_UPGRADING_EFFECT_WIPE">Tô dần quanh vòng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_UPGRADING_EFFECT_RAINBOW_CHASE">Cầu vồng xoay (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_BAR">Theo âm thanh: thanh dâng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_MIRROR">Theo âm thanh: loang hai phía (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_PULSE">Theo âm thanh: sáng theo nhịp</option>
               </select>
             </div>
             <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
@@ -334,6 +392,13 @@
                 <option value="CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_SLOW">Nháy chậm (500 ms)</option>
                 <option value="CUSTOM_LED_STATE_ACTIVATING_EFFECT_BREATHE">Thở (sáng dần, tối dần)</option>
                 <option value="CUSTOM_LED_STATE_ACTIVATING_EFFECT_RAINBOW">Cầu vồng đổi màu</option>
+                <option value="CUSTOM_LED_STATE_ACTIVATING_EFFECT_SCROLL">Chạy vòng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_ACTIVATING_EFFECT_SCANNER">Quét qua lại (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_ACTIVATING_EFFECT_WIPE">Tô dần quanh vòng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_ACTIVATING_EFFECT_RAINBOW_CHASE">Cầu vồng xoay (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_BAR">Theo âm thanh: thanh dâng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_MIRROR">Theo âm thanh: loang hai phía (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_PULSE">Theo âm thanh: sáng theo nhịp</option>
               </select>
             </div>
             <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
@@ -349,6 +414,13 @@
                 <option value="CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_SLOW">Nháy chậm (500 ms)</option>
                 <option value="CUSTOM_LED_STATE_ERROR_EFFECT_BREATHE">Thở (sáng dần, tối dần)</option>
                 <option value="CUSTOM_LED_STATE_ERROR_EFFECT_RAINBOW">Cầu vồng đổi màu</option>
+                <option value="CUSTOM_LED_STATE_ERROR_EFFECT_SCROLL">Chạy vòng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_ERROR_EFFECT_SCANNER">Quét qua lại (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_ERROR_EFFECT_WIPE">Tô dần quanh vòng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_ERROR_EFFECT_RAINBOW_CHASE">Cầu vồng xoay (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_BAR">Theo âm thanh: thanh dâng (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_MIRROR">Theo âm thanh: loang hai phía (vòng LED)</option>
+                <option value="CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_PULSE">Theo âm thanh: sáng theo nhịp</option>
               </select>
             </div>
             <div class="form-item" data-show-if="led_type!=CUSTOM_LED_NONE&amp;led_type!=CUSTOM_LED_USER_CUSTOM&amp;led_enable&amp;led_type=CUSTOM_LED_WS2812|CUSTOM_LED_CIRCULAR_STRIP">
