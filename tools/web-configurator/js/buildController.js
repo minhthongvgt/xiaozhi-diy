@@ -1,11 +1,14 @@
 import { GUIController } from './guiController.js';
+import { S3_PROFILE, isP4Profile, parseProfileValue, profileValue } from './profile.js';
 export class BuildController {
   static logOffset = 0;
   static pollTimer = null;
   static isPolling = false;
   static currentStatus = null;
   static REQUIRED_IDF = /^v?6\.1(\.|-|$)/;
-  static REQUIRED_TARGET = 'esp32s3';
+  static get REQUIRED_TARGET() {
+    return (window.buildProfile && window.buildProfile.chip) || S3_PROFILE.chip;
+  }
   static targetRedirectDone = false;
   static init() {
     BuildController.bindEvents();
@@ -26,7 +29,10 @@ export class BuildController {
       GUIController.showToast('Đã làm mới danh sách cổng COM', 'info');
     });
     document.getElementById('btn-quick-set-target')?.addEventListener('click', async () => {
-      await BuildController.triggerAction('set-target', { target: 'esp32s3' });
+      await BuildController.triggerAction('set-target', { target: BuildController.REQUIRED_TARGET });
+    });
+    document.getElementById('build-profile-select')?.addEventListener('change', async (event) => {
+      await BuildController.changeProfile(event.target.value);
     });
     document.getElementById('btn-idf-build')?.addEventListener('click', async () => {
       await BuildController.triggerAction('build');
@@ -212,8 +218,43 @@ export class BuildController {
       if (value) value.textContent = 'Không rõ';
     });
   }
+  static renderProfile(profile) {
+    if (profile) GUIController.applyProfile(profile);
+    const current = window.buildProfile || S3_PROFILE;
+    const select = document.getElementById('build-profile-select');
+    if (select) select.value = profileValue(current);
+    const btnSetTarget = document.getElementById('btn-quick-set-target');
+    if (btnSetTarget) btnSetTarget.textContent = `idf.py set-target ${BuildController.REQUIRED_TARGET}`;
+    const warnChip = document.getElementById('target-warning-chip');
+    if (warnChip) warnChip.textContent = BuildController.REQUIRED_TARGET;
+    const dirVal = document.getElementById('build-dir-val');
+    if (dirVal) dirVal.textContent = isP4Profile(current) ? `${current.build_dir || 'build_p4'} (${current.board_name || current.board})` : 'build';
+  }
+  static async changeProfile(value) {
+    const wanted = parseProfileValue(value);
+    if (Object.values(GUIController.dirty || {}).some(Boolean) &&
+        !confirm('Có thay đổi chưa lưu. Đổi thiết bị đích sẽ tải lại trang và bỏ các thay đổi này. Tiếp tục?')) {
+      BuildController.renderProfile(null);
+      return;
+    }
+    try {
+      const res = await window.apiFetch('/api/profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(wanted),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error);
+      window.location.reload();
+    } catch (e) {
+      GUIController.showToast(`Không đổi được thiết bị đích: ${e.message}`, 'error');
+      BuildController.renderProfile(null);
+    }
+  }
   static renderStatus(data) {
     const { idf, target, ports, job } = data;
+    BuildController.renderProfile(data.profile);
+    const required = BuildController.REQUIRED_TARGET;
     const idfBadge = document.getElementById('idf-status-badge');
     const idfVer = document.getElementById('idf-version-val');
     const idfPath = document.getElementById('idf-path-val');
@@ -248,19 +289,19 @@ export class BuildController {
     const targetBadge = document.getElementById('target-status-badge');
     const targetVal = document.getElementById('target-name-val');
     const btnSetTarget = document.getElementById('btn-quick-set-target');
-    if (target && target.is_set && target.target === 'esp32s3') {
+    if (target && target.is_set && target.target === required) {
       if (targetBadge) {
         targetBadge.textContent = 'Đã thiết lập';
         targetBadge.className = 'status-badge success';
       }
-      if (targetVal) targetVal.textContent = 'esp32s3 (Đã sẵn sàng build)';
+      if (targetVal) targetVal.textContent = `${required} (Đã sẵn sàng build)`;
       if (btnSetTarget) btnSetTarget.style.display = 'inline-flex';
     } else if (target && target.is_set) {
       if (targetBadge) {
         targetBadge.textContent = `Target: ${target.target}`;
         targetBadge.className = 'status-badge warning';
       }
-      if (targetVal) targetVal.textContent = `${target.target} (Cần đổi sang esp32s3)`;
+      if (targetVal) targetVal.textContent = `${target.target} (Cần đổi sang ${required})`;
       if (btnSetTarget) btnSetTarget.style.display = 'inline-flex';
     } else {
       if (targetBadge) {
@@ -308,7 +349,7 @@ export class BuildController {
 
     if (!targetOk && !BuildController.targetRedirectDone) {
       BuildController.targetRedirectDone = true;
-      GUIController.showToast('Chưa set-target esp32s3 — hãy set-target trước khi cấu hình!', 'warning');
+      GUIController.showToast(`Chưa set-target ${required} — hãy set-target trước khi cấu hình!`, 'warning');
       BuildController.gotoBuildCard('build-card-target');
     }
   }

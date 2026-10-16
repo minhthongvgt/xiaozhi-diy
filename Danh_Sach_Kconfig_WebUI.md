@@ -49,6 +49,7 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_LANGUAGE_SR_RS` | bool | Xiaozhi Assistant | Serbian |  |
 | `CONFIG_BOARD_TYPE_ESP32_S3_N16R8_CUSTOM` | bool | Xiaozhi Assistant | ESP32-S3 N16R8 Custom DIY Board (Bo mach tuy bien toan dien - Khuyen nghi) | y (mặc định của choice) |
 | `CONFIG_BOARD_TYPE_ESP32_P4_FUNCTION_EV_BOARD` | bool | Xiaozhi Assistant | Espressif ESP32-P4-Function-EV-Board |  |
+| `CONFIG_BOARD_TYPE_GUITION_ESP32_P4_M3_DEV` | bool | Xiaozhi Assistant | Guition JC-ESP32P4-M3-Dev |  |
 | `CONFIG_BOARD_TYPE_WAVESHARE_ESP32_P4_DEV_KIT` | bool | Xiaozhi Assistant | Waveshare ESP32-P4-Module-DEV-KIT |  |
 | `CONFIG_USE_DEFAULT_MESSAGE_STYLE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Mặc định (Chữ chạy ngang) | y (mặc định của choice) |
 | `CONFIG_USE_WECHAT_MESSAGE_STYLE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | WeChat (Bong bóng chat) |  |

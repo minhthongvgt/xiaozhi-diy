@@ -58,7 +58,12 @@ void WifiBoard::StartNetwork() {
     config.show_sleep_config = true;
 
     uint8_t mac[6];
-    if (esp_read_mac(mac, ESP_MAC_WIFI_STA) == ESP_OK) {
+#if CONFIG_IDF_TARGET_ESP32P4
+    const esp_err_t mac_ret = esp_efuse_mac_get_default(mac);
+#else
+    const esp_err_t mac_ret = esp_read_mac(mac, ESP_MAC_WIFI_STA);
+#endif
+    if (mac_ret == ESP_OK) {
         char hostname[32];
         snprintf(hostname, sizeof(hostname), "%s-%02X%02X", config.ssid_prefix.c_str(), mac[4], mac[5]);
         config.station_hostname = hostname;

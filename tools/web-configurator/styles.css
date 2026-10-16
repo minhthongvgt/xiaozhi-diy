@@ -2026,3 +2026,37 @@ select.form-control {
   max-width: 320px;
   width: 100%;
 }
+
+#build-profile-select {
+  width: 100%;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.78rem;
+}
+
+.p4-profile-note {
+  display: none;
+  margin: 0.25rem 0 0;
+  color: var(--accent-amber);
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+body[data-chip="esp32p4"] .p4-profile-note {
+  display: block;
+}
+
+body[data-chip="esp32p4"] .config-group[data-s3-only] .form-grid {
+  display: none;
+}
+
+body[data-chip="esp32p4"] .config-group[data-s3-only]::after {
+  content: "Chỉ dành cho ESP32-S3 N16R8. Bo ESP32-P4 đang chọn dùng phần cứng cố định, mục này không được ghi.";
+  display: block;
+  padding: 0.75rem 1rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}

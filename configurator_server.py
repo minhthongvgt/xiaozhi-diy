@@ -307,15 +307,75 @@ UI_PREFIXES = (
 
 
 
+def profile_file_path():
+    return os.path.join(project_ctx.web_dir, ".build_profile.json")
+
+
+def load_build_profile() -> dict:
+    try:
+        with open(profile_file_path(), "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception:
+        data = {}
+    if data.get("chip") == sdkconfig_io.P4_TARGET and data.get("board") in sdkconfig_io.P4_BOARDS:
+        return {"chip": sdkconfig_io.P4_TARGET, "board": data["board"],
+                "board_name": sdkconfig_io.P4_BOARDS[data["board"]], "build_dir": sdkconfig_io.P4_BUILD_DIR}
+    return {"chip": sdkconfig_io.WANTED_TARGET, "board": "esp32s3-n16r8-custom",
+            "board_name": "ESP32-S3 N16R8 Custom", "build_dir": "build"}
+
+
+def save_build_profile(chip: str, board: str) -> dict:
+    if chip == sdkconfig_io.P4_TARGET:
+        if board not in sdkconfig_io.P4_BOARDS:
+            return {"success": False, "error": f"Bo ESP32-P4 '{board}' không hợp lệ"}
+        data = {"chip": chip, "board": board}
+    elif chip == sdkconfig_io.WANTED_TARGET:
+        data = {"chip": chip}
+    else:
+        return {"success": False, "error": f"Chip '{chip}' không được hỗ trợ"}
+    with open(profile_file_path(), "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+    return {"success": True, "profile": load_build_profile()}
+
+
+def is_p4_profile(profile: dict) -> bool:
+    return profile["chip"] == sdkconfig_io.P4_TARGET
+
+
+def idf_command_for_profile(args: str):
+    profile = load_build_profile()
+    if not is_p4_profile(profile):
+        return f"idf.py {args}".strip(), None
+    build_dir = sdkconfig_io.P4_BUILD_DIR
+    board_file = os.path.join(PROJECT_ROOT, build_dir, "board.txt")
+    if args.startswith("set-target"):
+        if os.path.isfile(board_file):
+            os.remove(board_file)
+    elif os.path.isfile(os.path.join(PROJECT_ROOT, build_dir, "CMakeCache.txt")):
+        with open(board_file, "w", encoding="utf-8") as f:
+            f.write(profile["board"] + "\n")
+    cmd = f"idf.py -B {build_dir} -D SDKCONFIG={sdkconfig_io.p4_sdkconfig_rel()} {args}".strip()
+    return cmd, {"SDKCONFIG_DEFAULTS": sdkconfig_io.p4_defaults_list(profile["board"])}
+
+
 def read_active_config():
     """
     Cấu hình HIỆU LỰC đúng thứ tự ESP-IDF:
     sdkconfig.defaults < sdkconfig.defaults.esp32s3 < sdkconfig (file idf.py sinh ra).
     """
+    profile = load_build_profile()
+    if is_p4_profile(profile):
+        content = sdkconfig_io.load_effective_text_p4(PROJECT_ROOT, profile["board"])
+        layers = [n for n in ("sdkconfig.defaults", sdkconfig_io.P4_DEFAULTS_FILE,
+                              f"{sdkconfig_io.P4_BOARD_DIR}/sdkconfig.{profile['board']}",
+                              sdkconfig_io.p4_sdkconfig_rel())
+                  if os.path.isfile(os.path.join(PROJECT_ROOT, n))]
+        return {"source": " + ".join(layers) or "none", "content": content if layers else "",
+                "profile": profile}
     content = sdkconfig_io.load_effective_text(PROJECT_ROOT)
     has = lambda n: os.path.isfile(os.path.join(PROJECT_ROOT, n))
     layers = [n for n in ("sdkconfig.defaults", sdkconfig_io.DEFAULTS_FILE, "sdkconfig") if has(n)]
-    return {"source": " + ".join(layers) or "none", "content": content if layers else ""}
+    return {"source": " + ".join(layers) or "none", "content": content if layers else "", "profile": profile}
 
 
 def read_sdkconfig_defaults():
@@ -421,17 +481,22 @@ def save_configuration(payload: dict) -> dict:
     lines = payload.get("sdkconfig_lines")
     if not lines or not isinstance(lines, list) or not all(isinstance(x, str) for x in lines):
         return {"success": False, "error": "Thiếu hoặc sai định dạng sdkconfig_lines trong payload"}
+    profile = load_build_profile()
     try:
-        res = sdkconfig_io.save_config(PROJECT_ROOT, lines)
+        if is_p4_profile(profile):
+            res = sdkconfig_io.save_config_p4(PROJECT_ROOT, lines)
+        else:
+            res = sdkconfig_io.save_config(PROJECT_ROOT, lines)
     except ValueError as e:
         return {"success": False, "error": str(e)}
     except Exception as e:
         return {"success": False, "error": str(e)}
 
     d, s = res["defaults"], res["sdkconfig"]
-    msg = f"Đã ghi {sdkconfig_io.DEFAULTS_FILE} (đổi {d['changed']}, thêm {d['added']})"
+    defaults_name = sdkconfig_io.P4_DEFAULTS_FILE if is_p4_profile(profile) else sdkconfig_io.DEFAULTS_FILE
+    msg = f"Đã ghi {defaults_name} (đổi {d['changed']}, thêm {d['added']})"
     if s is not None:
-        msg += " và đồng bộ vào sdkconfig"
+        msg += f" và đồng bộ vào {sdkconfig_io.p4_sdkconfig_rel() if is_p4_profile(profile) else 'sdkconfig'}"
     if res.get("needs_reconfigure"):
         msg += ". Chạy 'idf.py reconfigure' (hoặc build) để IDF chuẩn hoá sdkconfig"
     elif res.get("note"):
@@ -722,6 +787,8 @@ def detect_idf():
 
 def detect_target():
     """Nhận diện target thật sự đã set-target (sdkconfig > build/CMakeCache.txt > sdkconfig.defaults)."""
+    if is_p4_profile(load_build_profile()):
+        return sdkconfig_io.detect_target_p4(PROJECT_ROOT)
     return sdkconfig_io.detect_target(PROJECT_ROOT)
 
 
@@ -818,13 +885,15 @@ class BuildJobManager:
 
         return {"success": True, "message": "Đã gửi lệnh dừng tiến trình"}
 
-    def start_job(self, action, idf_command, profile_script=None, idf_path=None):
+    def start_job(self, action, idf_command, profile_script=None, idf_path=None, env_extra=None):
         with self.lock:
             if self.state == "running":
                 return {"success": False, "error": f"Đang có tiến trình '{self.current_action}' đang chạy. Vui lòng đợi hoặc bấm Hủy."}
             self.state = "running"
             self.current_action = action
             self.logs = [f"=== BẮT ĐẦU: {action.upper()} ===", f"Lệnh: {idf_command}"]
+            for key, value in (env_extra or {}).items():
+                self.logs.append(f"Biến môi trường: {key}={value}")
             if idf_path:
                 self.logs.append(f"Đường dẫn ESP-IDF: {idf_path}")
             self.exit_code = None
@@ -838,10 +907,14 @@ class BuildJobManager:
             else:
                 full_cmd = idf_command
 
+            job_env = os.environ.copy()
+            if env_extra:
+                job_env.update(env_extra)
             try:
                 proc = subprocess.Popen(
                     full_cmd,
                     cwd=self.project_root,
+                    env=job_env,
                     shell=True,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
@@ -946,9 +1019,14 @@ class ConfiguratorHandler(BaseHTTPRequestHandler):
         if path == "/api/config":
             return self._json(read_active_config())
 
+        if path == "/api/profile":
+            return self._json({"success": True, "profile": load_build_profile(),
+                               "p4_boards": sdkconfig_io.P4_BOARDS})
+
         if path == "/api/idf/status":
             return self._json({
                 "idf": detect_idf(),
+                "profile": load_build_profile(),
                 "target": detect_target(),
                 "ports": detect_com_ports(),
                 "job": build_job_manager.get_status()
@@ -1042,8 +1120,19 @@ class ConfiguratorHandler(BaseHTTPRequestHandler):
             res = reset_custom_idf_config()
             return self._json(res)
 
+        if path == "/api/profile":
+            length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(length).decode("utf-8") if length else "{}"
+            try:
+                data = json.loads(body)
+            except Exception:
+                data = {}
+            res = save_build_profile(str(data.get("chip", "")).strip(), str(data.get("board", "")).strip())
+            return self._json(res, 200 if res["success"] else 400)
+
         if path == "/api/idf/build":
-            result = build_job_manager.start_job("build", "idf.py build", profile_script, idf_path)
+            cmd, env_extra = idf_command_for_profile("build")
+            result = build_job_manager.start_job("build", cmd, profile_script, idf_path, env_extra)
             return self._json(result, 200 if result["success"] else 400)
 
         if path == "/api/idf/flash":
@@ -1059,8 +1148,8 @@ class ConfiguratorHandler(BaseHTTPRequestHandler):
                 return self._json({"success": False, "error": "Cổng COM hoặc baud không hợp lệ"}, 400)
             port_arg = f"-p {port}" if port else ""
             baud_arg = f"-b {baud}" if baud else ""
-            cmd = f"idf.py {port_arg} {baud_arg} flash".strip()
-            result = build_job_manager.start_job("flash", cmd, profile_script, idf_path)
+            cmd, env_extra = idf_command_for_profile(f"{port_arg} {baud_arg} flash")
+            result = build_job_manager.start_job("flash", cmd, profile_script, idf_path, env_extra)
             return self._json(result, 200 if result["success"] else 400)
 
         if path == "/api/idf/build-flash":
@@ -1076,8 +1165,8 @@ class ConfiguratorHandler(BaseHTTPRequestHandler):
                 return self._json({"success": False, "error": "Cổng COM hoặc baud không hợp lệ"}, 400)
             port_arg = f"-p {port}" if port else ""
             baud_arg = f"-b {baud}" if baud else ""
-            cmd = f"idf.py {port_arg} {baud_arg} build flash".strip()
-            result = build_job_manager.start_job("build-flash", cmd, profile_script, idf_path)
+            cmd, env_extra = idf_command_for_profile(f"{port_arg} {baud_arg} build flash")
+            result = build_job_manager.start_job("build-flash", cmd, profile_script, idf_path, env_extra)
             return self._json(result, 200 if result["success"] else 400)
 
         if path == "/api/idf/set-target":
@@ -1090,12 +1179,17 @@ class ConfiguratorHandler(BaseHTTPRequestHandler):
             target = str(data.get("target", "esp32s3")).strip()
             if target not in ALLOWED_TARGETS:
                 return self._json({"success": False, "error": f"Target '{target}' không hợp lệ"}, 400)
-            cmd = f"idf.py set-target {target}"
-            result = build_job_manager.start_job("set-target", cmd, profile_script, idf_path)
+            expected = load_build_profile()["chip"]
+            if target != expected:
+                return self._json({"success": False,
+                                   "error": f"Thiết bị đích đang chọn cần target {expected}, không phải {target}"}, 400)
+            cmd, env_extra = idf_command_for_profile(f"set-target {target}")
+            result = build_job_manager.start_job("set-target", cmd, profile_script, idf_path, env_extra)
             return self._json(result, 200 if result["success"] else 400)
 
         if path == "/api/idf/clean":
-            result = build_job_manager.start_job("clean", "idf.py clean", profile_script, idf_path)
+            cmd, env_extra = idf_command_for_profile("clean")
+            result = build_job_manager.start_job("clean", cmd, profile_script, idf_path, env_extra)
             return self._json(result, 200 if result["success"] else 400)
 
         if path == "/api/idf/cancel":

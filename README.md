@@ -116,7 +116,19 @@ Nhấp đúp `02-build_esp32s3.bat` ở thư mục gốc dự án. Script:
 
 Để nạp firmware và xem log, dùng `idf.py -p COMx flash monitor` trong ESP-IDF terminal (mục 4.4). Thay `COMx` bằng cổng thực tế của board (xem trong Device Manager).
 
-### 4.3 Cấu hình chi tiết bằng menuconfig
+### 4.3 Bo ESP32-P4
+
+Dự án build được cho ba bo ESP32-P4: **Guition JC-ESP32P4-M3-Dev** (mặc định), Espressif ESP32-P4-Function-EV-Board và Waveshare ESP32-P4-Module-DEV-KIT. Phần cứng của các bo này cố định, không chỉnh chân như bo ESP32-S3.
+
+- **Dòng lệnh:** nhấp đúp `03-build_esp32p4.bat`, chọn bo, rồi chọn `menuconfig`, `build` hoặc `flash + monitor`.
+- **Web Configurator:** tab **Biên dịch & Nạp** → ô **Thiết bị đích** → chọn bo ESP32-P4 → bấm `idf.py set-target esp32p4` → Build.
+  - Ở chế độ này chỉ cài đặt của tab Trợ lý và nhóm Âm thanh thông báo được ghi, vào `sdkconfig.defaults.esp32p4`.
+  - Các mục chỉ dành cho ESP32-S3 được ẩn.
+- Bản build P4 nằm riêng trong `build_p4/` (cấu hình `build_p4/sdkconfig`), không đụng `build/` và `sdkconfig` của ESP32-S3.
+- Cấu hình mặc định dành cho chip ESP32-P4 bản v1.x. Chip v3.x: đổi `CONFIG_ESP32P4_SELECTS_REV_LESS_V3` / `CONFIG_ESP32P4_REV_MIN_100` trong `sdkconfig.defaults.esp32p4`.
+- Chi tiết chân và ngoại vi: `main/boards/esp32-p4/README.md`.
+
+### 4.4 Cấu hình chi tiết bằng menuconfig
 
 1. Nhấp đúp `01 set-UTF8-Fix-windows.bat` một lần để bật UTF-8 cho Windows, sau đó **mở terminal mới**.
 2. Chạy:
@@ -124,7 +136,7 @@ Nhấp đúp `02-build_esp32s3.bat` ở thư mục gốc dự án. Script:
    idf.py menuconfig
    ```
 
-### 4.4 Nạp và xem log
+### 4.5 Nạp và xem log
 
 Trong ESP-IDF terminal:
 
@@ -134,7 +146,7 @@ idf.py -p COM3 flash monitor
 
 Thoát monitor bằng `Ctrl + ]`.
 
-### 4.5 Đưa board vào chế độ nạp
+### 4.6 Đưa board vào chế độ nạp
 
 Nếu nạp không được (xem mục 5), giữ nút **BOOT** (GPIO 0), nhấn và thả **RESET**, rồi thả **BOOT**. Sau đó chạy lại lệnh nạp.
 

@@ -29,7 +29,8 @@ class ESP32P4FunctionEvBoard : public WifiBoard {
 private:
     i2c_master_bus_handle_t codec_i2c_bus_ = nullptr;
     Button boot_button_;
-    LcdDisplay* display_ = nullptr;
+    Display* display_ = nullptr;
+    esp_ldo_channel_handle_t csi_phy_power_ = nullptr;
     esp_lcd_dsi_bus_handle_t dsi_bus_ = nullptr;
     esp_ldo_channel_handle_t dsi_phy_power_ = nullptr;
     esp_lcd_touch_handle_t tp_ = nullptr;
@@ -57,6 +58,7 @@ private:
         ESP_ERROR_CHECK(i2c_new_master_bus(&i2c_bus_config, &codec_i2c_bus_));
     }
 
+#if BOARD_HAS_MIPI_DISPLAY
     void InitializeLcd() {
         esp_ldo_channel_config_t ldo_config = {
             .chan_id = MIPI_DSI_PHY_PWR_LDO_CHAN,
@@ -106,6 +108,7 @@ private:
                                       DISPLAY_OFFSET_X, DISPLAY_OFFSET_Y, DISPLAY_MIRROR_X,
                                       DISPLAY_MIRROR_Y, DISPLAY_SWAP_XY);
     }
+#endif
 
     void InitializeButtons() {
         if (GPIO_IS_VALID_GPIO(static_cast<gpio_num_t>(BOOT_BUTTON_GPIO))) {
@@ -120,6 +123,7 @@ private:
         }
     }
 
+#if BOARD_HAS_MIPI_DISPLAY
     void InitializeTouch() {
         esp_lcd_touch_config_t touch_config = {
             .x_max = DISPLAY_WIDTH,
@@ -158,6 +162,7 @@ private:
             ESP_LOGE(TAG, "Failed to register GT911 touch input");
         }
     }
+#endif
 
     void InitializeSdCard() {
         ESP_LOGI(TAG, "Initializing SD card");
@@ -200,6 +205,17 @@ private:
 
     void InitializeCamera() {
         ESP_LOGI(TAG, "Initializing camera");
+#if !BOARD_HAS_MIPI_DISPLAY
+        esp_ldo_channel_config_t csi_ldo_config = {
+            .chan_id = MIPI_CSI_PHY_PWR_LDO_CHAN,
+            .voltage_mv = MIPI_CSI_PHY_PWR_LDO_VOLTAGE_MV,
+        };
+        esp_err_t ldo_ret = esp_ldo_acquire_channel(&csi_ldo_config, &csi_phy_power_);
+        if (ldo_ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to power MIPI CSI PHY: %s", esp_err_to_name(ldo_ret));
+            return;
+        }
+#endif
 
         esp_video_init_csi_config_t csi_config = {
             .sccb_config =
@@ -218,6 +234,7 @@ private:
         camera_ = new EspVideo(video_config);
     }
 
+#if BOARD_HAS_MIPI_DISPLAY
     void InitializeFonts() {
         ESP_LOGI(TAG, "Initializing font support");
         auto& theme_manager = LvglThemeManager::GetInstance();
@@ -232,22 +249,35 @@ private:
             }
         }
     }
+#endif
 
 public:
     ESP32P4FunctionEvBoard() : boot_button_(static_cast<gpio_num_t>(BOOT_BUTTON_GPIO)) {
         InitializeI2cBus();
+#if BOARD_HAS_MIPI_DISPLAY
         InitializeLcd();
+#else
+        display_ = new NoDisplay();
+#endif
         InitializeButtons();
+#if BOARD_HAS_MIPI_DISPLAY
         InitializeTouch();
+#endif
         InitializeSdCard();
         InitializeCamera();
+#if BOARD_HAS_MIPI_DISPLAY
         InitializeFonts();
         GetBacklight()->RestoreBrightness();
+#endif
     }
 
     virtual ~ESP32P4FunctionEvBoard() override {
         delete camera_;
         camera_ = nullptr;
+        if (csi_phy_power_ != nullptr) {
+            esp_ldo_release_channel(csi_phy_power_);
+            csi_phy_power_ = nullptr;
+        }
 
         if (sd_card_mounted_) {
             esp_err_t ret = esp_vfs_fat_sdcard_unmount(SD_CARD_MOUNT_POINT, sd_card_);
@@ -296,6 +326,8 @@ public:
     virtual std::string GetBoardType() override {
 #if defined(CONFIG_BOARD_TYPE_WAVESHARE_ESP32_P4_DEV_KIT)
         return "waveshare-esp32-p4-dev-kit";
+#elif defined(CONFIG_BOARD_TYPE_GUITION_ESP32_P4_M3_DEV)
+        return "guition-esp32-p4-m3-dev";
 #else
         return "esp32-p4-function-ev-board";
 #endif
@@ -322,8 +354,12 @@ public:
     virtual Display* GetDisplay() override { return display_; }
 
     virtual Backlight* GetBacklight() override {
+#if BOARD_HAS_MIPI_DISPLAY
         static PwmBacklight backlight(static_cast<gpio_num_t>(DISPLAY_BACKLIGHT_PIN), DISPLAY_BACKLIGHT_OUTPUT_INVERT);
         return &backlight;
+#else
+        return nullptr;
+#endif
     }
 
     virtual Camera* GetCamera() override { return camera_; }

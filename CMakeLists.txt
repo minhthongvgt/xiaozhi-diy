@@ -6,6 +6,9 @@ set(ENV{PYTHONIOENCODING} "utf-8")
 add_compile_options(-Wno-missing-field-initializers)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
+if(IDF_TARGET STREQUAL "esp32p4")
+    idf_build_set_property(DEPENDENCIES_LOCK "${CMAKE_SOURCE_DIR}/dependencies.lock.esp32p4")
+endif()
 idf_build_set_property(MINIMAL_BUILD ON)
 
 set(PROJECT_VER "2.5.0")

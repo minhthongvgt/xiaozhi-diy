@@ -14,6 +14,7 @@ SAVE_ICON = ('<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke
              '</polyline></svg>')
 ALWAYS_TRUE = {'y', 'IDF_TARGET_ESP32S3'}
 EXTERNAL = {'SPIRAM': 'sys_spiram'}
+S3_ONLY_MENU = 'Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)'
 
 
 def esc(text):
@@ -242,7 +243,8 @@ class Builder:
                        f'            <button type="button" class="btn btn-primary btn-save-tab" data-tab="{panel_id}" '
                        f'title="Lưu thông tin mục này">\n              {SAVE_ICON}\n'
                        f'              <span>Lưu mục này</span>\n            </button>\n          </div>')
-        return (f'        <div class="config-group">\n'
+        s3_only = ' data-s3-only' if S3_ONLY_MENU in menu else ''
+        return (f'        <div class="config-group"{s3_only}>\n'
                 f'          <div class="group-header">\n'
                 f'            <div class="group-title">\n'
                 f'              <h2>{section.get("icon", "")} {esc(section.get("title", title))}</h2>\n'

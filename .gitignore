@@ -1,5 +1,7 @@
 # Build output (ESP-IDF / CMake)
 build/
+build_p4/
+build_sim/
 managed_components/
 dependencies.lock.bak
 sdkconfig
@@ -17,6 +19,7 @@ venv/
 node_modules/
 
 # Local tooling and backups
+tools/web-configurator/.build_profile.json
 .comment_backup/
 .cleancommentsignore.local
 .vscode/

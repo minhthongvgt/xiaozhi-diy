@@ -4,6 +4,7 @@ import { SdkconfigGenerator as G } from './js/generator.js';
 import { SdkconfigParser as P } from './js/parser.js';
 import { DEFAULT_CONFIG as D } from './js/configState.js';
 import { PinValidator } from './js/pinValidator.js';
+import { filterLinesForP4, linesForProfile, parseProfileValue, profileValue } from './js/profile.js';
 
 let pass = 0, fail = 0;
 const clone = o => JSON.parse(JSON.stringify(o));
@@ -338,6 +339,21 @@ t('kênh console USB chọn trong menuconfig được giữ nguyên', () => {
     assert.deepEqual(dup, []);
   });
 }
+
+t('ESP32-P4: chỉ ghi cài đặt chung, bỏ phần cứng S3, target và board', () => {
+  const lines = filterLinesForP4(G.build(clone(D)));
+  assert.ok(lines.some(l => /^CONFIG_LANGUAGE_/.test(l)));
+  assert.ok(lines.some(l => /^CONFIG_OTA_URL=/.test(l)));
+  assert.ok(lines.some(l => /^(# )?CONFIG_SOUND_STARTUP_/.test(l)));
+  assert.ok(!lines.some(l => /CONFIG_(IDF_TARGET|BOARD_TYPE_|ENABLE_CUSTOM_|CUSTOM_AUDIO_|SPIRAM|ESP32S3_|ESPTOOLPY_|PARTITION_TABLE_)/.test(l)));
+});
+t('profile: S3 giữ nguyên toàn bộ dòng, giá trị chọn đọc/ghi đúng', () => {
+  const all = G.build(clone(D));
+  assert.deepEqual(linesForProfile(all, { chip: 'esp32s3' }), all);
+  assert.deepEqual(parseProfileValue('esp32p4:guition-m3-dev'), { chip: 'esp32p4', board: 'guition-m3-dev' });
+  assert.deepEqual(parseProfileValue('esp32p4:khong-co'), { chip: 'esp32s3' });
+  assert.equal(profileValue({ chip: 'esp32p4', board: 'function-ev' }), 'esp32p4:function-ev');
+});
 
 console.log(`\n=== TỔNG KẾT: ${pass} PASS, ${fail} FAIL ===`);
 process.exit(fail ? 1 : 0);

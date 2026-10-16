@@ -114,4 +114,38 @@ class T(unittest.TestCase):
         self.assertEqual(io.parse_kconfig_text(r(self.root, "sdkconfig"))["CONFIG_OTA_URL"],
                          '"https://a.b/c?x=1&y=2"')
 
+    def test_p4_save_writes_p4_defaults_and_build_p4_sdkconfig_only(self):
+        w(self.root, "sdkconfig", SDK)
+        os.makedirs(os.path.join(self.root, "build_p4"))
+        w(self.root, "build_p4/sdkconfig", SDK.replace("esp32s3", "esp32p4"))
+        res = io.save_config_p4(self.root, ["CONFIG_LANGUAGE_VI_VN=y", "CONFIG_BOARD_TYPE_ESP32_S3_N16R8_CUSTOM=y",
+                                            'CONFIG_IDF_TARGET="esp32s3"'])
+        self.assertTrue(res["needs_reconfigure"])
+        p4_defaults = r(self.root, "sdkconfig.defaults.esp32p4")
+        self.assertIn("CONFIG_LANGUAGE_VI_VN=y", p4_defaults)
+        self.assertNotIn("BOARD_TYPE", p4_defaults)
+        self.assertNotIn("IDF_TARGET", p4_defaults)
+        self.assertIn('CONFIG_IDF_TARGET="esp32p4"', r(self.root, "build_p4/sdkconfig"))
+        self.assertEqual(r(self.root, "sdkconfig"), SDK)
+        self.assertFalse(os.path.exists(os.path.join(self.root, "sdkconfig.defaults.esp32s3")))
+
+    def test_p4_target_detected_from_build_p4(self):
+        w(self.root, "sdkconfig", SDK)
+        self.assertFalse(io.detect_target_p4(self.root)["is_set"])
+        os.makedirs(os.path.join(self.root, "build_p4"))
+        w(self.root, "build_p4/sdkconfig", SDK.replace("esp32s3", "esp32p4"))
+        info = io.detect_target_p4(self.root)
+        self.assertTrue(info["is_set"]); self.assertTrue(info["matches"]); self.assertEqual(info["target"], "esp32p4")
+
+    def test_p4_effective_layering_board_file_and_build_p4_win(self):
+        w(self.root, "sdkconfig.defaults", "CONFIG_LANGUAGE_EN_US=y\n")
+        w(self.root, "sdkconfig.defaults.esp32p4", "CONFIG_LANGUAGE_VI_VN=y\n")
+        os.makedirs(os.path.join(self.root, "main", "boards", "esp32-p4"))
+        w(self.root, "main/boards/esp32-p4/sdkconfig.guition-m3-dev", "CONFIG_BOARD_TYPE_GUITION_ESP32_P4_M3_DEV=y\n")
+        merged = io.load_effective_p4(self.root, "guition-m3-dev")
+        self.assertEqual(merged["CONFIG_LANGUAGE_VI_VN"], "y")
+        self.assertEqual(merged["CONFIG_BOARD_TYPE_GUITION_ESP32_P4_M3_DEV"], "y")
+        self.assertEqual(io.p4_defaults_list("guition-m3-dev"),
+                         "sdkconfig.defaults;main/boards/esp32-p4/sdkconfig.guition-m3-dev")
+
 if __name__ == "__main__": unittest.main(verbosity=2)

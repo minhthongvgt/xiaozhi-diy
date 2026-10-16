@@ -121,7 +121,18 @@
         <span class="status-badge" id="target-status-badge">--</span>
       </div>
       <div class="build-card-body">
+        <div class="build-info-row">
+          <label class="info-label" for="build-profile-select">Thiết bị đích</label>
+          <select id="build-profile-select" data-no-config>
+            <option value="esp32s3">ESP32-S3 N16R8 tùy biến</option>
+            <option value="esp32p4:guition-m3-dev">ESP32-P4 · Guition JC-ESP32P4-M3-Dev</option>
+            <option value="esp32p4:function-ev">ESP32-P4 · Espressif Function-EV-Board</option>
+            <option value="esp32p4:waveshare-dev-kit">ESP32-P4 · Waveshare Module-DEV-KIT</option>
+          </select>
+        </div>
+        <div class="build-info-row"><span class="info-label">Thư mục build</span><span class="info-value" id="build-dir-val">build</span></div>
         <div class="build-info-row"><span class="info-label">Target hiện tại</span><span class="info-value" id="target-name-val">--</span></div>
+        <p class="p4-profile-note">ESP32-P4 dùng phần cứng cố định theo bo: chỉ cài đặt của tab Trợ lý và nhóm Âm thanh thông báo được ghi (vào sdkconfig.defaults.esp32p4). Build riêng trong build_p4, không đụng cấu hình ESP32-S3.</p>
       </div>
       <div class="build-card-footer">
         <button type="button" class="btn btn-outline btn-sm" id="btn-quick-set-target">idf.py set-target esp32s3</button>

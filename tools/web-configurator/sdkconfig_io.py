@@ -34,6 +34,15 @@ from typing import Dict, Iterable, List, Optional
 
 WANTED_TARGET = "esp32s3"
 DEFAULTS_FILE = f"sdkconfig.defaults.{WANTED_TARGET}"
+P4_TARGET = "esp32p4"
+P4_BUILD_DIR = "build_p4"
+P4_DEFAULTS_FILE = f"sdkconfig.defaults.{P4_TARGET}"
+P4_BOARD_DIR = "main/boards/esp32-p4"
+P4_BOARDS = {
+    "guition-m3-dev": "Guition JC-ESP32P4-M3-Dev",
+    "function-ev": "Espressif ESP32-P4-Function-EV-Board",
+    "waveshare-dev-kit": "Waveshare ESP32-P4-Module-DEV-KIT",
+}
 
 _SET_RE = re.compile(r"^(CONFIG_[A-Za-z0-9_]+)=(.*)$")
 _UNSET_RE = re.compile(r"^# (CONFIG_[A-Za-z0-9_]+) is not set\s*$")
@@ -67,7 +76,8 @@ def _unquote(v: str) -> str:
     return v[1:-1] if len(v) >= 2 and v[0] == v[-1] == '"' else v
 
 
-def detect_target(project_root: str) -> dict:
+def detect_target(project_root: str, build_dir: str = "build", sdkconfig_rel: str = "sdkconfig",
+                  wanted: str = WANTED_TARGET) -> dict:
     """
     Trả về dict khớp với front-end (buildController.renderStatus):
         is_set   : True nếu IDF đã thực sự set-target (có sdkconfig hoặc CMakeCache)
@@ -80,7 +90,7 @@ def detect_target(project_root: str) -> dict:
     """
     found: Dict[str, str] = {}
 
-    sdk = _read(os.path.join(project_root, "sdkconfig"))
+    sdk = _read(os.path.join(project_root, sdkconfig_rel))
     idf_version = None
     if sdk is not None:
         m = re.search(r"^CONFIG_IDF_TARGET=\"?([a-z0-9]+)\"?\s*$", sdk, re.M)
@@ -90,7 +100,7 @@ def detect_target(project_root: str) -> dict:
         if hv:
             idf_version = hv.group(1)
 
-    cache = _read(os.path.join(project_root, "build", "CMakeCache.txt"))
+    cache = _read(os.path.join(project_root, build_dir, "CMakeCache.txt"))
     if cache is not None:
         m = re.search(r"^IDF_TARGET:[A-Z]+=([a-z0-9]+)\s*$", cache, re.M)
         if m:
@@ -126,7 +136,7 @@ def detect_target(project_root: str) -> dict:
     return {
         "is_set": is_set,
         "target": target,
-        "matches": target == WANTED_TARGET,
+        "matches": target == wanted,
         "source": source,
         "declared": declared,
         "idf_version": idf_version,
@@ -264,5 +274,54 @@ def save_config(project_root: str, sdkconfig_lines: Iterable[str]) -> dict:
         res["needs_reconfigure"] = False
         res["note"] = ("Chưa có sdkconfig: chạy 'idf.py set-target esp32s3' để IDF sinh sdkconfig "
                        "từ sdkconfig.defaults.")
+    res["target"] = info
+    return res
+
+
+def p4_defaults_list(board: str) -> str:
+    return f"sdkconfig.defaults;{P4_BOARD_DIR}/sdkconfig.{board}"
+
+
+def p4_sdkconfig_rel() -> str:
+    return f"{P4_BUILD_DIR}/sdkconfig"
+
+
+def detect_target_p4(project_root: str) -> dict:
+    info = detect_target(project_root, P4_BUILD_DIR, p4_sdkconfig_rel(), P4_TARGET)
+    if not info["is_set"]:
+        info["target"], info["source"] = None, None
+    info["conflicts"] = [c for c in info["conflicts"] if not c.startswith("sdkconfig.defaults khai báo")]
+    return info
+
+
+def load_effective_p4(project_root: str, board: str) -> Dict[str, str]:
+    merged: Dict[str, str] = {}
+    for rel in ("sdkconfig.defaults", P4_DEFAULTS_FILE, f"{P4_BOARD_DIR}/sdkconfig.{board}", p4_sdkconfig_rel()):
+        text = _read(os.path.join(project_root, rel))
+        if text is not None:
+            merged.update(parse_kconfig_text(text))
+    return merged
+
+
+def load_effective_text_p4(project_root: str, board: str) -> str:
+    lines = []
+    for k, v in load_effective_p4(project_root, board).items():
+        lines.append(f"# {k} is not set" if v == "n" else f"{k}={v}")
+    return "\n".join(lines) + "\n"
+
+
+def save_config_p4(project_root: str, sdkconfig_lines: Iterable[str]) -> dict:
+    info = detect_target_p4(project_root)
+    lines = [ln for ln in _normalize_lines(sdkconfig_lines)
+             if not re.search(r"CONFIG_(BOARD_TYPE_|IDF_TARGET)", ln)]
+    res = {"defaults": apply_to_kconfig_file(os.path.join(project_root, P4_DEFAULTS_FILE), lines)}
+    sdk_path = os.path.join(project_root, p4_sdkconfig_rel())
+    if info["is_set"] and os.path.exists(sdk_path):
+        res["sdkconfig"] = apply_to_kconfig_file(sdk_path, lines, skip_keys=("CONFIG_IDF_TARGET",))
+        res["needs_reconfigure"] = bool(res["sdkconfig"]["written"])
+    else:
+        res["sdkconfig"] = None
+        res["needs_reconfigure"] = False
+        res["note"] = f"Chưa có {p4_sdkconfig_rel()}: bấm set-target esp32p4 để IDF sinh cấu hình cho bo ESP32-P4."
     res["target"] = info
     return res

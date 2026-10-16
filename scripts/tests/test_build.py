@@ -66,6 +66,7 @@ class VersionTests(unittest.TestCase):
                 [
                     ("esp32-p4", "esp32-p4-function-ev-board"),
                     ("esp32-p4", "esp32-p4x-function-ev-board"),
+                    ("esp32-p4", "guition-esp32-p4-m3-dev"),
                     ("esp32-p4", "waveshare-esp32-p4-module-dev-kit"),
                     ("esp32s3-n16r8-custom", "esp32s3-n16r8-custom"),
                 ],

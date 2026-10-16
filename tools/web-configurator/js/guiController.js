@@ -5,6 +5,7 @@ import { SdkconfigGenerator } from './generator.js';
 import { PinValidator } from './pinValidator.js';
 import { BuildController } from './buildController.js';
 import { BINDINGS } from './bindings.js';
+import { applyProfileToDocument, isP4Profile, linesForProfile } from './profile.js';
 export class GUIController {
   static snapshots   = {};   
   static dirty       = {};   
@@ -38,6 +39,11 @@ export class GUIController {
     GUIController.initSnapshots();
     await GUIController.autoConnect();
   }
+  static applyProfile(profile) {
+    if (!profile) return;
+    window.buildProfile = profile;
+    applyProfileToDocument(profile);
+  }
   static async autoConnect() {
     try {
       const res = await window.apiFetch('/api/project', { cache: 'no-store' });
@@ -50,6 +56,7 @@ export class GUIController {
       const cfgRes = await window.apiFetch('/api/config', { cache: 'no-store' });
       if (cfgRes.ok) {
         const cfgData = await cfgRes.json();
+        GUIController.applyProfile(cfgData.profile);
         if (cfgData.content && cfgData.content.trim()) {
           window.configState = SdkconfigParser.parse(cfgData.content);
           GUIController.syncStateToUI();
@@ -197,7 +204,7 @@ export class GUIController {
   }
   static async saveTab(panelId) {
     GUIController.syncUIToState();
-    const { errors } = PinValidator.validate(window.configState);
+    const { errors } = isP4Profile(window.buildProfile) ? { errors: [] } : PinValidator.validate(window.configState);
     if (errors.length) {
       GUIController.showToast('Có xung đột GPIO! Kiểm tra lại.', 'error');
       GUIController.updateValidation();
@@ -205,7 +212,7 @@ export class GUIController {
     }
     if (window.isServerMode) {
       try {
-        const lines = SdkconfigGenerator.build(window.configState);
+        const lines = linesForProfile(SdkconfigGenerator.build(window.configState), window.buildProfile);
         const res = await window.apiFetch('/api/save', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -244,7 +251,7 @@ export class GUIController {
     });
     document.getElementById('btn-download-config')?.addEventListener('click', () => {
       GUIController.syncUIToState();
-      const lines = SdkconfigGenerator.build(window.configState);
+      const lines = linesForProfile(SdkconfigGenerator.build(window.configState), window.buildProfile);
       const blob  = new Blob([lines.join('\n')], { type: 'text/plain' });
       const a     = Object.assign(document.createElement('a'), {
         href: URL.createObjectURL(blob),
@@ -349,6 +356,7 @@ export class GUIController {
         const cfgRes = await window.apiFetch('/api/config', { cache: 'no-store' });
         if (cfgRes.ok) {
           const cfgData = await cfgRes.json();
+          GUIController.applyProfile(cfgData.profile);
           if (cfgData.content) {
             window.configState = SdkconfigParser.parse(cfgData.content);
             GUIController.syncStateToUI();
@@ -376,6 +384,7 @@ export class GUIController {
         const cfgRes = await window.apiFetch('/api/config', { cache: 'no-store' });
         if (cfgRes.ok) {
           const cfgData = await cfgRes.json();
+          GUIController.applyProfile(cfgData.profile);
           if (cfgData.content) {
             window.configState = SdkconfigParser.parse(cfgData.content);
             GUIController.syncStateToUI();

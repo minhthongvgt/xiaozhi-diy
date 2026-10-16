@@ -3,6 +3,26 @@
     "target": "esp32p4",
     "builds": [
         {
+            "name": "guition-esp32-p4-m3-dev",
+            "sdkconfig_append": [
+                "CONFIG_BOARD_TYPE_GUITION_ESP32_P4_M3_DEV=y",
+                "CONFIG_PARTITION_TABLE_CUSTOM=y",
+                "CONFIG_PARTITION_TABLE_CUSTOM_FILENAME=\"partitions/16m.csv\"",
+                "CONFIG_PARTITION_TABLE_FILENAME=\"partitions/16m.csv\"",
+                "CONFIG_SLAVE_IDF_TARGET_ESP32C6=y",
+                "CONFIG_ESP_HOSTED_P4_DEV_BOARD_FUNC_BOARD=y",
+                "CONFIG_ESP_HOSTED_SDIO_HOST_INTERFACE=y",
+                "CONFIG_ESP_HOSTED_SDIO_4_BIT_BUS=y",
+                "CONFIG_SPI_FLASH_SUPPORT_GD_CHIP=y",
+                "CONFIG_CAMERA_OV5647=y",
+                "CONFIG_SPI_FLASH_SUPPORT_BOYA_CHIP=y",
+                "CONFIG_ESP_HOSTED_MEMPOOL_PREFER_SPIRAM=y",
+                "CONFIG_ESP_VIDEO_ENABLE_ISP_PIPELINE_CONTROLLER=n",
+                "CONFIG_ESP32P4_SELECTS_REV_LESS_V3=y",
+                "CONFIG_ESP32P4_REV_MIN_100=y"
+            ]
+        },
+        {
             "name": "waveshare-esp32-p4-module-dev-kit",
             "sdkconfig_append": [
                 "CONFIG_BOARD_TYPE_WAVESHARE_ESP32_P4_DEV_KIT=y",

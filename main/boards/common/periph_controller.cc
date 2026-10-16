@@ -567,6 +567,7 @@ void PeripheralController::InitExpander() {
         ESP_LOGW(TAG, "IO expander %s not found at I2C address 0x%02X", exp_chip, static_cast<unsigned>(exp_addr));
         return;
     }
+#if defined(CONFIG_CUSTOM_EXPANDER_LED_PINS)
     std::vector<std::unique_ptr<UserLedOutput>> exp_leds;
     std::vector<int> used_pins;
     for (int pin : ParseUserLedList(CONFIG_CUSTOM_EXPANDER_LED_PINS)) {
@@ -577,11 +578,14 @@ void PeripheralController::InitExpander() {
         used_pins.push_back(pin);
         exp_leds.push_back(std::make_unique<ExpanderLedOutput>(s_expander, static_cast<uint8_t>(pin)));
     }
+#endif
     if (!kRegisterMcpTools) {
         return;
     }
+#if defined(CONFIG_CUSTOM_EXPANDER_LED_PINS)
     static UserLedGroup expander_led_group("self.expander_led", std::string("LEDs on the ") + exp_chip + " I/O expander",
                                            std::move(exp_leds), USER_LED_DEFAULTS(CONFIG_CUSTOM_EXPANDER_LED));
+#endif
     const int exp_max_pin = exp_pin_count - 1;
     auto& mcp_server = McpServer::GetInstance();
     mcp_server.AddTool("self.expander.set_pin",

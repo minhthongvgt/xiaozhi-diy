@@ -72,19 +72,20 @@
      "IDF_TARGET_ESP32S3"
     ],
     [
-     "BOARD_TYPE_WAVESHARE_ESP32_P4_DEV_KIT",
+     "BOARD_TYPE_GUITION_ESP32_P4_M3_DEV",
      "IDF_TARGET_ESP32P4"
     ]
    ],
    "members": [
     "BOARD_TYPE_ESP32_S3_N16R8_CUSTOM",
     "BOARD_TYPE_ESP32_P4_FUNCTION_EV_BOARD",
+    "BOARD_TYPE_GUITION_ESP32_P4_M3_DEV",
     "BOARD_TYPE_WAVESHARE_ESP32_P4_DEV_KIT"
    ]
   },
   {
    "name": "DISPLAY_STYLE",
-   "order": 47,
+   "order": 48,
    "prompt": "Select display style",
    "menu": [
     "Xiaozhi Assistant",
@@ -110,7 +111,7 @@
   },
   {
    "name": "CUSTOM_UI_COLOR_ACCENT",
-   "order": 56,
+   "order": 57,
    "prompt": "Màu sắc chủ đạo Giao diện (UI Accent Color)",
    "menu": [
     "Xiaozhi Assistant",
@@ -149,7 +150,7 @@
   },
   {
    "name": "FLASH_ASSET_CHOICE",
-   "order": 68,
+   "order": 69,
    "prompt": "Tùy Chọn Flash Tệp Tài Nguyên (Flash Assets Option)",
    "menu": [
     "Xiaozhi Assistant",
@@ -171,7 +172,7 @@
   },
   {
    "name": "WAKE_WORD_TYPE",
-   "order": 74,
+   "order": 75,
    "prompt": "Wake Word Implementation Type",
    "menu": [
     "Xiaozhi Assistant",
@@ -200,7 +201,7 @@
   },
   {
    "name": "AUDIO_PROCESSOR_AEC",
-   "order": 84,
+   "order": 85,
    "prompt": "AEC Mode",
    "menu": [
     "Xiaozhi Assistant",
@@ -221,7 +222,7 @@
   },
   {
    "name": "SOUND_STARTUP",
-   "order": 89,
+   "order": 90,
    "prompt": "Khởi động xong (sẵn sàng trò chuyện)",
    "menu": [
     "Xiaozhi Assistant",
@@ -246,7 +247,7 @@
   },
   {
    "name": "SOUND_LISTENING",
-   "order": 98,
+   "order": 99,
    "prompt": "Bắt đầu lắng nghe / có thông báo",
    "menu": [
     "Xiaozhi Assistant",
@@ -271,7 +272,7 @@
   },
   {
    "name": "SOUND_ERROR",
-   "order": 107,
+   "order": 108,
    "prompt": "Báo lỗi",
    "menu": [
     "Xiaozhi Assistant",
@@ -296,7 +297,7 @@
   },
   {
    "name": "SOUND_ALERT",
-   "order": 116,
+   "order": 117,
    "prompt": "Cảnh báo từ máy chủ",
    "menu": [
     "Xiaozhi Assistant",
@@ -321,7 +322,7 @@
   },
   {
    "name": "SOUND_LOW_BATTERY",
-   "order": 125,
+   "order": 126,
    "prompt": "Pin yếu",
    "menu": [
     "Xiaozhi Assistant",
@@ -346,7 +347,7 @@
   },
   {
    "name": "SOUND_WIFI_CONFIG",
-   "order": 134,
+   "order": 135,
    "prompt": "Vào chế độ cấu hình Wi-Fi",
    "menu": [
     "Xiaozhi Assistant",
@@ -372,7 +373,7 @@
   },
   {
    "name": "SOUND_ACTIVATION",
-   "order": 144,
+   "order": 145,
    "prompt": "Đọc mã kích hoạt",
    "menu": [
     "Xiaozhi Assistant",
@@ -398,7 +399,7 @@
   },
   {
    "name": "SOUND_UPGRADE",
-   "order": 154,
+   "order": 155,
    "prompt": "Nâng cấp / tải tài nguyên",
    "menu": [
     "Xiaozhi Assistant",
@@ -424,7 +425,7 @@
   },
   {
    "name": "XIAOZHI_CAMERA_IMAGE_ROTATION_ANGLE",
-   "order": 176,
+   "order": 177,
    "prompt": "Camera Image Rotation Angle (clockwise)",
    "menu": [
     "Xiaozhi Assistant",
@@ -452,7 +453,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_TYPE",
-   "order": 180,
+   "order": 181,
    "prompt": "Loại Bộ Điều Khiển Màn Hình (Display Controller)",
    "menu": [
     "Xiaozhi Assistant",
@@ -493,7 +494,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_LINK",
-   "order": 199,
+   "order": 200,
    "prompt": "Kiểu kết nối màn hình rời",
    "menu": [
     "Xiaozhi Assistant",
@@ -528,7 +529,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_BAUDRATE_CHOICE",
-   "order": 205,
+   "order": 206,
    "prompt": "Tốc độ truyền dữ liệu (Baudrate)",
    "menu": [
     "Xiaozhi Assistant",
@@ -573,7 +574,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_PROTOCOL",
-   "order": 215,
+   "order": 216,
    "prompt": "Giao thức truyền thông màn hình (Protocol)",
    "menu": [
     "Xiaozhi Assistant",
@@ -610,7 +611,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_AMOLED_CHIP",
-   "order": 232,
+   "order": 233,
    "prompt": "Chip điều khiển AMOLED QSPI (AMOLED Controller IC)",
    "menu": [
     "Xiaozhi Assistant",
@@ -641,7 +642,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_TYPE",
-   "order": 271,
+   "order": 272,
    "prompt": "Loại IC Cảm Ứng (Touch Controller)",
    "menu": [
     "Xiaozhi Assistant",
@@ -670,7 +671,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPEAKER_TYPE",
-   "order": 289,
+   "order": 290,
    "prompt": "Loại Mạch DAC / Loa (Audio DAC / Amplifier)",
    "menu": [
     "Xiaozhi Assistant",
@@ -703,7 +704,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_TYPE",
-   "order": 305,
+   "order": 306,
    "prompt": "Loại Microphone (Microphone Type)",
    "menu": [
     "Xiaozhi Assistant",
@@ -735,7 +736,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_I2S_MODE",
-   "order": 319,
+   "order": 320,
    "prompt": "Chế Độ Xung Nhịp I2S (I2S Clock Mode)",
    "menu": [
     "Xiaozhi Assistant",
@@ -764,7 +765,7 @@
   },
   {
    "name": "CUSTOM_UART_PORT_NUM",
-   "order": 324,
+   "order": 325,
    "prompt": "Cổng UART Phần Cứng (Hardware UART Port)",
    "menu": [
     "Xiaozhi Assistant",
@@ -790,7 +791,7 @@
   },
   {
    "name": "BT_UART_MODULE_TYPE",
-   "order": 334,
+   "order": 335,
    "prompt": "Loại module Bluetooth",
    "menu": [
     "Xiaozhi Assistant",
@@ -818,7 +819,7 @@
   },
   {
    "name": "BT_UART_MODULE_PORT",
-   "order": 339,
+   "order": 340,
    "prompt": "Cổng UART phần cứng cho module Bluetooth",
    "menu": [
     "Xiaozhi Assistant",
@@ -844,7 +845,7 @@
   },
   {
    "name": "BT_UART_MODULE_ROLE",
-   "order": 350,
+   "order": 351,
    "prompt": "Vai trò của module",
    "menu": [
     "Xiaozhi Assistant",
@@ -882,7 +883,7 @@
   },
   {
    "name": "BT_UART_MODULE_FRAME",
-   "order": 354,
+   "order": 355,
    "prompt": "Định dạng gói dữ liệu",
    "menu": [
     "Xiaozhi Assistant",
@@ -916,7 +917,7 @@
   },
   {
    "name": "CUSTOM_CAMERA_SENSOR_TYPE",
-   "order": 389,
+   "order": 390,
    "prompt": "Cảm Biến Camera (Camera Sensor Model)",
    "menu": [
     "Xiaozhi Assistant",
@@ -947,7 +948,7 @@
   },
   {
    "name": "CUSTOM_LED_TYPE",
-   "order": 417,
+   "order": 418,
    "prompt": "Loại Đèn LED Báo Hiệu Trạng Thái",
    "menu": [
     "Xiaozhi Assistant",
@@ -977,7 +978,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT",
-   "order": 430,
+   "order": 431,
    "prompt": "Khởi động: hiệu ứng",
    "menu": [
     "Xiaozhi Assistant",
@@ -1030,7 +1031,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT",
-   "order": 446,
+   "order": 447,
    "prompt": "Cấu hình WiFi: hiệu ứng",
    "menu": [
     "Xiaozhi Assistant",
@@ -1083,7 +1084,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT",
-   "order": 462,
+   "order": 463,
    "prompt": "Chờ: hiệu ứng",
    "menu": [
     "Xiaozhi Assistant",
@@ -1136,7 +1137,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT",
-   "order": 478,
+   "order": 479,
    "prompt": "Đang kết nối: hiệu ứng",
    "menu": [
     "Xiaozhi Assistant",
@@ -1189,7 +1190,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT",
-   "order": 494,
+   "order": 495,
    "prompt": "Đang nghe: hiệu ứng",
    "menu": [
     "Xiaozhi Assistant",
@@ -1242,7 +1243,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT",
-   "order": 510,
+   "order": 511,
    "prompt": "Đang nói: hiệu ứng",
    "menu": [
     "Xiaozhi Assistant",
@@ -1295,7 +1296,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT",
-   "order": 526,
+   "order": 527,
    "prompt": "Nâng cấp firmware: hiệu ứng",
    "menu": [
     "Xiaozhi Assistant",
@@ -1348,7 +1349,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT",
-   "order": 542,
+   "order": 543,
    "prompt": "Kích hoạt thiết bị: hiệu ứng",
    "menu": [
     "Xiaozhi Assistant",
@@ -1401,7 +1402,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT",
-   "order": 558,
+   "order": 559,
    "prompt": "Lỗi: hiệu ứng",
    "menu": [
     "Xiaozhi Assistant",
@@ -1454,7 +1455,7 @@
   },
   {
    "name": "CUSTOM_GPIO_LED_BOOT_EFFECT",
-   "order": 576,
+   "order": 577,
    "prompt": "Trạng thái khi khởi động",
    "menu": [
     "Xiaozhi Assistant",
@@ -1479,7 +1480,7 @@
   },
   {
    "name": "CUSTOM_LED_IC_LED_BOOT_EFFECT",
-   "order": 588,
+   "order": 589,
    "prompt": "Trạng thái khi khởi động",
    "menu": [
     "Xiaozhi Assistant",
@@ -1508,7 +1509,7 @@
   },
   {
    "name": "CUSTOM_PCA9685_LED_BOOT_EFFECT",
-   "order": 597,
+   "order": 598,
    "prompt": "Trạng thái khi khởi động",
    "menu": [
     "Xiaozhi Assistant",
@@ -1533,7 +1534,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_LED_BOOT_EFFECT",
-   "order": 606,
+   "order": 607,
    "prompt": "Trạng thái khi khởi động",
    "menu": [
     "Xiaozhi Assistant",
@@ -1558,7 +1559,7 @@
   },
   {
    "name": "BUZZER_TYPE",
-   "order": 616,
+   "order": 617,
    "prompt": "Loại còi",
    "menu": [
     "Xiaozhi Assistant",
@@ -1584,7 +1585,7 @@
   },
   {
    "name": "CUSTOM_MOTOR_DC_DRIVER_TYPE",
-   "order": 672,
+   "order": 673,
    "prompt": "Loại Mạch Điều Khiển Động Cơ (Motor Driver)",
    "menu": [
     "Xiaozhi Assistant",
@@ -1611,7 +1612,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_CHIP",
-   "order": 703,
+   "order": 704,
    "prompt": "Loại chip mở rộng GPIO",
    "menu": [
     "Xiaozhi Assistant",
@@ -2292,8 +2293,27 @@
    "help": ""
   },
   {
-   "name": "BOARD_TYPE_WAVESHARE_ESP32_P4_DEV_KIT",
+   "name": "BOARD_TYPE_GUITION_ESP32_P4_M3_DEV",
    "order": 46,
+   "type": "bool",
+   "prompt": "Guition JC-ESP32P4-M3-Dev",
+   "menu": [
+    "Xiaozhi Assistant"
+   ],
+   "menuconfig": false,
+   "choice": "BOARD_TYPE",
+   "depends": [
+    "and",
+    "IDF_TARGET_ESP32P4",
+    "BOARD_TYPE"
+   ],
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "BOARD_TYPE_WAVESHARE_ESP32_P4_DEV_KIT",
+   "order": 47,
    "type": "bool",
    "prompt": "Waveshare ESP32-P4-Module-DEV-KIT",
    "menu": [
@@ -2312,7 +2332,7 @@
   },
   {
    "name": "USE_DEFAULT_MESSAGE_STYLE",
-   "order": 48,
+   "order": 49,
    "type": "bool",
    "prompt": "Mặc định (Chữ chạy ngang)",
    "menu": [
@@ -2328,7 +2348,7 @@
   },
   {
    "name": "USE_WECHAT_MESSAGE_STYLE",
-   "order": 49,
+   "order": 50,
    "type": "bool",
    "prompt": "WeChat (Bong bóng chat)",
    "menu": [
@@ -2344,7 +2364,7 @@
   },
   {
    "name": "USE_EMOTE_MESSAGE_STYLE",
-   "order": 50,
+   "order": 51,
    "type": "bool",
    "prompt": "Emote (Biểu cảm khuôn mặt emoji)",
    "menu": [
@@ -2360,7 +2380,7 @@
   },
   {
    "name": "CUSTOM_UI_STYLE_CHAT_BUBBLE",
-   "order": 51,
+   "order": 52,
    "type": "bool",
    "prompt": "Adaptive: Chat Bubble (Bong bóng hội thoại)",
    "menu": [
@@ -2376,7 +2396,7 @@
   },
   {
    "name": "CUSTOM_UI_STYLE_CLASSIC_AVATAR",
-   "order": 52,
+   "order": 53,
    "type": "bool",
    "prompt": "Adaptive: Classic Avatar (Hình đại diện AI cổ điển)",
    "menu": [
@@ -2392,7 +2412,7 @@
   },
   {
    "name": "CUSTOM_UI_STYLE_CYBER_TERMINAL",
-   "order": 53,
+   "order": 54,
    "type": "bool",
    "prompt": "Adaptive: Cyber Terminal (Giao diện dòng lệnh hacker)",
    "menu": [
@@ -2408,7 +2428,7 @@
   },
   {
    "name": "CUSTOM_UI_STYLE_MINIMAL_ZEN",
-   "order": 54,
+   "order": 55,
    "type": "bool",
    "prompt": "Adaptive: Minimal Zen (Tối giản thanh lịch)",
    "menu": [
@@ -2424,7 +2444,7 @@
   },
   {
    "name": "CUSTOM_UI_STYLE_SMART_DASHBOARD",
-   "order": 55,
+   "order": 56,
    "type": "bool",
    "prompt": "Adaptive: Smart Dashboard (Bảng điều khiển thông minh)",
    "menu": [
@@ -2440,7 +2460,7 @@
   },
   {
    "name": "CUSTOM_UI_ACCENT_CYBER_BLUE",
-   "order": 57,
+   "order": 58,
    "type": "bool",
    "prompt": "Cyber Blue (Xanh dương đậm)",
    "menu": [
@@ -2456,7 +2476,7 @@
   },
   {
    "name": "CUSTOM_UI_ACCENT_EMERALD",
-   "order": 58,
+   "order": 59,
    "type": "bool",
    "prompt": "Emerald Green (Xanh lục bảo)",
    "menu": [
@@ -2472,7 +2492,7 @@
   },
   {
    "name": "CUSTOM_UI_ACCENT_PURPLE",
-   "order": 59,
+   "order": 60,
    "type": "bool",
    "prompt": "Cyber Purple (Tím neon)",
    "menu": [
@@ -2488,7 +2508,7 @@
   },
   {
    "name": "CUSTOM_UI_ACCENT_AMBER",
-   "order": 60,
+   "order": 61,
    "type": "bool",
    "prompt": "Warm Amber (Vàng hổ phách)",
    "menu": [
@@ -2504,7 +2524,7 @@
   },
   {
    "name": "CUSTOM_UI_ACCENT_MONO",
-   "order": 61,
+   "order": 62,
    "type": "bool",
    "prompt": "Monochrome (Đơn sắc trắng đen)",
    "menu": [
@@ -2520,7 +2540,7 @@
   },
   {
    "name": "CUSTOM_UI_AUTO_SCALE",
-   "order": 62,
+   "order": 63,
    "type": "bool",
    "prompt": "Tự động căn chỉnh kích thước UI theo độ phân giải màn hình",
    "menu": [
@@ -2557,7 +2577,7 @@
   },
   {
    "name": "CUSTOM_UI_ROUND_SCREEN_SAFE_AREA",
-   "order": 63,
+   "order": 64,
    "type": "bool",
    "prompt": "Vùng hiển thị an toàn cho màn hình tròn (Round Screen Safe Area)",
    "menu": [
@@ -2606,7 +2626,7 @@
   },
   {
    "name": "CUSTOM_UI_VOICE_WAVE_ENABLE",
-   "order": 64,
+   "order": 65,
    "type": "bool",
    "prompt": "Hiển thị sóng âm thanh động khi đàm thoại (Voice Waveform)",
    "menu": [
@@ -2643,7 +2663,7 @@
   },
   {
    "name": "CUSTOM_UI_WEATHER_ENABLE",
-   "order": 65,
+   "order": 66,
    "type": "bool",
    "prompt": "Hiển thị thời tiết trên màn hình (Weather Widget)",
    "menu": [
@@ -2680,7 +2700,7 @@
   },
   {
    "name": "CUSTOM_UI_WEATHER_CITY",
-   "order": 66,
+   "order": 67,
    "type": "string",
    "prompt": "Thành phố lấy dữ liệu thời tiết",
    "menu": [
@@ -2701,7 +2721,7 @@
   },
   {
    "name": "USE_MULTILINE_CHAT_MESSAGE",
-   "order": 67,
+   "order": 68,
    "type": "bool",
    "prompt": "Use multiline chat message display (default mode only)",
    "menu": [
@@ -2722,7 +2742,7 @@
   },
   {
    "name": "FLASH_DEFAULT_ASSETS",
-   "order": 69,
+   "order": 70,
    "type": "bool",
    "prompt": "Flash tài nguyên mặc định (Default Built-in Assets)",
    "menu": [
@@ -2738,7 +2758,7 @@
   },
   {
    "name": "FLASH_CUSTOM_ASSETS",
-   "order": 70,
+   "order": 71,
    "type": "bool",
    "prompt": "Flash tài nguyên tùy chỉnh từ URL hoặc tệp cục bộ (Custom Assets)",
    "menu": [
@@ -2754,7 +2774,7 @@
   },
   {
    "name": "FLASH_EXPRESSION_ASSETS",
-   "order": 71,
+   "order": 72,
    "type": "bool",
    "prompt": "Flash tài nguyên biểu cảm AI Voice (Emote Expression Assets)",
    "menu": [
@@ -2770,7 +2790,7 @@
   },
   {
    "name": "FLASH_NONE_ASSETS",
-   "order": 72,
+   "order": 73,
    "type": "bool",
    "prompt": "Không nạp phân vùng tài nguyên (No Assets Flashing)",
    "menu": [
@@ -2786,7 +2806,7 @@
   },
   {
    "name": "CUSTOM_ASSETS_FILE",
-   "order": 73,
+   "order": 74,
    "type": "string",
    "prompt": "Đường dẫn tệp hoặc URL tài nguyên tùy chỉnh (Custom Assets File / URL)",
    "menu": [
@@ -2807,7 +2827,7 @@
   },
   {
    "name": "WAKE_WORD_DISABLED",
-   "order": 75,
+   "order": 76,
    "type": "bool",
    "prompt": "Disabled",
    "menu": [
@@ -2823,7 +2843,7 @@
   },
   {
    "name": "USE_AFE_WAKE_WORD",
-   "order": 76,
+   "order": 77,
    "type": "bool",
    "prompt": "Wakenet model with AFE",
    "menu": [
@@ -2847,7 +2867,7 @@
   },
   {
    "name": "USE_CUSTOM_WAKE_WORD",
-   "order": 77,
+   "order": 78,
    "type": "bool",
    "prompt": "Multinet model (Custom Wake Word)",
    "menu": [
@@ -2871,7 +2891,7 @@
   },
   {
    "name": "CUSTOM_WAKE_WORD",
-   "order": 78,
+   "order": 79,
    "type": "string",
    "prompt": "Custom Wake Word",
    "menu": [
@@ -2892,7 +2912,7 @@
   },
   {
    "name": "CUSTOM_WAKE_WORD_DISPLAY",
-   "order": 79,
+   "order": 80,
    "type": "string",
    "prompt": "Custom Wake Word Display",
    "menu": [
@@ -2913,7 +2933,7 @@
   },
   {
    "name": "CUSTOM_WAKE_WORD_THRESHOLD",
-   "order": 80,
+   "order": 81,
    "type": "int",
    "prompt": "Custom Wake Word Threshold (%)",
    "menu": [
@@ -2940,7 +2960,7 @@
   },
   {
    "name": "SEND_WAKE_WORD_DATA",
-   "order": 81,
+   "order": 82,
    "type": "bool",
    "prompt": "Send Wake Word Data",
    "menu": [
@@ -2965,7 +2985,7 @@
   },
   {
    "name": "WAKE_WORD_DETECTION_IN_LISTENING",
-   "order": 82,
+   "order": 83,
    "type": "bool",
    "prompt": "Enable Wake Word Detection in Listening Mode",
    "menu": [
@@ -2990,7 +3010,7 @@
   },
   {
    "name": "USE_AUDIO_PROCESSOR",
-   "order": 83,
+   "order": 84,
    "type": "bool",
    "prompt": "Enable AFE Audio Processing",
    "menu": [
@@ -3015,7 +3035,7 @@
   },
   {
    "name": "USE_DEVICE_AEC",
-   "order": 85,
+   "order": 86,
    "type": "bool",
    "prompt": "Enable Device-Side AEC",
    "menu": [
@@ -3031,7 +3051,7 @@
   },
   {
    "name": "USE_SERVER_AEC",
-   "order": 86,
+   "order": 87,
    "type": "bool",
    "prompt": "Enable Server-Side AEC (Unstable)",
    "menu": [
@@ -3047,7 +3067,7 @@
   },
   {
    "name": "USE_NO_AEC",
-   "order": 87,
+   "order": 88,
    "type": "bool",
    "prompt": "Disable AEC",
    "menu": [
@@ -3063,7 +3083,7 @@
   },
   {
    "name": "USE_SOFTWARE_AEC_REFERENCE",
-   "order": 88,
+   "order": 89,
    "type": "bool",
    "prompt": "Software AEC Reference (codecs without hardware loopback)",
    "menu": [
@@ -3084,7 +3104,7 @@
   },
   {
    "name": "SOUND_STARTUP_POPUP",
-   "order": 90,
+   "order": 91,
    "type": "bool",
    "prompt": "Popup (tiếng bật ngắn)",
    "menu": [
@@ -3100,7 +3120,7 @@
   },
   {
    "name": "SOUND_STARTUP_SUCCESS",
-   "order": 91,
+   "order": 92,
    "type": "bool",
    "prompt": "Success (chuông thành công) (mặc định)",
    "menu": [
@@ -3116,7 +3136,7 @@
   },
   {
    "name": "SOUND_STARTUP_EXCLAMATION",
-   "order": 92,
+   "order": 93,
    "type": "bool",
    "prompt": "Exclamation (tiếng cảnh báo)",
    "menu": [
@@ -3132,7 +3152,7 @@
   },
   {
    "name": "SOUND_STARTUP_VIBRATION",
-   "order": 93,
+   "order": 94,
    "type": "bool",
    "prompt": "Vibration (tiếng rung)",
    "menu": [
@@ -3148,7 +3168,7 @@
   },
   {
    "name": "SOUND_STARTUP_LOW_BATTERY",
-   "order": 94,
+   "order": 95,
    "type": "bool",
    "prompt": "Low battery (tiếng pin yếu)",
    "menu": [
@@ -3164,7 +3184,7 @@
   },
   {
    "name": "SOUND_STARTUP_NONE",
-   "order": 95,
+   "order": 96,
    "type": "bool",
    "prompt": "Tắt tiếng",
    "menu": [
@@ -3180,7 +3200,7 @@
   },
   {
    "name": "SOUND_STARTUP_CUSTOM",
-   "order": 96,
+   "order": 97,
    "type": "bool",
    "prompt": "Tệp .ogg tùy chỉnh",
    "menu": [
@@ -3196,7 +3216,7 @@
   },
   {
    "name": "SOUND_STARTUP_CUSTOM_FILE",
-   "order": 97,
+   "order": 98,
    "type": "string",
    "prompt": "Tệp .ogg cho: Khởi động xong (sẵn sàng trò chuyện)",
    "menu": [
@@ -3217,7 +3237,7 @@
   },
   {
    "name": "SOUND_LISTENING_POPUP",
-   "order": 99,
+   "order": 100,
    "type": "bool",
    "prompt": "Popup (tiếng bật ngắn) (mặc định)",
    "menu": [
@@ -3233,7 +3253,7 @@
   },
   {
    "name": "SOUND_LISTENING_SUCCESS",
-   "order": 100,
+   "order": 101,
    "type": "bool",
    "prompt": "Success (chuông thành công)",
    "menu": [
@@ -3249,7 +3269,7 @@
   },
   {
    "name": "SOUND_LISTENING_EXCLAMATION",
-   "order": 101,
+   "order": 102,
    "type": "bool",
    "prompt": "Exclamation (tiếng cảnh báo)",
    "menu": [
@@ -3265,7 +3285,7 @@
   },
   {
    "name": "SOUND_LISTENING_VIBRATION",
-   "order": 102,
+   "order": 103,
    "type": "bool",
    "prompt": "Vibration (tiếng rung)",
    "menu": [
@@ -3281,7 +3301,7 @@
   },
   {
    "name": "SOUND_LISTENING_LOW_BATTERY",
-   "order": 103,
+   "order": 104,
    "type": "bool",
    "prompt": "Low battery (tiếng pin yếu)",
    "menu": [
@@ -3297,7 +3317,7 @@
   },
   {
    "name": "SOUND_LISTENING_NONE",
-   "order": 104,
+   "order": 105,
    "type": "bool",
    "prompt": "Tắt tiếng",
    "menu": [
@@ -3313,7 +3333,7 @@
   },
   {
    "name": "SOUND_LISTENING_CUSTOM",
-   "order": 105,
+   "order": 106,
    "type": "bool",
    "prompt": "Tệp .ogg tùy chỉnh",
    "menu": [
@@ -3329,7 +3349,7 @@
   },
   {
    "name": "SOUND_LISTENING_CUSTOM_FILE",
-   "order": 106,
+   "order": 107,
    "type": "string",
    "prompt": "Tệp .ogg cho: Bắt đầu lắng nghe / có thông báo",
    "menu": [
@@ -3350,7 +3370,7 @@
   },
   {
    "name": "SOUND_ERROR_POPUP",
-   "order": 108,
+   "order": 109,
    "type": "bool",
    "prompt": "Popup (tiếng bật ngắn)",
    "menu": [
@@ -3366,7 +3386,7 @@
   },
   {
    "name": "SOUND_ERROR_SUCCESS",
-   "order": 109,
+   "order": 110,
    "type": "bool",
    "prompt": "Success (chuông thành công)",
    "menu": [
@@ -3382,7 +3402,7 @@
   },
   {
    "name": "SOUND_ERROR_EXCLAMATION",
-   "order": 110,
+   "order": 111,
    "type": "bool",
    "prompt": "Exclamation (tiếng cảnh báo) (mặc định)",
    "menu": [
@@ -3398,7 +3418,7 @@
   },
   {
    "name": "SOUND_ERROR_VIBRATION",
-   "order": 111,
+   "order": 112,
    "type": "bool",
    "prompt": "Vibration (tiếng rung)",
    "menu": [
@@ -3414,7 +3434,7 @@
   },
   {
    "name": "SOUND_ERROR_LOW_BATTERY",
-   "order": 112,
+   "order": 113,
    "type": "bool",
    "prompt": "Low battery (tiếng pin yếu)",
    "menu": [
@@ -3430,7 +3450,7 @@
   },
   {
    "name": "SOUND_ERROR_NONE",
-   "order": 113,
+   "order": 114,
    "type": "bool",
    "prompt": "Tắt tiếng",
    "menu": [
@@ -3446,7 +3466,7 @@
   },
   {
    "name": "SOUND_ERROR_CUSTOM",
-   "order": 114,
+   "order": 115,
    "type": "bool",
    "prompt": "Tệp .ogg tùy chỉnh",
    "menu": [
@@ -3462,7 +3482,7 @@
   },
   {
    "name": "SOUND_ERROR_CUSTOM_FILE",
-   "order": 115,
+   "order": 116,
    "type": "string",
    "prompt": "Tệp .ogg cho: Báo lỗi",
    "menu": [
@@ -3483,7 +3503,7 @@
   },
   {
    "name": "SOUND_ALERT_POPUP",
-   "order": 117,
+   "order": 118,
    "type": "bool",
    "prompt": "Popup (tiếng bật ngắn)",
    "menu": [
@@ -3499,7 +3519,7 @@
   },
   {
    "name": "SOUND_ALERT_SUCCESS",
-   "order": 118,
+   "order": 119,
    "type": "bool",
    "prompt": "Success (chuông thành công)",
    "menu": [
@@ -3515,7 +3535,7 @@
   },
   {
    "name": "SOUND_ALERT_EXCLAMATION",
-   "order": 119,
+   "order": 120,
    "type": "bool",
    "prompt": "Exclamation (tiếng cảnh báo)",
    "menu": [
@@ -3531,7 +3551,7 @@
   },
   {
    "name": "SOUND_ALERT_VIBRATION",
-   "order": 120,
+   "order": 121,
    "type": "bool",
    "prompt": "Vibration (tiếng rung) (mặc định)",
    "menu": [
@@ -3547,7 +3567,7 @@
   },
   {
    "name": "SOUND_ALERT_LOW_BATTERY",
-   "order": 121,
+   "order": 122,
    "type": "bool",
    "prompt": "Low battery (tiếng pin yếu)",
    "menu": [
@@ -3563,7 +3583,7 @@
   },
   {
    "name": "SOUND_ALERT_NONE",
-   "order": 122,
+   "order": 123,
    "type": "bool",
    "prompt": "Tắt tiếng",
    "menu": [
@@ -3579,7 +3599,7 @@
   },
   {
    "name": "SOUND_ALERT_CUSTOM",
-   "order": 123,
+   "order": 124,
    "type": "bool",
    "prompt": "Tệp .ogg tùy chỉnh",
    "menu": [
@@ -3595,7 +3615,7 @@
   },
   {
    "name": "SOUND_ALERT_CUSTOM_FILE",
-   "order": 124,
+   "order": 125,
    "type": "string",
    "prompt": "Tệp .ogg cho: Cảnh báo từ máy chủ",
    "menu": [
@@ -3616,7 +3636,7 @@
   },
   {
    "name": "SOUND_LOW_BATTERY_POPUP",
-   "order": 126,
+   "order": 127,
    "type": "bool",
    "prompt": "Popup (tiếng bật ngắn)",
    "menu": [
@@ -3632,7 +3652,7 @@
   },
   {
    "name": "SOUND_LOW_BATTERY_SUCCESS",
-   "order": 127,
+   "order": 128,
    "type": "bool",
    "prompt": "Success (chuông thành công)",
    "menu": [
@@ -3648,7 +3668,7 @@
   },
   {
    "name": "SOUND_LOW_BATTERY_EXCLAMATION",
-   "order": 128,
+   "order": 129,
    "type": "bool",
    "prompt": "Exclamation (tiếng cảnh báo)",
    "menu": [
@@ -3664,7 +3684,7 @@
   },
   {
    "name": "SOUND_LOW_BATTERY_VIBRATION",
-   "order": 129,
+   "order": 130,
    "type": "bool",
    "prompt": "Vibration (tiếng rung)",
    "menu": [
@@ -3680,7 +3700,7 @@
   },
   {
    "name": "SOUND_LOW_BATTERY_LOW_BATTERY",
-   "order": 130,
+   "order": 131,
    "type": "bool",
    "prompt": "Low battery (tiếng pin yếu) (mặc định)",
    "menu": [
@@ -3696,7 +3716,7 @@
   },
   {
    "name": "SOUND_LOW_BATTERY_NONE",
-   "order": 131,
+   "order": 132,
    "type": "bool",
    "prompt": "Tắt tiếng",
    "menu": [
@@ -3712,7 +3732,7 @@
   },
   {
    "name": "SOUND_LOW_BATTERY_CUSTOM",
-   "order": 132,
+   "order": 133,
    "type": "bool",
    "prompt": "Tệp .ogg tùy chỉnh",
    "menu": [
@@ -3728,7 +3748,7 @@
   },
   {
    "name": "SOUND_LOW_BATTERY_CUSTOM_FILE",
-   "order": 133,
+   "order": 134,
    "type": "string",
    "prompt": "Tệp .ogg cho: Pin yếu",
    "menu": [
@@ -3749,7 +3769,7 @@
   },
   {
    "name": "SOUND_WIFI_CONFIG_VOICE",
-   "order": 135,
+   "order": 136,
    "type": "bool",
    "prompt": "Giọng nói «cấu hình Wi-Fi» theo ngôn ngữ (mặc định)",
    "menu": [
@@ -3765,7 +3785,7 @@
   },
   {
    "name": "SOUND_WIFI_CONFIG_POPUP",
-   "order": 136,
+   "order": 137,
    "type": "bool",
    "prompt": "Popup (tiếng bật ngắn)",
    "menu": [
@@ -3781,7 +3801,7 @@
   },
   {
    "name": "SOUND_WIFI_CONFIG_SUCCESS",
-   "order": 137,
+   "order": 138,
    "type": "bool",
    "prompt": "Success (chuông thành công)",
    "menu": [
@@ -3797,7 +3817,7 @@
   },
   {
    "name": "SOUND_WIFI_CONFIG_EXCLAMATION",
-   "order": 138,
+   "order": 139,
    "type": "bool",
    "prompt": "Exclamation (tiếng cảnh báo)",
    "menu": [
@@ -3813,7 +3833,7 @@
   },
   {
    "name": "SOUND_WIFI_CONFIG_VIBRATION",
-   "order": 139,
+   "order": 140,
    "type": "bool",
    "prompt": "Vibration (tiếng rung)",
    "menu": [
@@ -3829,7 +3849,7 @@
   },
   {
    "name": "SOUND_WIFI_CONFIG_LOW_BATTERY",
-   "order": 140,
+   "order": 141,
    "type": "bool",
    "prompt": "Low battery (tiếng pin yếu)",
    "menu": [
@@ -3845,7 +3865,7 @@
   },
   {
    "name": "SOUND_WIFI_CONFIG_NONE",
-   "order": 141,
+   "order": 142,
    "type": "bool",
    "prompt": "Tắt tiếng",
    "menu": [
@@ -3861,7 +3881,7 @@
   },
   {
    "name": "SOUND_WIFI_CONFIG_CUSTOM",
-   "order": 142,
+   "order": 143,
    "type": "bool",
    "prompt": "Tệp .ogg tùy chỉnh",
    "menu": [
@@ -3877,7 +3897,7 @@
   },
   {
    "name": "SOUND_WIFI_CONFIG_CUSTOM_FILE",
-   "order": 143,
+   "order": 144,
    "type": "string",
    "prompt": "Tệp .ogg cho: Vào chế độ cấu hình Wi-Fi",
    "menu": [
@@ -3898,7 +3918,7 @@
   },
   {
    "name": "SOUND_ACTIVATION_VOICE",
-   "order": 145,
+   "order": 146,
    "type": "bool",
    "prompt": "Giọng nói «kích hoạt» theo ngôn ngữ (mặc định)",
    "menu": [
@@ -3914,7 +3934,7 @@
   },
   {
    "name": "SOUND_ACTIVATION_POPUP",
-   "order": 146,
+   "order": 147,
    "type": "bool",
    "prompt": "Popup (tiếng bật ngắn)",
    "menu": [
@@ -3930,7 +3950,7 @@
   },
   {
    "name": "SOUND_ACTIVATION_SUCCESS",
-   "order": 147,
+   "order": 148,
    "type": "bool",
    "prompt": "Success (chuông thành công)",
    "menu": [
@@ -3946,7 +3966,7 @@
   },
   {
    "name": "SOUND_ACTIVATION_EXCLAMATION",
-   "order": 148,
+   "order": 149,
    "type": "bool",
    "prompt": "Exclamation (tiếng cảnh báo)",
    "menu": [
@@ -3962,7 +3982,7 @@
   },
   {
    "name": "SOUND_ACTIVATION_VIBRATION",
-   "order": 149,
+   "order": 150,
    "type": "bool",
    "prompt": "Vibration (tiếng rung)",
    "menu": [
@@ -3978,7 +3998,7 @@
   },
   {
    "name": "SOUND_ACTIVATION_LOW_BATTERY",
-   "order": 150,
+   "order": 151,
    "type": "bool",
    "prompt": "Low battery (tiếng pin yếu)",
    "menu": [
@@ -3994,7 +4014,7 @@
   },
   {
    "name": "SOUND_ACTIVATION_NONE",
-   "order": 151,
+   "order": 152,
    "type": "bool",
    "prompt": "Tắt tiếng",
    "menu": [
@@ -4010,7 +4030,7 @@
   },
   {
    "name": "SOUND_ACTIVATION_CUSTOM",
-   "order": 152,
+   "order": 153,
    "type": "bool",
    "prompt": "Tệp .ogg tùy chỉnh",
    "menu": [
@@ -4026,7 +4046,7 @@
   },
   {
    "name": "SOUND_ACTIVATION_CUSTOM_FILE",
-   "order": 153,
+   "order": 154,
    "type": "string",
    "prompt": "Tệp .ogg cho: Đọc mã kích hoạt",
    "menu": [
@@ -4047,7 +4067,7 @@
   },
   {
    "name": "SOUND_UPGRADE_VOICE",
-   "order": 155,
+   "order": 156,
    "type": "bool",
    "prompt": "Giọng nói «nâng cấp» theo ngôn ngữ (mặc định)",
    "menu": [
@@ -4063,7 +4083,7 @@
   },
   {
    "name": "SOUND_UPGRADE_POPUP",
-   "order": 156,
+   "order": 157,
    "type": "bool",
    "prompt": "Popup (tiếng bật ngắn)",
    "menu": [
@@ -4079,7 +4099,7 @@
   },
   {
    "name": "SOUND_UPGRADE_SUCCESS",
-   "order": 157,
+   "order": 158,
    "type": "bool",
    "prompt": "Success (chuông thành công)",
    "menu": [
@@ -4095,7 +4115,7 @@
   },
   {
    "name": "SOUND_UPGRADE_EXCLAMATION",
-   "order": 158,
+   "order": 159,
    "type": "bool",
    "prompt": "Exclamation (tiếng cảnh báo)",
    "menu": [
@@ -4111,7 +4131,7 @@
   },
   {
    "name": "SOUND_UPGRADE_VIBRATION",
-   "order": 159,
+   "order": 160,
    "type": "bool",
    "prompt": "Vibration (tiếng rung)",
    "menu": [
@@ -4127,7 +4147,7 @@
   },
   {
    "name": "SOUND_UPGRADE_LOW_BATTERY",
-   "order": 160,
+   "order": 161,
    "type": "bool",
    "prompt": "Low battery (tiếng pin yếu)",
    "menu": [
@@ -4143,7 +4163,7 @@
   },
   {
    "name": "SOUND_UPGRADE_NONE",
-   "order": 161,
+   "order": 162,
    "type": "bool",
    "prompt": "Tắt tiếng",
    "menu": [
@@ -4159,7 +4179,7 @@
   },
   {
    "name": "SOUND_UPGRADE_CUSTOM",
-   "order": 162,
+   "order": 163,
    "type": "bool",
    "prompt": "Tệp .ogg tùy chỉnh",
    "menu": [
@@ -4175,7 +4195,7 @@
   },
   {
    "name": "SOUND_UPGRADE_CUSTOM_FILE",
-   "order": 163,
+   "order": 164,
    "type": "string",
    "prompt": "Tệp .ogg cho: Nâng cấp / tải tài nguyên",
    "menu": [
@@ -4196,7 +4216,7 @@
   },
   {
    "name": "USE_AUDIO_DEBUGGER",
-   "order": 164,
+   "order": 165,
    "type": "bool",
    "prompt": "Enable Audio Debugger",
    "menu": [
@@ -4216,7 +4236,7 @@
   },
   {
    "name": "USE_HOTSPOT_WIFI_PROVISIONING",
-   "order": 165,
+   "order": 166,
    "type": "bool",
    "prompt": "Hotspot",
    "menu": [
@@ -4237,7 +4257,7 @@
   },
   {
    "name": "USE_ESP_BLUFI_WIFI_PROVISIONING",
-   "order": 166,
+   "order": 167,
    "type": "bool",
    "prompt": "ESP-BluFi",
    "menu": [
@@ -4253,7 +4273,7 @@
   },
   {
    "name": "AUDIO_DEBUG_UDP_SERVER",
-   "order": 167,
+   "order": 168,
    "type": "string",
    "prompt": "Audio Debug UDP Server Address",
    "menu": [
@@ -4273,7 +4293,7 @@
   },
   {
    "name": "RECEIVE_CUSTOM_MESSAGE",
-   "order": 168,
+   "order": 169,
    "type": "bool",
    "prompt": "Enable Custom Message Reception",
    "menu": [
@@ -4293,7 +4313,7 @@
   },
   {
    "name": "XIAOZHI_CAMERA_MIRROR_CONFIGURED",
-   "order": 169,
+   "order": 170,
    "type": "bool",
    "prompt": "Override camera mirror settings",
    "menu": [
@@ -4317,7 +4337,7 @@
   },
   {
    "name": "XIAOZHI_CAMERA_HMIRROR",
-   "order": 170,
+   "order": 171,
    "type": "bool",
    "prompt": "Mirror Camera Horizontally",
    "menu": [
@@ -4345,7 +4365,7 @@
   },
   {
    "name": "XIAOZHI_CAMERA_VFLIP",
-   "order": 171,
+   "order": 172,
    "type": "bool",
    "prompt": "Mirror Camera Vertically",
    "menu": [
@@ -4373,7 +4393,7 @@
   },
   {
    "name": "XIAOZHI_CAMERA_ALLOW_JPEG_INPUT",
-   "order": 172,
+   "order": 173,
    "type": "bool",
    "prompt": "Allow JPEG Input",
    "menu": [
@@ -4397,7 +4417,7 @@
   },
   {
    "name": "XIAOZHI_ENABLE_CAMERA_DEBUG_MODE",
-   "order": 173,
+   "order": 174,
    "type": "bool",
    "prompt": "Enable Camera Debug Mode",
    "menu": [
@@ -4421,7 +4441,7 @@
   },
   {
    "name": "XIAOZHI_ENABLE_CAMERA_ENDIANNESS_SWAP",
-   "order": 174,
+   "order": 175,
    "type": "bool",
    "prompt": "Enable software camera buffer endianness swapping",
    "menu": [
@@ -4452,7 +4472,7 @@
   },
   {
    "name": "XIAOZHI_ENABLE_ROTATE_CAMERA_IMAGE",
-   "order": 175,
+   "order": 176,
    "type": "bool",
    "prompt": "Enable Camera Image Rotation",
    "menu": [
@@ -4483,7 +4503,7 @@
   },
   {
    "name": "XIAOZHI_CAMERA_IMAGE_ROTATION_ANGLE_90",
-   "order": 177,
+   "order": 178,
    "type": "bool",
    "prompt": "90°",
    "menu": [
@@ -4500,7 +4520,7 @@
   },
   {
    "name": "XIAOZHI_CAMERA_IMAGE_ROTATION_ANGLE_270",
-   "order": 178,
+   "order": 179,
    "type": "bool",
    "prompt": "270°",
    "menu": [
@@ -4517,7 +4537,7 @@
   },
   {
    "name": "ENABLE_CUSTOM_DISPLAY",
-   "order": 179,
+   "order": 180,
    "type": "bool",
    "prompt": "Màn hình hiển thị (Display Panel)",
    "menu": [
@@ -4539,7 +4559,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_ST7789",
-   "order": 181,
+   "order": 182,
    "type": "bool",
    "prompt": "Sitronix ST7789 (240x320, 240x240, 170x320 SPI)",
    "menu": [
@@ -4557,7 +4577,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_ST7796",
-   "order": 182,
+   "order": 183,
    "type": "bool",
    "prompt": "Sitronix ST7796 (320x480 SPI)",
    "menu": [
@@ -4575,7 +4595,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_ST7735",
-   "order": 183,
+   "order": 184,
    "type": "bool",
    "prompt": "Sitronix ST7735 / ST7735S (128x128, 128x160 SPI mini)",
    "menu": [
@@ -4593,7 +4613,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_ST7701",
-   "order": 184,
+   "order": 185,
    "type": "bool",
    "prompt": "Sitronix ST7701 (480x480 RGB song song)",
    "menu": [
@@ -4611,7 +4631,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_ILI9341",
-   "order": 185,
+   "order": 186,
    "type": "bool",
    "prompt": "Ilitek ILI9341 (240x320 SPI)",
    "menu": [
@@ -4629,7 +4649,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_ILI9486",
-   "order": 186,
+   "order": 187,
    "type": "bool",
    "prompt": "Ilitek ILI9486 / ILI9488 (320x480 SPI)",
    "menu": [
@@ -4647,7 +4667,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_GC9A01",
-   "order": 187,
+   "order": 188,
    "type": "bool",
    "prompt": "GalaxyCore GC9A01 (240x240 Màn hình tròn SPI)",
    "menu": [
@@ -4665,7 +4685,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_GC9107",
-   "order": 188,
+   "order": 189,
    "type": "bool",
    "prompt": "GalaxyCore GC9107 (128x128 SPI)",
    "menu": [
@@ -4683,7 +4703,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_NV3023",
-   "order": 189,
+   "order": 190,
    "type": "bool",
    "prompt": "NewVision NV3030B (240x280 SPI)",
    "menu": [
@@ -4701,7 +4721,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_JD9853",
-   "order": 190,
+   "order": 191,
    "type": "bool",
    "prompt": "Jadard JD9853 (172x320 SPI)",
    "menu": [
@@ -4719,7 +4739,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_OLED_SSD1306",
-   "order": 191,
+   "order": 192,
    "type": "bool",
    "prompt": "Solomon OLED SSD1306 (128x64 / 128x32 I2C)",
    "menu": [
@@ -4737,7 +4757,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_OLED_SH1106",
-   "order": 192,
+   "order": 193,
    "type": "bool",
    "prompt": "Sino Wealth OLED SH1106 (128x64 I2C)",
    "menu": [
@@ -4755,7 +4775,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_QSPI_AMOLED",
-   "order": 193,
+   "order": 194,
    "type": "bool",
    "prompt": "AMOLED QSPI (SH8601 368x448 / CO5300 466x466 / SPD2010 412x412)",
    "menu": [
@@ -4773,7 +4793,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_EPAPER_SSD1681",
-   "order": 194,
+   "order": 195,
    "type": "bool",
    "prompt": "Solomon SSD1681 (200x200 Mực điện tử E-Paper SPI)",
    "menu": [
@@ -4791,7 +4811,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART",
-   "order": 195,
+   "order": 196,
    "type": "bool",
    "prompt": "Màn hình rời UART HMI (Nextion / TJC / DWIN / Serial Display)",
    "menu": [
@@ -4809,7 +4829,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_USER_CUSTOM",
-   "order": 196,
+   "order": 197,
    "type": "bool",
    "prompt": "Driver Màn hình tùy chỉnh (Custom User Display Hook)",
    "menu": [
@@ -4827,7 +4847,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_NONE",
-   "order": 197,
+   "order": 198,
    "type": "bool",
    "prompt": "Không sử dụng màn hình (Audio Only / Headless)",
    "menu": [
@@ -4845,7 +4865,7 @@
   },
   {
    "name": "ENABLE_CUSTOM_SECONDARY_UART_DISPLAY",
-   "order": 198,
+   "order": 199,
    "type": "bool",
    "prompt": "Màn hình rời UART mở rộng / Chạy song song 2 màn hình (Secondary UART Display)",
    "menu": [
@@ -4872,7 +4892,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_LINK_WIRED",
-   "order": 200,
+   "order": 201,
    "type": "bool",
    "prompt": "Có dây (UART trực tiếp)",
    "menu": [
@@ -4891,7 +4911,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_LINK_BLUETOOTH",
-   "order": 201,
+   "order": 202,
    "type": "bool",
    "prompt": "Không dây qua module Bluetooth UART",
    "menu": [
@@ -4914,7 +4934,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_PORT",
-   "order": 202,
+   "order": 203,
    "type": "int",
    "prompt": "Cổng UART phần cứng (1: UART1, 2: UART2)",
    "menu": [
@@ -4960,7 +4980,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_TX_PIN",
-   "order": 203,
+   "order": 204,
    "type": "int",
    "prompt": "Chân TX kết nối chân RX của Màn hình",
    "menu": [
@@ -5006,7 +5026,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_RX_PIN",
-   "order": 204,
+   "order": 205,
    "type": "int",
    "prompt": "Chân RX kết nối chân TX của Màn hình",
    "menu": [
@@ -5052,7 +5072,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_BAUDRATE_9600",
-   "order": 206,
+   "order": 207,
    "type": "bool",
    "prompt": "9600 bps (Nextion mặc định khi xuất xưởng)",
    "menu": [
@@ -5071,7 +5091,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_BAUDRATE_19200",
-   "order": 207,
+   "order": 208,
    "type": "bool",
    "prompt": "19200 bps",
    "menu": [
@@ -5090,7 +5110,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_BAUDRATE_38400",
-   "order": 208,
+   "order": 209,
    "type": "bool",
    "prompt": "38400 bps",
    "menu": [
@@ -5109,7 +5129,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_BAUDRATE_57600",
-   "order": 209,
+   "order": 210,
    "type": "bool",
    "prompt": "57600 bps",
    "menu": [
@@ -5128,7 +5148,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_BAUDRATE_115200",
-   "order": 210,
+   "order": 211,
    "type": "bool",
    "prompt": "115200 bps (Khuyên dùng)",
    "menu": [
@@ -5147,7 +5167,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_BAUDRATE_230400",
-   "order": 211,
+   "order": 212,
    "type": "bool",
    "prompt": "230400 bps",
    "menu": [
@@ -5166,7 +5186,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_BAUDRATE_460800",
-   "order": 212,
+   "order": 213,
    "type": "bool",
    "prompt": "460800 bps",
    "menu": [
@@ -5185,7 +5205,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_BAUDRATE_921600",
-   "order": 213,
+   "order": 214,
    "type": "bool",
    "prompt": "921600 bps (Tốc độ cao)",
    "menu": [
@@ -5204,7 +5224,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_BAUDRATE",
-   "order": 214,
+   "order": 215,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -5272,7 +5292,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_PROTO_NEXTION",
-   "order": 216,
+   "order": 217,
    "type": "bool",
    "prompt": "Nextion / TJC HMI (Lệnh kết thúc 0xFF 0xFF 0xFF)",
    "menu": [
@@ -5291,7 +5311,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_PROTO_JSON",
-   "order": 217,
+   "order": 218,
    "type": "bool",
    "prompt": "JSON Streaming (Chuỗi JSON kèm ký tự xuống dòng n)",
    "menu": [
@@ -5310,7 +5330,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_PROTO_RAW_TEXT",
-   "order": 218,
+   "order": 219,
    "type": "bool",
    "prompt": "Raw Text / ASCII (STATUS:..., EMOTION:..., CHAT:...)",
    "menu": [
@@ -5329,7 +5349,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_UART_PROTO_DWIN",
-   "order": 219,
+   "order": 220,
    "type": "bool",
    "prompt": "DWIN DGUS (Khung truyền nhị phân 0x5A 0xA5)",
    "menu": [
@@ -5348,7 +5368,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_WIDTH",
-   "order": 220,
+   "order": 221,
    "type": "int",
    "prompt": "Độ phân giải ngang (Width Pixels)",
    "menu": [
@@ -5445,7 +5465,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_HEIGHT",
-   "order": 221,
+   "order": 222,
    "type": "int",
    "prompt": "Độ phân giải dọc (Height Pixels)",
    "menu": [
@@ -5542,7 +5562,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_PIN_MOSI",
-   "order": 222,
+   "order": 223,
    "type": "int",
    "prompt": "Chân dữ liệu SPI MOSI (SDA)",
    "menu": [
@@ -5610,7 +5630,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_PIN_CLK",
-   "order": 223,
+   "order": 224,
    "type": "int",
    "prompt": "Chân xung nhịp SPI CLK (SCL)",
    "menu": [
@@ -5678,7 +5698,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_PIN_CS",
-   "order": 224,
+   "order": 225,
    "type": "int",
    "prompt": "Chân chọn chip SPI CS (-1 nếu không dùng)",
    "menu": [
@@ -5711,7 +5731,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_PIN_DC",
-   "order": 225,
+   "order": 226,
    "type": "int",
    "prompt": "Chân lệnh/dữ liệu SPI DC",
    "menu": [
@@ -5744,7 +5764,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_USE_RST",
-   "order": 226,
+   "order": 227,
    "type": "bool",
    "prompt": "Sử dụng chân Reset màn hình (RST)",
    "menu": [
@@ -5771,7 +5791,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_PIN_RST",
-   "order": 227,
+   "order": 228,
    "type": "int",
    "prompt": "Chân Reset màn hình RST GPIO",
    "menu": [
@@ -5808,7 +5828,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_USE_BLK",
-   "order": 228,
+   "order": 229,
    "type": "bool",
    "prompt": "Điều khiển đèn nền màn hình (Backlight BLK)",
    "menu": [
@@ -5835,7 +5855,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_PIN_BLK",
-   "order": 229,
+   "order": 230,
    "type": "int",
    "prompt": "Chân đèn nền BLK GPIO",
    "menu": [
@@ -5872,7 +5892,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_PIN_I2C_SDA",
-   "order": 230,
+   "order": 231,
    "type": "int",
    "prompt": "Chân OLED I2C SDA",
    "menu": [
@@ -5913,7 +5933,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_PIN_I2C_SCL",
-   "order": 231,
+   "order": 232,
    "type": "int",
    "prompt": "Chân OLED I2C SCL",
    "menu": [
@@ -5954,7 +5974,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_AMOLED_SH8601",
-   "order": 233,
+   "order": 234,
    "type": "bool",
    "prompt": "Sino Wealth SH8601",
    "menu": [
@@ -5972,7 +5992,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_AMOLED_CO5300",
-   "order": 234,
+   "order": 235,
    "type": "bool",
    "prompt": "Chipone CO5300",
    "menu": [
@@ -5990,7 +6010,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_AMOLED_SPD2010",
-   "order": 235,
+   "order": 236,
    "type": "bool",
    "prompt": "Solomon SPD2010",
    "menu": [
@@ -6008,7 +6028,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_QSPI_CS",
-   "order": 236,
+   "order": 237,
    "type": "int",
    "prompt": "Chân AMOLED QSPI CS",
    "menu": [
@@ -6045,7 +6065,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_QSPI_CLK",
-   "order": 237,
+   "order": 238,
    "type": "int",
    "prompt": "Chân AMOLED QSPI CLK",
    "menu": [
@@ -6082,7 +6102,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_QSPI_D0",
-   "order": 238,
+   "order": 239,
    "type": "int",
    "prompt": "Chân AMOLED QSPI D0",
    "menu": [
@@ -6119,7 +6139,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_QSPI_D1",
-   "order": 239,
+   "order": 240,
    "type": "int",
    "prompt": "Chân AMOLED QSPI D1",
    "menu": [
@@ -6156,7 +6176,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_QSPI_D2",
-   "order": 240,
+   "order": 241,
    "type": "int",
    "prompt": "Chân AMOLED QSPI D2",
    "menu": [
@@ -6193,7 +6213,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_QSPI_D3",
-   "order": 241,
+   "order": 242,
    "type": "int",
    "prompt": "Chân AMOLED QSPI D3",
    "menu": [
@@ -6230,7 +6250,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_QSPI_RST",
-   "order": 242,
+   "order": 243,
    "type": "int",
    "prompt": "Chân AMOLED QSPI Reset",
    "menu": [
@@ -6267,7 +6287,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_EPAPER_PIN_BUSY",
-   "order": 243,
+   "order": 244,
    "type": "int",
    "prompt": "Chân E-Paper BUSY",
    "menu": [
@@ -6304,7 +6324,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_PCLK",
-   "order": 244,
+   "order": 245,
    "type": "int",
    "prompt": "Chân RGB PCLK",
    "menu": [
@@ -6342,7 +6362,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_DE",
-   "order": 245,
+   "order": 246,
    "type": "int",
    "prompt": "Chân RGB DE (Data Enable)",
    "menu": [
@@ -6380,7 +6400,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_VSYNC",
-   "order": 246,
+   "order": 247,
    "type": "int",
    "prompt": "Chân RGB VSYNC",
    "menu": [
@@ -6418,7 +6438,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_HSYNC",
-   "order": 247,
+   "order": 248,
    "type": "int",
    "prompt": "Chân RGB HSYNC",
    "menu": [
@@ -6456,7 +6476,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D0",
-   "order": 248,
+   "order": 249,
    "type": "int",
    "prompt": "Chân RGB DATA0 (B0)",
    "menu": [
@@ -6494,7 +6514,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D1",
-   "order": 249,
+   "order": 250,
    "type": "int",
    "prompt": "Chân RGB DATA1 (B1)",
    "menu": [
@@ -6532,7 +6552,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D2",
-   "order": 250,
+   "order": 251,
    "type": "int",
    "prompt": "Chân RGB DATA2 (B2)",
    "menu": [
@@ -6570,7 +6590,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D3",
-   "order": 251,
+   "order": 252,
    "type": "int",
    "prompt": "Chân RGB DATA3 (B3)",
    "menu": [
@@ -6608,7 +6628,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D4",
-   "order": 252,
+   "order": 253,
    "type": "int",
    "prompt": "Chân RGB DATA4 (B4)",
    "menu": [
@@ -6646,7 +6666,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D5",
-   "order": 253,
+   "order": 254,
    "type": "int",
    "prompt": "Chân RGB DATA5 (G0)",
    "menu": [
@@ -6684,7 +6704,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D6",
-   "order": 254,
+   "order": 255,
    "type": "int",
    "prompt": "Chân RGB DATA6 (G1)",
    "menu": [
@@ -6722,7 +6742,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D7",
-   "order": 255,
+   "order": 256,
    "type": "int",
    "prompt": "Chân RGB DATA7 (G2)",
    "menu": [
@@ -6760,7 +6780,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D8",
-   "order": 256,
+   "order": 257,
    "type": "int",
    "prompt": "Chân RGB DATA8 (G3)",
    "menu": [
@@ -6798,7 +6818,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D9",
-   "order": 257,
+   "order": 258,
    "type": "int",
    "prompt": "Chân RGB DATA9 (G4)",
    "menu": [
@@ -6836,7 +6856,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D10",
-   "order": 258,
+   "order": 259,
    "type": "int",
    "prompt": "Chân RGB DATA10 (G5)",
    "menu": [
@@ -6874,7 +6894,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D11",
-   "order": 259,
+   "order": 260,
    "type": "int",
    "prompt": "Chân RGB DATA11 (R0)",
    "menu": [
@@ -6912,7 +6932,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D12",
-   "order": 260,
+   "order": 261,
    "type": "int",
    "prompt": "Chân RGB DATA12 (R1)",
    "menu": [
@@ -6950,7 +6970,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D13",
-   "order": 261,
+   "order": 262,
    "type": "int",
    "prompt": "Chân RGB DATA13 (R2)",
    "menu": [
@@ -6988,7 +7008,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D14",
-   "order": 262,
+   "order": 263,
    "type": "int",
    "prompt": "Chân RGB DATA14 (R3)",
    "menu": [
@@ -7026,7 +7046,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_RGB_D15",
-   "order": 263,
+   "order": 264,
    "type": "int",
    "prompt": "Chân RGB DATA15 (R4)",
    "menu": [
@@ -7064,7 +7084,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_OFFSET_X",
-   "order": 264,
+   "order": 265,
    "type": "int",
    "prompt": "Dịch tọa độ X (Offset X Pixels)",
    "menu": [
@@ -7101,7 +7121,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_OFFSET_Y",
-   "order": 265,
+   "order": 266,
    "type": "int",
    "prompt": "Dịch tọa độ Y (Offset Y Pixels)",
    "menu": [
@@ -7134,7 +7154,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_MIRROR_X",
-   "order": 266,
+   "order": 267,
    "type": "bool",
    "prompt": "Đảo chiều gương trục X (Mirror X)",
    "menu": [
@@ -7161,7 +7181,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_MIRROR_Y",
-   "order": 267,
+   "order": 268,
    "type": "bool",
    "prompt": "Đảo chiều gương trục Y (Mirror Y)",
    "menu": [
@@ -7188,7 +7208,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_SWAP_XY",
-   "order": 268,
+   "order": 269,
    "type": "bool",
    "prompt": "Hoán đổi tọa độ X-Y (X/Y Axes Swapped)",
    "menu": [
@@ -7215,7 +7235,7 @@
   },
   {
    "name": "CUSTOM_DISPLAY_INVERT_COLOR",
-   "order": 269,
+   "order": 270,
    "type": "bool",
    "prompt": "Đảo ngược màu sắc hiển thị (Invert Color)",
    "menu": [
@@ -7242,7 +7262,7 @@
   },
   {
    "name": "ENABLE_CUSTOM_TOUCH",
-   "order": 270,
+   "order": 271,
    "type": "bool",
    "prompt": "Màn hình cảm ứng (Touch Screen Panel)",
    "menu": [
@@ -7264,7 +7284,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_CST816S",
-   "order": 272,
+   "order": 273,
    "type": "bool",
    "prompt": "Hynitron CST816S / CST9217 (I2C)",
    "menu": [
@@ -7282,7 +7302,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_GT911",
-   "order": 273,
+   "order": 274,
    "type": "bool",
    "prompt": "Goodix GT911 / GT1151 (I2C)",
    "menu": [
@@ -7300,7 +7320,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_FT5X06",
-   "order": 274,
+   "order": 275,
    "type": "bool",
    "prompt": "FocalTech FT5x06 / FT6336 (I2C)",
    "menu": [
@@ -7318,7 +7338,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_USER_CUSTOM",
-   "order": 275,
+   "order": 276,
    "type": "bool",
    "prompt": "Driver Cảm ứng tùy chỉnh (Custom User Touch Hook)",
    "menu": [
@@ -7336,7 +7356,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_NONE",
-   "order": 276,
+   "order": 277,
    "type": "bool",
    "prompt": "Không sử dụng cảm ứng",
    "menu": [
@@ -7354,7 +7374,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_PIN_SDA",
-   "order": 277,
+   "order": 278,
    "type": "int",
    "prompt": "Chân cảm ứng I2C SDA",
    "menu": [
@@ -7387,7 +7407,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_PIN_SCL",
-   "order": 278,
+   "order": 279,
    "type": "int",
    "prompt": "Chân cảm ứng I2C SCL",
    "menu": [
@@ -7420,7 +7440,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_PIN_INT",
-   "order": 279,
+   "order": 280,
    "type": "int",
    "prompt": "Chân ngắt cảm ứng INT GPIO",
    "menu": [
@@ -7453,7 +7473,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_PIN_RST",
-   "order": 280,
+   "order": 281,
    "type": "int",
    "prompt": "Chân reset cảm ứng RST GPIO (-1 nếu không nối)",
    "menu": [
@@ -7486,7 +7506,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_TOUCH_SCREEN",
-   "order": 281,
+   "order": 282,
    "type": "bool",
    "prompt": "Mở rộng giao tiếp màn cảm ứng ngoại vi (Peripheral Touch Screen Controller)",
    "menu": [
@@ -7508,7 +7528,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_TOUCH_I2C_SDA",
-   "order": 282,
+   "order": 283,
    "type": "int",
    "prompt": "Chân ngoại vi cảm ứng I2C SDA",
    "menu": [
@@ -7540,7 +7560,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_TOUCH_I2C_SCL",
-   "order": 283,
+   "order": 284,
    "type": "int",
    "prompt": "Chân ngoại vi cảm ứng I2C SCL",
    "menu": [
@@ -7572,7 +7592,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_TOUCH_INT_PIN",
-   "order": 284,
+   "order": 285,
    "type": "int",
    "prompt": "Chân ngoại vi cảm ứng ngắt INT",
    "menu": [
@@ -7604,7 +7624,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_TOUCH_RST_PIN",
-   "order": 285,
+   "order": 286,
    "type": "int",
    "prompt": "Chân ngoại vi cảm ứng reset RST",
    "menu": [
@@ -7636,7 +7656,7 @@
   },
   {
    "name": "ENABLE_CUSTOM_AUDIO",
-   "order": 286,
+   "order": 287,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -7666,7 +7686,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_CODEC_USER_CUSTOM",
-   "order": 287,
+   "order": 288,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -7696,7 +7716,7 @@
   },
   {
    "name": "ENABLE_CUSTOM_SPEAKER",
-   "order": 288,
+   "order": 289,
    "type": "bool",
    "prompt": "Loa phát thanh & Mạch DAC (Speaker & Audio Out)",
    "menu": [
@@ -7718,7 +7738,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_DAC_MAX98357A",
-   "order": 290,
+   "order": 291,
    "type": "bool",
    "prompt": "MAX98357A (Mạch công suất I2S Class-D Mono 3W)",
    "menu": [
@@ -7736,7 +7756,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_DAC_MAX98360A",
-   "order": 291,
+   "order": 292,
    "type": "bool",
    "prompt": "MAX98360A / MAX98360B (I2S/PDM Class-D Mono 3W thế hệ mới)",
    "menu": [
@@ -7754,7 +7774,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_DAC_PCM5102A",
-   "order": 292,
+   "order": 293,
    "type": "bool",
    "prompt": "PCM5102A (Mạch giải mã Hi-Fi I2S Stereo DAC 32-bit/384kHz)",
    "menu": [
@@ -7772,7 +7792,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_CODEC_ES8311",
-   "order": 293,
+   "order": 294,
    "type": "bool",
    "prompt": "Everest Semi ES8311 Codec (I2C)",
    "menu": [
@@ -7790,7 +7810,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_CODEC_ES8388",
-   "order": 294,
+   "order": 295,
    "type": "bool",
    "prompt": "Everest Semi ES8388 Stereo Codec (I2C)",
    "menu": [
@@ -7808,7 +7828,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_CODEC_ES8374",
-   "order": 295,
+   "order": 296,
    "type": "bool",
    "prompt": "Everest Semi ES8374 Codec",
    "menu": [
@@ -7826,7 +7846,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_CODEC_ES8389",
-   "order": 296,
+   "order": 297,
    "type": "bool",
    "prompt": "Everest Semi ES8389 Codec",
    "menu": [
@@ -7844,7 +7864,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_CODEC_BOX",
-   "order": 297,
+   "order": 298,
    "type": "bool",
    "prompt": "Box Audio Codec",
    "menu": [
@@ -7862,7 +7882,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_CODEC_USER_CUSTOM",
-   "order": 298,
+   "order": 299,
    "type": "bool",
    "prompt": "Driver Loa / DAC phát tùy chỉnh (Custom User Speaker Hook)",
    "menu": [
@@ -7880,7 +7900,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_GPIO_DOUT",
-   "order": 299,
+   "order": 300,
    "type": "int",
    "prompt": "Chân dữ liệu Loa I2S DOUT (DIN trên module)",
    "menu": [
@@ -7913,7 +7933,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_GPIO_BCLK",
-   "order": 300,
+   "order": 301,
    "type": "int",
    "prompt": "Chân xung nhịp Loa I2S BCLK (BCK)",
    "menu": [
@@ -7946,7 +7966,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_GPIO_LRCK",
-   "order": 301,
+   "order": 302,
    "type": "int",
    "prompt": "Chân xung nhịp Loa I2S LRCK / WS (LCK)",
    "menu": [
@@ -7979,7 +7999,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_CODEC_I2C_SDA",
-   "order": 302,
+   "order": 303,
    "type": "int",
    "prompt": "Chân Codec DAC I2C SDA",
    "menu": [
@@ -8032,7 +8052,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_SPK_CODEC_I2C_SCL",
-   "order": 303,
+   "order": 304,
    "type": "int",
    "prompt": "Chân Codec DAC I2C SCL",
    "menu": [
@@ -8085,7 +8105,7 @@
   },
   {
    "name": "ENABLE_CUSTOM_MIC",
-   "order": 304,
+   "order": 305,
    "type": "bool",
    "prompt": "Microphone thu âm (Microphone & Audio In)",
    "menu": [
@@ -8107,7 +8127,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_INMP441",
-   "order": 306,
+   "order": 307,
    "type": "bool",
    "prompt": "INMP441 / MSM261S (Microphone số I2S MEMS Omnidirectional)",
    "menu": [
@@ -8125,7 +8145,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_PDM",
-   "order": 307,
+   "order": 308,
    "type": "bool",
    "prompt": "PDM Microphone (Micro số giao thức PDM)",
    "menu": [
@@ -8143,7 +8163,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_CODEC_ES8311",
-   "order": 308,
+   "order": 309,
    "type": "bool",
    "prompt": "Everest Semi ES8311 ADC (I2C)",
    "menu": [
@@ -8161,7 +8181,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_CODEC_ES8388",
-   "order": 309,
+   "order": 310,
    "type": "bool",
    "prompt": "Everest Semi ES8388 ADC (I2C)",
    "menu": [
@@ -8179,7 +8199,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_CODEC_ES8374",
-   "order": 310,
+   "order": 311,
    "type": "bool",
    "prompt": "Everest Semi ES8374 ADC",
    "menu": [
@@ -8197,7 +8217,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_CODEC_ES8389",
-   "order": 311,
+   "order": 312,
    "type": "bool",
    "prompt": "Everest Semi ES8389 ADC",
    "menu": [
@@ -8215,7 +8235,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_CODEC_BOX",
-   "order": 312,
+   "order": 313,
    "type": "bool",
    "prompt": "Box Audio Codec ADC",
    "menu": [
@@ -8233,7 +8253,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_CODEC_USER_CUSTOM",
-   "order": 313,
+   "order": 314,
    "type": "bool",
    "prompt": "Driver Micro thu âm tùy chỉnh (Custom User Audio Mic Hook)",
    "menu": [
@@ -8251,7 +8271,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_GPIO_DIN",
-   "order": 314,
+   "order": 315,
    "type": "int",
    "prompt": "Chân dữ liệu Micro I2S DIN (SD trên INMP441/MSM261S)",
    "menu": [
@@ -8284,7 +8304,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_GPIO_SCK",
-   "order": 315,
+   "order": 316,
    "type": "int",
    "prompt": "Chân xung nhịp Micro I2S SCK (SCK/BCLK)",
    "menu": [
@@ -8317,7 +8337,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_GPIO_WS",
-   "order": 316,
+   "order": 317,
    "type": "int",
    "prompt": "Chân chọn kênh Micro I2S WS (WS/LRCK)",
    "menu": [
@@ -8350,7 +8370,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_CODEC_I2C_SDA",
-   "order": 317,
+   "order": 318,
    "type": "int",
    "prompt": "Chân Codec ADC I2C SDA",
    "menu": [
@@ -8403,7 +8423,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_MIC_CODEC_I2C_SCL",
-   "order": 318,
+   "order": 319,
    "type": "int",
    "prompt": "Chân Codec ADC I2C SCL",
    "menu": [
@@ -8456,7 +8476,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_I2S_SIMPLEX",
-   "order": 320,
+   "order": 321,
    "type": "bool",
    "prompt": "Simplex (Độc lập: Loa và Micro có chân Clock BCLK/WS riêng)",
    "menu": [
@@ -8473,7 +8493,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_I2S_DUPLEX",
-   "order": 321,
+   "order": 322,
    "type": "bool",
    "prompt": "Duplex (Dùng chung: Loa và Micro chia sẻ chung chân BCLK và WS)",
    "menu": [
@@ -8490,7 +8510,7 @@
   },
   {
    "name": "CUSTOM_AUDIO_CODEC_AEC_REFERENCE",
-   "order": 322,
+   "order": 323,
    "type": "bool",
    "prompt": "Kênh tham chiếu khử tiếng vọng từ Codec (AEC Hardware Reference)",
    "menu": [
@@ -8582,7 +8602,7 @@
   },
   {
    "name": "ENABLE_CUSTOM_UART",
-   "order": 323,
+   "order": 324,
    "type": "bool",
    "prompt": "Cổng UART mở rộng (Serial Communication Port)",
    "menu": [
@@ -8604,7 +8624,7 @@
   },
   {
    "name": "CUSTOM_UART_PORT_1",
-   "order": 325,
+   "order": 326,
    "type": "bool",
    "prompt": "UART1 (Cổng serial phần cứng 1)",
    "menu": [
@@ -8622,7 +8642,7 @@
   },
   {
    "name": "CUSTOM_UART_PORT_2",
-   "order": 326,
+   "order": 327,
    "type": "bool",
    "prompt": "UART2 (Cổng serial phần cứng 2)",
    "menu": [
@@ -8640,7 +8660,7 @@
   },
   {
    "name": "CUSTOM_UART_PIN_TX",
-   "order": 327,
+   "order": 328,
    "type": "int",
    "prompt": "Chân phát UART TX GPIO",
    "menu": [
@@ -8673,7 +8693,7 @@
   },
   {
    "name": "CUSTOM_UART_PIN_RX",
-   "order": 328,
+   "order": 329,
    "type": "int",
    "prompt": "Chân nhận UART RX GPIO",
    "menu": [
@@ -8706,7 +8726,7 @@
   },
   {
    "name": "CUSTOM_UART_BAUDRATE",
-   "order": 329,
+   "order": 330,
    "type": "int",
    "prompt": "Tốc độ baud truyền thông (Baudrate)",
    "menu": [
@@ -8739,7 +8759,7 @@
   },
   {
    "name": "CUSTOM_UART_USE_FLOW_CONTROL",
-   "order": 330,
+   "order": 331,
    "type": "bool",
    "prompt": "Kích hoạt điều khiển luồng phần cứng (RTS/CTS Hardware Flow Control)",
    "menu": [
@@ -8766,7 +8786,7 @@
   },
   {
    "name": "CUSTOM_UART_PIN_RTS",
-   "order": 331,
+   "order": 332,
    "type": "int",
    "prompt": "Chân RTS GPIO (Request to Send)",
    "menu": [
@@ -8803,7 +8823,7 @@
   },
   {
    "name": "CUSTOM_UART_PIN_CTS",
-   "order": 332,
+   "order": 333,
    "type": "int",
    "prompt": "Chân CTS GPIO (Clear to Send)",
    "menu": [
@@ -8840,7 +8860,7 @@
   },
   {
    "name": "ENABLE_BT_UART_MODULE",
-   "order": 333,
+   "order": 334,
    "type": "bool",
    "prompt": "Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10)",
    "menu": [
@@ -8862,7 +8882,7 @@
   },
   {
    "name": "BT_UART_MODULE_HC05",
-   "order": 335,
+   "order": 336,
    "type": "bool",
    "prompt": "HC-05 (Bluetooth Classic SPP, chủ/tớ, cần chân KEY để vào AT)",
    "menu": [
@@ -8880,7 +8900,7 @@
   },
   {
    "name": "BT_UART_MODULE_HC06",
-   "order": 336,
+   "order": 337,
    "type": "bool",
    "prompt": "HC-06 / linvor (Bluetooth Classic SPP, chỉ làm tớ)",
    "menu": [
@@ -8898,7 +8918,7 @@
   },
   {
    "name": "BT_UART_MODULE_HM10",
-   "order": 337,
+   "order": 338,
    "type": "bool",
    "prompt": "HM-10 / CC2541 (BLE, chủ/tớ)",
    "menu": [
@@ -8916,7 +8936,7 @@
   },
   {
    "name": "BT_UART_MODULE_PRECONFIGURED",
-   "order": 338,
+   "order": 339,
    "type": "bool",
    "prompt": "Module đã cấu hình sẵn (không gửi lệnh AT)",
    "menu": [
@@ -8934,7 +8954,7 @@
   },
   {
    "name": "BT_UART_MODULE_PORT_1",
-   "order": 340,
+   "order": 341,
    "type": "bool",
    "prompt": "UART1",
    "menu": [
@@ -8952,7 +8972,7 @@
   },
   {
    "name": "BT_UART_MODULE_PORT_2",
-   "order": 341,
+   "order": 342,
    "type": "bool",
    "prompt": "UART2",
    "menu": [
@@ -8970,7 +8990,7 @@
   },
   {
    "name": "BT_UART_MODULE_TX_PIN",
-   "order": 342,
+   "order": 343,
    "type": "int",
    "prompt": "Chân TX (nối chân RXD của module)",
    "menu": [
@@ -9003,7 +9023,7 @@
   },
   {
    "name": "BT_UART_MODULE_RX_PIN",
-   "order": 343,
+   "order": 344,
    "type": "int",
    "prompt": "Chân RX (nối chân TXD của module)",
    "menu": [
@@ -9036,7 +9056,7 @@
   },
   {
    "name": "BT_UART_MODULE_BAUDRATE",
-   "order": 344,
+   "order": 345,
    "type": "int",
    "prompt": "Tốc độ baud dữ liệu của module",
    "menu": [
@@ -9069,7 +9089,7 @@
   },
   {
    "name": "BT_UART_MODULE_STATE_PIN",
-   "order": 345,
+   "order": 346,
    "type": "int",
    "prompt": "Chân STATE / LED (biết đã kết nối, -1 nếu không nối)",
    "menu": [
@@ -9102,7 +9122,7 @@
   },
   {
    "name": "BT_UART_MODULE_KEY_PIN",
-   "order": 346,
+   "order": 347,
    "type": "int",
    "prompt": "Chân KEY / EN của HC-05 (-1 nếu không nối)",
    "menu": [
@@ -9139,7 +9159,7 @@
   },
   {
    "name": "BT_UART_MODULE_APPLY_SETTINGS",
-   "order": 347,
+   "order": 348,
    "type": "bool",
    "prompt": "Gửi lệnh AT đặt tên, mã PIN và vai trò khi khởi động",
    "menu": [
@@ -9173,7 +9193,7 @@
   },
   {
    "name": "BT_UART_MODULE_NAME",
-   "order": 348,
+   "order": 349,
    "type": "string",
    "prompt": "Tên Bluetooth của module",
    "menu": [
@@ -9204,7 +9224,7 @@
   },
   {
    "name": "BT_UART_MODULE_PIN_CODE",
-   "order": 349,
+   "order": 350,
    "type": "string",
    "prompt": "Mã PIN ghép đôi (HC-05/HC-06: 4 số, HM-10: 6 số, để trống = giữ nguyên)",
    "menu": [
@@ -9235,7 +9255,7 @@
   },
   {
    "name": "BT_UART_MODULE_ROLE_SLAVE",
-   "order": 351,
+   "order": 352,
    "type": "bool",
    "prompt": "Tớ (Slave)",
    "menu": [
@@ -9253,7 +9273,7 @@
   },
   {
    "name": "BT_UART_MODULE_ROLE_MASTER",
-   "order": 352,
+   "order": 353,
    "type": "bool",
    "prompt": "Chủ (Master), tự kết nối tới địa chỉ cố định",
    "menu": [
@@ -9271,7 +9291,7 @@
   },
   {
    "name": "BT_UART_MODULE_REMOTE_ADDR",
-   "order": 353,
+   "order": 354,
    "type": "string",
    "prompt": "Địa chỉ Bluetooth của module đầu kia (12 chữ số hex)",
    "menu": [
@@ -9302,7 +9322,7 @@
   },
   {
    "name": "BT_UART_MODULE_FRAME_RAW",
-   "order": 355,
+   "order": 356,
    "type": "bool",
    "prompt": "Thô (gửi nguyên văn, nhận theo khoảng nghỉ)",
    "menu": [
@@ -9320,7 +9340,7 @@
   },
   {
    "name": "BT_UART_MODULE_FRAME_LINE",
-   "order": 356,
+   "order": 357,
    "type": "bool",
    "prompt": "Dòng văn bản (kết thúc bằng ký tự xuống dòng LF)",
    "menu": [
@@ -9338,7 +9358,7 @@
   },
   {
    "name": "BT_UART_MODULE_FRAME_BINARY4",
-   "order": 357,
+   "order": 358,
    "type": "bool",
    "prompt": "Khung nhị phân 4 byte (0xAA, chục, đơn vị, XOR)",
    "menu": [
@@ -9356,7 +9376,7 @@
   },
   {
    "name": "CUSTOM_MCP_TOOL_LAMP",
-   "order": 358,
+   "order": 359,
    "type": "bool",
    "prompt": "Đèn điều khiển bằng AI qua GPIO (MCP)",
    "menu": [
@@ -9378,7 +9398,7 @@
   },
   {
    "name": "CUSTOM_MCP_TOOL_LAMP_GPIO",
-   "order": 359,
+   "order": 360,
    "type": "int",
    "prompt": "Chân GPIO điều khiển Đèn",
    "menu": [
@@ -9410,7 +9430,7 @@
   },
   {
    "name": "CUSTOM_MCP_TOOL_LAMP_EXTRA_GPIOS",
-   "order": 360,
+   "order": 361,
    "type": "string",
    "prompt": "Các chân GPIO Đèn thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -9436,7 +9456,7 @@
   },
   {
    "name": "CUSTOM_MCP_TOOL_SENSOR",
-   "order": 361,
+   "order": 362,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -9518,7 +9538,7 @@
   },
   {
    "name": "CUSTOM_MCP_TOOL_ACTUATOR",
-   "order": 362,
+   "order": 363,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -9556,7 +9576,7 @@
   },
   {
    "name": "CUSTOM_MCP_TOOL_ROBOT",
-   "order": 363,
+   "order": 364,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -9582,7 +9602,7 @@
   },
   {
    "name": "CUSTOM_MCP_TOOL_LED",
-   "order": 364,
+   "order": 365,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -9611,7 +9631,7 @@
   },
   {
    "name": "CUSTOM_MCP_TOOL_GPIO_LED",
-   "order": 365,
+   "order": 366,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -9637,7 +9657,7 @@
   },
   {
    "name": "CUSTOM_MCP_TOOL_PERIPH",
-   "order": 366,
+   "order": 367,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -9711,7 +9731,7 @@
   },
   {
    "name": "CUSTOM_MCP_TOOL_PRESS_TO_TALK",
-   "order": 367,
+   "order": 368,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -9737,7 +9757,7 @@
   },
   {
    "name": "CUSTOM_MCP_TOOL_UART",
-   "order": 368,
+   "order": 369,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -9767,7 +9787,7 @@
   },
   {
    "name": "CUSTOM_MCP_TOOL_BT_UART",
-   "order": 369,
+   "order": 370,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -9796,7 +9816,7 @@
   },
   {
    "name": "ENABLE_CUSTOM_MCP_SERVER",
-   "order": 370,
+   "order": 371,
    "type": "bool",
    "prompt": "",
    "menu": [
@@ -9854,7 +9874,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_BUTTON_BOOT",
-   "order": 371,
+   "order": 372,
    "type": "bool",
    "prompt": "Nút bấm BOOT Onboard (BOOT Button)",
    "menu": [
@@ -9877,7 +9897,7 @@
   },
   {
    "name": "CUSTOM_BUTTON_BOOT_GPIO",
-   "order": 372,
+   "order": 373,
    "type": "int",
    "prompt": "Chân GPIO nút Boot",
    "menu": [
@@ -9910,7 +9930,7 @@
   },
   {
    "name": "CUSTOM_BUTTON_BOOT_EXTRA_GPIOS",
-   "order": 373,
+   "order": 374,
    "type": "string",
    "prompt": "Các chân GPIO nút Boot thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -9937,7 +9957,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_BUTTON_TOUCH",
-   "order": 374,
+   "order": 375,
    "type": "bool",
    "prompt": "Nút bấm chức năng Action / Chạm (PTT / Touch Key)",
    "menu": [
@@ -9960,7 +9980,7 @@
   },
   {
    "name": "CUSTOM_BUTTON_TOUCH_GPIO",
-   "order": 375,
+   "order": 376,
    "type": "int",
    "prompt": "Chân GPIO nút Action",
    "menu": [
@@ -9993,7 +10013,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_BUTTON_VOLUME",
-   "order": 376,
+   "order": 377,
    "type": "bool",
    "prompt": "Cụm phím vật lý Tăng / Giảm âm lượng (Volume Buttons)",
    "menu": [
@@ -10016,7 +10036,7 @@
   },
   {
    "name": "CUSTOM_BUTTON_VOL_UP_GPIO",
-   "order": 377,
+   "order": 378,
    "type": "int",
    "prompt": "Chân GPIO nút tăng âm lượng (Vol Up)",
    "menu": [
@@ -10049,7 +10069,7 @@
   },
   {
    "name": "CUSTOM_BUTTON_VOL_DOWN_GPIO",
-   "order": 378,
+   "order": 379,
    "type": "int",
    "prompt": "Chân GPIO nút giảm âm lượng (Vol Down)",
    "menu": [
@@ -10082,7 +10102,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_TOUCH_SLIDER",
-   "order": 379,
+   "order": 380,
    "type": "bool",
    "prompt": "Thanh trượt cảm ứng điện dung nội bộ ESP32-S3 (Touch Slider)",
    "menu": [
@@ -10105,7 +10125,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_SLIDER_PAD1_GPIO",
-   "order": 380,
+   "order": 381,
    "type": "int",
    "prompt": "Chân Touch Pad 1 của thanh trượt (GPIO 1-14)",
    "menu": [
@@ -10138,7 +10158,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_SLIDER_PAD2_GPIO",
-   "order": 381,
+   "order": 382,
    "type": "int",
    "prompt": "Chân Touch Pad 2 của thanh trượt (GPIO 1-14)",
    "menu": [
@@ -10171,7 +10191,7 @@
   },
   {
    "name": "CUSTOM_TOUCH_SLIDER_PAD3_GPIO",
-   "order": 382,
+   "order": 383,
    "type": "int",
    "prompt": "Chân Touch Pad 3 của thanh trượt (GPIO 1-14)",
    "menu": [
@@ -10204,7 +10224,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_ROTARY_ENCODER",
-   "order": 383,
+   "order": 384,
    "type": "bool",
    "prompt": "Núm vặn xoay vô cấp cơ học (Rotary Encoder EC11 qua PCNT)",
    "menu": [
@@ -10227,7 +10247,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_ENCODER_PHASE_A",
-   "order": 384,
+   "order": 385,
    "type": "int",
    "prompt": "Chân xung pha A (CLK) Encoder",
    "menu": [
@@ -10260,7 +10280,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_ENCODER_PHASE_B",
-   "order": 385,
+   "order": 386,
    "type": "int",
    "prompt": "Chân xung pha B (DT) Encoder",
    "menu": [
@@ -10293,7 +10313,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_ENCODER_KEY_PIN",
-   "order": 386,
+   "order": 387,
    "type": "int",
    "prompt": "Chân phím nhấn SW Encoder (-1 nếu không dùng)",
    "menu": [
@@ -10326,7 +10346,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_USER_CUSTOM_SENSORS",
-   "order": 387,
+   "order": 388,
    "type": "bool",
    "prompt": "Driver Cảm biến ngoại vi tùy chỉnh (Custom User Sensor Hook)",
    "menu": [
@@ -10349,7 +10369,7 @@
   },
   {
    "name": "ENABLE_CUSTOM_CAMERA",
-   "order": 388,
+   "order": 389,
    "type": "bool",
    "prompt": "Camera & Thị giác AI (Camera DVP / USB UVC)",
    "menu": [
@@ -10372,7 +10392,7 @@
   },
   {
    "name": "CUSTOM_CAMERA_OV2640",
-   "order": 390,
+   "order": 391,
    "type": "bool",
    "prompt": "OmniVision OV2640 (2 Megapixel)",
    "menu": [
@@ -10391,7 +10411,7 @@
   },
   {
    "name": "CUSTOM_CAMERA_OV3660",
-   "order": 391,
+   "order": 392,
    "type": "bool",
    "prompt": "OmniVision OV3660 (3 Megapixel)",
    "menu": [
@@ -10410,7 +10430,7 @@
   },
   {
    "name": "CUSTOM_CAMERA_OV5640",
-   "order": 392,
+   "order": 393,
    "type": "bool",
    "prompt": "OmniVision OV5640 (5 Megapixel)",
    "menu": [
@@ -10429,7 +10449,7 @@
   },
   {
    "name": "CUSTOM_CAMERA_SC030IOT",
-   "order": 393,
+   "order": 394,
    "type": "bool",
    "prompt": "SmartSens SC030IOT",
    "menu": [
@@ -10448,7 +10468,7 @@
   },
   {
    "name": "CUSTOM_CAMERA_USB_UVC",
-   "order": 394,
+   "order": 395,
    "type": "bool",
    "prompt": "USB UVC Web Camera (ESP32-S3 USB Host Port)",
    "menu": [
@@ -10467,7 +10487,7 @@
   },
   {
    "name": "CUSTOM_CAMERA_USER_CUSTOM",
-   "order": 395,
+   "order": 396,
    "type": "bool",
    "prompt": "Driver Camera tùy chỉnh (Custom User Camera Hook)",
    "menu": [
@@ -10486,7 +10506,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_XCLK",
-   "order": 396,
+   "order": 397,
    "type": "int",
    "prompt": "Camera XCLK (Master Clock)",
    "menu": [
@@ -10527,7 +10547,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_PCLK",
-   "order": 397,
+   "order": 398,
    "type": "int",
    "prompt": "Camera PCLK (Pixel Clock)",
    "menu": [
@@ -10568,7 +10588,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_VSYNC",
-   "order": 398,
+   "order": 399,
    "type": "int",
    "prompt": "Camera VSYNC (Vertical Sync)",
    "menu": [
@@ -10609,7 +10629,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_HREF",
-   "order": 399,
+   "order": 400,
    "type": "int",
    "prompt": "Camera HREF (Horizontal Reference)",
    "menu": [
@@ -10650,7 +10670,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_SIOD",
-   "order": 400,
+   "order": 401,
    "type": "int",
    "prompt": "Camera SIOD (SCCB I2C Data)",
    "menu": [
@@ -10691,7 +10711,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_SIOC",
-   "order": 401,
+   "order": 402,
    "type": "int",
    "prompt": "Camera SIOC (SCCB I2C Clock)",
    "menu": [
@@ -10732,7 +10752,7 @@
   },
   {
    "name": "CUSTOM_CAM_USE_RESET",
-   "order": 402,
+   "order": 403,
    "type": "bool",
    "prompt": "Sử dụng chân Reset Camera (RST)",
    "menu": [
@@ -10767,7 +10787,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_RESET",
-   "order": 403,
+   "order": 404,
    "type": "int",
    "prompt": "Chân Camera Reset GPIO",
    "menu": [
@@ -10812,7 +10832,7 @@
   },
   {
    "name": "CUSTOM_CAM_USE_PWDN",
-   "order": 404,
+   "order": 405,
    "type": "bool",
    "prompt": "Sử dụng chân Power-Down Camera (PWDN)",
    "menu": [
@@ -10847,7 +10867,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_PWDN",
-   "order": 405,
+   "order": 406,
    "type": "int",
    "prompt": "Chân Camera PWDN GPIO",
    "menu": [
@@ -10892,7 +10912,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_D0",
-   "order": 406,
+   "order": 407,
    "type": "int",
    "prompt": "Camera Data D0 Pin",
    "menu": [
@@ -10933,7 +10953,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_D1",
-   "order": 407,
+   "order": 408,
    "type": "int",
    "prompt": "Camera Data D1 Pin",
    "menu": [
@@ -10974,7 +10994,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_D2",
-   "order": 408,
+   "order": 409,
    "type": "int",
    "prompt": "Camera Data D2 Pin",
    "menu": [
@@ -11015,7 +11035,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_D3",
-   "order": 409,
+   "order": 410,
    "type": "int",
    "prompt": "Camera Data D3 Pin",
    "menu": [
@@ -11056,7 +11076,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_D4",
-   "order": 410,
+   "order": 411,
    "type": "int",
    "prompt": "Camera Data D4 Pin",
    "menu": [
@@ -11097,7 +11117,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_D5",
-   "order": 411,
+   "order": 412,
    "type": "int",
    "prompt": "Camera Data D5 Pin",
    "menu": [
@@ -11138,7 +11158,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_D6",
-   "order": 412,
+   "order": 413,
    "type": "int",
    "prompt": "Camera Data D6 Pin",
    "menu": [
@@ -11179,7 +11199,7 @@
   },
   {
    "name": "CUSTOM_CAM_PIN_D7",
-   "order": 413,
+   "order": 414,
    "type": "int",
    "prompt": "Camera Data D7 Pin",
    "menu": [
@@ -11220,7 +11240,7 @@
   },
   {
    "name": "CUSTOM_CAM_HMIRROR",
-   "order": 414,
+   "order": 415,
    "type": "bool",
    "prompt": "Lật ảnh theo chiều ngang (Horizontal Mirror)",
    "menu": [
@@ -11255,7 +11275,7 @@
   },
   {
    "name": "CUSTOM_CAM_VFLIP",
-   "order": 415,
+   "order": 416,
    "type": "bool",
    "prompt": "Lật ảnh theo chiều dọc (Vertical Flip)",
    "menu": [
@@ -11290,7 +11310,7 @@
   },
   {
    "name": "ENABLE_CUSTOM_LEDS",
-   "order": 416,
+   "order": 417,
    "type": "bool",
    "prompt": "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
    "menu": [
@@ -11313,7 +11333,7 @@
   },
   {
    "name": "CUSTOM_LED_WS2812",
-   "order": 418,
+   "order": 419,
    "type": "bool",
    "prompt": "Đèn LED RGB kỹ thuật số WS2812 / SK6812 (Giao thức RMT)",
    "menu": [
@@ -11332,7 +11352,7 @@
   },
   {
    "name": "CUSTOM_LED_SINGLE_PWM",
-   "order": 419,
+   "order": 420,
    "type": "bool",
    "prompt": "Đèn LED đơn điều chỉnh độ sáng (LEDC PWM)",
    "menu": [
@@ -11351,7 +11371,7 @@
   },
   {
    "name": "CUSTOM_LED_CIRCULAR_STRIP",
-   "order": 420,
+   "order": 421,
    "type": "bool",
    "prompt": "Vòng tròn LED xoay trạng thái (Circular LED Strip)",
    "menu": [
@@ -11370,7 +11390,7 @@
   },
   {
    "name": "CUSTOM_LED_USER_CUSTOM",
-   "order": 421,
+   "order": 422,
    "type": "bool",
    "prompt": "Driver Đèn LED tùy chỉnh (Custom User LED Hook)",
    "menu": [
@@ -11389,7 +11409,7 @@
   },
   {
    "name": "CUSTOM_LED_NONE",
-   "order": 422,
+   "order": 423,
    "type": "bool",
    "prompt": "Không sử dụng đèn LED",
    "menu": [
@@ -11408,7 +11428,7 @@
   },
   {
    "name": "CUSTOM_LED_GPIO",
-   "order": 423,
+   "order": 424,
    "type": "int",
    "prompt": "Chân GPIO kết nối Đèn LED (Mặc định chân LED onboard)",
    "menu": [
@@ -11442,7 +11462,7 @@
   },
   {
    "name": "CUSTOM_LED_COUNT",
-   "order": 424,
+   "order": 425,
    "type": "int",
    "prompt": "Số lượng mắt LED trên dải/vòng (Hỗ trợ tối đa 1024 mắt LED)",
    "menu": [
@@ -11476,7 +11496,7 @@
   },
   {
    "name": "CUSTOM_LED_BRIGHTNESS_NORMAL",
-   "order": 425,
+   "order": 426,
    "type": "int",
    "prompt": "Độ sáng thường (%)",
    "menu": [
@@ -11524,7 +11544,7 @@
   },
   {
    "name": "CUSTOM_LED_BRIGHTNESS_LOW",
-   "order": 426,
+   "order": 427,
    "type": "int",
    "prompt": "Độ sáng thấp (%) cho trạng thái Chờ",
    "menu": [
@@ -11572,7 +11592,7 @@
   },
   {
    "name": "CUSTOM_LED_BRIGHTNESS_HIGH",
-   "order": 427,
+   "order": 428,
    "type": "int",
    "prompt": "Độ sáng cao (%) cho Lỗi và khi nghe thấy tiếng nói",
    "menu": [
@@ -11620,7 +11640,7 @@
   },
   {
    "name": "CUSTOM_LED_EFFECT_SPEED_MS",
-   "order": 428,
+   "order": 429,
    "type": "int",
    "prompt": "Tốc độ hiệu ứng vòng LED (ms mỗi bước)",
    "menu": [
@@ -11668,7 +11688,7 @@
   },
   {
    "name": "CUSTOM_LED_AUDIO_DELAY_MS",
-   "order": 429,
+   "order": 430,
    "type": "int",
    "prompt": "Độ trễ hiệu ứng theo âm thanh (ms)",
    "menu": [
@@ -11716,7 +11736,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_OFF",
-   "order": 431,
+   "order": 432,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -11736,7 +11756,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_STEADY",
-   "order": 432,
+   "order": 433,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -11756,7 +11776,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_FAST",
-   "order": 433,
+   "order": 434,
    "type": "bool",
    "prompt": "Nháy nhanh (100 ms)",
    "menu": [
@@ -11776,7 +11796,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_SLOW",
-   "order": 434,
+   "order": 435,
    "type": "bool",
    "prompt": "Nháy chậm (500 ms)",
    "menu": [
@@ -11796,7 +11816,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_BREATHE",
-   "order": 435,
+   "order": 436,
    "type": "bool",
    "prompt": "Thở (sáng dần, tối dần)",
    "menu": [
@@ -11816,7 +11836,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_RAINBOW",
-   "order": 436,
+   "order": 437,
    "type": "bool",
    "prompt": "Cầu vồng đổi màu",
    "menu": [
@@ -11844,7 +11864,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_SCROLL",
-   "order": 437,
+   "order": 438,
    "type": "bool",
    "prompt": "Chạy vòng (vòng LED)",
    "menu": [
@@ -11872,7 +11892,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_SCANNER",
-   "order": 438,
+   "order": 439,
    "type": "bool",
    "prompt": "Quét qua lại (vòng LED)",
    "menu": [
@@ -11900,7 +11920,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_WIPE",
-   "order": 439,
+   "order": 440,
    "type": "bool",
    "prompt": "Tô dần quanh vòng (vòng LED)",
    "menu": [
@@ -11928,7 +11948,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_RAINBOW_CHASE",
-   "order": 440,
+   "order": 441,
    "type": "bool",
    "prompt": "Cầu vồng xoay (vòng LED)",
    "menu": [
@@ -11956,7 +11976,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_BAR",
-   "order": 441,
+   "order": 442,
    "type": "bool",
    "prompt": "Theo âm thanh: thanh dâng (vòng LED)",
    "menu": [
@@ -11984,7 +12004,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_MIRROR",
-   "order": 442,
+   "order": 443,
    "type": "bool",
    "prompt": "Theo âm thanh: loang hai phía (vòng LED)",
    "menu": [
@@ -12012,7 +12032,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_PULSE",
-   "order": 443,
+   "order": 444,
    "type": "bool",
    "prompt": "Theo âm thanh: sáng theo nhịp",
    "menu": [
@@ -12032,7 +12052,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_ID",
-   "order": 444,
+   "order": 445,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -12127,7 +12147,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_COLOR",
-   "order": 445,
+   "order": 446,
    "type": "string",
    "prompt": "Khởi động: màu (mã RRGGBB)",
    "menu": [
@@ -12178,7 +12198,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_OFF",
-   "order": 447,
+   "order": 448,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -12198,7 +12218,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_STEADY",
-   "order": 448,
+   "order": 449,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -12218,7 +12238,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_FAST",
-   "order": 449,
+   "order": 450,
    "type": "bool",
    "prompt": "Nháy nhanh (100 ms)",
    "menu": [
@@ -12238,7 +12258,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_SLOW",
-   "order": 450,
+   "order": 451,
    "type": "bool",
    "prompt": "Nháy chậm (500 ms)",
    "menu": [
@@ -12258,7 +12278,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BREATHE",
-   "order": 451,
+   "order": 452,
    "type": "bool",
    "prompt": "Thở (sáng dần, tối dần)",
    "menu": [
@@ -12278,7 +12298,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_RAINBOW",
-   "order": 452,
+   "order": 453,
    "type": "bool",
    "prompt": "Cầu vồng đổi màu",
    "menu": [
@@ -12306,7 +12326,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_SCROLL",
-   "order": 453,
+   "order": 454,
    "type": "bool",
    "prompt": "Chạy vòng (vòng LED)",
    "menu": [
@@ -12334,7 +12354,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_SCANNER",
-   "order": 454,
+   "order": 455,
    "type": "bool",
    "prompt": "Quét qua lại (vòng LED)",
    "menu": [
@@ -12362,7 +12382,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_WIPE",
-   "order": 455,
+   "order": 456,
    "type": "bool",
    "prompt": "Tô dần quanh vòng (vòng LED)",
    "menu": [
@@ -12390,7 +12410,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_RAINBOW_CHASE",
-   "order": 456,
+   "order": 457,
    "type": "bool",
    "prompt": "Cầu vồng xoay (vòng LED)",
    "menu": [
@@ -12418,7 +12438,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_BAR",
-   "order": 457,
+   "order": 458,
    "type": "bool",
    "prompt": "Theo âm thanh: thanh dâng (vòng LED)",
    "menu": [
@@ -12446,7 +12466,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_MIRROR",
-   "order": 458,
+   "order": 459,
    "type": "bool",
    "prompt": "Theo âm thanh: loang hai phía (vòng LED)",
    "menu": [
@@ -12474,7 +12494,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_PULSE",
-   "order": 459,
+   "order": 460,
    "type": "bool",
    "prompt": "Theo âm thanh: sáng theo nhịp",
    "menu": [
@@ -12494,7 +12514,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_ID",
-   "order": 460,
+   "order": 461,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -12589,7 +12609,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_COLOR",
-   "order": 461,
+   "order": 462,
    "type": "string",
    "prompt": "Cấu hình WiFi: màu (mã RRGGBB)",
    "menu": [
@@ -12640,7 +12660,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_OFF",
-   "order": 463,
+   "order": 464,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -12660,7 +12680,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_STEADY",
-   "order": 464,
+   "order": 465,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -12680,7 +12700,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_FAST",
-   "order": 465,
+   "order": 466,
    "type": "bool",
    "prompt": "Nháy nhanh (100 ms)",
    "menu": [
@@ -12700,7 +12720,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_SLOW",
-   "order": 466,
+   "order": 467,
    "type": "bool",
    "prompt": "Nháy chậm (500 ms)",
    "menu": [
@@ -12720,7 +12740,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_BREATHE",
-   "order": 467,
+   "order": 468,
    "type": "bool",
    "prompt": "Thở (sáng dần, tối dần)",
    "menu": [
@@ -12740,7 +12760,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_RAINBOW",
-   "order": 468,
+   "order": 469,
    "type": "bool",
    "prompt": "Cầu vồng đổi màu",
    "menu": [
@@ -12768,7 +12788,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_SCROLL",
-   "order": 469,
+   "order": 470,
    "type": "bool",
    "prompt": "Chạy vòng (vòng LED)",
    "menu": [
@@ -12796,7 +12816,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_SCANNER",
-   "order": 470,
+   "order": 471,
    "type": "bool",
    "prompt": "Quét qua lại (vòng LED)",
    "menu": [
@@ -12824,7 +12844,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_WIPE",
-   "order": 471,
+   "order": 472,
    "type": "bool",
    "prompt": "Tô dần quanh vòng (vòng LED)",
    "menu": [
@@ -12852,7 +12872,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_RAINBOW_CHASE",
-   "order": 472,
+   "order": 473,
    "type": "bool",
    "prompt": "Cầu vồng xoay (vòng LED)",
    "menu": [
@@ -12880,7 +12900,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_BAR",
-   "order": 473,
+   "order": 474,
    "type": "bool",
    "prompt": "Theo âm thanh: thanh dâng (vòng LED)",
    "menu": [
@@ -12908,7 +12928,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_MIRROR",
-   "order": 474,
+   "order": 475,
    "type": "bool",
    "prompt": "Theo âm thanh: loang hai phía (vòng LED)",
    "menu": [
@@ -12936,7 +12956,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_PULSE",
-   "order": 475,
+   "order": 476,
    "type": "bool",
    "prompt": "Theo âm thanh: sáng theo nhịp",
    "menu": [
@@ -12956,7 +12976,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_ID",
-   "order": 476,
+   "order": 477,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -13051,7 +13071,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_COLOR",
-   "order": 477,
+   "order": 478,
    "type": "string",
    "prompt": "Chờ: màu (mã RRGGBB)",
    "menu": [
@@ -13102,7 +13122,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_OFF",
-   "order": 479,
+   "order": 480,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -13122,7 +13142,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_STEADY",
-   "order": 480,
+   "order": 481,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -13142,7 +13162,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_FAST",
-   "order": 481,
+   "order": 482,
    "type": "bool",
    "prompt": "Nháy nhanh (100 ms)",
    "menu": [
@@ -13162,7 +13182,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_SLOW",
-   "order": 482,
+   "order": 483,
    "type": "bool",
    "prompt": "Nháy chậm (500 ms)",
    "menu": [
@@ -13182,7 +13202,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_BREATHE",
-   "order": 483,
+   "order": 484,
    "type": "bool",
    "prompt": "Thở (sáng dần, tối dần)",
    "menu": [
@@ -13202,7 +13222,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_RAINBOW",
-   "order": 484,
+   "order": 485,
    "type": "bool",
    "prompt": "Cầu vồng đổi màu",
    "menu": [
@@ -13230,7 +13250,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_SCROLL",
-   "order": 485,
+   "order": 486,
    "type": "bool",
    "prompt": "Chạy vòng (vòng LED)",
    "menu": [
@@ -13258,7 +13278,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_SCANNER",
-   "order": 486,
+   "order": 487,
    "type": "bool",
    "prompt": "Quét qua lại (vòng LED)",
    "menu": [
@@ -13286,7 +13306,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_WIPE",
-   "order": 487,
+   "order": 488,
    "type": "bool",
    "prompt": "Tô dần quanh vòng (vòng LED)",
    "menu": [
@@ -13314,7 +13334,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_RAINBOW_CHASE",
-   "order": 488,
+   "order": 489,
    "type": "bool",
    "prompt": "Cầu vồng xoay (vòng LED)",
    "menu": [
@@ -13342,7 +13362,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_BAR",
-   "order": 489,
+   "order": 490,
    "type": "bool",
    "prompt": "Theo âm thanh: thanh dâng (vòng LED)",
    "menu": [
@@ -13370,7 +13390,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_MIRROR",
-   "order": 490,
+   "order": 491,
    "type": "bool",
    "prompt": "Theo âm thanh: loang hai phía (vòng LED)",
    "menu": [
@@ -13398,7 +13418,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_PULSE",
-   "order": 491,
+   "order": 492,
    "type": "bool",
    "prompt": "Theo âm thanh: sáng theo nhịp",
    "menu": [
@@ -13418,7 +13438,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_ID",
-   "order": 492,
+   "order": 493,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -13513,7 +13533,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_COLOR",
-   "order": 493,
+   "order": 494,
    "type": "string",
    "prompt": "Đang kết nối: màu (mã RRGGBB)",
    "menu": [
@@ -13564,7 +13584,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_OFF",
-   "order": 495,
+   "order": 496,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -13584,7 +13604,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_STEADY",
-   "order": 496,
+   "order": 497,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -13604,7 +13624,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_FAST",
-   "order": 497,
+   "order": 498,
    "type": "bool",
    "prompt": "Nháy nhanh (100 ms)",
    "menu": [
@@ -13624,7 +13644,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_SLOW",
-   "order": 498,
+   "order": 499,
    "type": "bool",
    "prompt": "Nháy chậm (500 ms)",
    "menu": [
@@ -13644,7 +13664,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_BREATHE",
-   "order": 499,
+   "order": 500,
    "type": "bool",
    "prompt": "Thở (sáng dần, tối dần)",
    "menu": [
@@ -13664,7 +13684,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_RAINBOW",
-   "order": 500,
+   "order": 501,
    "type": "bool",
    "prompt": "Cầu vồng đổi màu",
    "menu": [
@@ -13692,7 +13712,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_SCROLL",
-   "order": 501,
+   "order": 502,
    "type": "bool",
    "prompt": "Chạy vòng (vòng LED)",
    "menu": [
@@ -13720,7 +13740,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_SCANNER",
-   "order": 502,
+   "order": 503,
    "type": "bool",
    "prompt": "Quét qua lại (vòng LED)",
    "menu": [
@@ -13748,7 +13768,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_WIPE",
-   "order": 503,
+   "order": 504,
    "type": "bool",
    "prompt": "Tô dần quanh vòng (vòng LED)",
    "menu": [
@@ -13776,7 +13796,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_RAINBOW_CHASE",
-   "order": 504,
+   "order": 505,
    "type": "bool",
    "prompt": "Cầu vồng xoay (vòng LED)",
    "menu": [
@@ -13804,7 +13824,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_BAR",
-   "order": 505,
+   "order": 506,
    "type": "bool",
    "prompt": "Theo âm thanh: thanh dâng (vòng LED)",
    "menu": [
@@ -13832,7 +13852,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_MIRROR",
-   "order": 506,
+   "order": 507,
    "type": "bool",
    "prompt": "Theo âm thanh: loang hai phía (vòng LED)",
    "menu": [
@@ -13860,7 +13880,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_PULSE",
-   "order": 507,
+   "order": 508,
    "type": "bool",
    "prompt": "Theo âm thanh: sáng theo nhịp",
    "menu": [
@@ -13880,7 +13900,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_ID",
-   "order": 508,
+   "order": 509,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -13975,7 +13995,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_COLOR",
-   "order": 509,
+   "order": 510,
    "type": "string",
    "prompt": "Đang nghe: màu (mã RRGGBB)",
    "menu": [
@@ -14026,7 +14046,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_OFF",
-   "order": 511,
+   "order": 512,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -14046,7 +14066,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_STEADY",
-   "order": 512,
+   "order": 513,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -14066,7 +14086,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_FAST",
-   "order": 513,
+   "order": 514,
    "type": "bool",
    "prompt": "Nháy nhanh (100 ms)",
    "menu": [
@@ -14086,7 +14106,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_SLOW",
-   "order": 514,
+   "order": 515,
    "type": "bool",
    "prompt": "Nháy chậm (500 ms)",
    "menu": [
@@ -14106,7 +14126,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_BREATHE",
-   "order": 515,
+   "order": 516,
    "type": "bool",
    "prompt": "Thở (sáng dần, tối dần)",
    "menu": [
@@ -14126,7 +14146,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_RAINBOW",
-   "order": 516,
+   "order": 517,
    "type": "bool",
    "prompt": "Cầu vồng đổi màu",
    "menu": [
@@ -14154,7 +14174,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_SCROLL",
-   "order": 517,
+   "order": 518,
    "type": "bool",
    "prompt": "Chạy vòng (vòng LED)",
    "menu": [
@@ -14182,7 +14202,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_SCANNER",
-   "order": 518,
+   "order": 519,
    "type": "bool",
    "prompt": "Quét qua lại (vòng LED)",
    "menu": [
@@ -14210,7 +14230,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_WIPE",
-   "order": 519,
+   "order": 520,
    "type": "bool",
    "prompt": "Tô dần quanh vòng (vòng LED)",
    "menu": [
@@ -14238,7 +14258,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_RAINBOW_CHASE",
-   "order": 520,
+   "order": 521,
    "type": "bool",
    "prompt": "Cầu vồng xoay (vòng LED)",
    "menu": [
@@ -14266,7 +14286,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_BAR",
-   "order": 521,
+   "order": 522,
    "type": "bool",
    "prompt": "Theo âm thanh: thanh dâng (vòng LED)",
    "menu": [
@@ -14294,7 +14314,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_MIRROR",
-   "order": 522,
+   "order": 523,
    "type": "bool",
    "prompt": "Theo âm thanh: loang hai phía (vòng LED)",
    "menu": [
@@ -14322,7 +14342,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_PULSE",
-   "order": 523,
+   "order": 524,
    "type": "bool",
    "prompt": "Theo âm thanh: sáng theo nhịp",
    "menu": [
@@ -14342,7 +14362,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_ID",
-   "order": 524,
+   "order": 525,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -14437,7 +14457,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_COLOR",
-   "order": 525,
+   "order": 526,
    "type": "string",
    "prompt": "Đang nói: màu (mã RRGGBB)",
    "menu": [
@@ -14488,7 +14508,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_OFF",
-   "order": 527,
+   "order": 528,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -14508,7 +14528,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_STEADY",
-   "order": 528,
+   "order": 529,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -14528,7 +14548,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_FAST",
-   "order": 529,
+   "order": 530,
    "type": "bool",
    "prompt": "Nháy nhanh (100 ms)",
    "menu": [
@@ -14548,7 +14568,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_SLOW",
-   "order": 530,
+   "order": 531,
    "type": "bool",
    "prompt": "Nháy chậm (500 ms)",
    "menu": [
@@ -14568,7 +14588,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_BREATHE",
-   "order": 531,
+   "order": 532,
    "type": "bool",
    "prompt": "Thở (sáng dần, tối dần)",
    "menu": [
@@ -14588,7 +14608,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_RAINBOW",
-   "order": 532,
+   "order": 533,
    "type": "bool",
    "prompt": "Cầu vồng đổi màu",
    "menu": [
@@ -14616,7 +14636,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_SCROLL",
-   "order": 533,
+   "order": 534,
    "type": "bool",
    "prompt": "Chạy vòng (vòng LED)",
    "menu": [
@@ -14644,7 +14664,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_SCANNER",
-   "order": 534,
+   "order": 535,
    "type": "bool",
    "prompt": "Quét qua lại (vòng LED)",
    "menu": [
@@ -14672,7 +14692,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_WIPE",
-   "order": 535,
+   "order": 536,
    "type": "bool",
    "prompt": "Tô dần quanh vòng (vòng LED)",
    "menu": [
@@ -14700,7 +14720,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_RAINBOW_CHASE",
-   "order": 536,
+   "order": 537,
    "type": "bool",
    "prompt": "Cầu vồng xoay (vòng LED)",
    "menu": [
@@ -14728,7 +14748,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_BAR",
-   "order": 537,
+   "order": 538,
    "type": "bool",
    "prompt": "Theo âm thanh: thanh dâng (vòng LED)",
    "menu": [
@@ -14756,7 +14776,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_MIRROR",
-   "order": 538,
+   "order": 539,
    "type": "bool",
    "prompt": "Theo âm thanh: loang hai phía (vòng LED)",
    "menu": [
@@ -14784,7 +14804,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_PULSE",
-   "order": 539,
+   "order": 540,
    "type": "bool",
    "prompt": "Theo âm thanh: sáng theo nhịp",
    "menu": [
@@ -14804,7 +14824,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_ID",
-   "order": 540,
+   "order": 541,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -14899,7 +14919,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_COLOR",
-   "order": 541,
+   "order": 542,
    "type": "string",
    "prompt": "Nâng cấp firmware: màu (mã RRGGBB)",
    "menu": [
@@ -14950,7 +14970,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_OFF",
-   "order": 543,
+   "order": 544,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -14970,7 +14990,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_STEADY",
-   "order": 544,
+   "order": 545,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -14990,7 +15010,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_FAST",
-   "order": 545,
+   "order": 546,
    "type": "bool",
    "prompt": "Nháy nhanh (100 ms)",
    "menu": [
@@ -15010,7 +15030,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_SLOW",
-   "order": 546,
+   "order": 547,
    "type": "bool",
    "prompt": "Nháy chậm (500 ms)",
    "menu": [
@@ -15030,7 +15050,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_BREATHE",
-   "order": 547,
+   "order": 548,
    "type": "bool",
    "prompt": "Thở (sáng dần, tối dần)",
    "menu": [
@@ -15050,7 +15070,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_RAINBOW",
-   "order": 548,
+   "order": 549,
    "type": "bool",
    "prompt": "Cầu vồng đổi màu",
    "menu": [
@@ -15078,7 +15098,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_SCROLL",
-   "order": 549,
+   "order": 550,
    "type": "bool",
    "prompt": "Chạy vòng (vòng LED)",
    "menu": [
@@ -15106,7 +15126,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_SCANNER",
-   "order": 550,
+   "order": 551,
    "type": "bool",
    "prompt": "Quét qua lại (vòng LED)",
    "menu": [
@@ -15134,7 +15154,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_WIPE",
-   "order": 551,
+   "order": 552,
    "type": "bool",
    "prompt": "Tô dần quanh vòng (vòng LED)",
    "menu": [
@@ -15162,7 +15182,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_RAINBOW_CHASE",
-   "order": 552,
+   "order": 553,
    "type": "bool",
    "prompt": "Cầu vồng xoay (vòng LED)",
    "menu": [
@@ -15190,7 +15210,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_BAR",
-   "order": 553,
+   "order": 554,
    "type": "bool",
    "prompt": "Theo âm thanh: thanh dâng (vòng LED)",
    "menu": [
@@ -15218,7 +15238,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_MIRROR",
-   "order": 554,
+   "order": 555,
    "type": "bool",
    "prompt": "Theo âm thanh: loang hai phía (vòng LED)",
    "menu": [
@@ -15246,7 +15266,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_PULSE",
-   "order": 555,
+   "order": 556,
    "type": "bool",
    "prompt": "Theo âm thanh: sáng theo nhịp",
    "menu": [
@@ -15266,7 +15286,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_ID",
-   "order": 556,
+   "order": 557,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -15361,7 +15381,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_COLOR",
-   "order": 557,
+   "order": 558,
    "type": "string",
    "prompt": "Kích hoạt thiết bị: màu (mã RRGGBB)",
    "menu": [
@@ -15412,7 +15432,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_OFF",
-   "order": 559,
+   "order": 560,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -15432,7 +15452,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_STEADY",
-   "order": 560,
+   "order": 561,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -15452,7 +15472,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_FAST",
-   "order": 561,
+   "order": 562,
    "type": "bool",
    "prompt": "Nháy nhanh (100 ms)",
    "menu": [
@@ -15472,7 +15492,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_SLOW",
-   "order": 562,
+   "order": 563,
    "type": "bool",
    "prompt": "Nháy chậm (500 ms)",
    "menu": [
@@ -15492,7 +15512,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_BREATHE",
-   "order": 563,
+   "order": 564,
    "type": "bool",
    "prompt": "Thở (sáng dần, tối dần)",
    "menu": [
@@ -15512,7 +15532,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_RAINBOW",
-   "order": 564,
+   "order": 565,
    "type": "bool",
    "prompt": "Cầu vồng đổi màu",
    "menu": [
@@ -15540,7 +15560,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_SCROLL",
-   "order": 565,
+   "order": 566,
    "type": "bool",
    "prompt": "Chạy vòng (vòng LED)",
    "menu": [
@@ -15568,7 +15588,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_SCANNER",
-   "order": 566,
+   "order": 567,
    "type": "bool",
    "prompt": "Quét qua lại (vòng LED)",
    "menu": [
@@ -15596,7 +15616,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_WIPE",
-   "order": 567,
+   "order": 568,
    "type": "bool",
    "prompt": "Tô dần quanh vòng (vòng LED)",
    "menu": [
@@ -15624,7 +15644,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_RAINBOW_CHASE",
-   "order": 568,
+   "order": 569,
    "type": "bool",
    "prompt": "Cầu vồng xoay (vòng LED)",
    "menu": [
@@ -15652,7 +15672,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_BAR",
-   "order": 569,
+   "order": 570,
    "type": "bool",
    "prompt": "Theo âm thanh: thanh dâng (vòng LED)",
    "menu": [
@@ -15680,7 +15700,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_MIRROR",
-   "order": 570,
+   "order": 571,
    "type": "bool",
    "prompt": "Theo âm thanh: loang hai phía (vòng LED)",
    "menu": [
@@ -15708,7 +15728,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_PULSE",
-   "order": 571,
+   "order": 572,
    "type": "bool",
    "prompt": "Theo âm thanh: sáng theo nhịp",
    "menu": [
@@ -15728,7 +15748,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_ID",
-   "order": 572,
+   "order": 573,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -15823,7 +15843,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_COLOR",
-   "order": 573,
+   "order": 574,
    "type": "string",
    "prompt": "Lỗi: màu (mã RRGGBB)",
    "menu": [
@@ -15874,7 +15894,7 @@
   },
   {
    "name": "CUSTOM_LED_EXTRA_GPIOS",
-   "order": 574,
+   "order": 575,
    "type": "string",
    "prompt": "Các chân LED đơn (cách nhau dấu phẩy, để trống là không dùng)",
    "menu": [
@@ -15898,7 +15918,7 @@
   },
   {
    "name": "CUSTOM_GPIO_LED_BRIGHTNESS",
-   "order": 575,
+   "order": 576,
    "type": "int",
    "prompt": "Độ sáng mặc định (%)",
    "menu": [
@@ -15928,7 +15948,7 @@
   },
   {
    "name": "CUSTOM_GPIO_LED_BOOT_EFFECT_OFF",
-   "order": 577,
+   "order": 578,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -15947,7 +15967,7 @@
   },
   {
    "name": "CUSTOM_GPIO_LED_BOOT_EFFECT_STEADY",
-   "order": 578,
+   "order": 579,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -15966,7 +15986,7 @@
   },
   {
    "name": "CUSTOM_GPIO_LED_BOOT_EFFECT_BLINK",
-   "order": 579,
+   "order": 580,
    "type": "bool",
    "prompt": "Nháy",
    "menu": [
@@ -15985,7 +16005,7 @@
   },
   {
    "name": "CUSTOM_GPIO_LED_BOOT_EFFECT_BREATHE",
-   "order": 580,
+   "order": 581,
    "type": "bool",
    "prompt": "Thở (LED không chỉnh độ sáng được sẽ nháy)",
    "menu": [
@@ -16004,7 +16024,7 @@
   },
   {
    "name": "CUSTOM_GPIO_LED_BOOT_EFFECT_ID",
-   "order": 581,
+   "order": 582,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -16044,7 +16064,7 @@
   },
   {
    "name": "CUSTOM_GPIO_LED_PERIOD_MS",
-   "order": 582,
+   "order": 583,
    "type": "int",
    "prompt": "Chu kỳ nháy/thở mặc định (ms)",
    "menu": [
@@ -16074,7 +16094,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC",
-   "order": 583,
+   "order": 584,
    "type": "bool",
    "prompt": "LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh)",
    "menu": [
@@ -16097,7 +16117,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_LED_IC_I2C_SDA",
-   "order": 584,
+   "order": 585,
    "type": "int",
    "prompt": "Chân I2C SDA chip điều khiển LED",
    "menu": [
@@ -16131,7 +16151,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_LED_IC_I2C_SCL",
-   "order": 585,
+   "order": 586,
    "type": "int",
    "prompt": "Chân I2C SCL chip điều khiển LED",
    "menu": [
@@ -16165,7 +16185,7 @@
   },
   {
    "name": "CUSTOM_LED_IC_LED_CHANNELS",
-   "order": 586,
+   "order": 587,
    "type": "string",
    "prompt": "Kênh dùng làm LED (cách nhau dấu phẩy, để trống là tất cả kênh)",
    "menu": [
@@ -16193,7 +16213,7 @@
   },
   {
    "name": "CUSTOM_LED_IC_LED_BRIGHTNESS",
-   "order": 587,
+   "order": 588,
    "type": "int",
    "prompt": "Độ sáng mặc định (%)",
    "menu": [
@@ -16227,7 +16247,7 @@
   },
   {
    "name": "CUSTOM_LED_IC_LED_BOOT_EFFECT_OFF",
-   "order": 589,
+   "order": 590,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -16246,7 +16266,7 @@
   },
   {
    "name": "CUSTOM_LED_IC_LED_BOOT_EFFECT_STEADY",
-   "order": 590,
+   "order": 591,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -16265,7 +16285,7 @@
   },
   {
    "name": "CUSTOM_LED_IC_LED_BOOT_EFFECT_BLINK",
-   "order": 591,
+   "order": 592,
    "type": "bool",
    "prompt": "Nháy",
    "menu": [
@@ -16284,7 +16304,7 @@
   },
   {
    "name": "CUSTOM_LED_IC_LED_BOOT_EFFECT_BREATHE",
-   "order": 592,
+   "order": 593,
    "type": "bool",
    "prompt": "Thở (LED không chỉnh độ sáng được sẽ nháy)",
    "menu": [
@@ -16303,7 +16323,7 @@
   },
   {
    "name": "CUSTOM_LED_IC_LED_BOOT_EFFECT_ID",
-   "order": 593,
+   "order": 594,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -16347,7 +16367,7 @@
   },
   {
    "name": "CUSTOM_LED_IC_LED_PERIOD_MS",
-   "order": 594,
+   "order": 595,
    "type": "int",
    "prompt": "Chu kỳ nháy/thở mặc định (ms)",
    "menu": [
@@ -16381,7 +16401,7 @@
   },
   {
    "name": "CUSTOM_PCA9685_LED_CHANNELS",
-   "order": 595,
+   "order": 596,
    "type": "string",
    "prompt": "Kênh PCA9685 dùng làm LED (0-15, cách nhau dấu phẩy, để trống là không dùng)",
    "menu": [
@@ -16405,7 +16425,7 @@
   },
   {
    "name": "CUSTOM_PCA9685_LED_BRIGHTNESS",
-   "order": 596,
+   "order": 597,
    "type": "int",
    "prompt": "Độ sáng mặc định (%)",
    "menu": [
@@ -16435,7 +16455,7 @@
   },
   {
    "name": "CUSTOM_PCA9685_LED_BOOT_EFFECT_OFF",
-   "order": 598,
+   "order": 599,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -16454,7 +16474,7 @@
   },
   {
    "name": "CUSTOM_PCA9685_LED_BOOT_EFFECT_STEADY",
-   "order": 599,
+   "order": 600,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -16473,7 +16493,7 @@
   },
   {
    "name": "CUSTOM_PCA9685_LED_BOOT_EFFECT_BLINK",
-   "order": 600,
+   "order": 601,
    "type": "bool",
    "prompt": "Nháy",
    "menu": [
@@ -16492,7 +16512,7 @@
   },
   {
    "name": "CUSTOM_PCA9685_LED_BOOT_EFFECT_BREATHE",
-   "order": 601,
+   "order": 602,
    "type": "bool",
    "prompt": "Thở (LED không chỉnh độ sáng được sẽ nháy)",
    "menu": [
@@ -16511,7 +16531,7 @@
   },
   {
    "name": "CUSTOM_PCA9685_LED_BOOT_EFFECT_ID",
-   "order": 602,
+   "order": 603,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -16551,7 +16571,7 @@
   },
   {
    "name": "CUSTOM_PCA9685_LED_PERIOD_MS",
-   "order": 603,
+   "order": 604,
    "type": "int",
    "prompt": "Chu kỳ nháy/thở mặc định (ms)",
    "menu": [
@@ -16581,7 +16601,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_LED_PINS",
-   "order": 604,
+   "order": 605,
    "type": "string",
    "prompt": "Chân IC mở rộng dùng làm LED (cách nhau dấu phẩy, để trống là không dùng)",
    "menu": [
@@ -16605,7 +16625,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_LED_BRIGHTNESS",
-   "order": 605,
+   "order": 606,
    "type": "int",
    "prompt": "Độ sáng mặc định (%)",
    "menu": [
@@ -16635,7 +16655,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_LED_BOOT_EFFECT_OFF",
-   "order": 607,
+   "order": 608,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -16654,7 +16674,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_LED_BOOT_EFFECT_STEADY",
-   "order": 608,
+   "order": 609,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -16673,7 +16693,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_LED_BOOT_EFFECT_BLINK",
-   "order": 609,
+   "order": 610,
    "type": "bool",
    "prompt": "Nháy",
    "menu": [
@@ -16692,7 +16712,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_LED_BOOT_EFFECT_BREATHE",
-   "order": 610,
+   "order": 611,
    "type": "bool",
    "prompt": "Thở (LED không chỉnh độ sáng được sẽ nháy)",
    "menu": [
@@ -16711,7 +16731,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_LED_BOOT_EFFECT_ID",
-   "order": 611,
+   "order": 612,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -16751,7 +16771,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_LED_PERIOD_MS",
-   "order": 612,
+   "order": 613,
    "type": "int",
    "prompt": "Chu kỳ nháy/thở mặc định (ms)",
    "menu": [
@@ -16781,7 +16801,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SERVO_DOG",
-   "order": 613,
+   "order": 614,
    "type": "bool",
    "prompt": "Động cơ Servo tương tác qua PWM (Servo Dog Controller)",
    "menu": [
@@ -16804,7 +16824,7 @@
   },
   {
    "name": "CUSTOM_SERVO_DOG_PWM_GPIO",
-   "order": 614,
+   "order": 615,
    "type": "int",
    "prompt": "Chân GPIO cấp xung PWM cho Động cơ Servo",
    "menu": [
@@ -16837,7 +16857,7 @@
   },
   {
    "name": "ENABLE_BUZZER",
-   "order": 615,
+   "order": 616,
    "type": "bool",
    "prompt": "Còi báo động Buzzer (GPIO 41)",
    "menu": [
@@ -16860,7 +16880,7 @@
   },
   {
    "name": "BUZZER_TYPE_ACTIVE",
-   "order": 617,
+   "order": 618,
    "type": "bool",
    "prompt": "Còi chủ động (Active, cấp điện là kêu)",
    "menu": [
@@ -16878,7 +16898,7 @@
   },
   {
    "name": "BUZZER_TYPE_PASSIVE",
-   "order": 618,
+   "order": 619,
    "type": "bool",
    "prompt": "Còi thụ động (Passive, phát xung theo tần số qua RMT)",
    "menu": [
@@ -16896,7 +16916,7 @@
   },
   {
    "name": "BUZZER_ACTIVE_LOW",
-   "order": 619,
+   "order": 620,
    "type": "bool",
    "prompt": "Module kích mức thấp (LOW = kêu)",
    "menu": [
@@ -16923,7 +16943,7 @@
   },
   {
    "name": "BUZZER_EXTRA_PINS",
-   "order": 620,
+   "order": 621,
    "type": "string",
    "prompt": "Các chân GPIO Còi thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -16950,7 +16970,7 @@
   },
   {
    "name": "BUZZER_PIN",
-   "order": 621,
+   "order": 622,
    "type": "int",
    "prompt": "Chân GPIO Buzzer",
    "menu": [
@@ -16983,7 +17003,7 @@
   },
   {
    "name": "ENABLE_HAPTIC_MOTOR",
-   "order": 622,
+   "order": 623,
    "type": "bool",
    "prompt": "Động cơ rung phản hồi xúc giác (GPIO 42)",
    "menu": [
@@ -17006,7 +17026,7 @@
   },
   {
    "name": "HAPTIC_PIN",
-   "order": 623,
+   "order": 624,
    "type": "int",
    "prompt": "Chân GPIO Động cơ rung",
    "menu": [
@@ -17039,7 +17059,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_DHT11_22",
-   "order": 624,
+   "order": 625,
    "type": "bool",
    "prompt": "Cảm biến Nhiệt độ & Độ ẩm 1 dây (DHT11 / DHT22)",
    "menu": [
@@ -17062,7 +17082,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_DHT_EXTRA_GPIOS",
-   "order": 625,
+   "order": 626,
    "type": "string",
    "prompt": "Các chân GPIO DHT thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -17089,7 +17109,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_DHT_GPIO",
-   "order": 626,
+   "order": 627,
    "type": "int",
    "prompt": "Chân dữ liệu 1-Wire cảm biến DHT GPIO",
    "menu": [
@@ -17122,7 +17142,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_I2C_TEMP_HUMID",
-   "order": 627,
+   "order": 628,
    "type": "bool",
    "prompt": "Cảm biến Nhiệt độ & Độ ẩm kỹ thuật số I2C (AHT20 / SHT3x)",
    "menu": [
@@ -17145,7 +17165,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_AHT20",
-   "order": 628,
+   "order": 629,
    "type": "bool",
    "prompt": "Aosong AHT10 / AHT20 / AHT21 (I2C)",
    "menu": [
@@ -17172,7 +17192,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_AHT20_EXTRA_GPIOS",
-   "order": 629,
+   "order": 630,
    "type": "string",
    "prompt": "Các chân GPIO AHT20 thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -17199,7 +17219,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_I2C_SDA",
-   "order": 630,
+   "order": 631,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến nhiệt ẩm",
    "menu": [
@@ -17232,7 +17252,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_I2C_SCL",
-   "order": 631,
+   "order": 632,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến nhiệt ẩm",
    "menu": [
@@ -17265,7 +17285,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_BMP280",
-   "order": 632,
+   "order": 633,
    "type": "bool",
    "prompt": "Cảm biến Áp suất khí quyển & Độ cao (Bosch BMP280 / BME280 I2C)",
    "menu": [
@@ -17288,7 +17308,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_BMP280_EXTRA_GPIOS",
-   "order": 633,
+   "order": 634,
    "type": "string",
    "prompt": "Các chân GPIO BMP280 thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -17315,7 +17335,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_BMP280_I2C_SDA",
-   "order": 634,
+   "order": 635,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến khí áp BMP280",
    "menu": [
@@ -17348,7 +17368,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_BMP280_I2C_SCL",
-   "order": 635,
+   "order": 636,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến khí áp BMP280",
    "menu": [
@@ -17381,7 +17401,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_BH1750",
-   "order": 636,
+   "order": 637,
    "type": "bool",
    "prompt": "Cảm biến cường độ ánh sáng kỹ thuật số BH1750 (I2C)",
    "menu": [
@@ -17404,7 +17424,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_BH1750_EXTRA_GPIOS",
-   "order": 637,
+   "order": 638,
    "type": "string",
    "prompt": "Các chân GPIO BH1750 thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -17431,7 +17451,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_BH1750_I2C_SDA",
-   "order": 638,
+   "order": 639,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến ánh sáng BH1750",
    "menu": [
@@ -17464,7 +17484,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_BH1750_I2C_SCL",
-   "order": 639,
+   "order": 640,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến ánh sáng BH1750",
    "menu": [
@@ -17497,7 +17517,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_LDR",
-   "order": 640,
+   "order": 641,
    "type": "bool",
    "prompt": "Cảm biến ánh sáng quang trở (LDR qua cầu phân áp ADC)",
    "menu": [
@@ -17520,7 +17540,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_LDR_EXTRA_CHS",
-   "order": 641,
+   "order": 642,
    "type": "string",
    "prompt": "Các kênh ADC quang trở LDR thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -17547,7 +17567,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_LDR_ADC_CHANNEL",
-   "order": 642,
+   "order": 643,
    "type": "int",
    "prompt": "Kênh ADC1 đo quang trở LDR (Kênh N ứng với GPIO N+1, -1 chưa chọn)",
    "menu": [
@@ -17580,7 +17600,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_GAS_CO2",
-   "order": 643,
+   "order": 644,
    "type": "bool",
    "prompt": "Cảm biến nồng độ Khí độc TVOC & CO2 NDIR (SCD40/41, SGP30/40 I2C)",
    "menu": [
@@ -17603,7 +17623,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_GAS_SCD4X",
-   "order": 644,
+   "order": 645,
    "type": "bool",
    "prompt": "Sensirion SCD40 / SCD41 (Cảm biến CO2 NDIR I2C)",
    "menu": [
@@ -17630,7 +17650,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_SCD4X_EXTRA_GPIOS",
-   "order": 645,
+   "order": 646,
    "type": "string",
    "prompt": "Các chân GPIO SCD4X thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -17657,7 +17677,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_GAS_I2C_SDA",
-   "order": 646,
+   "order": 647,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến khí/CO2",
    "menu": [
@@ -17690,7 +17710,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_GAS_I2C_SCL",
-   "order": 647,
+   "order": 648,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến khí/CO2",
    "menu": [
@@ -17723,7 +17743,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_GAS_ANALOG_MQ",
-   "order": 648,
+   "order": 649,
    "type": "bool",
    "prompt": "Cảm biến khói & khí gas dễ cháy (MQ-2 / MQ-135 Analog ADC)",
    "menu": [
@@ -17746,7 +17766,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_MQ_ANALOG_PIN",
-   "order": 649,
+   "order": 650,
    "type": "int",
    "prompt": "Chân analog đọc điện áp cảm biến MQ (kênh ADC1)",
    "menu": [
@@ -17779,7 +17799,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_DS18B20_PIN",
-   "order": 650,
+   "order": 651,
    "type": "int",
    "prompt": "Chân dữ liệu 1-Wire cảm biến nhiệt độ DS18B20",
    "menu": [
@@ -17808,7 +17828,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_FLOW_PULSE_PIN",
-   "order": 651,
+   "order": 652,
    "type": "int",
    "prompt": "Chân đọc xung lưu lượng chất lỏng (Flow Pulse)",
    "menu": [
@@ -17837,7 +17857,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_APDS9960",
-   "order": 652,
+   "order": 653,
    "type": "bool",
    "prompt": "Cảm biến màu sắc, cử chỉ & tiệm cận (Broadcom APDS-9960 I2C)",
    "menu": [
@@ -17860,7 +17880,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_APDS9960_I2C_SDA",
-   "order": 653,
+   "order": 654,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến APDS9960",
    "menu": [
@@ -17893,7 +17913,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_APDS9960_I2C_SCL",
-   "order": 654,
+   "order": 655,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến APDS9960",
    "menu": [
@@ -17926,7 +17946,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_APDS9960_INT_PIN",
-   "order": 655,
+   "order": 656,
    "type": "int",
    "prompt": "Chân ngắt INT cảm biến APDS9960",
    "menu": [
@@ -17959,7 +17979,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_VL53LX",
-   "order": 656,
+   "order": 657,
    "type": "bool",
    "prompt": "Cảm biến khoảng cách laser ToF (STMicroelectronics VL53L0X / VL53L1X I2C)",
    "menu": [
@@ -17982,7 +18002,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_VL53LX_I2C_SDA",
-   "order": 657,
+   "order": 658,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến laser VL53L",
    "menu": [
@@ -18015,7 +18035,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_VL53LX_I2C_SCL",
-   "order": 658,
+   "order": 659,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến laser VL53L",
    "menu": [
@@ -18048,7 +18068,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_VL53LX_XSHUT_PIN",
-   "order": 659,
+   "order": 660,
    "type": "int",
    "prompt": "Chân tắt nguồn XSHUT cảm biến laser VL53L",
    "menu": [
@@ -18081,7 +18101,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_HCSR04",
-   "order": 660,
+   "order": 661,
    "type": "bool",
    "prompt": "Cảm biến khoảng cách siêu âm (HC-SR04 / US-100)",
    "menu": [
@@ -18104,7 +18124,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_HCSR04_TRIG_GPIO",
-   "order": 661,
+   "order": 662,
    "type": "int",
    "prompt": "Chân phát xung siêu âm Trig GPIO",
    "menu": [
@@ -18137,7 +18157,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_HCSR04_ECHO_GPIO",
-   "order": 662,
+   "order": 663,
    "type": "int",
    "prompt": "Chân nhận tín hiệu siêu âm Echo GPIO",
    "menu": [
@@ -18170,7 +18190,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_PIR",
-   "order": 663,
+   "order": 664,
    "type": "bool",
    "prompt": "Cảm biến phát hiện người chuyển động PIR (HC-SR501 / RCWL-0516)",
    "menu": [
@@ -18193,7 +18213,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_PIR_GPIO",
-   "order": 664,
+   "order": 665,
    "type": "int",
    "prompt": "Chân tín hiệu cảm biến PIR GPIO",
    "menu": [
@@ -18226,7 +18246,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_VIBRATION_SW420",
-   "order": 665,
+   "order": 666,
    "type": "bool",
    "prompt": "Cảm biến cảnh báo chấn động / Rung tiếp điểm (SW-420 GPIO Interrupt)",
    "menu": [
@@ -18249,7 +18269,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_VIBRATION_PIN",
-   "order": 666,
+   "order": 667,
    "type": "int",
    "prompt": "Chân tín hiệu Digital Out cảm biến rung",
    "menu": [
@@ -18282,7 +18302,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_FLAME",
-   "order": 667,
+   "order": 668,
    "type": "bool",
    "prompt": "Cảm biến cảnh báo hỏa hoạn / Ngọn lửa (Flame Sensor IR)",
    "menu": [
@@ -18305,7 +18325,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_FLAME_PIN",
-   "order": 668,
+   "order": 669,
    "type": "int",
    "prompt": "Chân tín hiệu Digital báo lửa",
    "menu": [
@@ -18338,7 +18358,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RELAY_ENABLE",
-   "order": 669,
+   "order": 670,
    "type": "bool",
    "prompt": "Rơ-le đóng cắt thiết bị độc lập (Relay Switch)",
    "menu": [
@@ -18361,7 +18381,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RELAY_GPIO",
-   "order": 670,
+   "order": 671,
    "type": "int",
    "prompt": "Chân GPIO kích hoạt Relay đóng cắt",
    "menu": [
@@ -18394,7 +18414,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE",
-   "order": 671,
+   "order": 672,
    "type": "bool",
    "prompt": "Mạch cầu H Động cơ DC 2 chiều cho xe robot (TB6612FNG / L9110S / DRV8833)",
    "menu": [
@@ -18417,7 +18437,7 @@
   },
   {
    "name": "CUSTOM_MOTOR_DRIVER_TB6612",
-   "order": 673,
+   "order": 674,
    "type": "bool",
    "prompt": "Toshiba TB6612FNG (Hiệu suất cao MOSFET H-Bridge)",
    "menu": [
@@ -18435,7 +18455,7 @@
   },
   {
    "name": "CUSTOM_MOTOR_DRIVER_L9110S",
-   "order": 674,
+   "order": 675,
    "type": "bool",
    "prompt": "L9110S / HG7881 (Mạch 2 kênh DC mini giá rẻ)",
    "menu": [
@@ -18453,7 +18473,7 @@
   },
   {
    "name": "CUSTOM_MOTOR_DRIVER_DRV8833",
-   "order": 675,
+   "order": 676,
    "type": "bool",
    "prompt": "TI DRV8833 (Cầu H kép bảo vệ quá dòng)",
    "menu": [
@@ -18471,7 +18491,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_MOTOR_PWMA_PIN",
-   "order": 676,
+   "order": 677,
    "type": "int",
    "prompt": "Chân điều tốc PWM Động cơ A (PWMA)",
    "menu": [
@@ -18504,7 +18524,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_MOTOR_DIRA_PIN",
-   "order": 677,
+   "order": 678,
    "type": "int",
    "prompt": "Chân hướng quay Động cơ A (DIRA / IN1)",
    "menu": [
@@ -18537,7 +18557,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_MOTOR_PWMB_PIN",
-   "order": 678,
+   "order": 679,
    "type": "int",
    "prompt": "Chân điều tốc PWM Động cơ B (PWMB)",
    "menu": [
@@ -18570,7 +18590,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_MOTOR_DIRB_PIN",
-   "order": 679,
+   "order": 680,
    "type": "int",
    "prompt": "Chân hướng quay Động cơ B (DIRB / IN3)",
    "menu": [
@@ -18603,7 +18623,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_BATTERY_MONITOR",
-   "order": 680,
+   "order": 681,
    "type": "bool",
    "prompt": "Mạch đo dung lượng Pin (Battery Level Monitor)",
    "menu": [
@@ -18626,7 +18646,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_MONITOR_ADC",
-   "order": 681,
+   "order": 682,
    "type": "bool",
    "prompt": "Đo qua ADC nội bộ (Bộ chia điện trở Voltage Divider)",
    "menu": [
@@ -18653,7 +18673,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_ADC_CHANNEL",
-   "order": 682,
+   "order": 683,
    "type": "int",
    "prompt": "Kênh ADC1 đo pin (Kênh N ứng với GPIO N+1, -1 chưa chọn)",
    "menu": [
@@ -18690,7 +18710,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_DIVIDER_R1",
-   "order": 683,
+   "order": 684,
    "type": "int",
    "prompt": "Điện trở nhánh trên R1 cầu phân áp (kOhm)",
    "menu": [
@@ -18727,7 +18747,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_DIVIDER_R2",
-   "order": 684,
+   "order": 685,
    "type": "int",
    "prompt": "Điện trở nhánh dưới R2 cầu phân áp (kOhm)",
    "menu": [
@@ -18764,7 +18784,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_INA2XX",
-   "order": 685,
+   "order": 686,
    "type": "bool",
    "prompt": "Module đo điện áp, dòng điện & công suất tiêu thụ (TI INA219 / INA226 I2C)",
    "menu": [
@@ -18787,7 +18807,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_INA219",
-   "order": 686,
+   "order": 687,
    "type": "bool",
    "prompt": "Texas Instruments INA219 (Điện áp tối đa 26V, độ phân giải 12-bit)",
    "menu": [
@@ -18814,7 +18834,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_INA2XX_I2C_SDA",
-   "order": 687,
+   "order": 688,
    "type": "int",
    "prompt": "Chân I2C SDA module đo dòng INA",
    "menu": [
@@ -18847,7 +18867,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_INA2XX_I2C_SCL",
-   "order": 688,
+   "order": 689,
    "type": "int",
    "prompt": "Chân I2C SCL module đo dòng INA",
    "menu": [
@@ -18880,7 +18900,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_BATTERY_CHARGING_DETECT",
-   "order": 689,
+   "order": 690,
    "type": "bool",
    "prompt": "Giám sát trạng thái sạc pin (TP4056 CHRG / STDBY Pin)",
    "menu": [
@@ -18903,7 +18923,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_BATTERY_CHRG_PIN",
-   "order": 690,
+   "order": 691,
    "type": "int",
    "prompt": "Chân đọc tín hiệu sạc (kéo trở Pull-up)",
    "menu": [
@@ -18936,7 +18956,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_MONITOR_BQ27220",
-   "order": 691,
+   "order": 692,
    "type": "bool",
    "prompt": "Mạch giám sát pin chuyên dụng I2C (TI BQ27220)",
    "menu": [
@@ -18959,7 +18979,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_BQ27220_I2C_SDA",
-   "order": 692,
+   "order": 693,
    "type": "int",
    "prompt": "Chân I2C SDA IC đo pin BQ27220",
    "menu": [
@@ -18992,7 +19012,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_BQ27220_I2C_SCL",
-   "order": 693,
+   "order": 694,
    "type": "int",
    "prompt": "Chân I2C SCL IC đo pin BQ27220",
    "menu": [
@@ -19025,7 +19045,7 @@
   },
   {
    "name": "CUSTOM_PMIC_I2C_SDA",
-   "order": 694,
+   "order": 695,
    "type": "int",
    "prompt": "Chân I2C SDA chip quản lý nguồn PMIC",
    "menu": [
@@ -19054,7 +19074,7 @@
   },
   {
    "name": "CUSTOM_PMIC_I2C_SCL",
-   "order": 695,
+   "order": 696,
    "type": "int",
    "prompt": "Chân I2C SCL chip quản lý nguồn PMIC",
    "menu": [
@@ -19083,7 +19103,7 @@
   },
   {
    "name": "CUSTOM_PMIC_INT_PIN",
-   "order": 696,
+   "order": 697,
    "type": "int",
    "prompt": "Chân ngắt INT chip quản lý nguồn PMIC",
    "menu": [
@@ -19112,7 +19132,7 @@
   },
   {
    "name": "CUSTOM_IMU_I2C_SDA",
-   "order": 697,
+   "order": 698,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến chuyển động IMU",
    "menu": [
@@ -19141,7 +19161,7 @@
   },
   {
    "name": "CUSTOM_IMU_I2C_SCL",
-   "order": 698,
+   "order": 699,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến chuyển động IMU",
    "menu": [
@@ -19170,7 +19190,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_I2C_SDA",
-   "order": 699,
+   "order": 700,
    "type": "int",
    "prompt": "Chân I2C SDA chip mở rộng GPIO (IO Expander)",
    "menu": [
@@ -19199,7 +19219,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_I2C_SCL",
-   "order": 700,
+   "order": 701,
    "type": "int",
    "prompt": "Chân I2C SCL chip mở rộng GPIO (IO Expander)",
    "menu": [
@@ -19228,7 +19248,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_INT_PIN",
-   "order": 701,
+   "order": 702,
    "type": "int",
    "prompt": "Chân ngắt INT chip mở rộng GPIO",
    "menu": [
@@ -19257,7 +19277,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_RST_PIN",
-   "order": 702,
+   "order": 703,
    "type": "int",
    "prompt": "Chân reset RST chip mở rộng GPIO",
    "menu": [
@@ -19286,7 +19306,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_CHIP_TCA9554",
-   "order": 704,
+   "order": 705,
    "type": "bool",
    "prompt": "TCA9554 / PCA9554 / TCA9554A (8 chân)",
    "menu": [
@@ -19304,7 +19324,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_CHIP_TCA95XX_16BIT",
-   "order": 705,
+   "order": 706,
    "type": "bool",
    "prompt": "TCA9555 / PCA9555 / TCA9535 / TCA9539 (16 chân)",
    "menu": [
@@ -19322,7 +19342,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_I2C_ADDR",
-   "order": 706,
+   "order": 707,
    "type": "int",
    "prompt": "Địa chỉ I2C chip mở rộng GPIO (thập phân)",
    "menu": [
@@ -19351,7 +19371,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_RTC",
-   "order": 707,
+   "order": 708,
    "type": "bool",
    "prompt": "Đồng hồ thời gian thực ngoại vi (RTC I2C DS3231 / PCF8563)",
    "menu": [
@@ -19374,7 +19394,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RTC_I2C_SDA",
-   "order": 708,
+   "order": 709,
    "type": "int",
    "prompt": "Chân I2C SDA module RTC",
    "menu": [
@@ -19407,7 +19427,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RTC_I2C_SCL",
-   "order": 709,
+   "order": 710,
    "type": "int",
    "prompt": "Chân I2C SCL module RTC",
    "menu": [
@@ -19440,7 +19460,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RTC_INT_PIN",
-   "order": 710,
+   "order": 711,
    "type": "int",
    "prompt": "Chân ngắt báo thức INT module RTC",
    "menu": [
@@ -19473,7 +19493,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_NFC_PN532",
-   "order": 711,
+   "order": 712,
    "type": "bool",
    "prompt": "Đầu đọc thẻ từ giao tiếp gần NFC (NXP PN532 I2C)",
    "menu": [
@@ -19496,7 +19516,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_NFC_I2C_SDA",
-   "order": 712,
+   "order": 713,
    "type": "int",
    "prompt": "Chân I2C SDA module NFC",
    "menu": [
@@ -19529,7 +19549,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_NFC_I2C_SCL",
-   "order": 713,
+   "order": 714,
    "type": "int",
    "prompt": "Chân I2C SCL module NFC",
    "menu": [
@@ -19562,7 +19582,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_NFC_IRQ_PIN",
-   "order": 714,
+   "order": 715,
    "type": "int",
    "prompt": "Chân ngắt IRQ module NFC",
    "menu": [
@@ -19595,7 +19615,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_NFC_RST_PIN",
-   "order": 715,
+   "order": 716,
    "type": "int",
    "prompt": "Chân reset RST module NFC",
    "menu": [
@@ -19628,7 +19648,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_PCA9685",
-   "order": 716,
+   "order": 717,
    "type": "bool",
    "prompt": "Mạch mở rộng 16 kênh PWM I2C (NXP PCA9685)",
    "menu": [
@@ -19651,7 +19671,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_PCA9685_I2C_SDA",
-   "order": 717,
+   "order": 718,
    "type": "int",
    "prompt": "Chân I2C SDA module PCA9685",
    "menu": [
@@ -19684,7 +19704,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_PCA9685_I2C_SCL",
-   "order": 718,
+   "order": 719,
    "type": "int",
    "prompt": "Chân I2C SCL module PCA9685",
    "menu": [
@@ -19717,7 +19737,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_PCA9685_OE_PIN",
-   "order": 719,
+   "order": 720,
    "type": "int",
    "prompt": "Chân cho phép đầu ra OE module PCA9685",
    "menu": [
@@ -19750,7 +19770,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_SDCARD_SPI",
-   "order": 720,
+   "order": 721,
    "type": "bool",
    "prompt": "Đầu đọc thẻ nhớ MicroSD qua giao tiếp SPI",
    "menu": [
@@ -19773,7 +19793,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_SDCARD_SPI_SCK",
-   "order": 721,
+   "order": 722,
    "type": "int",
    "prompt": "Chân xung nhịp SPI SCK thẻ nhớ",
    "menu": [
@@ -19806,7 +19826,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_SDCARD_SPI_MOSI",
-   "order": 722,
+   "order": 723,
    "type": "int",
    "prompt": "Chân dữ liệu SPI MOSI thẻ nhớ",
    "menu": [
@@ -19839,7 +19859,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_SDCARD_SPI_MISO",
-   "order": 723,
+   "order": 724,
    "type": "int",
    "prompt": "Chân dữ liệu SPI MISO thẻ nhớ",
    "menu": [
@@ -19872,7 +19892,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_SDCARD_SPI_CS",
-   "order": 724,
+   "order": 725,
    "type": "int",
    "prompt": "Chân chọn chip SPI CS thẻ nhớ",
    "menu": [
@@ -19905,7 +19925,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RC522_SPI_SCK",
-   "order": 725,
+   "order": 726,
    "type": "int",
    "prompt": "Chân xung nhịp SPI SCK module RFID RC522",
    "menu": [
@@ -19934,7 +19954,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RC522_SPI_MOSI",
-   "order": 726,
+   "order": 727,
    "type": "int",
    "prompt": "Chân dữ liệu SPI MOSI module RFID RC522",
    "menu": [
@@ -19963,7 +19983,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RC522_SPI_MISO",
-   "order": 727,
+   "order": 728,
    "type": "int",
    "prompt": "Chân dữ liệu SPI MISO module RFID RC522",
    "menu": [
@@ -19992,7 +20012,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RC522_SPI_CS",
-   "order": 728,
+   "order": 729,
    "type": "int",
    "prompt": "Chân chọn chip SPI CS module RFID RC522",
    "menu": [
@@ -20021,7 +20041,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RC522_RST_PIN",
-   "order": 729,
+   "order": 730,
    "type": "int",
    "prompt": "Chân reset RST module RFID RC522",
    "menu": [
@@ -20050,7 +20070,7 @@
   },
   {
    "name": "CUSTOM_ETH_SPI_SCK_PIN",
-   "order": 730,
+   "order": 731,
    "type": "int",
    "prompt": "Chân SCK SPI module Ethernet (W5500)",
    "menu": [
@@ -20079,7 +20099,7 @@
   },
   {
    "name": "CUSTOM_ETH_SPI_MOSI_PIN",
-   "order": 731,
+   "order": 732,
    "type": "int",
    "prompt": "Chân MOSI SPI module Ethernet (W5500)",
    "menu": [
@@ -20108,7 +20128,7 @@
   },
   {
    "name": "CUSTOM_ETH_SPI_MISO_PIN",
-   "order": 732,
+   "order": 733,
    "type": "int",
    "prompt": "Chân MISO SPI module Ethernet (W5500)",
    "menu": [
@@ -20137,7 +20157,7 @@
   },
   {
    "name": "CUSTOM_ETH_SPI_CS_PIN",
-   "order": 733,
+   "order": 734,
    "type": "int",
    "prompt": "Chân chọn chip SPI CS module Ethernet (W5500)",
    "menu": [
@@ -20166,7 +20186,7 @@
   },
   {
    "name": "CUSTOM_ETH_SPI_INT_PIN",
-   "order": 734,
+   "order": 735,
    "type": "int",
    "prompt": "Chân ngắt INT module Ethernet",
    "menu": [
@@ -20195,7 +20215,7 @@
   },
   {
    "name": "CUSTOM_ETH_SPI_RST_PIN",
-   "order": 735,
+   "order": 736,
    "type": "int",
    "prompt": "Chân reset RST module Ethernet",
    "menu": [
@@ -20224,7 +20244,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_IR_REMOTE",
-   "order": 736,
+   "order": 737,
    "type": "bool",
    "prompt": "Module truyền nhận hồng ngoại điều khiển từ xa (IR Remote) - CHƯA HỖ TRỢ, chưa có driver",
    "menu": [
@@ -20247,7 +20267,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_IR_TX_PIN",
-   "order": 737,
+   "order": 738,
    "type": "int",
    "prompt": "Chân phát hồng ngoại IR TX (38kHz)",
    "menu": [
@@ -20280,7 +20300,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_IR_RX_PIN",
-   "order": 738,
+   "order": 739,
    "type": "int",
    "prompt": "Chân thu hồng ngoại IR RX (VS1838B)",
    "menu": [
@@ -20313,7 +20333,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_TWAI_TX_PIN",
-   "order": 739,
+   "order": 740,
    "type": "int",
    "prompt": "Chân phát mạng CAN / TWAI TX",
    "menu": [
@@ -20342,7 +20362,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_TWAI_RX_PIN",
-   "order": 740,
+   "order": 741,
    "type": "int",
    "prompt": "Chân nhận mạng CAN / TWAI RX",
    "menu": [
@@ -20371,7 +20391,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE",
-   "order": 741,
+   "order": 742,
    "type": "bool",
    "prompt": "Module truyền thông dữ liệu mạng di động 4G LTE (A7670 / SIM7600) - CHƯA HỖ TRỢ, chưa có driver",
    "menu": [
@@ -20394,7 +20414,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_4G_PWRKEY_PIN",
-   "order": 742,
+   "order": 743,
    "type": "int",
    "prompt": "Chân bật nguồn PWRKEY module 4G",
    "menu": [
@@ -20427,7 +20447,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_4G_UART_TX_PIN",
-   "order": 743,
+   "order": 744,
    "type": "int",
    "prompt": "Chân truyền UART TX kết nối module 4G",
    "menu": [
@@ -20460,7 +20480,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_4G_UART_RX_PIN",
-   "order": 744,
+   "order": 745,
    "type": "int",
    "prompt": "Chân nhận UART RX kết nối module 4G",
    "menu": [
@@ -20493,7 +20513,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_MONITOR_NONE",
-   "order": 745,
+   "order": 746,
    "type": "bool",
    "prompt": "",
    "menu": [
