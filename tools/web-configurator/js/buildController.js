@@ -311,6 +311,12 @@ export class BuildController {
       if (targetVal) targetVal.textContent = 'Chưa xác định target';
       if (btnSetTarget) btnSetTarget.style.display = 'inline-flex';
     }
+    const conflictVal = document.getElementById('target-conflict-val');
+    const conflicts = (target && target.conflicts) || [];
+    if (conflictVal) {
+      conflictVal.hidden = conflicts.length === 0;
+      conflictVal.textContent = conflicts.join(' · ');
+    }
     BuildController.renderReadiness(idf, target);
     BuildController.renderPortOptions(ports);
     BuildController.syncJobState(job);
@@ -335,9 +341,11 @@ export class BuildController {
     }
 
     const required = BuildController.REQUIRED_TARGET;
-    const targetOk = !!(target && target.is_set && target.target === required);
+    const targetOk = !!(target && target.is_set && target.target === required && !(target.conflicts || []).length);
     if (targetOk) {
       setChip('status-target', 'ok', required);
+    } else if (target && target.is_set && target.target === required) {
+      setChip('status-target', 'warn', `${required} (lệch bo)`);
     } else if (target && target.is_set) {
       setChip('status-target', 'warn', `${target.target} (cần ${required})`);
     } else {

@@ -286,11 +286,43 @@ def p4_sdkconfig_rel() -> str:
     return f"{P4_BUILD_DIR}/sdkconfig"
 
 
-def detect_target_p4(project_root: str) -> dict:
+P4_BOARD_SYMBOLS = {
+    "guition-m3-dev": "CONFIG_BOARD_TYPE_GUITION_ESP32_P4_M3_DEV",
+    "function-ev": "CONFIG_BOARD_TYPE_ESP32_P4_FUNCTION_EV_BOARD",
+    "waveshare-dev-kit": "CONFIG_BOARD_TYPE_WAVESHARE_ESP32_P4_DEV_KIT",
+}
+
+
+def configured_p4_board(project_root: str) -> Optional[str]:
+    text = _read(os.path.join(project_root, p4_sdkconfig_rel()))
+    if text is None:
+        return None
+    values = parse_kconfig_text(text)
+    for board, symbol in P4_BOARD_SYMBOLS.items():
+        if values.get(symbol) == "y":
+            return board
+    return None
+
+
+def reset_p4_sdkconfig(project_root: str) -> bool:
+    sdk_path = os.path.join(project_root, p4_sdkconfig_rel())
+    if not os.path.exists(sdk_path):
+        return False
+    os.replace(sdk_path, sdk_path + ".old")
+    return True
+
+
+def detect_target_p4(project_root: str, board: Optional[str] = None) -> dict:
     info = detect_target(project_root, P4_BUILD_DIR, p4_sdkconfig_rel(), P4_TARGET)
     if not info["is_set"]:
         info["target"], info["source"] = None, None
     info["conflicts"] = [c for c in info["conflicts"] if not c.startswith("sdkconfig.defaults khai báo")]
+    configured = configured_p4_board(project_root)
+    info["configured_board"] = configured
+    if board and configured and configured != board:
+        info["conflicts"].append(
+            f"{p4_sdkconfig_rel()} đang là bo {P4_BOARDS.get(configured, configured)}, "
+            f"khác bo đã chọn {P4_BOARDS.get(board, board)} — bấm set-target esp32p4 để sinh lại cấu hình")
     return info
 
 

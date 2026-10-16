@@ -2060,3 +2060,10 @@ body[data-chip="esp32p4"] .config-group[data-s3-only]::after {
   color: var(--text-muted);
   font-size: 0.78rem;
 }
+
+.target-conflict {
+  margin: 0.25rem 0 0;
+  color: var(--accent-rose);
+  font-size: 0.72rem;
+  line-height: 1.4;
+}

@@ -267,7 +267,9 @@ public:
         InitializeCamera();
 #if BOARD_HAS_MIPI_DISPLAY
         InitializeFonts();
-        GetBacklight()->RestoreBrightness();
+        if (auto backlight = GetBacklight()) {
+            backlight->RestoreBrightness();
+        }
 #endif
     }
 
@@ -355,6 +357,9 @@ public:
 
     virtual Backlight* GetBacklight() override {
 #if BOARD_HAS_MIPI_DISPLAY
+        if (!GPIO_IS_VALID_OUTPUT_GPIO(static_cast<gpio_num_t>(DISPLAY_BACKLIGHT_PIN))) {
+            return nullptr;
+        }
         static PwmBacklight backlight(static_cast<gpio_num_t>(DISPLAY_BACKLIGHT_PIN), DISPLAY_BACKLIGHT_OUTPUT_INVERT);
         return &backlight;
 #else

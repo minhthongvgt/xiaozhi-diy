@@ -154,6 +154,11 @@ exit /b 0
 
 :load_board
 if exist "%BOARD_FILE%" set /p BOARD_ID=<"%BOARD_FILE%"
+if exist "%BUILD_DIR%\sdkconfig" (
+    findstr /b /c:"CONFIG_BOARD_TYPE_GUITION_ESP32_P4_M3_DEV=y" "%BUILD_DIR%\sdkconfig" >nul && set "BOARD_ID=guition-m3-dev"
+    findstr /b /c:"CONFIG_BOARD_TYPE_ESP32_P4_FUNCTION_EV_BOARD=y" "%BUILD_DIR%\sdkconfig" >nul && set "BOARD_ID=function-ev"
+    findstr /b /c:"CONFIG_BOARD_TYPE_WAVESHARE_ESP32_P4_DEV_KIT=y" "%BUILD_DIR%\sdkconfig" >nul && set "BOARD_ID=waveshare-dev-kit"
+)
 call :board_name
 exit /b 0
 

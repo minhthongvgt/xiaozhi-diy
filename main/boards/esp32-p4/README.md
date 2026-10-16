@@ -26,6 +26,31 @@ Pins come from the Guition schematic audit in the Camera-AI project (`docs/hardw
 - Power it from a 5 V / 2 A supply. On a weak USB port the board browns out (`rst:0x1 POWERON`, COM port disappears) once Wi-Fi, the camera and the speaker run together.
 - Tested on a v1.3 board (2026-10-16): SD card, OV5647 (35 fps), ES8311 and the Wi-Fi setup AP through the C6 start.
 
+## Board comparison (checked 2026-10-16)
+
+| | Guition JC-ESP32P4-M3-Dev | Espressif Function-EV | Waveshare ESP32-P4-Module-DEV-KIT |
+|---|---|---|---|
+| Source | Guition schematic audit | esp-bsp `esp32_p4_function_ev_board.h` | `docs/ESP32-P4-Module-DEV-KIT_Schematic.pdf` |
+| ES8311 I2S | MCLK 13, BCLK 12, WS 10, DOUT 9, DIN 48 | MCLK 13, BCLK 12, WS 10, DOUT 9, DIN 11 | same as Function-EV |
+| Amplifier enable | 11 | 53 | 53 (`PA_CTRL` via R52) |
+| I2C | SDA 7, SCL 8 | SDA 7, SCL 8 | SDA 7, SCL 8 |
+| BOOT button | 35 | 35 | 35 |
+| C6 SDIO (slot 1) | CLK 18, CMD 19, D0-D3 14-17, reset 54 | same | same (GPIO 14-19 are internal to the module) |
+| Display | none (headless) | EK79007 1024x600 MIPI DSI, backlight 26, reset 27 | 15-pin DSI connector with only DSI lanes, I2C and 3V3: no reset, backlight or touch INT/RST GPIO |
+| Touch | none | GT911 (no INT/RST) | GT911 over I2C (no INT/RST) |
+| Camera sensors enabled | OV5647 | OV5647, SC2336 | OV5647 |
+
+- The esp_hosted SDIO pins and C6 reset are the same for all three boards. Without a preset (`ESP_HOSTED_P4_DEV_BOARD_NONE`) esp_hosted already defaults to these pins on ESP32-P4.
+- Waveshare: the panel driver is still EK79007 1024x600 (Waveshare panels may use another controller and control the backlight over I2C). Without a backlight GPIO the board returns no `Backlight`.
+
+## Switching boards
+
+Each board's hardware follows `CONFIG_BOARD_TYPE_*` automatically:
+- Pins and peripherals come from `config.h`, which picks the board header at compile time.
+- Selecting a board in menuconfig `imply`s its camera sensors (`CAMERA_OV5647`, `CAMERA_SC2336`).
+- `03-build_esp32p4.bat` reads the board from `build_p4/sdkconfig`. "Doi bo mach" regenerates `build_p4/sdkconfig` from that board's defaults.
+- Web Configurator: choosing another ESP32-P4 board in **Thiết bị đích** moves `build_p4/sdkconfig` to `sdkconfig.old`, so the next build regenerates it from the new board's defaults. If `build_p4/sdkconfig` names a different board than the one selected (for example after menuconfig), the build tab shows a warning.
+
 ## Building (all ESP32-P4 boards)
 
 - Double-click `03-build_esp32p4.bat` in the project root, pick the board, then build or flash. It builds in `build_p4/` with `build_p4/sdkconfig`, so the ESP32-S3 `build/` and `sdkconfig` stay untouched.

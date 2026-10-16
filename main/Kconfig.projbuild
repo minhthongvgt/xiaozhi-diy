@@ -108,14 +108,18 @@ choice BOARD_TYPE
     config BOARD_TYPE_ESP32_P4_FUNCTION_EV_BOARD
         bool "Espressif ESP32-P4-Function-EV-Board"
         depends on IDF_TARGET_ESP32P4
+        imply CAMERA_OV5647
+        imply CAMERA_SC2336
 
     config BOARD_TYPE_GUITION_ESP32_P4_M3_DEV
         bool "Guition JC-ESP32P4-M3-Dev"
         depends on IDF_TARGET_ESP32P4
+        imply CAMERA_OV5647
 
     config BOARD_TYPE_WAVESHARE_ESP32_P4_DEV_KIT
         bool "Waveshare ESP32-P4-Module-DEV-KIT"
         depends on IDF_TARGET_ESP32P4
+        imply CAMERA_OV5647
 endchoice
 
 menu "Giao diện hiển thị & Gói tài nguyên (Display Style & Assets)"

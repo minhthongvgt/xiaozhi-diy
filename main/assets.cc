@@ -295,6 +295,11 @@ bool Assets::LvglStrategy::Apply(Assets* assets, bool refresh_display_theme) {
 
     Assets::LoadSrmodelsFromIndex(assets, root.get());
 
+    if (!lv_is_initialized()) {
+        ESP_LOGI(TAG, "LVGL is not initialized (no display), skipping fonts, emoji and themes");
+        return true;
+    }
+
     auto& theme_manager = LvglThemeManager::GetInstance();
     auto light_theme = theme_manager.GetTheme("light");
     auto dark_theme = theme_manager.GetTheme("dark");

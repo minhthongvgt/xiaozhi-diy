@@ -17,7 +17,7 @@ import time
 import glob
 import re
 import string
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs, unquote
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
@@ -325,17 +325,21 @@ def load_build_profile() -> dict:
 
 
 def save_build_profile(chip: str, board: str) -> dict:
+    reset_done = False
     if chip == sdkconfig_io.P4_TARGET:
         if board not in sdkconfig_io.P4_BOARDS:
             return {"success": False, "error": f"Bo ESP32-P4 '{board}' không hợp lệ"}
         data = {"chip": chip, "board": board}
+        configured = sdkconfig_io.configured_p4_board(PROJECT_ROOT)
+        if configured and configured != board:
+            reset_done = sdkconfig_io.reset_p4_sdkconfig(PROJECT_ROOT)
     elif chip == sdkconfig_io.WANTED_TARGET:
         data = {"chip": chip}
     else:
         return {"success": False, "error": f"Chip '{chip}' không được hỗ trợ"}
     with open(profile_file_path(), "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
-    return {"success": True, "profile": load_build_profile()}
+    return {"success": True, "profile": load_build_profile(), "sdkconfig_reset": reset_done}
 
 
 def is_p4_profile(profile: dict) -> bool:
@@ -787,8 +791,9 @@ def detect_idf():
 
 def detect_target():
     """Nhận diện target thật sự đã set-target (sdkconfig > build/CMakeCache.txt > sdkconfig.defaults)."""
-    if is_p4_profile(load_build_profile()):
-        return sdkconfig_io.detect_target_p4(PROJECT_ROOT)
+    profile = load_build_profile()
+    if is_p4_profile(profile):
+        return sdkconfig_io.detect_target_p4(PROJECT_ROOT, profile["board"])
     return sdkconfig_io.detect_target(PROJECT_ROOT)
 
 
@@ -1248,7 +1253,7 @@ def run_server(port=DEFAULT_PORT, project_path=None, web_dir_path=None):
     httpd = None
     for p in [port] + list(range(8080, 8100)) + [0]:
         try:
-            httpd = HTTPServer(("127.0.0.1", p), ConfiguratorHandler)
+            httpd = ThreadingHTTPServer(("127.0.0.1", p), ConfiguratorHandler)
             port = httpd.server_port
             break
         except OSError:

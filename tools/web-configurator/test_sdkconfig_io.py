@@ -148,4 +148,28 @@ class T(unittest.TestCase):
         self.assertEqual(io.p4_defaults_list("guition-m3-dev"),
                          "sdkconfig.defaults;main/boards/esp32-p4/sdkconfig.guition-m3-dev")
 
+    def test_p4_board_mismatch_detected_and_reset(self):
+        os.makedirs(os.path.join(self.root, "build_p4"))
+        w(self.root, "build_p4/sdkconfig", 'CONFIG_IDF_TARGET="esp32p4"\nCONFIG_BOARD_TYPE_GUITION_ESP32_P4_M3_DEV=y\n'
+          "# CONFIG_BOARD_TYPE_ESP32_P4_FUNCTION_EV_BOARD is not set\n")
+        self.assertEqual(io.configured_p4_board(self.root), "guition-m3-dev")
+        self.assertEqual(io.detect_target_p4(self.root, "guition-m3-dev")["conflicts"], [])
+        self.assertEqual(len(io.detect_target_p4(self.root, "function-ev")["conflicts"]), 1)
+        self.assertTrue(io.reset_p4_sdkconfig(self.root))
+        self.assertFalse(os.path.exists(os.path.join(self.root, "build_p4", "sdkconfig")))
+        self.assertTrue(os.path.exists(os.path.join(self.root, "build_p4", "sdkconfig.old")))
+        self.assertIsNone(io.configured_p4_board(self.root))
+        self.assertFalse(io.reset_p4_sdkconfig(self.root))
+
+    def test_p4_board_files_select_their_own_board(self):
+        boards_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+                                  "main", "boards", "esp32-p4")
+        for board, symbol in io.P4_BOARD_SYMBOLS.items():
+            with open(os.path.join(boards_dir, f"sdkconfig.{board}"), encoding="utf-8") as f:
+                values = io.parse_kconfig_text(f.read())
+            self.assertEqual(values.get(symbol), "y", board)
+            self.assertEqual(values.get("CONFIG_CAMERA_OV5647"), "y", board)
+            others = [s for b, s in io.P4_BOARD_SYMBOLS.items() if b != board]
+            self.assertFalse(any(values.get(s) == "y" for s in others), board)
+
 if __name__ == "__main__": unittest.main(verbosity=2)
