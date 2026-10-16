@@ -57,6 +57,13 @@
       "2. Âm thanh: Loa & Micro (Audio: Speaker & Microphone)"
      ],
      "icon": "🔊"
+    },
+    {
+     "menu": [
+      "Xiaozhi Assistant",
+      "Âm thanh thông báo (Notification Sounds)"
+     ],
+     "icon": "🔔"
     }
    ]
   },

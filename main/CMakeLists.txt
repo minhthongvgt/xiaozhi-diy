@@ -2,6 +2,7 @@ set(SOURCES "audio/audio_codec.cc"
             "audio/soft_aec_reference.cc"
             "audio/audio_debugger.cc"
             "audio/audio_service.cc"
+            "audio/sound_theme.cc"
             "audio/demuxer/ogg_demuxer.cc"
             "notify/notify_player.cc"
             "audio/codecs/no_audio_codec.cc"
@@ -300,6 +301,8 @@ endif()
 
 file(GLOB COMMON_SOUNDS ${CMAKE_CURRENT_SOURCE_DIR}/assets/common/*.ogg)
 
+include(${CMAKE_CURRENT_LIST_DIR}/sound_theme.cmake)
+
 list(APPEND SOURCES "boards/common/esp_video.cc")
 
 if(CONFIG_IDF_TARGET_ESP32S3)
@@ -308,7 +311,7 @@ endif()
 
 set(MAIN_PRIV_REQUIRES_EXTRA "")
 idf_component_register(SRCS ${SOURCES}
-                    EMBED_FILES ${LANG_SOUNDS} ${COMMON_SOUNDS}
+                    EMBED_FILES ${LANG_SOUNDS} ${COMMON_SOUNDS} ${SOUND_THEME_EMBED_FILES}
                     INCLUDE_DIRS ${INCLUDE_DIRS}
                     WHOLE_ARCHIVE
                     PRIV_REQUIRES
@@ -322,6 +325,7 @@ idf_component_register(SRCS ${SOURCES}
                         esp_driver_i2c
                         esp_driver_i2s
                         esp_driver_ledc
+                        esp_driver_rmt
                         esp_driver_jpeg
                         esp_driver_ppa
                         esp_driver_tsens
@@ -340,6 +344,7 @@ idf_component_register(SRCS ${SOURCES}
 
 if(NOT CMAKE_BUILD_EARLY_EXPANSION)
     target_compile_options(${COMPONENT_LIB} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-std=gnu++23>)
+    target_include_directories(${COMPONENT_LIB} PRIVATE ${SOUND_THEME_DIR})
 endif()
 
 if(NOT BOARD_NAME)

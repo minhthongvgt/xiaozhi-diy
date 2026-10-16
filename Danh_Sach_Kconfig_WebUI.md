@@ -87,6 +87,73 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_USE_SERVER_AEC` | bool | Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC) | Enable Server-Side AEC (Unstable) |  |
 | `CONFIG_USE_NO_AEC` | bool | Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC) | Disable AEC |  |
 | `CONFIG_USE_SOFTWARE_AEC_REFERENCE` | bool | Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC) | Software AEC Reference (codecs without hardware loopback) | y |
+| `CONFIG_SOUND_STARTUP_POPUP` | bool | Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
+| `CONFIG_SOUND_STARTUP_SUCCESS` | bool | Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) (mặc định) | y (mặc định của choice) |
+| `CONFIG_SOUND_STARTUP_EXCLAMATION` | bool | Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
+| `CONFIG_SOUND_STARTUP_VIBRATION` | bool | Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
+| `CONFIG_SOUND_STARTUP_LOW_BATTERY` | bool | Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
+| `CONFIG_SOUND_STARTUP_NONE` | bool | Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
+| `CONFIG_SOUND_STARTUP_CUSTOM` | bool | Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
+| `CONFIG_SOUND_STARTUP_CUSTOM_FILE` | string | Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Khởi động xong (sẵn sàng trò chuyện) | "" |
+| `CONFIG_SOUND_LISTENING_POPUP` | bool | Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) (mặc định) | y (mặc định của choice) |
+| `CONFIG_SOUND_LISTENING_SUCCESS` | bool | Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
+| `CONFIG_SOUND_LISTENING_EXCLAMATION` | bool | Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
+| `CONFIG_SOUND_LISTENING_VIBRATION` | bool | Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
+| `CONFIG_SOUND_LISTENING_LOW_BATTERY` | bool | Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
+| `CONFIG_SOUND_LISTENING_NONE` | bool | Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
+| `CONFIG_SOUND_LISTENING_CUSTOM` | bool | Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
+| `CONFIG_SOUND_LISTENING_CUSTOM_FILE` | string | Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Bắt đầu lắng nghe / có thông báo | "" |
+| `CONFIG_SOUND_ERROR_POPUP` | bool | Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
+| `CONFIG_SOUND_ERROR_SUCCESS` | bool | Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
+| `CONFIG_SOUND_ERROR_EXCLAMATION` | bool | Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) (mặc định) | y (mặc định của choice) |
+| `CONFIG_SOUND_ERROR_VIBRATION` | bool | Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
+| `CONFIG_SOUND_ERROR_LOW_BATTERY` | bool | Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
+| `CONFIG_SOUND_ERROR_NONE` | bool | Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
+| `CONFIG_SOUND_ERROR_CUSTOM` | bool | Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
+| `CONFIG_SOUND_ERROR_CUSTOM_FILE` | string | Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Báo lỗi | "" |
+| `CONFIG_SOUND_ALERT_POPUP` | bool | Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
+| `CONFIG_SOUND_ALERT_SUCCESS` | bool | Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
+| `CONFIG_SOUND_ALERT_EXCLAMATION` | bool | Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
+| `CONFIG_SOUND_ALERT_VIBRATION` | bool | Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) (mặc định) | y (mặc định của choice) |
+| `CONFIG_SOUND_ALERT_LOW_BATTERY` | bool | Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
+| `CONFIG_SOUND_ALERT_NONE` | bool | Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
+| `CONFIG_SOUND_ALERT_CUSTOM` | bool | Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
+| `CONFIG_SOUND_ALERT_CUSTOM_FILE` | string | Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Cảnh báo từ máy chủ | "" |
+| `CONFIG_SOUND_LOW_BATTERY_POPUP` | bool | Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
+| `CONFIG_SOUND_LOW_BATTERY_SUCCESS` | bool | Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
+| `CONFIG_SOUND_LOW_BATTERY_EXCLAMATION` | bool | Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
+| `CONFIG_SOUND_LOW_BATTERY_VIBRATION` | bool | Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
+| `CONFIG_SOUND_LOW_BATTERY_LOW_BATTERY` | bool | Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) (mặc định) | y (mặc định của choice) |
+| `CONFIG_SOUND_LOW_BATTERY_NONE` | bool | Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
+| `CONFIG_SOUND_LOW_BATTERY_CUSTOM` | bool | Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
+| `CONFIG_SOUND_LOW_BATTERY_CUSTOM_FILE` | string | Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Pin yếu | "" |
+| `CONFIG_SOUND_WIFI_CONFIG_VOICE` | bool | Âm thanh thông báo (Notification Sounds) | Giọng nói «cấu hình Wi-Fi» theo ngôn ngữ (mặc định) | y (mặc định của choice) |
+| `CONFIG_SOUND_WIFI_CONFIG_POPUP` | bool | Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
+| `CONFIG_SOUND_WIFI_CONFIG_SUCCESS` | bool | Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
+| `CONFIG_SOUND_WIFI_CONFIG_EXCLAMATION` | bool | Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
+| `CONFIG_SOUND_WIFI_CONFIG_VIBRATION` | bool | Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
+| `CONFIG_SOUND_WIFI_CONFIG_LOW_BATTERY` | bool | Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
+| `CONFIG_SOUND_WIFI_CONFIG_NONE` | bool | Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
+| `CONFIG_SOUND_WIFI_CONFIG_CUSTOM` | bool | Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
+| `CONFIG_SOUND_WIFI_CONFIG_CUSTOM_FILE` | string | Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Vào chế độ cấu hình Wi-Fi | "" |
+| `CONFIG_SOUND_ACTIVATION_VOICE` | bool | Âm thanh thông báo (Notification Sounds) | Giọng nói «kích hoạt» theo ngôn ngữ (mặc định) | y (mặc định của choice) |
+| `CONFIG_SOUND_ACTIVATION_POPUP` | bool | Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
+| `CONFIG_SOUND_ACTIVATION_SUCCESS` | bool | Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
+| `CONFIG_SOUND_ACTIVATION_EXCLAMATION` | bool | Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
+| `CONFIG_SOUND_ACTIVATION_VIBRATION` | bool | Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
+| `CONFIG_SOUND_ACTIVATION_LOW_BATTERY` | bool | Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
+| `CONFIG_SOUND_ACTIVATION_NONE` | bool | Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
+| `CONFIG_SOUND_ACTIVATION_CUSTOM` | bool | Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
+| `CONFIG_SOUND_ACTIVATION_CUSTOM_FILE` | string | Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Đọc mã kích hoạt | "" |
+| `CONFIG_SOUND_UPGRADE_VOICE` | bool | Âm thanh thông báo (Notification Sounds) | Giọng nói «nâng cấp» theo ngôn ngữ (mặc định) | y (mặc định của choice) |
+| `CONFIG_SOUND_UPGRADE_POPUP` | bool | Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
+| `CONFIG_SOUND_UPGRADE_SUCCESS` | bool | Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
+| `CONFIG_SOUND_UPGRADE_EXCLAMATION` | bool | Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
+| `CONFIG_SOUND_UPGRADE_VIBRATION` | bool | Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
+| `CONFIG_SOUND_UPGRADE_LOW_BATTERY` | bool | Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
+| `CONFIG_SOUND_UPGRADE_NONE` | bool | Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
+| `CONFIG_SOUND_UPGRADE_CUSTOM` | bool | Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
+| `CONFIG_SOUND_UPGRADE_CUSTOM_FILE` | string | Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Nâng cấp / tải tài nguyên | "" |
 | `CONFIG_USE_AUDIO_DEBUGGER` | bool | Xiaozhi Assistant | Enable Audio Debugger | n |
 | `CONFIG_USE_HOTSPOT_WIFI_PROVISIONING` | bool | WiFi Configuration Method | Hotspot | y |
 | `CONFIG_USE_ESP_BLUFI_WIFI_PROVISIONING` | bool | WiFi Configuration Method | ESP-BluFi |  |
@@ -509,6 +576,9 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_ENABLE_SERVO_DOG` | bool | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Động cơ Servo tương tác qua PWM (Servo Dog Controller) | n |
 | `CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO` | int | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Chân GPIO cấp xung PWM cho Động cơ Servo | -1 |
 | `CONFIG_ENABLE_BUZZER` | bool | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Còi báo động Buzzer (GPIO 41) | n |
+| `CONFIG_BUZZER_TYPE_ACTIVE` | bool | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Còi chủ động (Active, cấp điện là kêu) | y (mặc định của choice) |
+| `CONFIG_BUZZER_TYPE_PASSIVE` | bool | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Còi thụ động (Passive, phát xung theo tần số qua RMT) |  |
+| `CONFIG_BUZZER_ACTIVE_LOW` | bool | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Module kích mức thấp (LOW = kêu) | n |
 | `CONFIG_BUZZER_EXTRA_PINS` | string | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Các chân GPIO Còi thêm (cách nhau dấu phẩy) | "" |
 | `CONFIG_BUZZER_PIN` | int | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Chân GPIO Buzzer | -1 |
 | `CONFIG_ENABLE_HAPTIC_MOTOR` | bool | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Động cơ rung phản hồi xúc giác (GPIO 42) | n |

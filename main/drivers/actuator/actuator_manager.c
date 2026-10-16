@@ -4,6 +4,8 @@
 #include <sdkconfig.h>
 #include <driver/gpio.h>
 #include <driver/ledc.h>
+#include <driver/rmt_tx.h>
+#include <driver/rmt_encoder.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #define TAG "ActuatorManager"
@@ -28,6 +30,27 @@ static gpio_num_t s_buzzer_pin = (gpio_num_t)-1;
 #define MAX_EXTRA_BUZZERS 4
 static extra_gpio_config_t s_extra_buzzers[MAX_EXTRA_BUZZERS];
 static int s_num_extra_buzzers = 0;
+#define BUZZER_OUTPUT_COUNT (1 + MAX_EXTRA_BUZZERS)
+#define BUZZER_DEFAULT_DURATION_MS 100
+#if defined(CONFIG_BUZZER_ACTIVE_LOW)
+#define BUZZER_ON_LEVEL 0
+#else
+#define BUZZER_ON_LEVEL 1
+#endif
+#if defined(CONFIG_BUZZER_TYPE_PASSIVE)
+#define BUZZER_RMT_RESOLUTION_HZ 1000000
+#define BUZZER_RMT_MEM_SYMBOLS 48
+#define BUZZER_MIN_FREQ_HZ 20
+#define BUZZER_MAX_FREQ_HZ 20000
+typedef struct buzzer_tone_output_t {
+    gpio_num_t pin;
+    rmt_channel_handle_t channel;
+    rmt_encoder_handle_t encoder;
+} buzzer_tone_output_t;
+static __attribute__((unused)) buzzer_tone_output_t s_buzzer_tones[BUZZER_OUTPUT_COUNT];
+static __attribute__((unused)) int s_num_buzzer_tones = 0;
+static __attribute__((unused)) rmt_symbol_word_t s_buzzer_tone_symbol;
+#endif
 static gpio_num_t s_haptic_pin = (gpio_num_t)-1;
 static gpio_num_t s_servo_pin = (gpio_num_t)-1;
 static uint8_t s_servo_angle = 90;
@@ -218,31 +241,92 @@ void actuator_set_dc_motor(int motor_id, int speed_pct)
         motor_apply(s_motor_pwmb, s_motor_dirb, MOTOR_LEDC_CHANNEL_B, speed_pct);
     }
 }
+static int buzzer_collect_pins(gpio_num_t *pins)
+{
+    int count = 0;
+    if (GPIO_IS_VALID_GPIO(s_buzzer_pin)) {
+        pins[count++] = s_buzzer_pin;
+    }
+    for (int i = 0; i < s_num_extra_buzzers && count < BUZZER_OUTPUT_COUNT; i++) {
+        if (GPIO_IS_VALID_GPIO(s_extra_buzzers[i].pin1)) {
+            pins[count++] = s_extra_buzzers[i].pin1;
+        }
+    }
+    return count;
+}
+static void buzzer_set_all_dc(const gpio_num_t *pins, int count, bool on)
+{
+    for (int i = 0; i < count; i++) {
+        gpio_set_level(pins[i], on ? BUZZER_ON_LEVEL : !BUZZER_ON_LEVEL);
+    }
+}
+#if defined(CONFIG_BUZZER_TYPE_PASSIVE)
+static __attribute__((unused)) const buzzer_tone_output_t *buzzer_find_tone(gpio_num_t pin)
+{
+    for (int i = 0; i < s_num_buzzer_tones; i++) {
+        if (s_buzzer_tones[i].pin == pin) {
+            return &s_buzzer_tones[i];
+        }
+    }
+    return NULL;
+}
+static __attribute__((unused)) void buzzer_play_tone(const gpio_num_t *pins, int count, uint32_t freq_hz, uint32_t duration_ms)
+{
+    if (freq_hz < BUZZER_MIN_FREQ_HZ) freq_hz = BUZZER_MIN_FREQ_HZ;
+    if (freq_hz > BUZZER_MAX_FREQ_HZ) freq_hz = BUZZER_MAX_FREQ_HZ;
+    uint32_t half_period_ticks = BUZZER_RMT_RESOLUTION_HZ / (2 * freq_hz);
+    s_buzzer_tone_symbol.level0 = 1;
+    s_buzzer_tone_symbol.duration0 = half_period_ticks;
+    s_buzzer_tone_symbol.level1 = 0;
+    s_buzzer_tone_symbol.duration1 = half_period_ticks;
+    uint32_t cycles = (uint32_t)(((uint64_t)freq_hz * duration_ms) / 1000);
+    rmt_transmit_config_t tx_config = {
+        .loop_count = cycles > 1 ? (int)cycles : 1,
+        .flags.eot_level = 0,
+    };
+    gpio_num_t dc_pins[BUZZER_OUTPUT_COUNT];
+    int dc_count = 0;
+    for (int i = 0; i < count; i++) {
+        const buzzer_tone_output_t *tone = buzzer_find_tone(pins[i]);
+        esp_err_t err = ESP_FAIL;
+        if (tone != NULL) {
+            err = rmt_transmit(tone->channel, tone->encoder, &s_buzzer_tone_symbol, sizeof(s_buzzer_tone_symbol), &tx_config);
+        }
+        if (err != ESP_OK) {
+            dc_pins[dc_count++] = pins[i];
+        }
+    }
+    buzzer_set_all_dc(dc_pins, dc_count, true);
+    vTaskDelay(pdMS_TO_TICKS(duration_ms));
+    buzzer_set_all_dc(dc_pins, dc_count, false);
+    for (int i = 0; i < s_num_buzzer_tones; i++) {
+        esp_err_t err = rmt_tx_wait_all_done(s_buzzer_tones[i].channel, 200);
+        if (err != ESP_OK) {
+            ESP_LOGW(TAG, "Buzzer tone on GPIO %d did not finish: %s", s_buzzer_tones[i].pin, esp_err_to_name(err));
+        }
+    }
+}
+#endif
 void actuator_beep(uint32_t freq_hz, uint32_t duration_ms)
 {
-    bool valid = false;
-    if (GPIO_IS_VALID_GPIO(s_buzzer_pin)) {
-        gpio_set_level(s_buzzer_pin, 1);
-        valid = true;
-    }
-    for (int i = 0; i < s_num_extra_buzzers; i++) {
-        if (GPIO_IS_VALID_GPIO(s_extra_buzzers[i].pin1)) {
-            gpio_set_level(s_extra_buzzers[i].pin1, 1);
-            valid = true;
-        }
-    }
-    if (valid) {
-        vTaskDelay(pdMS_TO_TICKS(duration_ms > 0 ? duration_ms : 100));
-        if (GPIO_IS_VALID_GPIO(s_buzzer_pin)) gpio_set_level(s_buzzer_pin, 0);
-        for (int i = 0; i < s_num_extra_buzzers; i++) {
-            if (GPIO_IS_VALID_GPIO(s_extra_buzzers[i].pin1)) {
-                gpio_set_level(s_extra_buzzers[i].pin1, 0);
-            }
-        }
-        ESP_LOGI(TAG, "Buzzer beep executed (%lu Hz, %lu ms)", (unsigned long)freq_hz, (unsigned long)duration_ms);
-    } else {
+    gpio_num_t pins[BUZZER_OUTPUT_COUNT];
+    int count = buzzer_collect_pins(pins);
+    if (count == 0) {
         ESP_LOGW(TAG, "Buzzer hardware not configured/invalid pin, action ignored");
+        return;
     }
+    if (duration_ms == 0) {
+        duration_ms = BUZZER_DEFAULT_DURATION_MS;
+    }
+#if defined(CONFIG_BUZZER_TYPE_PASSIVE)
+    buzzer_play_tone(pins, count, freq_hz, duration_ms);
+    ESP_LOGI(TAG, "Passive buzzer tone executed (%lu Hz, %lu ms)", (unsigned long)freq_hz, (unsigned long)duration_ms);
+#else
+    buzzer_set_all_dc(pins, count, true);
+    vTaskDelay(pdMS_TO_TICKS(duration_ms));
+    buzzer_set_all_dc(pins, count, false);
+    ESP_LOGI(TAG, "Active buzzer beep executed (%lu ms, requested %lu Hz ignored)", (unsigned long)duration_ms, (unsigned long)freq_hz);
+#endif
 }
 void actuator_vibrate(uint32_t duration_ms)
 {
@@ -255,7 +339,7 @@ void actuator_vibrate(uint32_t duration_ms)
         ESP_LOGW(TAG, "Haptic hardware not configured/invalid pin (%d), action ignored", (int)s_haptic_pin);
     }
 }
-static void __attribute__((unused)) init_output_pin(gpio_num_t pin, const char *name)
+static void __attribute__((unused)) init_output_pin_level(gpio_num_t pin, const char *name, int idle_level)
 {
     if (!GPIO_IS_VALID_GPIO(pin)) return;
     gpio_config_t io_conf = {
@@ -270,9 +354,54 @@ static void __attribute__((unused)) init_output_pin(gpio_num_t pin, const char *
         ESP_LOGE(TAG, "Failed to configure output '%s' on GPIO %d: %s", name, pin, esp_err_to_name(err));
         return;
     }
-    gpio_set_level(pin, 0);
+    gpio_set_level(pin, idle_level);
     ESP_LOGI(TAG, "Configured actuator output '%s' on GPIO %d", name, pin);
 }
+static void __attribute__((unused)) init_output_pin(gpio_num_t pin, const char *name)
+{
+    init_output_pin_level(pin, name, 0);
+}
+#if defined(CONFIG_BUZZER_TYPE_PASSIVE)
+static __attribute__((unused)) void buzzer_init_tone_output(gpio_num_t pin)
+{
+    if (s_num_buzzer_tones >= BUZZER_OUTPUT_COUNT) {
+        return;
+    }
+    rmt_tx_channel_config_t channel_config = {
+        .gpio_num = pin,
+        .clk_src = RMT_CLK_SRC_DEFAULT,
+        .resolution_hz = BUZZER_RMT_RESOLUTION_HZ,
+        .mem_block_symbols = BUZZER_RMT_MEM_SYMBOLS,
+        .trans_queue_depth = 1,
+        .flags.invert_out = (BUZZER_ON_LEVEL == 0),
+    };
+    rmt_channel_handle_t channel = NULL;
+    esp_err_t err = rmt_new_tx_channel(&channel_config, &channel);
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "No RMT channel for passive buzzer on GPIO %d (%s), it will only click", pin, esp_err_to_name(err));
+        return;
+    }
+    rmt_copy_encoder_config_t encoder_config = {};
+    rmt_encoder_handle_t encoder = NULL;
+    err = rmt_new_copy_encoder(&encoder_config, &encoder);
+    if (err == ESP_OK) {
+        err = rmt_enable(channel);
+    }
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to start passive buzzer on GPIO %d: %s", pin, esp_err_to_name(err));
+        if (encoder != NULL) {
+            rmt_del_encoder(encoder);
+        }
+        rmt_del_channel(channel);
+        return;
+    }
+    s_buzzer_tones[s_num_buzzer_tones].pin = pin;
+    s_buzzer_tones[s_num_buzzer_tones].channel = channel;
+    s_buzzer_tones[s_num_buzzer_tones].encoder = encoder;
+    s_num_buzzer_tones++;
+    ESP_LOGI(TAG, "Passive buzzer on GPIO %d driven by RMT square wave", pin);
+}
+#endif
 esp_err_t actuator_manager_init(void)
 {
     ESP_LOGI(TAG, "Initializing Actuators Subsystem (Relay, Servo, DC Motor, Buzzer)...");
@@ -292,15 +421,17 @@ esp_err_t actuator_manager_init(void)
 #else
     s_buzzer_pin = (gpio_num_t)-1;
 #endif
-    if (GPIO_IS_VALID_GPIO(s_buzzer_pin)) {
-        init_output_pin(s_buzzer_pin, "Buzzer Alarm");
-    }
-#endif
 #if defined(CONFIG_BUZZER_EXTRA_PINS)
     s_num_extra_buzzers = parse_extra_gpios(CONFIG_BUZZER_EXTRA_PINS, s_extra_buzzers, MAX_EXTRA_BUZZERS);
-    for (int i = 0; i < s_num_extra_buzzers; i++) {
-        if (GPIO_IS_VALID_GPIO(s_extra_buzzers[i].pin1)) {
-            init_output_pin(s_extra_buzzers[i].pin1, s_extra_buzzers[i].label[0] ? s_extra_buzzers[i].label : "Extra Buzzer");
+#endif
+    {
+        gpio_num_t buzzer_pins[BUZZER_OUTPUT_COUNT];
+        int buzzer_count = buzzer_collect_pins(buzzer_pins);
+        for (int i = 0; i < buzzer_count; i++) {
+            init_output_pin_level(buzzer_pins[i], "Buzzer", !BUZZER_ON_LEVEL);
+#if defined(CONFIG_BUZZER_TYPE_PASSIVE)
+            buzzer_init_tone_output(buzzer_pins[i]);
+#endif
         }
     }
 #endif

@@ -47,7 +47,7 @@ Chọn một trong các cách sau:
 | :--- | :--- |
 | Trợ lý (Assistant) | Ngôn ngữ, địa chỉ OTA, Wake Word, xử lý âm thanh và khử tiếng vọng (AEC) |
 | Màn hình (Display) | Màn hình, cảm ứng, gói tài nguyên giao diện |
-| Âm thanh (Audio) | Loa và micro |
+| Âm thanh (Audio) | Loa và micro; âm thông báo cho từng sự kiện (khởi động, lắng nghe, lỗi, pin yếu...): chọn âm có sẵn, tắt tiếng hoặc tệp `.ogg` riêng (`docs/NOTIFICATION_SOUNDS.md`) |
 | Mạng (Network) | Phương thức cấu hình WiFi, UART mở rộng, module Bluetooth UART, MCP Server |
 | Ngoại vi (Peripherals) | Nút bấm, camera, LED, còi, rung, servo, cảm biến, motor, relay |
 | Nguồn & viễn thông (Power) | Pin, bộ sạc, RTC, NFC, thẻ SD, 4G, hồng ngoại |

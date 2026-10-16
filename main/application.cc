@@ -1,6 +1,7 @@
 #include "application.h"
 #include "assets.h"
 #include "assets/lang_config.h"
+#include "sound_theme.h"
 #include "audio_codec.h"
 #include "board.h"
 #include "display.h"
@@ -149,7 +150,7 @@ void Application::Initialize() {
                 break;
             case NetworkEvent::ModemErrorInitFailed:
                 Alert(Lang::Strings::ERROR, Lang::Strings::MODEM_INIT_ERROR, "warning",
-                      Lang::Sounds::OGG_EXCLAMATION);
+                      SoundTheme::Error());
                 break;
             case NetworkEvent::ModemErrorTimeout:
                 display->SetStatus(Lang::Strings::REGISTERING_NETWORK);
@@ -181,7 +182,7 @@ void Application::Run() {
             }
             SetDeviceState(kDeviceStateIdle);
             Alert(Lang::Strings::ERROR, last_error_message_.c_str(), "cancel",
-                  Lang::Sounds::OGG_EXCLAMATION);
+                  SoundTheme::Error());
         }
 
         if (bits & MAIN_EVENT_NETWORK_CONNECTED) {
@@ -329,7 +330,7 @@ void Application::HandleActivationDoneEvent() {
 
     if (!has_error) {
         Schedule([this]() {
-            audio_service_.PlaySound(Lang::Sounds::OGG_SUCCESS);
+            audio_service_.PlaySound(SoundTheme::Startup());
         });
     }
 }
@@ -369,7 +370,7 @@ void Application::CheckAssetsVersion() {
 
         char message[256];
         snprintf(message, sizeof(message), Lang::Strings::FOUND_NEW_ASSETS, download_url.c_str());
-        Alert(Lang::Strings::LOADING_ASSETS, message, "cloud_download", Lang::Sounds::OGG_UPGRADE);
+        Alert(Lang::Strings::LOADING_ASSETS, message, "cloud_download", SoundTheme::Upgrade());
 
         vTaskDelay(pdMS_TO_TICKS(3000));
         SetDeviceState(kDeviceStateUpgrading);
@@ -390,7 +391,7 @@ void Application::CheckAssetsVersion() {
 
         if (!success) {
             Alert(Lang::Strings::ERROR, Lang::Strings::DOWNLOAD_ASSETS_FAILED, "cancel",
-                  Lang::Sounds::OGG_EXCLAMATION);
+                  SoundTheme::Error());
             vTaskDelay(pdMS_TO_TICKS(2000));
             SetDeviceState(kDeviceStateActivating);
             return;
@@ -437,7 +438,7 @@ void Application::CheckNewVersion() {
                 alert_message_length >= static_cast<int>(sizeof(buffer))) {
                 snprintf(buffer, sizeof(buffer), "%s", err.Message());
             }
-            Alert(Lang::Strings::ERROR, buffer, "cloud_off", Lang::Sounds::OGG_EXCLAMATION);
+            Alert(Lang::Strings::ERROR, buffer, "cloud_off", SoundTheme::Error());
 
             ESP_LOGW(TAG, "Check new version failed, retry in %d seconds (%d/%d)", retry_delay,
                      retry_count, MAX_RETRY);
@@ -659,7 +660,7 @@ void Application::InitializeProtocol() {
             auto emotion = cJSON_GetObjectItem(root, "emotion");
             if (cJSON_IsString(status) && cJSON_IsString(message) && cJSON_IsString(emotion)) {
                 Alert(status->valuestring, message->valuestring, emotion->valuestring,
-                      Lang::Sounds::OGG_VIBRATION);
+                      SoundTheme::Alert());
             } else {
                 ESP_LOGW(TAG, "Alert command requires status, message and emotion");
             }
@@ -696,7 +697,7 @@ void Application::ShowActivationCode(const std::string& code, const std::string&
          digit_sound{'6', Lang::Sounds::OGG_6}, digit_sound{'7', Lang::Sounds::OGG_7},
          digit_sound{'8', Lang::Sounds::OGG_8}, digit_sound{'9', Lang::Sounds::OGG_9}}};
 
-    Alert(Lang::Strings::ACTIVATION, message.c_str(), "link", Lang::Sounds::OGG_ACTIVATION);
+    Alert(Lang::Strings::ACTIVATION, message.c_str(), "link", SoundTheme::Activation());
 
     for (const auto& digit : code) {
         auto it = std::find_if(digit_sounds.begin(), digit_sounds.end(),
@@ -868,7 +869,7 @@ void Application::HandleWakeWordDetectedEvent() {
         if (state == kDeviceStateListening) {
             protocol_->SendStartListening(GetDefaultListeningMode());
             audio_service_.ResetDecoder();
-            audio_service_.PlaySound(Lang::Sounds::OGG_POPUP);
+            audio_service_.PlaySound(SoundTheme::Listening());
             audio_service_.EnableWakeWordDetection(true);
         } else {
             play_popup_on_listening_ = true;
@@ -1000,7 +1001,7 @@ void Application::StartListeningAudio() {
 
     if (play_popup_on_listening_) {
         play_popup_on_listening_ = false;
-        audio_service_.PlaySound(Lang::Sounds::OGG_POPUP);
+        audio_service_.PlaySound(SoundTheme::Listening());
     }
 }
 
@@ -1035,7 +1036,7 @@ void Application::StartNotification(std::string audio_url, std::vector<NotifySub
     if (playback_id == 0) {
         playback_id = ++notification_playback_id_;
     }
-    audio_service_.PlaySound(Lang::Sounds::OGG_POPUP);
+    audio_service_.PlaySound(SoundTheme::Listening());
 
     bool started = notify_player_.Start(
         std::move(audio_url), std::move(subtitles), playback_id,
@@ -1147,7 +1148,7 @@ bool Application::UpgradeFirmware(const std::string& url, const std::string& ver
     ESP_LOGI(TAG, "Starting firmware upgrade from URL: %s", upgrade_url.c_str());
 
     Alert(Lang::Strings::OTA_UPGRADE, Lang::Strings::UPGRADING, "download",
-          Lang::Sounds::OGG_UPGRADE);
+          SoundTheme::Upgrade());
     vTaskDelay(pdMS_TO_TICKS(3000));
 
     SetDeviceState(kDeviceStateUpgrading);
@@ -1173,7 +1174,7 @@ bool Application::UpgradeFirmware(const std::string& url, const std::string& ver
         audio_service_.Start();
         board.SetPowerSaveLevel(PowerSaveLevel::LOW_POWER);
         Alert(Lang::Strings::ERROR, Lang::Strings::UPGRADE_FAILED, "cancel",
-              Lang::Sounds::OGG_EXCLAMATION);
+              SoundTheme::Error());
         vTaskDelay(pdMS_TO_TICKS(3000));
         return false;
     } else {

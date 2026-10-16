@@ -7,6 +7,7 @@
 
 #include "application.h"
 #include "assets/lang_config.h"
+#include "sound_theme.h"
 #include "audio_codec.h"
 #include "board.h"
 #include "dynamic_glyph_cache.h"
@@ -265,7 +266,7 @@ void LvglDisplay::UpdateStatusBar(bool update_all) {
                 if (lv_obj_has_flag(low_battery_popup_,
                                     LV_OBJ_FLAG_HIDDEN)) {
                     lv_obj_remove_flag(low_battery_popup_, LV_OBJ_FLAG_HIDDEN);
-                    app.Schedule([&app]() { app.PlaySound(Lang::Sounds::OGG_LOW_BATTERY); });
+                    app.Schedule([&app]() { app.PlaySound(SoundTheme::LowBattery()); });
                 }
             } else {
                 if (!lv_obj_has_flag(low_battery_popup_,

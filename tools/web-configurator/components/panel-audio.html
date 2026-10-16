@@ -102,4 +102,153 @@
             </div>
           </div>
         </div>
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🔔 Âm thanh thông báo (Notification Sounds)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → Âm thanh thông báo (Notification Sounds)</span>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-item">
+              <label class="form-label" for="kc_SOUND_STARTUP">Khởi động xong (sẵn sàng trò chuyện)</label>
+              <select class="form-control" id="kc_SOUND_STARTUP">
+                <option value="SOUND_STARTUP_POPUP">Popup (tiếng bật ngắn)</option>
+                <option value="SOUND_STARTUP_SUCCESS">Success (chuông thành công) (mặc định)</option>
+                <option value="SOUND_STARTUP_EXCLAMATION">Exclamation (tiếng cảnh báo)</option>
+                <option value="SOUND_STARTUP_VIBRATION">Vibration (tiếng rung)</option>
+                <option value="SOUND_STARTUP_LOW_BATTERY">Low battery (tiếng pin yếu)</option>
+                <option value="SOUND_STARTUP_NONE">Tắt tiếng</option>
+                <option value="SOUND_STARTUP_CUSTOM">Tệp .ogg tùy chỉnh</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="kc_SOUND_STARTUP=SOUND_STARTUP_CUSTOM">
+              <label class="form-label" for="kc_SOUND_STARTUP_CUSTOM_FILE">Tệp .ogg cho: Khởi động xong (sẵn sàng trò chuyện)</label>
+              <input type="text" class="form-control" id="kc_SOUND_STARTUP_CUSTOM_FILE">
+              <div class="form-hint">Đường dẫn tới tệp Ogg Opus, tuyệt đối hoặc tương đối từ thư mục gốc dự án, ví dụ sounds/khoi_dong.ogg.</div>
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_SOUND_LISTENING">Bắt đầu lắng nghe / có thông báo</label>
+              <select class="form-control" id="kc_SOUND_LISTENING">
+                <option value="SOUND_LISTENING_POPUP">Popup (tiếng bật ngắn) (mặc định)</option>
+                <option value="SOUND_LISTENING_SUCCESS">Success (chuông thành công)</option>
+                <option value="SOUND_LISTENING_EXCLAMATION">Exclamation (tiếng cảnh báo)</option>
+                <option value="SOUND_LISTENING_VIBRATION">Vibration (tiếng rung)</option>
+                <option value="SOUND_LISTENING_LOW_BATTERY">Low battery (tiếng pin yếu)</option>
+                <option value="SOUND_LISTENING_NONE">Tắt tiếng</option>
+                <option value="SOUND_LISTENING_CUSTOM">Tệp .ogg tùy chỉnh</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="kc_SOUND_LISTENING=SOUND_LISTENING_CUSTOM">
+              <label class="form-label" for="kc_SOUND_LISTENING_CUSTOM_FILE">Tệp .ogg cho: Bắt đầu lắng nghe / có thông báo</label>
+              <input type="text" class="form-control" id="kc_SOUND_LISTENING_CUSTOM_FILE">
+              <div class="form-hint">Đường dẫn tới tệp Ogg Opus, tuyệt đối hoặc tương đối từ thư mục gốc dự án, ví dụ sounds/khoi_dong.ogg.</div>
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_SOUND_ERROR">Báo lỗi</label>
+              <select class="form-control" id="kc_SOUND_ERROR">
+                <option value="SOUND_ERROR_POPUP">Popup (tiếng bật ngắn)</option>
+                <option value="SOUND_ERROR_SUCCESS">Success (chuông thành công)</option>
+                <option value="SOUND_ERROR_EXCLAMATION">Exclamation (tiếng cảnh báo) (mặc định)</option>
+                <option value="SOUND_ERROR_VIBRATION">Vibration (tiếng rung)</option>
+                <option value="SOUND_ERROR_LOW_BATTERY">Low battery (tiếng pin yếu)</option>
+                <option value="SOUND_ERROR_NONE">Tắt tiếng</option>
+                <option value="SOUND_ERROR_CUSTOM">Tệp .ogg tùy chỉnh</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="kc_SOUND_ERROR=SOUND_ERROR_CUSTOM">
+              <label class="form-label" for="kc_SOUND_ERROR_CUSTOM_FILE">Tệp .ogg cho: Báo lỗi</label>
+              <input type="text" class="form-control" id="kc_SOUND_ERROR_CUSTOM_FILE">
+              <div class="form-hint">Đường dẫn tới tệp Ogg Opus, tuyệt đối hoặc tương đối từ thư mục gốc dự án, ví dụ sounds/khoi_dong.ogg.</div>
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_SOUND_ALERT">Cảnh báo từ máy chủ</label>
+              <select class="form-control" id="kc_SOUND_ALERT">
+                <option value="SOUND_ALERT_POPUP">Popup (tiếng bật ngắn)</option>
+                <option value="SOUND_ALERT_SUCCESS">Success (chuông thành công)</option>
+                <option value="SOUND_ALERT_EXCLAMATION">Exclamation (tiếng cảnh báo)</option>
+                <option value="SOUND_ALERT_VIBRATION">Vibration (tiếng rung) (mặc định)</option>
+                <option value="SOUND_ALERT_LOW_BATTERY">Low battery (tiếng pin yếu)</option>
+                <option value="SOUND_ALERT_NONE">Tắt tiếng</option>
+                <option value="SOUND_ALERT_CUSTOM">Tệp .ogg tùy chỉnh</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="kc_SOUND_ALERT=SOUND_ALERT_CUSTOM">
+              <label class="form-label" for="kc_SOUND_ALERT_CUSTOM_FILE">Tệp .ogg cho: Cảnh báo từ máy chủ</label>
+              <input type="text" class="form-control" id="kc_SOUND_ALERT_CUSTOM_FILE">
+              <div class="form-hint">Đường dẫn tới tệp Ogg Opus, tuyệt đối hoặc tương đối từ thư mục gốc dự án, ví dụ sounds/khoi_dong.ogg.</div>
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_SOUND_LOW_BATTERY">Pin yếu</label>
+              <select class="form-control" id="kc_SOUND_LOW_BATTERY">
+                <option value="SOUND_LOW_BATTERY_POPUP">Popup (tiếng bật ngắn)</option>
+                <option value="SOUND_LOW_BATTERY_SUCCESS">Success (chuông thành công)</option>
+                <option value="SOUND_LOW_BATTERY_EXCLAMATION">Exclamation (tiếng cảnh báo)</option>
+                <option value="SOUND_LOW_BATTERY_VIBRATION">Vibration (tiếng rung)</option>
+                <option value="SOUND_LOW_BATTERY_LOW_BATTERY">Low battery (tiếng pin yếu) (mặc định)</option>
+                <option value="SOUND_LOW_BATTERY_NONE">Tắt tiếng</option>
+                <option value="SOUND_LOW_BATTERY_CUSTOM">Tệp .ogg tùy chỉnh</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="kc_SOUND_LOW_BATTERY=SOUND_LOW_BATTERY_CUSTOM">
+              <label class="form-label" for="kc_SOUND_LOW_BATTERY_CUSTOM_FILE">Tệp .ogg cho: Pin yếu</label>
+              <input type="text" class="form-control" id="kc_SOUND_LOW_BATTERY_CUSTOM_FILE">
+              <div class="form-hint">Đường dẫn tới tệp Ogg Opus, tuyệt đối hoặc tương đối từ thư mục gốc dự án, ví dụ sounds/khoi_dong.ogg.</div>
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_SOUND_WIFI_CONFIG">Vào chế độ cấu hình Wi-Fi</label>
+              <select class="form-control" id="kc_SOUND_WIFI_CONFIG">
+                <option value="SOUND_WIFI_CONFIG_VOICE">Giọng nói «cấu hình Wi-Fi» theo ngôn ngữ (mặc định)</option>
+                <option value="SOUND_WIFI_CONFIG_POPUP">Popup (tiếng bật ngắn)</option>
+                <option value="SOUND_WIFI_CONFIG_SUCCESS">Success (chuông thành công)</option>
+                <option value="SOUND_WIFI_CONFIG_EXCLAMATION">Exclamation (tiếng cảnh báo)</option>
+                <option value="SOUND_WIFI_CONFIG_VIBRATION">Vibration (tiếng rung)</option>
+                <option value="SOUND_WIFI_CONFIG_LOW_BATTERY">Low battery (tiếng pin yếu)</option>
+                <option value="SOUND_WIFI_CONFIG_NONE">Tắt tiếng</option>
+                <option value="SOUND_WIFI_CONFIG_CUSTOM">Tệp .ogg tùy chỉnh</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="kc_SOUND_WIFI_CONFIG=SOUND_WIFI_CONFIG_CUSTOM">
+              <label class="form-label" for="kc_SOUND_WIFI_CONFIG_CUSTOM_FILE">Tệp .ogg cho: Vào chế độ cấu hình Wi-Fi</label>
+              <input type="text" class="form-control" id="kc_SOUND_WIFI_CONFIG_CUSTOM_FILE">
+              <div class="form-hint">Đường dẫn tới tệp Ogg Opus, tuyệt đối hoặc tương đối từ thư mục gốc dự án, ví dụ sounds/khoi_dong.ogg.</div>
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_SOUND_ACTIVATION">Đọc mã kích hoạt</label>
+              <select class="form-control" id="kc_SOUND_ACTIVATION">
+                <option value="SOUND_ACTIVATION_VOICE">Giọng nói «kích hoạt» theo ngôn ngữ (mặc định)</option>
+                <option value="SOUND_ACTIVATION_POPUP">Popup (tiếng bật ngắn)</option>
+                <option value="SOUND_ACTIVATION_SUCCESS">Success (chuông thành công)</option>
+                <option value="SOUND_ACTIVATION_EXCLAMATION">Exclamation (tiếng cảnh báo)</option>
+                <option value="SOUND_ACTIVATION_VIBRATION">Vibration (tiếng rung)</option>
+                <option value="SOUND_ACTIVATION_LOW_BATTERY">Low battery (tiếng pin yếu)</option>
+                <option value="SOUND_ACTIVATION_NONE">Tắt tiếng</option>
+                <option value="SOUND_ACTIVATION_CUSTOM">Tệp .ogg tùy chỉnh</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="kc_SOUND_ACTIVATION=SOUND_ACTIVATION_CUSTOM">
+              <label class="form-label" for="kc_SOUND_ACTIVATION_CUSTOM_FILE">Tệp .ogg cho: Đọc mã kích hoạt</label>
+              <input type="text" class="form-control" id="kc_SOUND_ACTIVATION_CUSTOM_FILE">
+              <div class="form-hint">Đường dẫn tới tệp Ogg Opus, tuyệt đối hoặc tương đối từ thư mục gốc dự án, ví dụ sounds/khoi_dong.ogg.</div>
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="kc_SOUND_UPGRADE">Nâng cấp / tải tài nguyên</label>
+              <select class="form-control" id="kc_SOUND_UPGRADE">
+                <option value="SOUND_UPGRADE_VOICE">Giọng nói «nâng cấp» theo ngôn ngữ (mặc định)</option>
+                <option value="SOUND_UPGRADE_POPUP">Popup (tiếng bật ngắn)</option>
+                <option value="SOUND_UPGRADE_SUCCESS">Success (chuông thành công)</option>
+                <option value="SOUND_UPGRADE_EXCLAMATION">Exclamation (tiếng cảnh báo)</option>
+                <option value="SOUND_UPGRADE_VIBRATION">Vibration (tiếng rung)</option>
+                <option value="SOUND_UPGRADE_LOW_BATTERY">Low battery (tiếng pin yếu)</option>
+                <option value="SOUND_UPGRADE_NONE">Tắt tiếng</option>
+                <option value="SOUND_UPGRADE_CUSTOM">Tệp .ogg tùy chỉnh</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="kc_SOUND_UPGRADE=SOUND_UPGRADE_CUSTOM">
+              <label class="form-label" for="kc_SOUND_UPGRADE_CUSTOM_FILE">Tệp .ogg cho: Nâng cấp / tải tài nguyên</label>
+              <input type="text" class="form-control" id="kc_SOUND_UPGRADE_CUSTOM_FILE">
+              <div class="form-hint">Đường dẫn tới tệp Ogg Opus, tuyệt đối hoặc tương đối từ thư mục gốc dự án, ví dụ sounds/khoi_dong.ogg.</div>
+            </div>
+          </div>
+        </div>
 </section>

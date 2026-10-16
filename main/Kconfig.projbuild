@@ -361,6 +361,244 @@ menu "Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC
             khối, không cần chỉnh tay. Micro trễ thêm khoảng một khối DMA (20-40 ms).
 endmenu
 
+menu "Âm thanh thông báo (Notification Sounds)"
+    help
+        Chọn âm phát ra cho từng sự kiện: âm có sẵn, tắt tiếng, hoặc tệp .ogg của bạn.
+        Tệp tùy chỉnh phải là Ogg Opus (khuyên dùng mono, 16 kHz, khung 60 ms), tối đa 1 MB.
+        Đường dẫn tương đối tính từ thư mục gốc dự án. Xem docs/NOTIFICATION_SOUNDS.md.
+
+    choice SOUND_STARTUP
+        prompt "Khởi động xong (sẵn sàng trò chuyện)"
+        default SOUND_STARTUP_SUCCESS
+
+        config SOUND_STARTUP_POPUP
+            bool "Popup (tiếng bật ngắn)"
+        config SOUND_STARTUP_SUCCESS
+            bool "Success (chuông thành công) (mặc định)"
+        config SOUND_STARTUP_EXCLAMATION
+            bool "Exclamation (tiếng cảnh báo)"
+        config SOUND_STARTUP_VIBRATION
+            bool "Vibration (tiếng rung)"
+        config SOUND_STARTUP_LOW_BATTERY
+            bool "Low battery (tiếng pin yếu)"
+        config SOUND_STARTUP_NONE
+            bool "Tắt tiếng"
+        config SOUND_STARTUP_CUSTOM
+            bool "Tệp .ogg tùy chỉnh"
+    endchoice
+
+    config SOUND_STARTUP_CUSTOM_FILE
+        string "Tệp .ogg cho: Khởi động xong (sẵn sàng trò chuyện)"
+        depends on SOUND_STARTUP_CUSTOM
+        default ""
+        help
+            Đường dẫn tới tệp Ogg Opus, tuyệt đối hoặc tương đối từ thư mục gốc dự án,
+            ví dụ sounds/khoi_dong.ogg. Dùng dấu / để ngăn cách thư mục.
+
+    choice SOUND_LISTENING
+        prompt "Bắt đầu lắng nghe / có thông báo"
+        default SOUND_LISTENING_POPUP
+
+        config SOUND_LISTENING_POPUP
+            bool "Popup (tiếng bật ngắn) (mặc định)"
+        config SOUND_LISTENING_SUCCESS
+            bool "Success (chuông thành công)"
+        config SOUND_LISTENING_EXCLAMATION
+            bool "Exclamation (tiếng cảnh báo)"
+        config SOUND_LISTENING_VIBRATION
+            bool "Vibration (tiếng rung)"
+        config SOUND_LISTENING_LOW_BATTERY
+            bool "Low battery (tiếng pin yếu)"
+        config SOUND_LISTENING_NONE
+            bool "Tắt tiếng"
+        config SOUND_LISTENING_CUSTOM
+            bool "Tệp .ogg tùy chỉnh"
+    endchoice
+
+    config SOUND_LISTENING_CUSTOM_FILE
+        string "Tệp .ogg cho: Bắt đầu lắng nghe / có thông báo"
+        depends on SOUND_LISTENING_CUSTOM
+        default ""
+        help
+            Đường dẫn tới tệp Ogg Opus, tuyệt đối hoặc tương đối từ thư mục gốc dự án,
+            ví dụ sounds/khoi_dong.ogg. Dùng dấu / để ngăn cách thư mục.
+
+    choice SOUND_ERROR
+        prompt "Báo lỗi"
+        default SOUND_ERROR_EXCLAMATION
+
+        config SOUND_ERROR_POPUP
+            bool "Popup (tiếng bật ngắn)"
+        config SOUND_ERROR_SUCCESS
+            bool "Success (chuông thành công)"
+        config SOUND_ERROR_EXCLAMATION
+            bool "Exclamation (tiếng cảnh báo) (mặc định)"
+        config SOUND_ERROR_VIBRATION
+            bool "Vibration (tiếng rung)"
+        config SOUND_ERROR_LOW_BATTERY
+            bool "Low battery (tiếng pin yếu)"
+        config SOUND_ERROR_NONE
+            bool "Tắt tiếng"
+        config SOUND_ERROR_CUSTOM
+            bool "Tệp .ogg tùy chỉnh"
+    endchoice
+
+    config SOUND_ERROR_CUSTOM_FILE
+        string "Tệp .ogg cho: Báo lỗi"
+        depends on SOUND_ERROR_CUSTOM
+        default ""
+        help
+            Đường dẫn tới tệp Ogg Opus, tuyệt đối hoặc tương đối từ thư mục gốc dự án,
+            ví dụ sounds/khoi_dong.ogg. Dùng dấu / để ngăn cách thư mục.
+
+    choice SOUND_ALERT
+        prompt "Cảnh báo từ máy chủ"
+        default SOUND_ALERT_VIBRATION
+
+        config SOUND_ALERT_POPUP
+            bool "Popup (tiếng bật ngắn)"
+        config SOUND_ALERT_SUCCESS
+            bool "Success (chuông thành công)"
+        config SOUND_ALERT_EXCLAMATION
+            bool "Exclamation (tiếng cảnh báo)"
+        config SOUND_ALERT_VIBRATION
+            bool "Vibration (tiếng rung) (mặc định)"
+        config SOUND_ALERT_LOW_BATTERY
+            bool "Low battery (tiếng pin yếu)"
+        config SOUND_ALERT_NONE
+            bool "Tắt tiếng"
+        config SOUND_ALERT_CUSTOM
+            bool "Tệp .ogg tùy chỉnh"
+    endchoice
+
+    config SOUND_ALERT_CUSTOM_FILE
+        string "Tệp .ogg cho: Cảnh báo từ máy chủ"
+        depends on SOUND_ALERT_CUSTOM
+        default ""
+        help
+            Đường dẫn tới tệp Ogg Opus, tuyệt đối hoặc tương đối từ thư mục gốc dự án,
+            ví dụ sounds/khoi_dong.ogg. Dùng dấu / để ngăn cách thư mục.
+
+    choice SOUND_LOW_BATTERY
+        prompt "Pin yếu"
+        default SOUND_LOW_BATTERY_LOW_BATTERY
+
+        config SOUND_LOW_BATTERY_POPUP
+            bool "Popup (tiếng bật ngắn)"
+        config SOUND_LOW_BATTERY_SUCCESS
+            bool "Success (chuông thành công)"
+        config SOUND_LOW_BATTERY_EXCLAMATION
+            bool "Exclamation (tiếng cảnh báo)"
+        config SOUND_LOW_BATTERY_VIBRATION
+            bool "Vibration (tiếng rung)"
+        config SOUND_LOW_BATTERY_LOW_BATTERY
+            bool "Low battery (tiếng pin yếu) (mặc định)"
+        config SOUND_LOW_BATTERY_NONE
+            bool "Tắt tiếng"
+        config SOUND_LOW_BATTERY_CUSTOM
+            bool "Tệp .ogg tùy chỉnh"
+    endchoice
+
+    config SOUND_LOW_BATTERY_CUSTOM_FILE
+        string "Tệp .ogg cho: Pin yếu"
+        depends on SOUND_LOW_BATTERY_CUSTOM
+        default ""
+        help
+            Đường dẫn tới tệp Ogg Opus, tuyệt đối hoặc tương đối từ thư mục gốc dự án,
+            ví dụ sounds/khoi_dong.ogg. Dùng dấu / để ngăn cách thư mục.
+
+    choice SOUND_WIFI_CONFIG
+        prompt "Vào chế độ cấu hình Wi-Fi"
+        default SOUND_WIFI_CONFIG_VOICE
+
+        config SOUND_WIFI_CONFIG_VOICE
+            bool "Giọng nói «cấu hình Wi-Fi» theo ngôn ngữ (mặc định)"
+        config SOUND_WIFI_CONFIG_POPUP
+            bool "Popup (tiếng bật ngắn)"
+        config SOUND_WIFI_CONFIG_SUCCESS
+            bool "Success (chuông thành công)"
+        config SOUND_WIFI_CONFIG_EXCLAMATION
+            bool "Exclamation (tiếng cảnh báo)"
+        config SOUND_WIFI_CONFIG_VIBRATION
+            bool "Vibration (tiếng rung)"
+        config SOUND_WIFI_CONFIG_LOW_BATTERY
+            bool "Low battery (tiếng pin yếu)"
+        config SOUND_WIFI_CONFIG_NONE
+            bool "Tắt tiếng"
+        config SOUND_WIFI_CONFIG_CUSTOM
+            bool "Tệp .ogg tùy chỉnh"
+    endchoice
+
+    config SOUND_WIFI_CONFIG_CUSTOM_FILE
+        string "Tệp .ogg cho: Vào chế độ cấu hình Wi-Fi"
+        depends on SOUND_WIFI_CONFIG_CUSTOM
+        default ""
+        help
+            Đường dẫn tới tệp Ogg Opus, tuyệt đối hoặc tương đối từ thư mục gốc dự án,
+            ví dụ sounds/khoi_dong.ogg. Dùng dấu / để ngăn cách thư mục.
+
+    choice SOUND_ACTIVATION
+        prompt "Đọc mã kích hoạt"
+        default SOUND_ACTIVATION_VOICE
+
+        config SOUND_ACTIVATION_VOICE
+            bool "Giọng nói «kích hoạt» theo ngôn ngữ (mặc định)"
+        config SOUND_ACTIVATION_POPUP
+            bool "Popup (tiếng bật ngắn)"
+        config SOUND_ACTIVATION_SUCCESS
+            bool "Success (chuông thành công)"
+        config SOUND_ACTIVATION_EXCLAMATION
+            bool "Exclamation (tiếng cảnh báo)"
+        config SOUND_ACTIVATION_VIBRATION
+            bool "Vibration (tiếng rung)"
+        config SOUND_ACTIVATION_LOW_BATTERY
+            bool "Low battery (tiếng pin yếu)"
+        config SOUND_ACTIVATION_NONE
+            bool "Tắt tiếng"
+        config SOUND_ACTIVATION_CUSTOM
+            bool "Tệp .ogg tùy chỉnh"
+    endchoice
+
+    config SOUND_ACTIVATION_CUSTOM_FILE
+        string "Tệp .ogg cho: Đọc mã kích hoạt"
+        depends on SOUND_ACTIVATION_CUSTOM
+        default ""
+        help
+            Đường dẫn tới tệp Ogg Opus, tuyệt đối hoặc tương đối từ thư mục gốc dự án,
+            ví dụ sounds/khoi_dong.ogg. Dùng dấu / để ngăn cách thư mục.
+
+    choice SOUND_UPGRADE
+        prompt "Nâng cấp / tải tài nguyên"
+        default SOUND_UPGRADE_VOICE
+
+        config SOUND_UPGRADE_VOICE
+            bool "Giọng nói «nâng cấp» theo ngôn ngữ (mặc định)"
+        config SOUND_UPGRADE_POPUP
+            bool "Popup (tiếng bật ngắn)"
+        config SOUND_UPGRADE_SUCCESS
+            bool "Success (chuông thành công)"
+        config SOUND_UPGRADE_EXCLAMATION
+            bool "Exclamation (tiếng cảnh báo)"
+        config SOUND_UPGRADE_VIBRATION
+            bool "Vibration (tiếng rung)"
+        config SOUND_UPGRADE_LOW_BATTERY
+            bool "Low battery (tiếng pin yếu)"
+        config SOUND_UPGRADE_NONE
+            bool "Tắt tiếng"
+        config SOUND_UPGRADE_CUSTOM
+            bool "Tệp .ogg tùy chỉnh"
+    endchoice
+
+    config SOUND_UPGRADE_CUSTOM_FILE
+        string "Tệp .ogg cho: Nâng cấp / tải tài nguyên"
+        depends on SOUND_UPGRADE_CUSTOM
+        default ""
+        help
+            Đường dẫn tới tệp Ogg Opus, tuyệt đối hoặc tương đối từ thư mục gốc dự án,
+            ví dụ sounds/khoi_dong.ogg. Dùng dấu / để ngăn cách thư mục.
+
+endmenu
+
 config USE_AUDIO_DEBUGGER
     bool "Enable Audio Debugger"
     default n
@@ -2430,6 +2668,28 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                 Kích hoạt âm báo Buzzer trên chân GPIO 41.
 
         if ENABLE_BUZZER
+            choice BUZZER_TYPE
+                prompt "Loại còi"
+                default BUZZER_TYPE_ACTIVE
+                help
+                    Còi chủ động (active) có mạch dao động bên trong: cấp điện là kêu, không chỉnh được tần số.
+                    Còi thụ động (passive) chỉ là màng loa: cần xung vuông theo tần số, cấp điện một chiều chỉ nghe "tách".
+                    Phân biệt: cấp 3,3-5 V trực tiếp, kêu liên tục là chủ động; chỉ tách một tiếng là thụ động.
+                    Còi chủ động thường có nhãn dán và đáy bịt kín; còi thụ động thường lộ bo mạch ở đáy.
+
+                config BUZZER_TYPE_ACTIVE
+                    bool "Còi chủ động (Active, cấp điện là kêu)"
+                config BUZZER_TYPE_PASSIVE
+                    bool "Còi thụ động (Passive, phát xung theo tần số qua RMT)"
+            endchoice
+
+            config BUZZER_ACTIVE_LOW
+                bool "Module kích mức thấp (LOW = kêu)"
+                default n
+                help
+                    Bật khi module còi có transistor PNP hoặc ghi "low level trigger": chân ở mức 0 thì còi kêu.
+                    Chân còi được giữ ở mức tắt ngay khi khởi động.
+
             config BUZZER_EXTRA_PINS
                 string "Các chân GPIO Còi thêm (cách nhau dấu phẩy)"
                 default ""

@@ -598,6 +598,17 @@
               <div class="form-hint">Kích hoạt âm báo Buzzer trên chân GPIO 41.</div>
             </div>
             <div class="form-item" data-show-if="buzzer_enable">
+              <label class="form-label" for="kc_BUZZER_TYPE">Loại còi</label>
+              <select class="form-control" id="kc_BUZZER_TYPE">
+                <option value="BUZZER_TYPE_ACTIVE">Còi chủ động (Active, cấp điện là kêu)</option>
+                <option value="BUZZER_TYPE_PASSIVE">Còi thụ động (Passive, phát xung theo tần số qua RMT)</option>
+              </select>
+            </div>
+            <div class="form-item span-2" data-show-if="buzzer_enable">
+              <label class="form-checkbox"><input type="checkbox" id="kc_BUZZER_ACTIVE_LOW"><span>Module kích mức thấp (LOW = kêu)</span></label>
+              <div class="form-hint">Bật khi module còi có transistor PNP hoặc ghi &quot;low level trigger&quot;: chân ở mức 0 thì còi kêu.</div>
+            </div>
+            <div class="form-item" data-show-if="buzzer_enable">
               <label class="form-label" for="kc_BUZZER_EXTRA_PINS">Các chân GPIO Còi thêm (cách nhau dấu phẩy)</label>
               <input type="text" class="form-control" id="kc_BUZZER_EXTRA_PINS">
             </div>

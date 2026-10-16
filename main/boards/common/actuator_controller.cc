@@ -67,9 +67,16 @@ ActuatorController::ActuatorController() {
 
 #if defined(CONFIG_ENABLE_BUZZER)
   if (actuator_has_buzzer()) {
+#if defined(CONFIG_BUZZER_TYPE_PASSIVE)
+    constexpr const char *kBeepDescription =
+        "Play a buzzer tone with the specified frequency and duration";
+#else
+    constexpr const char *kBeepDescription =
+        "Play a buzzer beep for the specified duration; the buzzer has a fixed pitch, so frequency_hz has no effect";
+#endif
     mcp_server.AddTool(
         "self.actuator.beep",
-        "Play a buzzer alarm or beep sound with specified frequency and duration",
+        kBeepDescription,
         PropertyList(
             {Property("duration_ms", kPropertyTypeInteger, 100, 10, 5000),
              Property("frequency_hz", kPropertyTypeInteger, 2000, 100, 10000)}),
