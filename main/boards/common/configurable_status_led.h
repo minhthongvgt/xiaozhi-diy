@@ -381,11 +381,11 @@ public:
                 Breathe({0, 0, 0}, color, 30);
                 break;
             case StatusLedEffect::kRainbow:
-                CircularStrip::SetBrightness(level, static_cast<uint8_t>(level / 8));
+                SetBrightnessLevels(level, static_cast<uint8_t>(level / 8));
                 Rainbow(speed);
                 break;
             case StatusLedEffect::kRainbowChase:
-                CircularStrip::SetBrightness(level, static_cast<uint8_t>(level / 8));
+                SetBrightnessLevels(level, static_cast<uint8_t>(level / 8));
                 RainbowChase(speed);
                 break;
             case StatusLedEffect::kScroll:

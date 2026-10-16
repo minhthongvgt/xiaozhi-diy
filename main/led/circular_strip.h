@@ -57,6 +57,8 @@ public:
     void SetCustomMode(bool custom) override { custom_mode_ = custom; }
     bool IsCustomMode() const override { return custom_mode_; }
     std::string GetType() const override { return "CircularStrip"; }
+protected:
+    void SetBrightnessLevels(uint8_t default_brightness, uint8_t low_brightness);
 private:
     std::mutex mutex_;
     led_strip_handle_t led_strip_ = nullptr;

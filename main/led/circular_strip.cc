@@ -442,9 +442,13 @@ void CircularStrip::StartStripTask(int interval_ms, std::function<void()> cb) {
     esp_timer_start_periodic(strip_timer_, interval_ms * 1000);
 }
 
-void CircularStrip::SetBrightness(uint8_t default_brightness, uint8_t low_brightness) {
+void CircularStrip::SetBrightnessLevels(uint8_t default_brightness, uint8_t low_brightness) {
     default_brightness_ = default_brightness;
     low_brightness_ = low_brightness;
+}
+
+void CircularStrip::SetBrightness(uint8_t default_brightness, uint8_t low_brightness) {
+    SetBrightnessLevels(default_brightness, low_brightness);
     if (!custom_mode_) {
         OnStateChanged();
     } else {
