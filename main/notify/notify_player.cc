@@ -15,7 +15,8 @@ namespace {
 constexpr int kHttpTimeoutMs = 5000;
 constexpr size_t kHttpReadBufferSize = 1024;
 constexpr uint32_t kNotifyTaskStackSize = 6144;
-constexpr UBaseType_t kNotifyTaskPriority = 10;
+constexpr UBaseType_t kNotifyTaskPriority = 4;
+constexpr BaseType_t kNotifyTaskCore = 0;
 const char* TAG = "NotifyPlayer";
 
 bool IsSupportedUrl(const std::string& url) {
@@ -63,7 +64,7 @@ bool NotifyPlayer::Start(std::string audio_url, std::vector<NotifySubtitle> subt
     }
 
     BaseType_t created = xTaskCreatePinnedToCore(WorkerEntry, "notify_http", kNotifyTaskStackSize, this,
-                                     kNotifyTaskPriority, &task_handle_, 1);
+                                     kNotifyTaskPriority, &task_handle_, kNotifyTaskCore);
     if (created != pdPASS) {
         ESP_LOGE(TAG, "Failed to create notification HTTP task");
         std::lock_guard<std::mutex> lock(mutex_);
