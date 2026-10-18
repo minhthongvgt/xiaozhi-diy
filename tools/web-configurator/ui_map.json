@@ -377,5 +377,5 @@
  "exclude": [
   "BOARD_TYPE"
  ],
- "_exclude_reason": "BOARD_TYPE: Web Configurator chỉ sinh cấu hình cho ESP32-S3 N16R8 (2 board còn lại cần target ESP32-P4)."
+ "_exclude_reason": "BOARD_TYPE: Web Configurator chỉ ghi board ESP32-S3 N16R8; board ESP32-P4 chọn ở ô \"Thiết bị đích\" của tab Biên dịch (build riêng trong build_p4)."
 }

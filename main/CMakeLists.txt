@@ -160,6 +160,7 @@ set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${BOARD_CONFIG_F
 
 set(BOARD_TYPE "")
 set(BOARD_MANUFACTURER "")
+set(BOARD_TARGET "")
 if(EXISTS "${BOARD_CONFIG_FILE}")
     file(READ "${BOARD_CONFIG_FILE}" BOARD_CONFIG_JSON)
     string(REGEX MATCH "\"type\"[ \t\r\n]*:[ \t\r\n]*\"([^\"]+)\"" BOARD_TYPE_MATCH "${BOARD_CONFIG_JSON}")
@@ -169,6 +170,20 @@ if(EXISTS "${BOARD_CONFIG_FILE}")
     string(REGEX MATCH "\"manufacturer\"[ \t\r\n]*:[ \t\r\n]*\"([^\"]+)\"" BOARD_MANUFACTURER_MATCH "${BOARD_CONFIG_JSON}")
     if(BOARD_MANUFACTURER_MATCH)
         set(BOARD_MANUFACTURER "${CMAKE_MATCH_1}")
+    endif()
+    string(REGEX MATCH "\"target\"[ \t\r\n]*:[ \t\r\n]*\"([^\"]+)\"" BOARD_TARGET_MATCH "${BOARD_CONFIG_JSON}")
+    if(BOARD_TARGET_MATCH)
+        set(BOARD_TARGET "${CMAKE_MATCH_1}")
+    endif()
+endif()
+if(NOT CMAKE_BUILD_EARLY_EXPANSION AND BOARD_TARGET)
+    idf_build_get_property(BUILD_IDF_TARGET IDF_TARGET)
+    if(NOT BOARD_TARGET STREQUAL BUILD_IDF_TARGET)
+        message(FATAL_ERROR
+            "Board '${BOARD_DIR}' needs target ${BOARD_TARGET}, but this build uses ${BUILD_IDF_TARGET}. "
+            "Pick a ${BUILD_IDF_TARGET} board in menuconfig (Target Board), or switch target: "
+            "ESP32-P4 -> 03-build_esp32p4.bat (build_p4), ESP32-S3 -> 02-build_esp32s3.bat."
+        )
     endif()
 endif()
 if(NOT BOARD_TYPE)

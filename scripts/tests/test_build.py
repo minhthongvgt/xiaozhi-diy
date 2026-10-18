@@ -371,13 +371,12 @@ class BoardMenuTests(unittest.TestCase):
         )[0]
         entries = re.findall(
             r'^    config (BOARD_TYPE_[A-Za-z0-9_]+)\n'
-            r'        bool "([^"]+)"\n'
-            r'        depends on (IDF_TARGET_[A-Za-z0-9_]+)$',
+            r'        bool "([^"]+)"$',
             choice,
             re.MULTILINE,
         )
-        symbols = [symbol for symbol, _, _ in entries]
-        labels = [label for _, label, _ in entries]
+        symbols = [symbol for symbol, _ in entries]
+        labels = [label for _, label in entries]
 
         self.assertEqual(len(symbols), len(set(symbols)))
         self.assertEqual(len(labels), len(set(labels)))
@@ -421,7 +420,14 @@ class BoardMenuTests(unittest.TestCase):
             "default BOARD_TYPE_ESP32_S3_N16R8_CUSTOM",
             choice,
         )
-        self.assertIn("depends on IDF_TARGET_ESP32S3", choice)
+        self.assertIn(
+            "default BOARD_TYPE_GUITION_ESP32_P4_M3_DEV if IDF_TARGET_ESP32P4",
+            choice,
+        )
+        self.assertNotIn("depends on IDF_TARGET", choice)
+        cmake = (ROOT / "main/CMakeLists.txt").read_text(encoding="utf-8")
+        self.assertIn("idf_build_get_property(BUILD_IDF_TARGET IDF_TARGET)", cmake)
+        self.assertIn("NOT BOARD_TARGET STREQUAL BUILD_IDF_TARGET", cmake)
 
 
 class InvalidConfigTests(unittest.TestCase):

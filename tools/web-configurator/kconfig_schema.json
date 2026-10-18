@@ -979,14 +979,15 @@
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT",
    "order": 431,
-   "prompt": "Khởi động: hiệu ứng",
+   "prompt": "Hiệu ứng",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
    ],
    "depends": [
     "and",
@@ -1019,27 +1020,131 @@
     "CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_FAST",
     "CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_SLOW",
     "CUSTOM_LED_STATE_STARTING_EFFECT_BREATHE",
-    "CUSTOM_LED_STATE_STARTING_EFFECT_RAINBOW",
     "CUSTOM_LED_STATE_STARTING_EFFECT_SCROLL",
     "CUSTOM_LED_STATE_STARTING_EFFECT_SCANNER",
     "CUSTOM_LED_STATE_STARTING_EFFECT_WIPE",
-    "CUSTOM_LED_STATE_STARTING_EFFECT_RAINBOW_CHASE",
     "CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_BAR",
     "CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_MIRROR",
     "CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_PULSE"
    ]
   },
   {
-   "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT",
-   "order": 447,
-   "prompt": "Cấu hình WiFi: hiệu ứng",
+   "name": "CUSTOM_LED_STATE_STARTING_COLOR_SOURCE",
+   "order": 444,
+   "prompt": "Màu",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
+   ],
+   "depends": [
+    "and",
+    [
+     "and",
+     [
+      "or",
+      "CUSTOM_LED_WS2812",
+      "CUSTOM_LED_CIRCULAR_STRIP"
+     ],
+     [
+      "not",
+      "CUSTOM_LED_STATE_STARTING_EFFECT_OFF"
+     ]
+    ],
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_FIXED",
+     "y"
+    ]
+   ],
+   "members": [
+    "CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_FIXED",
+    "CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_RAINBOW"
+   ]
+  },
+  {
+   "name": "CUSTOM_LED_STATE_STARTING_RAINBOW_MODE",
+   "order": 448,
+   "prompt": "Cách chạy cầu vồng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
+   ],
+   "depends": [
+    "and",
+    "CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_RAINBOW",
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "CUSTOM_LED_STATE_STARTING_RAINBOW_MODE_WHOLE",
+     "y"
+    ]
+   ],
+   "members": [
+    "CUSTOM_LED_STATE_STARTING_RAINBOW_MODE_WHOLE",
+    "CUSTOM_LED_STATE_STARTING_RAINBOW_MODE_CHASE"
+   ]
+  },
+  {
+   "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT",
+   "order": 452,
+   "prompt": "Hiệu ứng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
    ],
    "depends": [
     "and",
@@ -1072,27 +1177,131 @@
     "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_FAST",
     "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_SLOW",
     "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BREATHE",
-    "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_RAINBOW",
     "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_SCROLL",
     "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_SCANNER",
     "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_WIPE",
-    "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_RAINBOW_CHASE",
     "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_BAR",
     "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_MIRROR",
     "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_PULSE"
    ]
   },
   {
-   "name": "CUSTOM_LED_STATE_IDLE_EFFECT",
-   "order": 463,
-   "prompt": "Chờ: hiệu ứng",
+   "name": "CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE",
+   "order": 465,
+   "prompt": "Màu",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
+   ],
+   "depends": [
+    "and",
+    [
+     "and",
+     [
+      "or",
+      "CUSTOM_LED_WS2812",
+      "CUSTOM_LED_CIRCULAR_STRIP"
+     ],
+     [
+      "not",
+      "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_OFF"
+     ]
+    ],
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_FIXED",
+     "y"
+    ]
+   ],
+   "members": [
+    "CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_FIXED",
+    "CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_RAINBOW"
+   ]
+  },
+  {
+   "name": "CUSTOM_LED_STATE_WIFI_CONFIG_RAINBOW_MODE",
+   "order": 469,
+   "prompt": "Cách chạy cầu vồng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
+   ],
+   "depends": [
+    "and",
+    "CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_RAINBOW",
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "CUSTOM_LED_STATE_WIFI_CONFIG_RAINBOW_MODE_WHOLE",
+     "y"
+    ]
+   ],
+   "members": [
+    "CUSTOM_LED_STATE_WIFI_CONFIG_RAINBOW_MODE_WHOLE",
+    "CUSTOM_LED_STATE_WIFI_CONFIG_RAINBOW_MODE_CHASE"
+   ]
+  },
+  {
+   "name": "CUSTOM_LED_STATE_IDLE_EFFECT",
+   "order": 473,
+   "prompt": "Hiệu ứng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
    ],
    "depends": [
     "and",
@@ -1125,27 +1334,131 @@
     "CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_FAST",
     "CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_SLOW",
     "CUSTOM_LED_STATE_IDLE_EFFECT_BREATHE",
-    "CUSTOM_LED_STATE_IDLE_EFFECT_RAINBOW",
     "CUSTOM_LED_STATE_IDLE_EFFECT_SCROLL",
     "CUSTOM_LED_STATE_IDLE_EFFECT_SCANNER",
     "CUSTOM_LED_STATE_IDLE_EFFECT_WIPE",
-    "CUSTOM_LED_STATE_IDLE_EFFECT_RAINBOW_CHASE",
     "CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_BAR",
     "CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_MIRROR",
     "CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_PULSE"
    ]
   },
   {
-   "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT",
-   "order": 479,
-   "prompt": "Đang kết nối: hiệu ứng",
+   "name": "CUSTOM_LED_STATE_IDLE_COLOR_SOURCE",
+   "order": 486,
+   "prompt": "Màu",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
+   ],
+   "depends": [
+    "and",
+    [
+     "and",
+     [
+      "or",
+      "CUSTOM_LED_WS2812",
+      "CUSTOM_LED_CIRCULAR_STRIP"
+     ],
+     [
+      "not",
+      "CUSTOM_LED_STATE_IDLE_EFFECT_OFF"
+     ]
+    ],
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_FIXED",
+     "y"
+    ]
+   ],
+   "members": [
+    "CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_FIXED",
+    "CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_RAINBOW"
+   ]
+  },
+  {
+   "name": "CUSTOM_LED_STATE_IDLE_RAINBOW_MODE",
+   "order": 490,
+   "prompt": "Cách chạy cầu vồng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
+   ],
+   "depends": [
+    "and",
+    "CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_RAINBOW",
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "CUSTOM_LED_STATE_IDLE_RAINBOW_MODE_WHOLE",
+     "y"
+    ]
+   ],
+   "members": [
+    "CUSTOM_LED_STATE_IDLE_RAINBOW_MODE_WHOLE",
+    "CUSTOM_LED_STATE_IDLE_RAINBOW_MODE_CHASE"
+   ]
+  },
+  {
+   "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT",
+   "order": 494,
+   "prompt": "Hiệu ứng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
    ],
    "depends": [
     "and",
@@ -1178,27 +1491,131 @@
     "CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_FAST",
     "CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_SLOW",
     "CUSTOM_LED_STATE_CONNECTING_EFFECT_BREATHE",
-    "CUSTOM_LED_STATE_CONNECTING_EFFECT_RAINBOW",
     "CUSTOM_LED_STATE_CONNECTING_EFFECT_SCROLL",
     "CUSTOM_LED_STATE_CONNECTING_EFFECT_SCANNER",
     "CUSTOM_LED_STATE_CONNECTING_EFFECT_WIPE",
-    "CUSTOM_LED_STATE_CONNECTING_EFFECT_RAINBOW_CHASE",
     "CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_BAR",
     "CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_MIRROR",
     "CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_PULSE"
    ]
   },
   {
-   "name": "CUSTOM_LED_STATE_LISTENING_EFFECT",
-   "order": 495,
-   "prompt": "Đang nghe: hiệu ứng",
+   "name": "CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE",
+   "order": 507,
+   "prompt": "Màu",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
+   ],
+   "depends": [
+    "and",
+    [
+     "and",
+     [
+      "or",
+      "CUSTOM_LED_WS2812",
+      "CUSTOM_LED_CIRCULAR_STRIP"
+     ],
+     [
+      "not",
+      "CUSTOM_LED_STATE_CONNECTING_EFFECT_OFF"
+     ]
+    ],
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_FIXED",
+     "y"
+    ]
+   ],
+   "members": [
+    "CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_FIXED",
+    "CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_RAINBOW"
+   ]
+  },
+  {
+   "name": "CUSTOM_LED_STATE_CONNECTING_RAINBOW_MODE",
+   "order": 511,
+   "prompt": "Cách chạy cầu vồng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
+   ],
+   "depends": [
+    "and",
+    "CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_RAINBOW",
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "CUSTOM_LED_STATE_CONNECTING_RAINBOW_MODE_WHOLE",
+     "y"
+    ]
+   ],
+   "members": [
+    "CUSTOM_LED_STATE_CONNECTING_RAINBOW_MODE_WHOLE",
+    "CUSTOM_LED_STATE_CONNECTING_RAINBOW_MODE_CHASE"
+   ]
+  },
+  {
+   "name": "CUSTOM_LED_STATE_LISTENING_EFFECT",
+   "order": 515,
+   "prompt": "Hiệu ứng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
    ],
    "depends": [
     "and",
@@ -1231,27 +1648,131 @@
     "CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_FAST",
     "CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_SLOW",
     "CUSTOM_LED_STATE_LISTENING_EFFECT_BREATHE",
-    "CUSTOM_LED_STATE_LISTENING_EFFECT_RAINBOW",
     "CUSTOM_LED_STATE_LISTENING_EFFECT_SCROLL",
     "CUSTOM_LED_STATE_LISTENING_EFFECT_SCANNER",
     "CUSTOM_LED_STATE_LISTENING_EFFECT_WIPE",
-    "CUSTOM_LED_STATE_LISTENING_EFFECT_RAINBOW_CHASE",
     "CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_BAR",
     "CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_MIRROR",
     "CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_PULSE"
    ]
   },
   {
-   "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT",
-   "order": 511,
-   "prompt": "Đang nói: hiệu ứng",
+   "name": "CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE",
+   "order": 528,
+   "prompt": "Màu",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
+   ],
+   "depends": [
+    "and",
+    [
+     "and",
+     [
+      "or",
+      "CUSTOM_LED_WS2812",
+      "CUSTOM_LED_CIRCULAR_STRIP"
+     ],
+     [
+      "not",
+      "CUSTOM_LED_STATE_LISTENING_EFFECT_OFF"
+     ]
+    ],
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_FIXED",
+     "y"
+    ]
+   ],
+   "members": [
+    "CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_FIXED",
+    "CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_RAINBOW"
+   ]
+  },
+  {
+   "name": "CUSTOM_LED_STATE_LISTENING_RAINBOW_MODE",
+   "order": 532,
+   "prompt": "Cách chạy cầu vồng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
+   ],
+   "depends": [
+    "and",
+    "CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_RAINBOW",
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "CUSTOM_LED_STATE_LISTENING_RAINBOW_MODE_WHOLE",
+     "y"
+    ]
+   ],
+   "members": [
+    "CUSTOM_LED_STATE_LISTENING_RAINBOW_MODE_WHOLE",
+    "CUSTOM_LED_STATE_LISTENING_RAINBOW_MODE_CHASE"
+   ]
+  },
+  {
+   "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT",
+   "order": 536,
+   "prompt": "Hiệu ứng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
    ],
    "depends": [
     "and",
@@ -1284,27 +1805,131 @@
     "CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_FAST",
     "CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_SLOW",
     "CUSTOM_LED_STATE_SPEAKING_EFFECT_BREATHE",
-    "CUSTOM_LED_STATE_SPEAKING_EFFECT_RAINBOW",
     "CUSTOM_LED_STATE_SPEAKING_EFFECT_SCROLL",
     "CUSTOM_LED_STATE_SPEAKING_EFFECT_SCANNER",
     "CUSTOM_LED_STATE_SPEAKING_EFFECT_WIPE",
-    "CUSTOM_LED_STATE_SPEAKING_EFFECT_RAINBOW_CHASE",
     "CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_BAR",
     "CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_MIRROR",
     "CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_PULSE"
    ]
   },
   {
-   "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT",
-   "order": 527,
-   "prompt": "Nâng cấp firmware: hiệu ứng",
+   "name": "CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE",
+   "order": 549,
+   "prompt": "Màu",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
+   ],
+   "depends": [
+    "and",
+    [
+     "and",
+     [
+      "or",
+      "CUSTOM_LED_WS2812",
+      "CUSTOM_LED_CIRCULAR_STRIP"
+     ],
+     [
+      "not",
+      "CUSTOM_LED_STATE_SPEAKING_EFFECT_OFF"
+     ]
+    ],
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_FIXED",
+     "y"
+    ]
+   ],
+   "members": [
+    "CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_FIXED",
+    "CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_RAINBOW"
+   ]
+  },
+  {
+   "name": "CUSTOM_LED_STATE_SPEAKING_RAINBOW_MODE",
+   "order": 553,
+   "prompt": "Cách chạy cầu vồng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
+   ],
+   "depends": [
+    "and",
+    "CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_RAINBOW",
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "CUSTOM_LED_STATE_SPEAKING_RAINBOW_MODE_WHOLE",
+     "y"
+    ]
+   ],
+   "members": [
+    "CUSTOM_LED_STATE_SPEAKING_RAINBOW_MODE_WHOLE",
+    "CUSTOM_LED_STATE_SPEAKING_RAINBOW_MODE_CHASE"
+   ]
+  },
+  {
+   "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT",
+   "order": 557,
+   "prompt": "Hiệu ứng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
    ],
    "depends": [
     "and",
@@ -1337,27 +1962,131 @@
     "CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_FAST",
     "CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_SLOW",
     "CUSTOM_LED_STATE_UPGRADING_EFFECT_BREATHE",
-    "CUSTOM_LED_STATE_UPGRADING_EFFECT_RAINBOW",
     "CUSTOM_LED_STATE_UPGRADING_EFFECT_SCROLL",
     "CUSTOM_LED_STATE_UPGRADING_EFFECT_SCANNER",
     "CUSTOM_LED_STATE_UPGRADING_EFFECT_WIPE",
-    "CUSTOM_LED_STATE_UPGRADING_EFFECT_RAINBOW_CHASE",
     "CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_BAR",
     "CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_MIRROR",
     "CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_PULSE"
    ]
   },
   {
-   "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT",
-   "order": 543,
-   "prompt": "Kích hoạt thiết bị: hiệu ứng",
+   "name": "CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE",
+   "order": 570,
+   "prompt": "Màu",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
+   ],
+   "depends": [
+    "and",
+    [
+     "and",
+     [
+      "or",
+      "CUSTOM_LED_WS2812",
+      "CUSTOM_LED_CIRCULAR_STRIP"
+     ],
+     [
+      "not",
+      "CUSTOM_LED_STATE_UPGRADING_EFFECT_OFF"
+     ]
+    ],
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_FIXED",
+     "y"
+    ]
+   ],
+   "members": [
+    "CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_FIXED",
+    "CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_RAINBOW"
+   ]
+  },
+  {
+   "name": "CUSTOM_LED_STATE_UPGRADING_RAINBOW_MODE",
+   "order": 574,
+   "prompt": "Cách chạy cầu vồng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
+   ],
+   "depends": [
+    "and",
+    "CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_RAINBOW",
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "CUSTOM_LED_STATE_UPGRADING_RAINBOW_MODE_WHOLE",
+     "y"
+    ]
+   ],
+   "members": [
+    "CUSTOM_LED_STATE_UPGRADING_RAINBOW_MODE_WHOLE",
+    "CUSTOM_LED_STATE_UPGRADING_RAINBOW_MODE_CHASE"
+   ]
+  },
+  {
+   "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT",
+   "order": 578,
+   "prompt": "Hiệu ứng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
    ],
    "depends": [
     "and",
@@ -1390,27 +2119,131 @@
     "CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_FAST",
     "CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_SLOW",
     "CUSTOM_LED_STATE_ACTIVATING_EFFECT_BREATHE",
-    "CUSTOM_LED_STATE_ACTIVATING_EFFECT_RAINBOW",
     "CUSTOM_LED_STATE_ACTIVATING_EFFECT_SCROLL",
     "CUSTOM_LED_STATE_ACTIVATING_EFFECT_SCANNER",
     "CUSTOM_LED_STATE_ACTIVATING_EFFECT_WIPE",
-    "CUSTOM_LED_STATE_ACTIVATING_EFFECT_RAINBOW_CHASE",
     "CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_BAR",
     "CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_MIRROR",
     "CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_PULSE"
    ]
   },
   {
-   "name": "CUSTOM_LED_STATE_ERROR_EFFECT",
-   "order": 559,
-   "prompt": "Lỗi: hiệu ứng",
+   "name": "CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE",
+   "order": 591,
+   "prompt": "Màu",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
+   ],
+   "depends": [
+    "and",
+    [
+     "and",
+     [
+      "or",
+      "CUSTOM_LED_WS2812",
+      "CUSTOM_LED_CIRCULAR_STRIP"
+     ],
+     [
+      "not",
+      "CUSTOM_LED_STATE_ACTIVATING_EFFECT_OFF"
+     ]
+    ],
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_FIXED",
+     "y"
+    ]
+   ],
+   "members": [
+    "CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_FIXED",
+    "CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_RAINBOW"
+   ]
+  },
+  {
+   "name": "CUSTOM_LED_STATE_ACTIVATING_RAINBOW_MODE",
+   "order": 595,
+   "prompt": "Cách chạy cầu vồng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
+   ],
+   "depends": [
+    "and",
+    "CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_RAINBOW",
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "CUSTOM_LED_STATE_ACTIVATING_RAINBOW_MODE_WHOLE",
+     "y"
+    ]
+   ],
+   "members": [
+    "CUSTOM_LED_STATE_ACTIVATING_RAINBOW_MODE_WHOLE",
+    "CUSTOM_LED_STATE_ACTIVATING_RAINBOW_MODE_CHASE"
+   ]
+  },
+  {
+   "name": "CUSTOM_LED_STATE_ERROR_EFFECT",
+   "order": 599,
+   "prompt": "Hiệu ứng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
    ],
    "depends": [
     "and",
@@ -1443,19 +2276,122 @@
     "CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_FAST",
     "CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_SLOW",
     "CUSTOM_LED_STATE_ERROR_EFFECT_BREATHE",
-    "CUSTOM_LED_STATE_ERROR_EFFECT_RAINBOW",
     "CUSTOM_LED_STATE_ERROR_EFFECT_SCROLL",
     "CUSTOM_LED_STATE_ERROR_EFFECT_SCANNER",
     "CUSTOM_LED_STATE_ERROR_EFFECT_WIPE",
-    "CUSTOM_LED_STATE_ERROR_EFFECT_RAINBOW_CHASE",
     "CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_BAR",
     "CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_MIRROR",
     "CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_PULSE"
    ]
   },
   {
+   "name": "CUSTOM_LED_STATE_ERROR_COLOR_SOURCE",
+   "order": 612,
+   "prompt": "Màu",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
+   ],
+   "depends": [
+    "and",
+    [
+     "and",
+     [
+      "or",
+      "CUSTOM_LED_WS2812",
+      "CUSTOM_LED_CIRCULAR_STRIP"
+     ],
+     [
+      "not",
+      "CUSTOM_LED_STATE_ERROR_EFFECT_OFF"
+     ]
+    ],
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_FIXED",
+     "y"
+    ]
+   ],
+   "members": [
+    "CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_FIXED",
+    "CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_RAINBOW"
+   ]
+  },
+  {
+   "name": "CUSTOM_LED_STATE_ERROR_RAINBOW_MODE",
+   "order": 616,
+   "prompt": "Cách chạy cầu vồng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
+   ],
+   "depends": [
+    "and",
+    "CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_RAINBOW",
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "CUSTOM_LED_STATE_ERROR_RAINBOW_MODE_WHOLE",
+     "y"
+    ]
+   ],
+   "members": [
+    "CUSTOM_LED_STATE_ERROR_RAINBOW_MODE_WHOLE",
+    "CUSTOM_LED_STATE_ERROR_RAINBOW_MODE_CHASE"
+   ]
+  },
+  {
    "name": "CUSTOM_GPIO_LED_BOOT_EFFECT",
-   "order": 577,
+   "order": 622,
    "prompt": "Trạng thái khi khởi động",
    "menu": [
     "Xiaozhi Assistant",
@@ -1480,7 +2416,7 @@
   },
   {
    "name": "CUSTOM_LED_IC_LED_BOOT_EFFECT",
-   "order": 589,
+   "order": 634,
    "prompt": "Trạng thái khi khởi động",
    "menu": [
     "Xiaozhi Assistant",
@@ -1509,7 +2445,7 @@
   },
   {
    "name": "CUSTOM_PCA9685_LED_BOOT_EFFECT",
-   "order": 598,
+   "order": 643,
    "prompt": "Trạng thái khi khởi động",
    "menu": [
     "Xiaozhi Assistant",
@@ -1534,7 +2470,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_LED_BOOT_EFFECT",
-   "order": 607,
+   "order": 652,
    "prompt": "Trạng thái khi khởi động",
    "menu": [
     "Xiaozhi Assistant",
@@ -1559,7 +2495,7 @@
   },
   {
    "name": "BUZZER_TYPE",
-   "order": 617,
+   "order": 662,
    "prompt": "Loại còi",
    "menu": [
     "Xiaozhi Assistant",
@@ -1584,8 +2520,34 @@
    ]
   },
   {
+   "name": "CUSTOM_SENSOR_MQ_TYPE",
+   "order": 691,
+   "prompt": "Loại cảm biến MQ",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow)"
+   ],
+   "depends": [
+    "and",
+    "CUSTOM_ENABLE_SENSOR_GAS_ANALOG_MQ",
+    "IDF_TARGET_ESP32S3"
+   ],
+   "default": [
+    [
+     "CUSTOM_SENSOR_MQ_TYPE_MQ2",
+     "y"
+    ]
+   ],
+   "members": [
+    "CUSTOM_SENSOR_MQ_TYPE_MQ2",
+    "CUSTOM_SENSOR_MQ_TYPE_MQ135"
+   ]
+  },
+  {
    "name": "CUSTOM_MOTOR_DC_DRIVER_TYPE",
-   "order": 673,
+   "order": 716,
    "prompt": "Loại Mạch Điều Khiển Động Cơ (Motor Driver)",
    "menu": [
     "Xiaozhi Assistant",
@@ -1612,7 +2574,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_CHIP",
-   "order": 704,
+   "order": 747,
    "prompt": "Loại chip mở rộng GPIO",
    "menu": [
     "Xiaozhi Assistant",
@@ -2264,11 +3226,7 @@
    ],
    "menuconfig": false,
    "choice": "BOARD_TYPE",
-   "depends": [
-    "and",
-    "IDF_TARGET_ESP32S3",
-    "BOARD_TYPE"
-   ],
+   "depends": "BOARD_TYPE",
    "default": [],
    "range": [],
    "help": ""
@@ -2283,11 +3241,7 @@
    ],
    "menuconfig": false,
    "choice": "BOARD_TYPE",
-   "depends": [
-    "and",
-    "IDF_TARGET_ESP32P4",
-    "BOARD_TYPE"
-   ],
+   "depends": "BOARD_TYPE",
    "default": [],
    "range": [],
    "help": ""
@@ -2302,11 +3256,7 @@
    ],
    "menuconfig": false,
    "choice": "BOARD_TYPE",
-   "depends": [
-    "and",
-    "IDF_TARGET_ESP32P4",
-    "BOARD_TYPE"
-   ],
+   "depends": "BOARD_TYPE",
    "default": [],
    "range": [],
    "help": ""
@@ -2321,11 +3271,7 @@
    ],
    "menuconfig": false,
    "choice": "BOARD_TYPE",
-   "depends": [
-    "and",
-    "IDF_TARGET_ESP32P4",
-    "BOARD_TYPE"
-   ],
+   "depends": "BOARD_TYPE",
    "default": [],
    "range": [],
    "help": ""
@@ -11642,13 +12588,14 @@
    "name": "CUSTOM_LED_EFFECT_SPEED_MS",
    "order": 429,
    "type": "int",
-   "prompt": "Tốc độ hiệu ứng vòng LED (ms mỗi bước)",
+   "prompt": "Tốc độ chạy vòng / quét / tô dần (ms mỗi bước)",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
-    "Đèn LED trạng thái (Status LED WS2812 / Single LED)"
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái"
    ],
    "menuconfig": false,
    "choice": null,
@@ -11667,8 +12614,22 @@
     ],
     [
      "and",
-     "ENABLE_CUSTOM_LEDS",
-     "IDF_TARGET_ESP32S3"
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
     ]
    ],
    "default": [
@@ -11696,7 +12657,8 @@
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
-    "Đèn LED trạng thái (Status LED WS2812 / Single LED)"
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái"
    ],
    "menuconfig": false,
    "choice": null,
@@ -11715,8 +12677,22 @@
     ],
     [
      "and",
-     "ENABLE_CUSTOM_LEDS",
-     "IDF_TARGET_ESP32S3"
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
     ]
    ],
    "default": [
@@ -11745,7 +12721,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_STARTING_EFFECT",
@@ -11765,7 +12742,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_STARTING_EFFECT",
@@ -11785,7 +12763,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_STARTING_EFFECT",
@@ -11805,7 +12784,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_STARTING_EFFECT",
@@ -11825,7 +12805,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_STARTING_EFFECT",
@@ -11835,36 +12816,8 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_LED_STATE_STARTING_EFFECT_RAINBOW",
-   "order": 437,
-   "type": "bool",
-   "prompt": "Cầu vồng đổi màu",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Hệ thống chính (Main System)",
-    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
-   ],
-   "menuconfig": false,
-   "choice": "CUSTOM_LED_STATE_STARTING_EFFECT",
-   "depends": [
-    "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
-    "CUSTOM_LED_STATE_STARTING_EFFECT"
-   ],
-   "default": [],
-   "range": [],
-   "help": ""
-  },
-  {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_SCROLL",
-   "order": 438,
+   "order": 437,
    "type": "bool",
    "prompt": "Chạy vòng (vòng LED)",
    "menu": [
@@ -11873,7 +12826,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_STARTING_EFFECT",
@@ -11892,7 +12846,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_SCANNER",
-   "order": 439,
+   "order": 438,
    "type": "bool",
    "prompt": "Quét qua lại (vòng LED)",
    "menu": [
@@ -11901,7 +12855,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_STARTING_EFFECT",
@@ -11920,7 +12875,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_WIPE",
-   "order": 440,
+   "order": 439,
    "type": "bool",
    "prompt": "Tô dần quanh vòng (vòng LED)",
    "menu": [
@@ -11929,35 +12884,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
-   ],
-   "menuconfig": false,
-   "choice": "CUSTOM_LED_STATE_STARTING_EFFECT",
-   "depends": [
-    "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
-    "CUSTOM_LED_STATE_STARTING_EFFECT"
-   ],
-   "default": [],
-   "range": [],
-   "help": ""
-  },
-  {
-   "name": "CUSTOM_LED_STATE_STARTING_EFFECT_RAINBOW_CHASE",
-   "order": 441,
-   "type": "bool",
-   "prompt": "Cầu vồng xoay (vòng LED)",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Hệ thống chính (Main System)",
-    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_STARTING_EFFECT",
@@ -11976,7 +12904,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_BAR",
-   "order": 442,
+   "order": 440,
    "type": "bool",
    "prompt": "Theo âm thanh: thanh dâng (vòng LED)",
    "menu": [
@@ -11985,7 +12913,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_STARTING_EFFECT",
@@ -12004,7 +12933,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_MIRROR",
-   "order": 443,
+   "order": 441,
    "type": "bool",
    "prompt": "Theo âm thanh: loang hai phía (vòng LED)",
    "menu": [
@@ -12013,7 +12942,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_STARTING_EFFECT",
@@ -12032,7 +12962,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_PULSE",
-   "order": 444,
+   "order": 442,
    "type": "bool",
    "prompt": "Theo âm thanh: sáng theo nhịp",
    "menu": [
@@ -12041,7 +12971,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_STARTING_EFFECT",
@@ -12052,7 +12983,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_STARTING_EFFECT_ID",
-   "order": 445,
+   "order": 443,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -12061,7 +12992,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
    ],
    "menuconfig": false,
    "choice": null,
@@ -12106,10 +13038,6 @@
      "CUSTOM_LED_STATE_STARTING_EFFECT_BREATHE"
     ],
     [
-     "5",
-     "CUSTOM_LED_STATE_STARTING_EFFECT_RAINBOW"
-    ],
-    [
      "6",
      "CUSTOM_LED_STATE_STARTING_EFFECT_SCROLL"
     ],
@@ -12120,10 +13048,6 @@
     [
      "8",
      "CUSTOM_LED_STATE_STARTING_EFFECT_WIPE"
-    ],
-    [
-     "9",
-     "CUSTOM_LED_STATE_STARTING_EFFECT_RAINBOW_CHASE"
     ],
     [
      "10",
@@ -12146,27 +13070,66 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_LED_STATE_STARTING_COLOR",
-   "order": 446,
-   "type": "string",
-   "prompt": "Khởi động: màu (mã RRGGBB)",
+   "name": "CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_FIXED",
+   "order": 445,
+   "type": "bool",
+   "prompt": "Màu cố định (nhập mã màu)",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_STARTING_COLOR_SOURCE",
+   "depends": "CUSTOM_LED_STATE_STARTING_COLOR_SOURCE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_RAINBOW",
+   "order": 446,
+   "type": "bool",
+   "prompt": "Cầu vồng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_STARTING_COLOR_SOURCE",
+   "depends": "CUSTOM_LED_STATE_STARTING_COLOR_SOURCE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_STARTING_COLOR",
+   "order": 447,
+   "type": "string",
+   "prompt": "Mã màu (RRGGBB)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
    ],
    "menuconfig": false,
    "choice": null,
    "depends": [
     "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
+    "CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_FIXED",
     [
      "and",
      [
@@ -12197,8 +13160,104 @@
    "help": ""
   },
   {
+   "name": "CUSTOM_LED_STATE_STARTING_RAINBOW_MODE_WHOLE",
+   "order": 449,
+   "type": "bool",
+   "prompt": "Đổi màu toàn bộ (mọi LED cùng một màu)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_STARTING_RAINBOW_MODE",
+   "depends": "CUSTOM_LED_STATE_STARTING_RAINBOW_MODE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_STARTING_RAINBOW_MODE_CHASE",
+   "order": 450,
+   "type": "bool",
+   "prompt": "Chạy đuổi (mỗi LED một màu, xoay quanh vòng)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_STARTING_RAINBOW_MODE",
+   "depends": "CUSTOM_LED_STATE_STARTING_RAINBOW_MODE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_STARTING_RAINBOW_SPEED_MS",
+   "order": 451,
+   "type": "int",
+   "prompt": "Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Khởi động"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": [
+    "and",
+    "CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_RAINBOW",
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "50",
+     "y"
+    ]
+   ],
+   "range": [
+    [
+     "10",
+     "500",
+     "y"
+    ]
+   ],
+   "help": "Một vòng đủ 7 màu gồm 64 bước: 50 ms mỗi bước là khoảng 3,2 giây một vòng.\nHiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng."
+  },
+  {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_OFF",
-   "order": 448,
+   "order": 453,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -12207,7 +13266,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT",
@@ -12218,7 +13278,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_STEADY",
-   "order": 449,
+   "order": 454,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -12227,7 +13287,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT",
@@ -12238,7 +13299,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_FAST",
-   "order": 450,
+   "order": 455,
    "type": "bool",
    "prompt": "Nháy nhanh (100 ms)",
    "menu": [
@@ -12247,7 +13308,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT",
@@ -12258,7 +13320,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_SLOW",
-   "order": 451,
+   "order": 456,
    "type": "bool",
    "prompt": "Nháy chậm (500 ms)",
    "menu": [
@@ -12267,7 +13329,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT",
@@ -12278,7 +13341,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BREATHE",
-   "order": 452,
+   "order": 457,
    "type": "bool",
    "prompt": "Thở (sáng dần, tối dần)",
    "menu": [
@@ -12287,7 +13350,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT",
@@ -12297,36 +13361,8 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_RAINBOW",
-   "order": 453,
-   "type": "bool",
-   "prompt": "Cầu vồng đổi màu",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Hệ thống chính (Main System)",
-    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
-   ],
-   "menuconfig": false,
-   "choice": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT",
-   "depends": [
-    "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
-    "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT"
-   ],
-   "default": [],
-   "range": [],
-   "help": ""
-  },
-  {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_SCROLL",
-   "order": 454,
+   "order": 458,
    "type": "bool",
    "prompt": "Chạy vòng (vòng LED)",
    "menu": [
@@ -12335,7 +13371,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT",
@@ -12354,7 +13391,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_SCANNER",
-   "order": 455,
+   "order": 459,
    "type": "bool",
    "prompt": "Quét qua lại (vòng LED)",
    "menu": [
@@ -12363,7 +13400,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT",
@@ -12382,7 +13420,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_WIPE",
-   "order": 456,
+   "order": 460,
    "type": "bool",
    "prompt": "Tô dần quanh vòng (vòng LED)",
    "menu": [
@@ -12391,35 +13429,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
-   ],
-   "menuconfig": false,
-   "choice": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT",
-   "depends": [
-    "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
-    "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT"
-   ],
-   "default": [],
-   "range": [],
-   "help": ""
-  },
-  {
-   "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_RAINBOW_CHASE",
-   "order": 457,
-   "type": "bool",
-   "prompt": "Cầu vồng xoay (vòng LED)",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Hệ thống chính (Main System)",
-    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT",
@@ -12438,7 +13449,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_BAR",
-   "order": 458,
+   "order": 461,
    "type": "bool",
    "prompt": "Theo âm thanh: thanh dâng (vòng LED)",
    "menu": [
@@ -12447,7 +13458,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT",
@@ -12466,7 +13478,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_MIRROR",
-   "order": 459,
+   "order": 462,
    "type": "bool",
    "prompt": "Theo âm thanh: loang hai phía (vòng LED)",
    "menu": [
@@ -12475,7 +13487,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT",
@@ -12494,7 +13507,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_PULSE",
-   "order": 460,
+   "order": 463,
    "type": "bool",
    "prompt": "Theo âm thanh: sáng theo nhịp",
    "menu": [
@@ -12503,7 +13516,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT",
@@ -12514,7 +13528,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_ID",
-   "order": 461,
+   "order": 464,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -12523,7 +13537,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
    ],
    "menuconfig": false,
    "choice": null,
@@ -12568,10 +13583,6 @@
      "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BREATHE"
     ],
     [
-     "5",
-     "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_RAINBOW"
-    ],
-    [
      "6",
      "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_SCROLL"
     ],
@@ -12582,10 +13593,6 @@
     [
      "8",
      "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_WIPE"
-    ],
-    [
-     "9",
-     "CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_RAINBOW_CHASE"
     ],
     [
      "10",
@@ -12608,27 +13615,66 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_LED_STATE_WIFI_CONFIG_COLOR",
-   "order": 462,
-   "type": "string",
-   "prompt": "Cấu hình WiFi: màu (mã RRGGBB)",
+   "name": "CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_FIXED",
+   "order": 466,
+   "type": "bool",
+   "prompt": "Màu cố định (nhập mã màu)",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE",
+   "depends": "CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_RAINBOW",
+   "order": 467,
+   "type": "bool",
+   "prompt": "Cầu vồng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE",
+   "depends": "CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_WIFI_CONFIG_COLOR",
+   "order": 468,
+   "type": "string",
+   "prompt": "Mã màu (RRGGBB)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
    ],
    "menuconfig": false,
    "choice": null,
    "depends": [
     "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
+    "CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_FIXED",
     [
      "and",
      [
@@ -12659,8 +13705,104 @@
    "help": ""
   },
   {
+   "name": "CUSTOM_LED_STATE_WIFI_CONFIG_RAINBOW_MODE_WHOLE",
+   "order": 470,
+   "type": "bool",
+   "prompt": "Đổi màu toàn bộ (mọi LED cùng một màu)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_WIFI_CONFIG_RAINBOW_MODE",
+   "depends": "CUSTOM_LED_STATE_WIFI_CONFIG_RAINBOW_MODE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_WIFI_CONFIG_RAINBOW_MODE_CHASE",
+   "order": 471,
+   "type": "bool",
+   "prompt": "Chạy đuổi (mỗi LED một màu, xoay quanh vòng)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_WIFI_CONFIG_RAINBOW_MODE",
+   "depends": "CUSTOM_LED_STATE_WIFI_CONFIG_RAINBOW_MODE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_WIFI_CONFIG_RAINBOW_SPEED_MS",
+   "order": 472,
+   "type": "int",
+   "prompt": "Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Cấu hình WiFi"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": [
+    "and",
+    "CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_RAINBOW",
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "50",
+     "y"
+    ]
+   ],
+   "range": [
+    [
+     "10",
+     "500",
+     "y"
+    ]
+   ],
+   "help": "Một vòng đủ 7 màu gồm 64 bước: 50 ms mỗi bước là khoảng 3,2 giây một vòng.\nHiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng."
+  },
+  {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_OFF",
-   "order": 464,
+   "order": 474,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -12669,7 +13811,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_IDLE_EFFECT",
@@ -12680,7 +13823,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_STEADY",
-   "order": 465,
+   "order": 475,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -12689,7 +13832,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_IDLE_EFFECT",
@@ -12700,7 +13844,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_FAST",
-   "order": 466,
+   "order": 476,
    "type": "bool",
    "prompt": "Nháy nhanh (100 ms)",
    "menu": [
@@ -12709,7 +13853,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_IDLE_EFFECT",
@@ -12720,7 +13865,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_SLOW",
-   "order": 467,
+   "order": 477,
    "type": "bool",
    "prompt": "Nháy chậm (500 ms)",
    "menu": [
@@ -12729,7 +13874,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_IDLE_EFFECT",
@@ -12740,7 +13886,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_BREATHE",
-   "order": 468,
+   "order": 478,
    "type": "bool",
    "prompt": "Thở (sáng dần, tối dần)",
    "menu": [
@@ -12749,7 +13895,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_IDLE_EFFECT",
@@ -12759,36 +13906,8 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_LED_STATE_IDLE_EFFECT_RAINBOW",
-   "order": 469,
-   "type": "bool",
-   "prompt": "Cầu vồng đổi màu",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Hệ thống chính (Main System)",
-    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
-   ],
-   "menuconfig": false,
-   "choice": "CUSTOM_LED_STATE_IDLE_EFFECT",
-   "depends": [
-    "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
-    "CUSTOM_LED_STATE_IDLE_EFFECT"
-   ],
-   "default": [],
-   "range": [],
-   "help": ""
-  },
-  {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_SCROLL",
-   "order": 470,
+   "order": 479,
    "type": "bool",
    "prompt": "Chạy vòng (vòng LED)",
    "menu": [
@@ -12797,7 +13916,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_IDLE_EFFECT",
@@ -12816,7 +13936,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_SCANNER",
-   "order": 471,
+   "order": 480,
    "type": "bool",
    "prompt": "Quét qua lại (vòng LED)",
    "menu": [
@@ -12825,7 +13945,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_IDLE_EFFECT",
@@ -12844,7 +13965,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_WIPE",
-   "order": 472,
+   "order": 481,
    "type": "bool",
    "prompt": "Tô dần quanh vòng (vòng LED)",
    "menu": [
@@ -12853,35 +13974,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
-   ],
-   "menuconfig": false,
-   "choice": "CUSTOM_LED_STATE_IDLE_EFFECT",
-   "depends": [
-    "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
-    "CUSTOM_LED_STATE_IDLE_EFFECT"
-   ],
-   "default": [],
-   "range": [],
-   "help": ""
-  },
-  {
-   "name": "CUSTOM_LED_STATE_IDLE_EFFECT_RAINBOW_CHASE",
-   "order": 473,
-   "type": "bool",
-   "prompt": "Cầu vồng xoay (vòng LED)",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Hệ thống chính (Main System)",
-    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_IDLE_EFFECT",
@@ -12900,7 +13994,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_BAR",
-   "order": 474,
+   "order": 482,
    "type": "bool",
    "prompt": "Theo âm thanh: thanh dâng (vòng LED)",
    "menu": [
@@ -12909,7 +14003,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_IDLE_EFFECT",
@@ -12928,7 +14023,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_MIRROR",
-   "order": 475,
+   "order": 483,
    "type": "bool",
    "prompt": "Theo âm thanh: loang hai phía (vòng LED)",
    "menu": [
@@ -12937,7 +14032,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_IDLE_EFFECT",
@@ -12956,7 +14052,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_PULSE",
-   "order": 476,
+   "order": 484,
    "type": "bool",
    "prompt": "Theo âm thanh: sáng theo nhịp",
    "menu": [
@@ -12965,7 +14061,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_IDLE_EFFECT",
@@ -12976,7 +14073,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_IDLE_EFFECT_ID",
-   "order": 477,
+   "order": 485,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -12985,7 +14082,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
    ],
    "menuconfig": false,
    "choice": null,
@@ -13030,10 +14128,6 @@
      "CUSTOM_LED_STATE_IDLE_EFFECT_BREATHE"
     ],
     [
-     "5",
-     "CUSTOM_LED_STATE_IDLE_EFFECT_RAINBOW"
-    ],
-    [
      "6",
      "CUSTOM_LED_STATE_IDLE_EFFECT_SCROLL"
     ],
@@ -13044,10 +14138,6 @@
     [
      "8",
      "CUSTOM_LED_STATE_IDLE_EFFECT_WIPE"
-    ],
-    [
-     "9",
-     "CUSTOM_LED_STATE_IDLE_EFFECT_RAINBOW_CHASE"
     ],
     [
      "10",
@@ -13070,27 +14160,66 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_LED_STATE_IDLE_COLOR",
-   "order": 478,
-   "type": "string",
-   "prompt": "Chờ: màu (mã RRGGBB)",
+   "name": "CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_FIXED",
+   "order": 487,
+   "type": "bool",
+   "prompt": "Màu cố định (nhập mã màu)",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_IDLE_COLOR_SOURCE",
+   "depends": "CUSTOM_LED_STATE_IDLE_COLOR_SOURCE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_RAINBOW",
+   "order": 488,
+   "type": "bool",
+   "prompt": "Cầu vồng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_IDLE_COLOR_SOURCE",
+   "depends": "CUSTOM_LED_STATE_IDLE_COLOR_SOURCE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_IDLE_COLOR",
+   "order": 489,
+   "type": "string",
+   "prompt": "Mã màu (RRGGBB)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
    ],
    "menuconfig": false,
    "choice": null,
    "depends": [
     "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
+    "CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_FIXED",
     [
      "and",
      [
@@ -13121,8 +14250,104 @@
    "help": ""
   },
   {
+   "name": "CUSTOM_LED_STATE_IDLE_RAINBOW_MODE_WHOLE",
+   "order": 491,
+   "type": "bool",
+   "prompt": "Đổi màu toàn bộ (mọi LED cùng một màu)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_IDLE_RAINBOW_MODE",
+   "depends": "CUSTOM_LED_STATE_IDLE_RAINBOW_MODE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_IDLE_RAINBOW_MODE_CHASE",
+   "order": 492,
+   "type": "bool",
+   "prompt": "Chạy đuổi (mỗi LED một màu, xoay quanh vòng)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_IDLE_RAINBOW_MODE",
+   "depends": "CUSTOM_LED_STATE_IDLE_RAINBOW_MODE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_IDLE_RAINBOW_SPEED_MS",
+   "order": 493,
+   "type": "int",
+   "prompt": "Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Chờ"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": [
+    "and",
+    "CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_RAINBOW",
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "50",
+     "y"
+    ]
+   ],
+   "range": [
+    [
+     "10",
+     "500",
+     "y"
+    ]
+   ],
+   "help": "Một vòng đủ 7 màu gồm 64 bước: 50 ms mỗi bước là khoảng 3,2 giây một vòng.\nHiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng."
+  },
+  {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_OFF",
-   "order": 480,
+   "order": 495,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -13131,7 +14356,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_CONNECTING_EFFECT",
@@ -13142,7 +14368,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_STEADY",
-   "order": 481,
+   "order": 496,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -13151,7 +14377,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_CONNECTING_EFFECT",
@@ -13162,7 +14389,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_FAST",
-   "order": 482,
+   "order": 497,
    "type": "bool",
    "prompt": "Nháy nhanh (100 ms)",
    "menu": [
@@ -13171,7 +14398,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_CONNECTING_EFFECT",
@@ -13182,7 +14410,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_SLOW",
-   "order": 483,
+   "order": 498,
    "type": "bool",
    "prompt": "Nháy chậm (500 ms)",
    "menu": [
@@ -13191,7 +14419,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_CONNECTING_EFFECT",
@@ -13202,7 +14431,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_BREATHE",
-   "order": 484,
+   "order": 499,
    "type": "bool",
    "prompt": "Thở (sáng dần, tối dần)",
    "menu": [
@@ -13211,7 +14440,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_CONNECTING_EFFECT",
@@ -13221,36 +14451,8 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_RAINBOW",
-   "order": 485,
-   "type": "bool",
-   "prompt": "Cầu vồng đổi màu",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Hệ thống chính (Main System)",
-    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
-   ],
-   "menuconfig": false,
-   "choice": "CUSTOM_LED_STATE_CONNECTING_EFFECT",
-   "depends": [
-    "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
-    "CUSTOM_LED_STATE_CONNECTING_EFFECT"
-   ],
-   "default": [],
-   "range": [],
-   "help": ""
-  },
-  {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_SCROLL",
-   "order": 486,
+   "order": 500,
    "type": "bool",
    "prompt": "Chạy vòng (vòng LED)",
    "menu": [
@@ -13259,7 +14461,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_CONNECTING_EFFECT",
@@ -13278,7 +14481,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_SCANNER",
-   "order": 487,
+   "order": 501,
    "type": "bool",
    "prompt": "Quét qua lại (vòng LED)",
    "menu": [
@@ -13287,7 +14490,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_CONNECTING_EFFECT",
@@ -13306,7 +14510,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_WIPE",
-   "order": 488,
+   "order": 502,
    "type": "bool",
    "prompt": "Tô dần quanh vòng (vòng LED)",
    "menu": [
@@ -13315,35 +14519,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
-   ],
-   "menuconfig": false,
-   "choice": "CUSTOM_LED_STATE_CONNECTING_EFFECT",
-   "depends": [
-    "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
-    "CUSTOM_LED_STATE_CONNECTING_EFFECT"
-   ],
-   "default": [],
-   "range": [],
-   "help": ""
-  },
-  {
-   "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_RAINBOW_CHASE",
-   "order": 489,
-   "type": "bool",
-   "prompt": "Cầu vồng xoay (vòng LED)",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Hệ thống chính (Main System)",
-    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_CONNECTING_EFFECT",
@@ -13362,7 +14539,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_BAR",
-   "order": 490,
+   "order": 503,
    "type": "bool",
    "prompt": "Theo âm thanh: thanh dâng (vòng LED)",
    "menu": [
@@ -13371,7 +14548,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_CONNECTING_EFFECT",
@@ -13390,7 +14568,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_MIRROR",
-   "order": 491,
+   "order": 504,
    "type": "bool",
    "prompt": "Theo âm thanh: loang hai phía (vòng LED)",
    "menu": [
@@ -13399,7 +14577,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_CONNECTING_EFFECT",
@@ -13418,7 +14597,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_PULSE",
-   "order": 492,
+   "order": 505,
    "type": "bool",
    "prompt": "Theo âm thanh: sáng theo nhịp",
    "menu": [
@@ -13427,7 +14606,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_CONNECTING_EFFECT",
@@ -13438,7 +14618,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_CONNECTING_EFFECT_ID",
-   "order": 493,
+   "order": 506,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -13447,7 +14627,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
    ],
    "menuconfig": false,
    "choice": null,
@@ -13492,10 +14673,6 @@
      "CUSTOM_LED_STATE_CONNECTING_EFFECT_BREATHE"
     ],
     [
-     "5",
-     "CUSTOM_LED_STATE_CONNECTING_EFFECT_RAINBOW"
-    ],
-    [
      "6",
      "CUSTOM_LED_STATE_CONNECTING_EFFECT_SCROLL"
     ],
@@ -13506,10 +14683,6 @@
     [
      "8",
      "CUSTOM_LED_STATE_CONNECTING_EFFECT_WIPE"
-    ],
-    [
-     "9",
-     "CUSTOM_LED_STATE_CONNECTING_EFFECT_RAINBOW_CHASE"
     ],
     [
      "10",
@@ -13532,27 +14705,66 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_LED_STATE_CONNECTING_COLOR",
-   "order": 494,
-   "type": "string",
-   "prompt": "Đang kết nối: màu (mã RRGGBB)",
+   "name": "CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_FIXED",
+   "order": 508,
+   "type": "bool",
+   "prompt": "Màu cố định (nhập mã màu)",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE",
+   "depends": "CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_RAINBOW",
+   "order": 509,
+   "type": "bool",
+   "prompt": "Cầu vồng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE",
+   "depends": "CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_CONNECTING_COLOR",
+   "order": 510,
+   "type": "string",
+   "prompt": "Mã màu (RRGGBB)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
    ],
    "menuconfig": false,
    "choice": null,
    "depends": [
     "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
+    "CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_FIXED",
     [
      "and",
      [
@@ -13583,8 +14795,104 @@
    "help": ""
   },
   {
+   "name": "CUSTOM_LED_STATE_CONNECTING_RAINBOW_MODE_WHOLE",
+   "order": 512,
+   "type": "bool",
+   "prompt": "Đổi màu toàn bộ (mọi LED cùng một màu)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_CONNECTING_RAINBOW_MODE",
+   "depends": "CUSTOM_LED_STATE_CONNECTING_RAINBOW_MODE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_CONNECTING_RAINBOW_MODE_CHASE",
+   "order": 513,
+   "type": "bool",
+   "prompt": "Chạy đuổi (mỗi LED một màu, xoay quanh vòng)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_CONNECTING_RAINBOW_MODE",
+   "depends": "CUSTOM_LED_STATE_CONNECTING_RAINBOW_MODE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_CONNECTING_RAINBOW_SPEED_MS",
+   "order": 514,
+   "type": "int",
+   "prompt": "Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang kết nối"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": [
+    "and",
+    "CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_RAINBOW",
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "50",
+     "y"
+    ]
+   ],
+   "range": [
+    [
+     "10",
+     "500",
+     "y"
+    ]
+   ],
+   "help": "Một vòng đủ 7 màu gồm 64 bước: 50 ms mỗi bước là khoảng 3,2 giây một vòng.\nHiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng."
+  },
+  {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_OFF",
-   "order": 496,
+   "order": 516,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -13593,7 +14901,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_LISTENING_EFFECT",
@@ -13604,7 +14913,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_STEADY",
-   "order": 497,
+   "order": 517,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -13613,7 +14922,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_LISTENING_EFFECT",
@@ -13624,7 +14934,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_FAST",
-   "order": 498,
+   "order": 518,
    "type": "bool",
    "prompt": "Nháy nhanh (100 ms)",
    "menu": [
@@ -13633,7 +14943,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_LISTENING_EFFECT",
@@ -13644,7 +14955,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_SLOW",
-   "order": 499,
+   "order": 519,
    "type": "bool",
    "prompt": "Nháy chậm (500 ms)",
    "menu": [
@@ -13653,7 +14964,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_LISTENING_EFFECT",
@@ -13664,7 +14976,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_BREATHE",
-   "order": 500,
+   "order": 520,
    "type": "bool",
    "prompt": "Thở (sáng dần, tối dần)",
    "menu": [
@@ -13673,7 +14985,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_LISTENING_EFFECT",
@@ -13683,36 +14996,8 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_RAINBOW",
-   "order": 501,
-   "type": "bool",
-   "prompt": "Cầu vồng đổi màu",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Hệ thống chính (Main System)",
-    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
-   ],
-   "menuconfig": false,
-   "choice": "CUSTOM_LED_STATE_LISTENING_EFFECT",
-   "depends": [
-    "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
-    "CUSTOM_LED_STATE_LISTENING_EFFECT"
-   ],
-   "default": [],
-   "range": [],
-   "help": ""
-  },
-  {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_SCROLL",
-   "order": 502,
+   "order": 521,
    "type": "bool",
    "prompt": "Chạy vòng (vòng LED)",
    "menu": [
@@ -13721,7 +15006,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_LISTENING_EFFECT",
@@ -13740,7 +15026,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_SCANNER",
-   "order": 503,
+   "order": 522,
    "type": "bool",
    "prompt": "Quét qua lại (vòng LED)",
    "menu": [
@@ -13749,7 +15035,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_LISTENING_EFFECT",
@@ -13768,7 +15055,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_WIPE",
-   "order": 504,
+   "order": 523,
    "type": "bool",
    "prompt": "Tô dần quanh vòng (vòng LED)",
    "menu": [
@@ -13777,35 +15064,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
-   ],
-   "menuconfig": false,
-   "choice": "CUSTOM_LED_STATE_LISTENING_EFFECT",
-   "depends": [
-    "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
-    "CUSTOM_LED_STATE_LISTENING_EFFECT"
-   ],
-   "default": [],
-   "range": [],
-   "help": ""
-  },
-  {
-   "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_RAINBOW_CHASE",
-   "order": 505,
-   "type": "bool",
-   "prompt": "Cầu vồng xoay (vòng LED)",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Hệ thống chính (Main System)",
-    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_LISTENING_EFFECT",
@@ -13824,7 +15084,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_BAR",
-   "order": 506,
+   "order": 524,
    "type": "bool",
    "prompt": "Theo âm thanh: thanh dâng (vòng LED)",
    "menu": [
@@ -13833,7 +15093,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_LISTENING_EFFECT",
@@ -13852,7 +15113,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_MIRROR",
-   "order": 507,
+   "order": 525,
    "type": "bool",
    "prompt": "Theo âm thanh: loang hai phía (vòng LED)",
    "menu": [
@@ -13861,7 +15122,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_LISTENING_EFFECT",
@@ -13880,7 +15142,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_PULSE",
-   "order": 508,
+   "order": 526,
    "type": "bool",
    "prompt": "Theo âm thanh: sáng theo nhịp",
    "menu": [
@@ -13889,7 +15151,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_LISTENING_EFFECT",
@@ -13900,7 +15163,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_LISTENING_EFFECT_ID",
-   "order": 509,
+   "order": 527,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -13909,7 +15172,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
    ],
    "menuconfig": false,
    "choice": null,
@@ -13954,10 +15218,6 @@
      "CUSTOM_LED_STATE_LISTENING_EFFECT_BREATHE"
     ],
     [
-     "5",
-     "CUSTOM_LED_STATE_LISTENING_EFFECT_RAINBOW"
-    ],
-    [
      "6",
      "CUSTOM_LED_STATE_LISTENING_EFFECT_SCROLL"
     ],
@@ -13968,10 +15228,6 @@
     [
      "8",
      "CUSTOM_LED_STATE_LISTENING_EFFECT_WIPE"
-    ],
-    [
-     "9",
-     "CUSTOM_LED_STATE_LISTENING_EFFECT_RAINBOW_CHASE"
     ],
     [
      "10",
@@ -13994,27 +15250,66 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_LED_STATE_LISTENING_COLOR",
-   "order": 510,
-   "type": "string",
-   "prompt": "Đang nghe: màu (mã RRGGBB)",
+   "name": "CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_FIXED",
+   "order": 529,
+   "type": "bool",
+   "prompt": "Màu cố định (nhập mã màu)",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE",
+   "depends": "CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_RAINBOW",
+   "order": 530,
+   "type": "bool",
+   "prompt": "Cầu vồng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE",
+   "depends": "CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_LISTENING_COLOR",
+   "order": 531,
+   "type": "string",
+   "prompt": "Mã màu (RRGGBB)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
    ],
    "menuconfig": false,
    "choice": null,
    "depends": [
     "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
+    "CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_FIXED",
     [
      "and",
      [
@@ -14045,8 +15340,104 @@
    "help": ""
   },
   {
+   "name": "CUSTOM_LED_STATE_LISTENING_RAINBOW_MODE_WHOLE",
+   "order": 533,
+   "type": "bool",
+   "prompt": "Đổi màu toàn bộ (mọi LED cùng một màu)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_LISTENING_RAINBOW_MODE",
+   "depends": "CUSTOM_LED_STATE_LISTENING_RAINBOW_MODE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_LISTENING_RAINBOW_MODE_CHASE",
+   "order": 534,
+   "type": "bool",
+   "prompt": "Chạy đuổi (mỗi LED một màu, xoay quanh vòng)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_LISTENING_RAINBOW_MODE",
+   "depends": "CUSTOM_LED_STATE_LISTENING_RAINBOW_MODE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_LISTENING_RAINBOW_SPEED_MS",
+   "order": 535,
+   "type": "int",
+   "prompt": "Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nghe"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": [
+    "and",
+    "CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_RAINBOW",
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "50",
+     "y"
+    ]
+   ],
+   "range": [
+    [
+     "10",
+     "500",
+     "y"
+    ]
+   ],
+   "help": "Một vòng đủ 7 màu gồm 64 bước: 50 ms mỗi bước là khoảng 3,2 giây một vòng.\nHiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng."
+  },
+  {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_OFF",
-   "order": 512,
+   "order": 537,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -14055,7 +15446,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_SPEAKING_EFFECT",
@@ -14066,7 +15458,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_STEADY",
-   "order": 513,
+   "order": 538,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -14075,7 +15467,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_SPEAKING_EFFECT",
@@ -14086,7 +15479,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_FAST",
-   "order": 514,
+   "order": 539,
    "type": "bool",
    "prompt": "Nháy nhanh (100 ms)",
    "menu": [
@@ -14095,7 +15488,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_SPEAKING_EFFECT",
@@ -14106,7 +15500,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_SLOW",
-   "order": 515,
+   "order": 540,
    "type": "bool",
    "prompt": "Nháy chậm (500 ms)",
    "menu": [
@@ -14115,7 +15509,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_SPEAKING_EFFECT",
@@ -14126,7 +15521,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_BREATHE",
-   "order": 516,
+   "order": 541,
    "type": "bool",
    "prompt": "Thở (sáng dần, tối dần)",
    "menu": [
@@ -14135,7 +15530,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_SPEAKING_EFFECT",
@@ -14145,36 +15541,8 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_RAINBOW",
-   "order": 517,
-   "type": "bool",
-   "prompt": "Cầu vồng đổi màu",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Hệ thống chính (Main System)",
-    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
-   ],
-   "menuconfig": false,
-   "choice": "CUSTOM_LED_STATE_SPEAKING_EFFECT",
-   "depends": [
-    "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
-    "CUSTOM_LED_STATE_SPEAKING_EFFECT"
-   ],
-   "default": [],
-   "range": [],
-   "help": ""
-  },
-  {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_SCROLL",
-   "order": 518,
+   "order": 542,
    "type": "bool",
    "prompt": "Chạy vòng (vòng LED)",
    "menu": [
@@ -14183,7 +15551,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_SPEAKING_EFFECT",
@@ -14202,7 +15571,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_SCANNER",
-   "order": 519,
+   "order": 543,
    "type": "bool",
    "prompt": "Quét qua lại (vòng LED)",
    "menu": [
@@ -14211,7 +15580,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_SPEAKING_EFFECT",
@@ -14230,7 +15600,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_WIPE",
-   "order": 520,
+   "order": 544,
    "type": "bool",
    "prompt": "Tô dần quanh vòng (vòng LED)",
    "menu": [
@@ -14239,35 +15609,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
-   ],
-   "menuconfig": false,
-   "choice": "CUSTOM_LED_STATE_SPEAKING_EFFECT",
-   "depends": [
-    "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
-    "CUSTOM_LED_STATE_SPEAKING_EFFECT"
-   ],
-   "default": [],
-   "range": [],
-   "help": ""
-  },
-  {
-   "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_RAINBOW_CHASE",
-   "order": 521,
-   "type": "bool",
-   "prompt": "Cầu vồng xoay (vòng LED)",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Hệ thống chính (Main System)",
-    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_SPEAKING_EFFECT",
@@ -14286,7 +15629,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_BAR",
-   "order": 522,
+   "order": 545,
    "type": "bool",
    "prompt": "Theo âm thanh: thanh dâng (vòng LED)",
    "menu": [
@@ -14295,7 +15638,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_SPEAKING_EFFECT",
@@ -14314,7 +15658,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_MIRROR",
-   "order": 523,
+   "order": 546,
    "type": "bool",
    "prompt": "Theo âm thanh: loang hai phía (vòng LED)",
    "menu": [
@@ -14323,7 +15667,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_SPEAKING_EFFECT",
@@ -14342,7 +15687,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_PULSE",
-   "order": 524,
+   "order": 547,
    "type": "bool",
    "prompt": "Theo âm thanh: sáng theo nhịp",
    "menu": [
@@ -14351,7 +15696,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_SPEAKING_EFFECT",
@@ -14362,7 +15708,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_SPEAKING_EFFECT_ID",
-   "order": 525,
+   "order": 548,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -14371,7 +15717,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
    ],
    "menuconfig": false,
    "choice": null,
@@ -14416,10 +15763,6 @@
      "CUSTOM_LED_STATE_SPEAKING_EFFECT_BREATHE"
     ],
     [
-     "5",
-     "CUSTOM_LED_STATE_SPEAKING_EFFECT_RAINBOW"
-    ],
-    [
      "6",
      "CUSTOM_LED_STATE_SPEAKING_EFFECT_SCROLL"
     ],
@@ -14430,10 +15773,6 @@
     [
      "8",
      "CUSTOM_LED_STATE_SPEAKING_EFFECT_WIPE"
-    ],
-    [
-     "9",
-     "CUSTOM_LED_STATE_SPEAKING_EFFECT_RAINBOW_CHASE"
     ],
     [
      "10",
@@ -14456,27 +15795,66 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_LED_STATE_SPEAKING_COLOR",
-   "order": 526,
-   "type": "string",
-   "prompt": "Đang nói: màu (mã RRGGBB)",
+   "name": "CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_FIXED",
+   "order": 550,
+   "type": "bool",
+   "prompt": "Màu cố định (nhập mã màu)",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE",
+   "depends": "CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_RAINBOW",
+   "order": 551,
+   "type": "bool",
+   "prompt": "Cầu vồng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE",
+   "depends": "CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_SPEAKING_COLOR",
+   "order": 552,
+   "type": "string",
+   "prompt": "Mã màu (RRGGBB)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
    ],
    "menuconfig": false,
    "choice": null,
    "depends": [
     "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
+    "CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_FIXED",
     [
      "and",
      [
@@ -14507,8 +15885,104 @@
    "help": ""
   },
   {
+   "name": "CUSTOM_LED_STATE_SPEAKING_RAINBOW_MODE_WHOLE",
+   "order": 554,
+   "type": "bool",
+   "prompt": "Đổi màu toàn bộ (mọi LED cùng một màu)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_SPEAKING_RAINBOW_MODE",
+   "depends": "CUSTOM_LED_STATE_SPEAKING_RAINBOW_MODE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_SPEAKING_RAINBOW_MODE_CHASE",
+   "order": 555,
+   "type": "bool",
+   "prompt": "Chạy đuổi (mỗi LED một màu, xoay quanh vòng)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_SPEAKING_RAINBOW_MODE",
+   "depends": "CUSTOM_LED_STATE_SPEAKING_RAINBOW_MODE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_SPEAKING_RAINBOW_SPEED_MS",
+   "order": 556,
+   "type": "int",
+   "prompt": "Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Đang nói"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": [
+    "and",
+    "CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_RAINBOW",
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "50",
+     "y"
+    ]
+   ],
+   "range": [
+    [
+     "10",
+     "500",
+     "y"
+    ]
+   ],
+   "help": "Một vòng đủ 7 màu gồm 64 bước: 50 ms mỗi bước là khoảng 3,2 giây một vòng.\nHiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng."
+  },
+  {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_OFF",
-   "order": 528,
+   "order": 558,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -14517,7 +15991,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_UPGRADING_EFFECT",
@@ -14528,7 +16003,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_STEADY",
-   "order": 529,
+   "order": 559,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -14537,7 +16012,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_UPGRADING_EFFECT",
@@ -14548,7 +16024,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_FAST",
-   "order": 530,
+   "order": 560,
    "type": "bool",
    "prompt": "Nháy nhanh (100 ms)",
    "menu": [
@@ -14557,7 +16033,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_UPGRADING_EFFECT",
@@ -14568,7 +16045,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_SLOW",
-   "order": 531,
+   "order": 561,
    "type": "bool",
    "prompt": "Nháy chậm (500 ms)",
    "menu": [
@@ -14577,7 +16054,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_UPGRADING_EFFECT",
@@ -14588,7 +16066,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_BREATHE",
-   "order": 532,
+   "order": 562,
    "type": "bool",
    "prompt": "Thở (sáng dần, tối dần)",
    "menu": [
@@ -14597,7 +16075,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_UPGRADING_EFFECT",
@@ -14607,36 +16086,8 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_RAINBOW",
-   "order": 533,
-   "type": "bool",
-   "prompt": "Cầu vồng đổi màu",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Hệ thống chính (Main System)",
-    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
-   ],
-   "menuconfig": false,
-   "choice": "CUSTOM_LED_STATE_UPGRADING_EFFECT",
-   "depends": [
-    "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
-    "CUSTOM_LED_STATE_UPGRADING_EFFECT"
-   ],
-   "default": [],
-   "range": [],
-   "help": ""
-  },
-  {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_SCROLL",
-   "order": 534,
+   "order": 563,
    "type": "bool",
    "prompt": "Chạy vòng (vòng LED)",
    "menu": [
@@ -14645,7 +16096,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_UPGRADING_EFFECT",
@@ -14664,7 +16116,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_SCANNER",
-   "order": 535,
+   "order": 564,
    "type": "bool",
    "prompt": "Quét qua lại (vòng LED)",
    "menu": [
@@ -14673,7 +16125,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_UPGRADING_EFFECT",
@@ -14692,7 +16145,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_WIPE",
-   "order": 536,
+   "order": 565,
    "type": "bool",
    "prompt": "Tô dần quanh vòng (vòng LED)",
    "menu": [
@@ -14701,35 +16154,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
-   ],
-   "menuconfig": false,
-   "choice": "CUSTOM_LED_STATE_UPGRADING_EFFECT",
-   "depends": [
-    "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
-    "CUSTOM_LED_STATE_UPGRADING_EFFECT"
-   ],
-   "default": [],
-   "range": [],
-   "help": ""
-  },
-  {
-   "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_RAINBOW_CHASE",
-   "order": 537,
-   "type": "bool",
-   "prompt": "Cầu vồng xoay (vòng LED)",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Hệ thống chính (Main System)",
-    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_UPGRADING_EFFECT",
@@ -14748,7 +16174,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_BAR",
-   "order": 538,
+   "order": 566,
    "type": "bool",
    "prompt": "Theo âm thanh: thanh dâng (vòng LED)",
    "menu": [
@@ -14757,7 +16183,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_UPGRADING_EFFECT",
@@ -14776,7 +16203,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_MIRROR",
-   "order": 539,
+   "order": 567,
    "type": "bool",
    "prompt": "Theo âm thanh: loang hai phía (vòng LED)",
    "menu": [
@@ -14785,7 +16212,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_UPGRADING_EFFECT",
@@ -14804,7 +16232,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_PULSE",
-   "order": 540,
+   "order": 568,
    "type": "bool",
    "prompt": "Theo âm thanh: sáng theo nhịp",
    "menu": [
@@ -14813,7 +16241,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_UPGRADING_EFFECT",
@@ -14824,7 +16253,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_UPGRADING_EFFECT_ID",
-   "order": 541,
+   "order": 569,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -14833,7 +16262,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
    ],
    "menuconfig": false,
    "choice": null,
@@ -14878,10 +16308,6 @@
      "CUSTOM_LED_STATE_UPGRADING_EFFECT_BREATHE"
     ],
     [
-     "5",
-     "CUSTOM_LED_STATE_UPGRADING_EFFECT_RAINBOW"
-    ],
-    [
      "6",
      "CUSTOM_LED_STATE_UPGRADING_EFFECT_SCROLL"
     ],
@@ -14892,10 +16318,6 @@
     [
      "8",
      "CUSTOM_LED_STATE_UPGRADING_EFFECT_WIPE"
-    ],
-    [
-     "9",
-     "CUSTOM_LED_STATE_UPGRADING_EFFECT_RAINBOW_CHASE"
     ],
     [
      "10",
@@ -14918,27 +16340,66 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_LED_STATE_UPGRADING_COLOR",
-   "order": 542,
-   "type": "string",
-   "prompt": "Nâng cấp firmware: màu (mã RRGGBB)",
+   "name": "CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_FIXED",
+   "order": 571,
+   "type": "bool",
+   "prompt": "Màu cố định (nhập mã màu)",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE",
+   "depends": "CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_RAINBOW",
+   "order": 572,
+   "type": "bool",
+   "prompt": "Cầu vồng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE",
+   "depends": "CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_UPGRADING_COLOR",
+   "order": 573,
+   "type": "string",
+   "prompt": "Mã màu (RRGGBB)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
    ],
    "menuconfig": false,
    "choice": null,
    "depends": [
     "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
+    "CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_FIXED",
     [
      "and",
      [
@@ -14969,8 +16430,104 @@
    "help": ""
   },
   {
+   "name": "CUSTOM_LED_STATE_UPGRADING_RAINBOW_MODE_WHOLE",
+   "order": 575,
+   "type": "bool",
+   "prompt": "Đổi màu toàn bộ (mọi LED cùng một màu)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_UPGRADING_RAINBOW_MODE",
+   "depends": "CUSTOM_LED_STATE_UPGRADING_RAINBOW_MODE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_UPGRADING_RAINBOW_MODE_CHASE",
+   "order": 576,
+   "type": "bool",
+   "prompt": "Chạy đuổi (mỗi LED một màu, xoay quanh vòng)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_UPGRADING_RAINBOW_MODE",
+   "depends": "CUSTOM_LED_STATE_UPGRADING_RAINBOW_MODE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_UPGRADING_RAINBOW_SPEED_MS",
+   "order": 577,
+   "type": "int",
+   "prompt": "Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Nâng cấp firmware"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": [
+    "and",
+    "CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_RAINBOW",
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "50",
+     "y"
+    ]
+   ],
+   "range": [
+    [
+     "10",
+     "500",
+     "y"
+    ]
+   ],
+   "help": "Một vòng đủ 7 màu gồm 64 bước: 50 ms mỗi bước là khoảng 3,2 giây một vòng.\nHiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng."
+  },
+  {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_OFF",
-   "order": 544,
+   "order": 579,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -14979,7 +16536,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ACTIVATING_EFFECT",
@@ -14990,7 +16548,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_STEADY",
-   "order": 545,
+   "order": 580,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -14999,7 +16557,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ACTIVATING_EFFECT",
@@ -15010,7 +16569,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_FAST",
-   "order": 546,
+   "order": 581,
    "type": "bool",
    "prompt": "Nháy nhanh (100 ms)",
    "menu": [
@@ -15019,7 +16578,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ACTIVATING_EFFECT",
@@ -15030,7 +16590,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_SLOW",
-   "order": 547,
+   "order": 582,
    "type": "bool",
    "prompt": "Nháy chậm (500 ms)",
    "menu": [
@@ -15039,7 +16599,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ACTIVATING_EFFECT",
@@ -15050,7 +16611,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_BREATHE",
-   "order": 548,
+   "order": 583,
    "type": "bool",
    "prompt": "Thở (sáng dần, tối dần)",
    "menu": [
@@ -15059,7 +16620,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ACTIVATING_EFFECT",
@@ -15069,36 +16631,8 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_RAINBOW",
-   "order": 549,
-   "type": "bool",
-   "prompt": "Cầu vồng đổi màu",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Hệ thống chính (Main System)",
-    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
-   ],
-   "menuconfig": false,
-   "choice": "CUSTOM_LED_STATE_ACTIVATING_EFFECT",
-   "depends": [
-    "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
-    "CUSTOM_LED_STATE_ACTIVATING_EFFECT"
-   ],
-   "default": [],
-   "range": [],
-   "help": ""
-  },
-  {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_SCROLL",
-   "order": 550,
+   "order": 584,
    "type": "bool",
    "prompt": "Chạy vòng (vòng LED)",
    "menu": [
@@ -15107,7 +16641,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ACTIVATING_EFFECT",
@@ -15126,7 +16661,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_SCANNER",
-   "order": 551,
+   "order": 585,
    "type": "bool",
    "prompt": "Quét qua lại (vòng LED)",
    "menu": [
@@ -15135,7 +16670,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ACTIVATING_EFFECT",
@@ -15154,7 +16690,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_WIPE",
-   "order": 552,
+   "order": 586,
    "type": "bool",
    "prompt": "Tô dần quanh vòng (vòng LED)",
    "menu": [
@@ -15163,35 +16699,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
-   ],
-   "menuconfig": false,
-   "choice": "CUSTOM_LED_STATE_ACTIVATING_EFFECT",
-   "depends": [
-    "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
-    "CUSTOM_LED_STATE_ACTIVATING_EFFECT"
-   ],
-   "default": [],
-   "range": [],
-   "help": ""
-  },
-  {
-   "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_RAINBOW_CHASE",
-   "order": 553,
-   "type": "bool",
-   "prompt": "Cầu vồng xoay (vòng LED)",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Hệ thống chính (Main System)",
-    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ACTIVATING_EFFECT",
@@ -15210,7 +16719,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_BAR",
-   "order": 554,
+   "order": 587,
    "type": "bool",
    "prompt": "Theo âm thanh: thanh dâng (vòng LED)",
    "menu": [
@@ -15219,7 +16728,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ACTIVATING_EFFECT",
@@ -15238,7 +16748,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_MIRROR",
-   "order": 555,
+   "order": 588,
    "type": "bool",
    "prompt": "Theo âm thanh: loang hai phía (vòng LED)",
    "menu": [
@@ -15247,7 +16757,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ACTIVATING_EFFECT",
@@ -15266,7 +16777,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_PULSE",
-   "order": 556,
+   "order": 589,
    "type": "bool",
    "prompt": "Theo âm thanh: sáng theo nhịp",
    "menu": [
@@ -15275,7 +16786,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ACTIVATING_EFFECT",
@@ -15286,7 +16798,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ACTIVATING_EFFECT_ID",
-   "order": 557,
+   "order": 590,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -15295,7 +16807,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
    ],
    "menuconfig": false,
    "choice": null,
@@ -15340,10 +16853,6 @@
      "CUSTOM_LED_STATE_ACTIVATING_EFFECT_BREATHE"
     ],
     [
-     "5",
-     "CUSTOM_LED_STATE_ACTIVATING_EFFECT_RAINBOW"
-    ],
-    [
      "6",
      "CUSTOM_LED_STATE_ACTIVATING_EFFECT_SCROLL"
     ],
@@ -15354,10 +16863,6 @@
     [
      "8",
      "CUSTOM_LED_STATE_ACTIVATING_EFFECT_WIPE"
-    ],
-    [
-     "9",
-     "CUSTOM_LED_STATE_ACTIVATING_EFFECT_RAINBOW_CHASE"
     ],
     [
      "10",
@@ -15380,27 +16885,66 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_LED_STATE_ACTIVATING_COLOR",
-   "order": 558,
-   "type": "string",
-   "prompt": "Kích hoạt thiết bị: màu (mã RRGGBB)",
+   "name": "CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_FIXED",
+   "order": 592,
+   "type": "bool",
+   "prompt": "Màu cố định (nhập mã màu)",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE",
+   "depends": "CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_RAINBOW",
+   "order": 593,
+   "type": "bool",
+   "prompt": "Cầu vồng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE",
+   "depends": "CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_ACTIVATING_COLOR",
+   "order": 594,
+   "type": "string",
+   "prompt": "Mã màu (RRGGBB)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
    ],
    "menuconfig": false,
    "choice": null,
    "depends": [
     "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
+    "CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_FIXED",
     [
      "and",
      [
@@ -15431,8 +16975,104 @@
    "help": ""
   },
   {
+   "name": "CUSTOM_LED_STATE_ACTIVATING_RAINBOW_MODE_WHOLE",
+   "order": 596,
+   "type": "bool",
+   "prompt": "Đổi màu toàn bộ (mọi LED cùng một màu)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_ACTIVATING_RAINBOW_MODE",
+   "depends": "CUSTOM_LED_STATE_ACTIVATING_RAINBOW_MODE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_ACTIVATING_RAINBOW_MODE_CHASE",
+   "order": 597,
+   "type": "bool",
+   "prompt": "Chạy đuổi (mỗi LED một màu, xoay quanh vòng)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_ACTIVATING_RAINBOW_MODE",
+   "depends": "CUSTOM_LED_STATE_ACTIVATING_RAINBOW_MODE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_ACTIVATING_RAINBOW_SPEED_MS",
+   "order": 598,
+   "type": "int",
+   "prompt": "Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Kích hoạt thiết bị"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": [
+    "and",
+    "CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_RAINBOW",
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "50",
+     "y"
+    ]
+   ],
+   "range": [
+    [
+     "10",
+     "500",
+     "y"
+    ]
+   ],
+   "help": "Một vòng đủ 7 màu gồm 64 bước: 50 ms mỗi bước là khoảng 3,2 giây một vòng.\nHiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng."
+  },
+  {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_OFF",
-   "order": 560,
+   "order": 600,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -15441,7 +17081,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ERROR_EFFECT",
@@ -15452,7 +17093,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_STEADY",
-   "order": 561,
+   "order": 601,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -15461,7 +17102,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ERROR_EFFECT",
@@ -15472,7 +17114,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_FAST",
-   "order": 562,
+   "order": 602,
    "type": "bool",
    "prompt": "Nháy nhanh (100 ms)",
    "menu": [
@@ -15481,7 +17123,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ERROR_EFFECT",
@@ -15492,7 +17135,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_SLOW",
-   "order": 563,
+   "order": 603,
    "type": "bool",
    "prompt": "Nháy chậm (500 ms)",
    "menu": [
@@ -15501,7 +17144,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ERROR_EFFECT",
@@ -15512,7 +17156,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_BREATHE",
-   "order": 564,
+   "order": 604,
    "type": "bool",
    "prompt": "Thở (sáng dần, tối dần)",
    "menu": [
@@ -15521,7 +17165,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ERROR_EFFECT",
@@ -15531,36 +17176,8 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_LED_STATE_ERROR_EFFECT_RAINBOW",
-   "order": 565,
-   "type": "bool",
-   "prompt": "Cầu vồng đổi màu",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Hệ thống chính (Main System)",
-    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
-   ],
-   "menuconfig": false,
-   "choice": "CUSTOM_LED_STATE_ERROR_EFFECT",
-   "depends": [
-    "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
-    "CUSTOM_LED_STATE_ERROR_EFFECT"
-   ],
-   "default": [],
-   "range": [],
-   "help": ""
-  },
-  {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_SCROLL",
-   "order": 566,
+   "order": 605,
    "type": "bool",
    "prompt": "Chạy vòng (vòng LED)",
    "menu": [
@@ -15569,7 +17186,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ERROR_EFFECT",
@@ -15588,7 +17206,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_SCANNER",
-   "order": 567,
+   "order": 606,
    "type": "bool",
    "prompt": "Quét qua lại (vòng LED)",
    "menu": [
@@ -15597,7 +17215,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ERROR_EFFECT",
@@ -15616,7 +17235,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_WIPE",
-   "order": 568,
+   "order": 607,
    "type": "bool",
    "prompt": "Tô dần quanh vòng (vòng LED)",
    "menu": [
@@ -15625,35 +17244,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
-   ],
-   "menuconfig": false,
-   "choice": "CUSTOM_LED_STATE_ERROR_EFFECT",
-   "depends": [
-    "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
-    "CUSTOM_LED_STATE_ERROR_EFFECT"
-   ],
-   "default": [],
-   "range": [],
-   "help": ""
-  },
-  {
-   "name": "CUSTOM_LED_STATE_ERROR_EFFECT_RAINBOW_CHASE",
-   "order": 569,
-   "type": "bool",
-   "prompt": "Cầu vồng xoay (vòng LED)",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.2. Hệ thống chính (Main System)",
-    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ERROR_EFFECT",
@@ -15672,7 +17264,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_BAR",
-   "order": 570,
+   "order": 608,
    "type": "bool",
    "prompt": "Theo âm thanh: thanh dâng (vòng LED)",
    "menu": [
@@ -15681,7 +17273,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ERROR_EFFECT",
@@ -15700,7 +17293,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_MIRROR",
-   "order": 571,
+   "order": 609,
    "type": "bool",
    "prompt": "Theo âm thanh: loang hai phía (vòng LED)",
    "menu": [
@@ -15709,7 +17302,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ERROR_EFFECT",
@@ -15728,7 +17322,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_PULSE",
-   "order": 572,
+   "order": 610,
    "type": "bool",
    "prompt": "Theo âm thanh: sáng theo nhịp",
    "menu": [
@@ -15737,7 +17331,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
    ],
    "menuconfig": false,
    "choice": "CUSTOM_LED_STATE_ERROR_EFFECT",
@@ -15748,7 +17343,7 @@
   },
   {
    "name": "CUSTOM_LED_STATE_ERROR_EFFECT_ID",
-   "order": 573,
+   "order": 611,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -15757,7 +17352,8 @@
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
    ],
    "menuconfig": false,
    "choice": null,
@@ -15802,10 +17398,6 @@
      "CUSTOM_LED_STATE_ERROR_EFFECT_BREATHE"
     ],
     [
-     "5",
-     "CUSTOM_LED_STATE_ERROR_EFFECT_RAINBOW"
-    ],
-    [
      "6",
      "CUSTOM_LED_STATE_ERROR_EFFECT_SCROLL"
     ],
@@ -15816,10 +17408,6 @@
     [
      "8",
      "CUSTOM_LED_STATE_ERROR_EFFECT_WIPE"
-    ],
-    [
-     "9",
-     "CUSTOM_LED_STATE_ERROR_EFFECT_RAINBOW_CHASE"
     ],
     [
      "10",
@@ -15842,27 +17430,66 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_LED_STATE_ERROR_COLOR",
-   "order": 574,
-   "type": "string",
-   "prompt": "Lỗi: màu (mã RRGGBB)",
+   "name": "CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_FIXED",
+   "order": 613,
+   "type": "bool",
+   "prompt": "Màu cố định (nhập mã màu)",
    "menu": [
     "Xiaozhi Assistant",
     "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
     "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
     "4.2. Hệ thống chính (Main System)",
     "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
-    "Màu và hiệu ứng theo trạng thái"
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_ERROR_COLOR_SOURCE",
+   "depends": "CUSTOM_LED_STATE_ERROR_COLOR_SOURCE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_RAINBOW",
+   "order": 614,
+   "type": "bool",
+   "prompt": "Cầu vồng",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_ERROR_COLOR_SOURCE",
+   "depends": "CUSTOM_LED_STATE_ERROR_COLOR_SOURCE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_ERROR_COLOR",
+   "order": 615,
+   "type": "string",
+   "prompt": "Mã màu (RRGGBB)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
    ],
    "menuconfig": false,
    "choice": null,
    "depends": [
     "and",
-    [
-     "or",
-     "CUSTOM_LED_WS2812",
-     "CUSTOM_LED_CIRCULAR_STRIP"
-    ],
+    "CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_FIXED",
     [
      "and",
      [
@@ -15893,8 +17520,104 @@
    "help": ""
   },
   {
+   "name": "CUSTOM_LED_STATE_ERROR_RAINBOW_MODE_WHOLE",
+   "order": 617,
+   "type": "bool",
+   "prompt": "Đổi màu toàn bộ (mọi LED cùng một màu)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_ERROR_RAINBOW_MODE",
+   "depends": "CUSTOM_LED_STATE_ERROR_RAINBOW_MODE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_ERROR_RAINBOW_MODE_CHASE",
+   "order": 618,
+   "type": "bool",
+   "prompt": "Chạy đuổi (mỗi LED một màu, xoay quanh vòng)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_LED_STATE_ERROR_RAINBOW_MODE",
+   "depends": "CUSTOM_LED_STATE_ERROR_RAINBOW_MODE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_LED_STATE_ERROR_RAINBOW_SPEED_MS",
+   "order": 619,
+   "type": "int",
+   "prompt": "Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.2. Hệ thống chính (Main System)",
+    "Đèn LED trạng thái (Status LED WS2812 / Single LED)",
+    "Màu và hiệu ứng theo trạng thái",
+    "Lỗi"
+   ],
+   "menuconfig": false,
+   "choice": null,
+   "depends": [
+    "and",
+    "CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_RAINBOW",
+    [
+     "and",
+     [
+      "and",
+      [
+       "not",
+       "CUSTOM_LED_NONE"
+      ],
+      [
+       "not",
+       "CUSTOM_LED_USER_CUSTOM"
+      ]
+     ],
+     [
+      "and",
+      "ENABLE_CUSTOM_LEDS",
+      "IDF_TARGET_ESP32S3"
+     ]
+    ]
+   ],
+   "default": [
+    [
+     "50",
+     "y"
+    ]
+   ],
+   "range": [
+    [
+     "10",
+     "500",
+     "y"
+    ]
+   ],
+   "help": "Một vòng đủ 7 màu gồm 64 bước: 50 ms mỗi bước là khoảng 3,2 giây một vòng.\nHiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng."
+  },
+  {
    "name": "CUSTOM_LED_EXTRA_GPIOS",
-   "order": 575,
+   "order": 620,
    "type": "string",
    "prompt": "Các chân LED đơn (cách nhau dấu phẩy, để trống là không dùng)",
    "menu": [
@@ -15918,7 +17641,7 @@
   },
   {
    "name": "CUSTOM_GPIO_LED_BRIGHTNESS",
-   "order": 576,
+   "order": 621,
    "type": "int",
    "prompt": "Độ sáng mặc định (%)",
    "menu": [
@@ -15948,7 +17671,7 @@
   },
   {
    "name": "CUSTOM_GPIO_LED_BOOT_EFFECT_OFF",
-   "order": 578,
+   "order": 623,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -15967,7 +17690,7 @@
   },
   {
    "name": "CUSTOM_GPIO_LED_BOOT_EFFECT_STEADY",
-   "order": 579,
+   "order": 624,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -15986,7 +17709,7 @@
   },
   {
    "name": "CUSTOM_GPIO_LED_BOOT_EFFECT_BLINK",
-   "order": 580,
+   "order": 625,
    "type": "bool",
    "prompt": "Nháy",
    "menu": [
@@ -16005,7 +17728,7 @@
   },
   {
    "name": "CUSTOM_GPIO_LED_BOOT_EFFECT_BREATHE",
-   "order": 581,
+   "order": 626,
    "type": "bool",
    "prompt": "Thở (LED không chỉnh độ sáng được sẽ nháy)",
    "menu": [
@@ -16024,7 +17747,7 @@
   },
   {
    "name": "CUSTOM_GPIO_LED_BOOT_EFFECT_ID",
-   "order": 582,
+   "order": 627,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -16064,7 +17787,7 @@
   },
   {
    "name": "CUSTOM_GPIO_LED_PERIOD_MS",
-   "order": 583,
+   "order": 628,
    "type": "int",
    "prompt": "Chu kỳ nháy/thở mặc định (ms)",
    "menu": [
@@ -16094,7 +17817,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC",
-   "order": 584,
+   "order": 629,
    "type": "bool",
    "prompt": "LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh)",
    "menu": [
@@ -16117,7 +17840,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_LED_IC_I2C_SDA",
-   "order": 585,
+   "order": 630,
    "type": "int",
    "prompt": "Chân I2C SDA chip điều khiển LED",
    "menu": [
@@ -16151,7 +17874,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_LED_IC_I2C_SCL",
-   "order": 586,
+   "order": 631,
    "type": "int",
    "prompt": "Chân I2C SCL chip điều khiển LED",
    "menu": [
@@ -16185,7 +17908,7 @@
   },
   {
    "name": "CUSTOM_LED_IC_LED_CHANNELS",
-   "order": 587,
+   "order": 632,
    "type": "string",
    "prompt": "Kênh dùng làm LED (cách nhau dấu phẩy, để trống là tất cả kênh)",
    "menu": [
@@ -16213,7 +17936,7 @@
   },
   {
    "name": "CUSTOM_LED_IC_LED_BRIGHTNESS",
-   "order": 588,
+   "order": 633,
    "type": "int",
    "prompt": "Độ sáng mặc định (%)",
    "menu": [
@@ -16247,7 +17970,7 @@
   },
   {
    "name": "CUSTOM_LED_IC_LED_BOOT_EFFECT_OFF",
-   "order": 590,
+   "order": 635,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -16266,7 +17989,7 @@
   },
   {
    "name": "CUSTOM_LED_IC_LED_BOOT_EFFECT_STEADY",
-   "order": 591,
+   "order": 636,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -16285,7 +18008,7 @@
   },
   {
    "name": "CUSTOM_LED_IC_LED_BOOT_EFFECT_BLINK",
-   "order": 592,
+   "order": 637,
    "type": "bool",
    "prompt": "Nháy",
    "menu": [
@@ -16304,7 +18027,7 @@
   },
   {
    "name": "CUSTOM_LED_IC_LED_BOOT_EFFECT_BREATHE",
-   "order": 593,
+   "order": 638,
    "type": "bool",
    "prompt": "Thở (LED không chỉnh độ sáng được sẽ nháy)",
    "menu": [
@@ -16323,7 +18046,7 @@
   },
   {
    "name": "CUSTOM_LED_IC_LED_BOOT_EFFECT_ID",
-   "order": 594,
+   "order": 639,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -16367,7 +18090,7 @@
   },
   {
    "name": "CUSTOM_LED_IC_LED_PERIOD_MS",
-   "order": 595,
+   "order": 640,
    "type": "int",
    "prompt": "Chu kỳ nháy/thở mặc định (ms)",
    "menu": [
@@ -16401,7 +18124,7 @@
   },
   {
    "name": "CUSTOM_PCA9685_LED_CHANNELS",
-   "order": 596,
+   "order": 641,
    "type": "string",
    "prompt": "Kênh PCA9685 dùng làm LED (0-15, cách nhau dấu phẩy, để trống là không dùng)",
    "menu": [
@@ -16425,7 +18148,7 @@
   },
   {
    "name": "CUSTOM_PCA9685_LED_BRIGHTNESS",
-   "order": 597,
+   "order": 642,
    "type": "int",
    "prompt": "Độ sáng mặc định (%)",
    "menu": [
@@ -16455,7 +18178,7 @@
   },
   {
    "name": "CUSTOM_PCA9685_LED_BOOT_EFFECT_OFF",
-   "order": 599,
+   "order": 644,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -16474,7 +18197,7 @@
   },
   {
    "name": "CUSTOM_PCA9685_LED_BOOT_EFFECT_STEADY",
-   "order": 600,
+   "order": 645,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -16493,7 +18216,7 @@
   },
   {
    "name": "CUSTOM_PCA9685_LED_BOOT_EFFECT_BLINK",
-   "order": 601,
+   "order": 646,
    "type": "bool",
    "prompt": "Nháy",
    "menu": [
@@ -16512,7 +18235,7 @@
   },
   {
    "name": "CUSTOM_PCA9685_LED_BOOT_EFFECT_BREATHE",
-   "order": 602,
+   "order": 647,
    "type": "bool",
    "prompt": "Thở (LED không chỉnh độ sáng được sẽ nháy)",
    "menu": [
@@ -16531,7 +18254,7 @@
   },
   {
    "name": "CUSTOM_PCA9685_LED_BOOT_EFFECT_ID",
-   "order": 603,
+   "order": 648,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -16571,7 +18294,7 @@
   },
   {
    "name": "CUSTOM_PCA9685_LED_PERIOD_MS",
-   "order": 604,
+   "order": 649,
    "type": "int",
    "prompt": "Chu kỳ nháy/thở mặc định (ms)",
    "menu": [
@@ -16601,7 +18324,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_LED_PINS",
-   "order": 605,
+   "order": 650,
    "type": "string",
    "prompt": "Chân IC mở rộng dùng làm LED (cách nhau dấu phẩy, để trống là không dùng)",
    "menu": [
@@ -16625,7 +18348,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_LED_BRIGHTNESS",
-   "order": 606,
+   "order": 651,
    "type": "int",
    "prompt": "Độ sáng mặc định (%)",
    "menu": [
@@ -16655,7 +18378,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_LED_BOOT_EFFECT_OFF",
-   "order": 608,
+   "order": 653,
    "type": "bool",
    "prompt": "Tắt",
    "menu": [
@@ -16674,7 +18397,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_LED_BOOT_EFFECT_STEADY",
-   "order": 609,
+   "order": 654,
    "type": "bool",
    "prompt": "Sáng đứng yên",
    "menu": [
@@ -16693,7 +18416,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_LED_BOOT_EFFECT_BLINK",
-   "order": 610,
+   "order": 655,
    "type": "bool",
    "prompt": "Nháy",
    "menu": [
@@ -16712,7 +18435,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_LED_BOOT_EFFECT_BREATHE",
-   "order": 611,
+   "order": 656,
    "type": "bool",
    "prompt": "Thở (LED không chỉnh độ sáng được sẽ nháy)",
    "menu": [
@@ -16731,7 +18454,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_LED_BOOT_EFFECT_ID",
-   "order": 612,
+   "order": 657,
    "type": "int",
    "prompt": "",
    "menu": [
@@ -16771,7 +18494,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_LED_PERIOD_MS",
-   "order": 613,
+   "order": 658,
    "type": "int",
    "prompt": "Chu kỳ nháy/thở mặc định (ms)",
    "menu": [
@@ -16801,7 +18524,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SERVO_DOG",
-   "order": 614,
+   "order": 659,
    "type": "bool",
    "prompt": "Động cơ Servo tương tác qua PWM (Servo Dog Controller)",
    "menu": [
@@ -16824,7 +18547,7 @@
   },
   {
    "name": "CUSTOM_SERVO_DOG_PWM_GPIO",
-   "order": 615,
+   "order": 660,
    "type": "int",
    "prompt": "Chân GPIO cấp xung PWM cho Động cơ Servo",
    "menu": [
@@ -16857,7 +18580,7 @@
   },
   {
    "name": "ENABLE_BUZZER",
-   "order": 616,
+   "order": 661,
    "type": "bool",
    "prompt": "Còi báo động Buzzer (GPIO 41)",
    "menu": [
@@ -16880,7 +18603,7 @@
   },
   {
    "name": "BUZZER_TYPE_ACTIVE",
-   "order": 618,
+   "order": 663,
    "type": "bool",
    "prompt": "Còi chủ động (Active, cấp điện là kêu)",
    "menu": [
@@ -16898,7 +18621,7 @@
   },
   {
    "name": "BUZZER_TYPE_PASSIVE",
-   "order": 619,
+   "order": 664,
    "type": "bool",
    "prompt": "Còi thụ động (Passive, phát xung theo tần số qua RMT)",
    "menu": [
@@ -16916,7 +18639,7 @@
   },
   {
    "name": "BUZZER_ACTIVE_LOW",
-   "order": 620,
+   "order": 665,
    "type": "bool",
    "prompt": "Module kích mức thấp (LOW = kêu)",
    "menu": [
@@ -16943,7 +18666,7 @@
   },
   {
    "name": "BUZZER_EXTRA_PINS",
-   "order": 621,
+   "order": 666,
    "type": "string",
    "prompt": "Các chân GPIO Còi thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -16970,7 +18693,7 @@
   },
   {
    "name": "BUZZER_PIN",
-   "order": 622,
+   "order": 667,
    "type": "int",
    "prompt": "Chân GPIO Buzzer",
    "menu": [
@@ -17003,7 +18726,7 @@
   },
   {
    "name": "ENABLE_HAPTIC_MOTOR",
-   "order": 623,
+   "order": 668,
    "type": "bool",
    "prompt": "Động cơ rung phản hồi xúc giác (GPIO 42)",
    "menu": [
@@ -17026,7 +18749,7 @@
   },
   {
    "name": "HAPTIC_PIN",
-   "order": 624,
+   "order": 669,
    "type": "int",
    "prompt": "Chân GPIO Động cơ rung",
    "menu": [
@@ -17059,7 +18782,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_DHT11_22",
-   "order": 625,
+   "order": 670,
    "type": "bool",
    "prompt": "Cảm biến Nhiệt độ & Độ ẩm 1 dây (DHT11 / DHT22)",
    "menu": [
@@ -17081,35 +18804,8 @@
    "help": "Cảm biến nhiệt độ và độ ẩm giao tiếp 1-Wire."
   },
   {
-   "name": "CUSTOM_SENSOR_DHT_EXTRA_GPIOS",
-   "order": 626,
-   "type": "string",
-   "prompt": "Các chân GPIO DHT thêm (cách nhau dấu phẩy)",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow)"
-   ],
-   "menuconfig": false,
-   "choice": null,
-   "depends": [
-    "and",
-    "CUSTOM_ENABLE_SENSOR_DHT11_22",
-    "IDF_TARGET_ESP32S3"
-   ],
-   "default": [
-    [
-     "",
-     "y"
-    ]
-   ],
-   "range": [],
-   "help": ""
-  },
-  {
    "name": "CUSTOM_SENSOR_DHT_GPIO",
-   "order": 627,
+   "order": 671,
    "type": "int",
    "prompt": "Chân dữ liệu 1-Wire cảm biến DHT GPIO",
    "menu": [
@@ -17142,7 +18838,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_I2C_TEMP_HUMID",
-   "order": 628,
+   "order": 672,
    "type": "bool",
    "prompt": "Cảm biến Nhiệt độ & Độ ẩm kỹ thuật số I2C (AHT20 / SHT3x)",
    "menu": [
@@ -17165,7 +18861,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_AHT20",
-   "order": 629,
+   "order": 673,
    "type": "bool",
    "prompt": "Aosong AHT10 / AHT20 / AHT21 (I2C)",
    "menu": [
@@ -17191,35 +18887,8 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_SENSOR_AHT20_EXTRA_GPIOS",
-   "order": 630,
-   "type": "string",
-   "prompt": "Các chân GPIO AHT20 thêm (cách nhau dấu phẩy)",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow)"
-   ],
-   "menuconfig": false,
-   "choice": null,
-   "depends": [
-    "and",
-    "CUSTOM_ENABLE_SENSOR_I2C_TEMP_HUMID",
-    "IDF_TARGET_ESP32S3"
-   ],
-   "default": [
-    [
-     "",
-     "y"
-    ]
-   ],
-   "range": [],
-   "help": ""
-  },
-  {
    "name": "CUSTOM_SENSOR_I2C_SDA",
-   "order": 631,
+   "order": 674,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến nhiệt ẩm",
    "menu": [
@@ -17252,7 +18921,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_I2C_SCL",
-   "order": 632,
+   "order": 675,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến nhiệt ẩm",
    "menu": [
@@ -17285,7 +18954,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_BMP280",
-   "order": 633,
+   "order": 676,
    "type": "bool",
    "prompt": "Cảm biến Áp suất khí quyển & Độ cao (Bosch BMP280 / BME280 I2C)",
    "menu": [
@@ -17307,35 +18976,8 @@
    "help": "Cảm biến áp suất khí quyển và ước tính độ cao qua I2C."
   },
   {
-   "name": "CUSTOM_SENSOR_BMP280_EXTRA_GPIOS",
-   "order": 634,
-   "type": "string",
-   "prompt": "Các chân GPIO BMP280 thêm (cách nhau dấu phẩy)",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow)"
-   ],
-   "menuconfig": false,
-   "choice": null,
-   "depends": [
-    "and",
-    "CUSTOM_ENABLE_SENSOR_BMP280",
-    "IDF_TARGET_ESP32S3"
-   ],
-   "default": [
-    [
-     "",
-     "y"
-    ]
-   ],
-   "range": [],
-   "help": ""
-  },
-  {
    "name": "CUSTOM_SENSOR_BMP280_I2C_SDA",
-   "order": 635,
+   "order": 677,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến khí áp BMP280",
    "menu": [
@@ -17368,7 +19010,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_BMP280_I2C_SCL",
-   "order": 636,
+   "order": 678,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến khí áp BMP280",
    "menu": [
@@ -17401,7 +19043,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_BH1750",
-   "order": 637,
+   "order": 679,
    "type": "bool",
    "prompt": "Cảm biến cường độ ánh sáng kỹ thuật số BH1750 (I2C)",
    "menu": [
@@ -17423,35 +19065,8 @@
    "help": "Cảm biến đo cường độ sáng môi trường đơn vị Lux qua I2C."
   },
   {
-   "name": "CUSTOM_SENSOR_BH1750_EXTRA_GPIOS",
-   "order": 638,
-   "type": "string",
-   "prompt": "Các chân GPIO BH1750 thêm (cách nhau dấu phẩy)",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow)"
-   ],
-   "menuconfig": false,
-   "choice": null,
-   "depends": [
-    "and",
-    "CUSTOM_ENABLE_SENSOR_BH1750",
-    "IDF_TARGET_ESP32S3"
-   ],
-   "default": [
-    [
-     "",
-     "y"
-    ]
-   ],
-   "range": [],
-   "help": ""
-  },
-  {
    "name": "CUSTOM_SENSOR_BH1750_I2C_SDA",
-   "order": 639,
+   "order": 680,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến ánh sáng BH1750",
    "menu": [
@@ -17484,7 +19099,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_BH1750_I2C_SCL",
-   "order": 640,
+   "order": 681,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến ánh sáng BH1750",
    "menu": [
@@ -17517,7 +19132,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_LDR",
-   "order": 641,
+   "order": 682,
    "type": "bool",
    "prompt": "Cảm biến ánh sáng quang trở (LDR qua cầu phân áp ADC)",
    "menu": [
@@ -17540,7 +19155,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_LDR_EXTRA_CHS",
-   "order": 642,
+   "order": 683,
    "type": "string",
    "prompt": "Các kênh ADC quang trở LDR thêm (cách nhau dấu phẩy)",
    "menu": [
@@ -17567,7 +19182,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_LDR_ADC_CHANNEL",
-   "order": 643,
+   "order": 684,
    "type": "int",
    "prompt": "Kênh ADC1 đo quang trở LDR (Kênh N ứng với GPIO N+1, -1 chưa chọn)",
    "menu": [
@@ -17600,7 +19215,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_GAS_CO2",
-   "order": 644,
+   "order": 685,
    "type": "bool",
    "prompt": "Cảm biến nồng độ Khí độc TVOC & CO2 NDIR (SCD40/41, SGP30/40 I2C)",
    "menu": [
@@ -17623,7 +19238,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_GAS_SCD4X",
-   "order": 645,
+   "order": 686,
    "type": "bool",
    "prompt": "Sensirion SCD40 / SCD41 (Cảm biến CO2 NDIR I2C)",
    "menu": [
@@ -17649,35 +19264,8 @@
    "help": ""
   },
   {
-   "name": "CUSTOM_SENSOR_SCD4X_EXTRA_GPIOS",
-   "order": 646,
-   "type": "string",
-   "prompt": "Các chân GPIO SCD4X thêm (cách nhau dấu phẩy)",
-   "menu": [
-    "Xiaozhi Assistant",
-    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-    "4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow)"
-   ],
-   "menuconfig": false,
-   "choice": null,
-   "depends": [
-    "and",
-    "CUSTOM_ENABLE_SENSOR_GAS_CO2",
-    "IDF_TARGET_ESP32S3"
-   ],
-   "default": [
-    [
-     "",
-     "y"
-    ]
-   ],
-   "range": [],
-   "help": ""
-  },
-  {
    "name": "CUSTOM_SENSOR_GAS_I2C_SDA",
-   "order": 647,
+   "order": 687,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến khí/CO2",
    "menu": [
@@ -17710,7 +19298,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_GAS_I2C_SCL",
-   "order": 648,
+   "order": 688,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến khí/CO2",
    "menu": [
@@ -17743,7 +19331,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_GAS_ANALOG_MQ",
-   "order": 649,
+   "order": 689,
    "type": "bool",
    "prompt": "Cảm biến khói & khí gas dễ cháy (MQ-2 / MQ-135 Analog ADC)",
    "menu": [
@@ -17766,7 +19354,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_MQ_ANALOG_PIN",
-   "order": 650,
+   "order": 690,
    "type": "int",
    "prompt": "Chân analog đọc điện áp cảm biến MQ (kênh ADC1)",
    "menu": [
@@ -17798,8 +19386,44 @@
    "help": ""
   },
   {
+   "name": "CUSTOM_SENSOR_MQ_TYPE_MQ2",
+   "order": 692,
+   "type": "bool",
+   "prompt": "MQ-2 (khói, LPG, khí dễ cháy)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow)"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_SENSOR_MQ_TYPE",
+   "depends": "CUSTOM_SENSOR_MQ_TYPE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
+   "name": "CUSTOM_SENSOR_MQ_TYPE_MQ135",
+   "order": 693,
+   "type": "bool",
+   "prompt": "MQ-135 (chất lượng không khí, NH3, CO2, benzen)",
+   "menu": [
+    "Xiaozhi Assistant",
+    "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
+    "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
+    "4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow)"
+   ],
+   "menuconfig": false,
+   "choice": "CUSTOM_SENSOR_MQ_TYPE",
+   "depends": "CUSTOM_SENSOR_MQ_TYPE",
+   "default": [],
+   "range": [],
+   "help": ""
+  },
+  {
    "name": "CUSTOM_SENSOR_DS18B20_PIN",
-   "order": 651,
+   "order": 694,
    "type": "int",
    "prompt": "Chân dữ liệu 1-Wire cảm biến nhiệt độ DS18B20",
    "menu": [
@@ -17828,7 +19452,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_FLOW_PULSE_PIN",
-   "order": 652,
+   "order": 695,
    "type": "int",
    "prompt": "Chân đọc xung lưu lượng chất lỏng (Flow Pulse)",
    "menu": [
@@ -17857,7 +19481,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_APDS9960",
-   "order": 653,
+   "order": 696,
    "type": "bool",
    "prompt": "Cảm biến màu sắc, cử chỉ & tiệm cận (Broadcom APDS-9960 I2C)",
    "menu": [
@@ -17880,7 +19504,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_APDS9960_I2C_SDA",
-   "order": 654,
+   "order": 697,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến APDS9960",
    "menu": [
@@ -17913,7 +19537,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_APDS9960_I2C_SCL",
-   "order": 655,
+   "order": 698,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến APDS9960",
    "menu": [
@@ -17946,7 +19570,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_APDS9960_INT_PIN",
-   "order": 656,
+   "order": 699,
    "type": "int",
    "prompt": "Chân ngắt INT cảm biến APDS9960",
    "menu": [
@@ -17979,7 +19603,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_VL53LX",
-   "order": 657,
+   "order": 700,
    "type": "bool",
    "prompt": "Cảm biến khoảng cách laser ToF (STMicroelectronics VL53L0X / VL53L1X I2C)",
    "menu": [
@@ -18002,7 +19626,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_VL53LX_I2C_SDA",
-   "order": 658,
+   "order": 701,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến laser VL53L",
    "menu": [
@@ -18035,7 +19659,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_VL53LX_I2C_SCL",
-   "order": 659,
+   "order": 702,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến laser VL53L",
    "menu": [
@@ -18068,7 +19692,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_VL53LX_XSHUT_PIN",
-   "order": 660,
+   "order": 703,
    "type": "int",
    "prompt": "Chân tắt nguồn XSHUT cảm biến laser VL53L",
    "menu": [
@@ -18101,7 +19725,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_HCSR04",
-   "order": 661,
+   "order": 704,
    "type": "bool",
    "prompt": "Cảm biến khoảng cách siêu âm (HC-SR04 / US-100)",
    "menu": [
@@ -18124,7 +19748,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_HCSR04_TRIG_GPIO",
-   "order": 662,
+   "order": 705,
    "type": "int",
    "prompt": "Chân phát xung siêu âm Trig GPIO",
    "menu": [
@@ -18157,7 +19781,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_HCSR04_ECHO_GPIO",
-   "order": 663,
+   "order": 706,
    "type": "int",
    "prompt": "Chân nhận tín hiệu siêu âm Echo GPIO",
    "menu": [
@@ -18190,7 +19814,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_PIR",
-   "order": 664,
+   "order": 707,
    "type": "bool",
    "prompt": "Cảm biến phát hiện người chuyển động PIR (HC-SR501 / RCWL-0516)",
    "menu": [
@@ -18213,7 +19837,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_PIR_GPIO",
-   "order": 665,
+   "order": 708,
    "type": "int",
    "prompt": "Chân tín hiệu cảm biến PIR GPIO",
    "menu": [
@@ -18246,7 +19870,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_VIBRATION_SW420",
-   "order": 666,
+   "order": 709,
    "type": "bool",
    "prompt": "Cảm biến cảnh báo chấn động / Rung tiếp điểm (SW-420 GPIO Interrupt)",
    "menu": [
@@ -18269,7 +19893,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_VIBRATION_PIN",
-   "order": 667,
+   "order": 710,
    "type": "int",
    "prompt": "Chân tín hiệu Digital Out cảm biến rung",
    "menu": [
@@ -18302,7 +19926,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_FLAME",
-   "order": 668,
+   "order": 711,
    "type": "bool",
    "prompt": "Cảm biến cảnh báo hỏa hoạn / Ngọn lửa (Flame Sensor IR)",
    "menu": [
@@ -18325,7 +19949,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_FLAME_PIN",
-   "order": 669,
+   "order": 712,
    "type": "int",
    "prompt": "Chân tín hiệu Digital báo lửa",
    "menu": [
@@ -18358,7 +19982,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RELAY_ENABLE",
-   "order": 670,
+   "order": 713,
    "type": "bool",
    "prompt": "Rơ-le đóng cắt thiết bị độc lập (Relay Switch)",
    "menu": [
@@ -18381,7 +20005,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RELAY_GPIO",
-   "order": 671,
+   "order": 714,
    "type": "int",
    "prompt": "Chân GPIO kích hoạt Relay đóng cắt",
    "menu": [
@@ -18414,7 +20038,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE",
-   "order": 672,
+   "order": 715,
    "type": "bool",
    "prompt": "Mạch cầu H Động cơ DC 2 chiều cho xe robot (TB6612FNG / L9110S / DRV8833)",
    "menu": [
@@ -18437,7 +20061,7 @@
   },
   {
    "name": "CUSTOM_MOTOR_DRIVER_TB6612",
-   "order": 674,
+   "order": 717,
    "type": "bool",
    "prompt": "Toshiba TB6612FNG (Hiệu suất cao MOSFET H-Bridge)",
    "menu": [
@@ -18455,7 +20079,7 @@
   },
   {
    "name": "CUSTOM_MOTOR_DRIVER_L9110S",
-   "order": 675,
+   "order": 718,
    "type": "bool",
    "prompt": "L9110S / HG7881 (Mạch 2 kênh DC mini giá rẻ)",
    "menu": [
@@ -18473,7 +20097,7 @@
   },
   {
    "name": "CUSTOM_MOTOR_DRIVER_DRV8833",
-   "order": 676,
+   "order": 719,
    "type": "bool",
    "prompt": "TI DRV8833 (Cầu H kép bảo vệ quá dòng)",
    "menu": [
@@ -18491,7 +20115,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_MOTOR_PWMA_PIN",
-   "order": 677,
+   "order": 720,
    "type": "int",
    "prompt": "Chân điều tốc PWM Động cơ A (PWMA)",
    "menu": [
@@ -18524,7 +20148,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_MOTOR_DIRA_PIN",
-   "order": 678,
+   "order": 721,
    "type": "int",
    "prompt": "Chân hướng quay Động cơ A (DIRA / IN1)",
    "menu": [
@@ -18557,7 +20181,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_MOTOR_PWMB_PIN",
-   "order": 679,
+   "order": 722,
    "type": "int",
    "prompt": "Chân điều tốc PWM Động cơ B (PWMB)",
    "menu": [
@@ -18590,7 +20214,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_MOTOR_DIRB_PIN",
-   "order": 680,
+   "order": 723,
    "type": "int",
    "prompt": "Chân hướng quay Động cơ B (DIRB / IN3)",
    "menu": [
@@ -18623,7 +20247,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_BATTERY_MONITOR",
-   "order": 681,
+   "order": 724,
    "type": "bool",
    "prompt": "Mạch đo dung lượng Pin (Battery Level Monitor)",
    "menu": [
@@ -18646,7 +20270,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_MONITOR_ADC",
-   "order": 682,
+   "order": 725,
    "type": "bool",
    "prompt": "Đo qua ADC nội bộ (Bộ chia điện trở Voltage Divider)",
    "menu": [
@@ -18673,7 +20297,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_ADC_CHANNEL",
-   "order": 683,
+   "order": 726,
    "type": "int",
    "prompt": "Kênh ADC1 đo pin (Kênh N ứng với GPIO N+1, -1 chưa chọn)",
    "menu": [
@@ -18710,7 +20334,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_DIVIDER_R1",
-   "order": 684,
+   "order": 727,
    "type": "int",
    "prompt": "Điện trở nhánh trên R1 cầu phân áp (kOhm)",
    "menu": [
@@ -18747,7 +20371,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_DIVIDER_R2",
-   "order": 685,
+   "order": 728,
    "type": "int",
    "prompt": "Điện trở nhánh dưới R2 cầu phân áp (kOhm)",
    "menu": [
@@ -18784,7 +20408,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_SENSOR_INA2XX",
-   "order": 686,
+   "order": 729,
    "type": "bool",
    "prompt": "Module đo điện áp, dòng điện & công suất tiêu thụ (TI INA219 / INA226 I2C)",
    "menu": [
@@ -18807,7 +20431,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_INA219",
-   "order": 687,
+   "order": 730,
    "type": "bool",
    "prompt": "Texas Instruments INA219 (Điện áp tối đa 26V, độ phân giải 12-bit)",
    "menu": [
@@ -18834,7 +20458,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_INA2XX_I2C_SDA",
-   "order": 688,
+   "order": 731,
    "type": "int",
    "prompt": "Chân I2C SDA module đo dòng INA",
    "menu": [
@@ -18867,7 +20491,7 @@
   },
   {
    "name": "CUSTOM_SENSOR_INA2XX_I2C_SCL",
-   "order": 689,
+   "order": 732,
    "type": "int",
    "prompt": "Chân I2C SCL module đo dòng INA",
    "menu": [
@@ -18900,7 +20524,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_BATTERY_CHARGING_DETECT",
-   "order": 690,
+   "order": 733,
    "type": "bool",
    "prompt": "Giám sát trạng thái sạc pin (TP4056 CHRG / STDBY Pin)",
    "menu": [
@@ -18923,7 +20547,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_BATTERY_CHRG_PIN",
-   "order": 691,
+   "order": 734,
    "type": "int",
    "prompt": "Chân đọc tín hiệu sạc (kéo trở Pull-up)",
    "menu": [
@@ -18956,7 +20580,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_MONITOR_BQ27220",
-   "order": 692,
+   "order": 735,
    "type": "bool",
    "prompt": "Mạch giám sát pin chuyên dụng I2C (TI BQ27220)",
    "menu": [
@@ -18979,7 +20603,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_BQ27220_I2C_SDA",
-   "order": 693,
+   "order": 736,
    "type": "int",
    "prompt": "Chân I2C SDA IC đo pin BQ27220",
    "menu": [
@@ -19012,7 +20636,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_BQ27220_I2C_SCL",
-   "order": 694,
+   "order": 737,
    "type": "int",
    "prompt": "Chân I2C SCL IC đo pin BQ27220",
    "menu": [
@@ -19045,7 +20669,7 @@
   },
   {
    "name": "CUSTOM_PMIC_I2C_SDA",
-   "order": 695,
+   "order": 738,
    "type": "int",
    "prompt": "Chân I2C SDA chip quản lý nguồn PMIC",
    "menu": [
@@ -19074,7 +20698,7 @@
   },
   {
    "name": "CUSTOM_PMIC_I2C_SCL",
-   "order": 696,
+   "order": 739,
    "type": "int",
    "prompt": "Chân I2C SCL chip quản lý nguồn PMIC",
    "menu": [
@@ -19103,7 +20727,7 @@
   },
   {
    "name": "CUSTOM_PMIC_INT_PIN",
-   "order": 697,
+   "order": 740,
    "type": "int",
    "prompt": "Chân ngắt INT chip quản lý nguồn PMIC",
    "menu": [
@@ -19132,7 +20756,7 @@
   },
   {
    "name": "CUSTOM_IMU_I2C_SDA",
-   "order": 698,
+   "order": 741,
    "type": "int",
    "prompt": "Chân I2C SDA cảm biến chuyển động IMU",
    "menu": [
@@ -19161,7 +20785,7 @@
   },
   {
    "name": "CUSTOM_IMU_I2C_SCL",
-   "order": 699,
+   "order": 742,
    "type": "int",
    "prompt": "Chân I2C SCL cảm biến chuyển động IMU",
    "menu": [
@@ -19190,7 +20814,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_I2C_SDA",
-   "order": 700,
+   "order": 743,
    "type": "int",
    "prompt": "Chân I2C SDA chip mở rộng GPIO (IO Expander)",
    "menu": [
@@ -19219,7 +20843,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_I2C_SCL",
-   "order": 701,
+   "order": 744,
    "type": "int",
    "prompt": "Chân I2C SCL chip mở rộng GPIO (IO Expander)",
    "menu": [
@@ -19248,7 +20872,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_INT_PIN",
-   "order": 702,
+   "order": 745,
    "type": "int",
    "prompt": "Chân ngắt INT chip mở rộng GPIO",
    "menu": [
@@ -19277,7 +20901,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_RST_PIN",
-   "order": 703,
+   "order": 746,
    "type": "int",
    "prompt": "Chân reset RST chip mở rộng GPIO",
    "menu": [
@@ -19306,7 +20930,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_CHIP_TCA9554",
-   "order": 705,
+   "order": 748,
    "type": "bool",
    "prompt": "TCA9554 / PCA9554 / TCA9554A (8 chân)",
    "menu": [
@@ -19324,7 +20948,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_CHIP_TCA95XX_16BIT",
-   "order": 706,
+   "order": 749,
    "type": "bool",
    "prompt": "TCA9555 / PCA9555 / TCA9535 / TCA9539 (16 chân)",
    "menu": [
@@ -19342,7 +20966,7 @@
   },
   {
    "name": "CUSTOM_EXPANDER_I2C_ADDR",
-   "order": 707,
+   "order": 750,
    "type": "int",
    "prompt": "Địa chỉ I2C chip mở rộng GPIO (thập phân)",
    "menu": [
@@ -19371,7 +20995,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_RTC",
-   "order": 708,
+   "order": 751,
    "type": "bool",
    "prompt": "Đồng hồ thời gian thực ngoại vi (RTC I2C DS3231 / PCF8563)",
    "menu": [
@@ -19394,7 +21018,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RTC_I2C_SDA",
-   "order": 709,
+   "order": 752,
    "type": "int",
    "prompt": "Chân I2C SDA module RTC",
    "menu": [
@@ -19427,7 +21051,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RTC_I2C_SCL",
-   "order": 710,
+   "order": 753,
    "type": "int",
    "prompt": "Chân I2C SCL module RTC",
    "menu": [
@@ -19460,7 +21084,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RTC_INT_PIN",
-   "order": 711,
+   "order": 754,
    "type": "int",
    "prompt": "Chân ngắt báo thức INT module RTC",
    "menu": [
@@ -19493,7 +21117,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_NFC_PN532",
-   "order": 712,
+   "order": 755,
    "type": "bool",
    "prompt": "Đầu đọc thẻ từ giao tiếp gần NFC (NXP PN532 I2C)",
    "menu": [
@@ -19516,7 +21140,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_NFC_I2C_SDA",
-   "order": 713,
+   "order": 756,
    "type": "int",
    "prompt": "Chân I2C SDA module NFC",
    "menu": [
@@ -19549,7 +21173,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_NFC_I2C_SCL",
-   "order": 714,
+   "order": 757,
    "type": "int",
    "prompt": "Chân I2C SCL module NFC",
    "menu": [
@@ -19582,7 +21206,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_NFC_IRQ_PIN",
-   "order": 715,
+   "order": 758,
    "type": "int",
    "prompt": "Chân ngắt IRQ module NFC",
    "menu": [
@@ -19615,7 +21239,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_NFC_RST_PIN",
-   "order": 716,
+   "order": 759,
    "type": "int",
    "prompt": "Chân reset RST module NFC",
    "menu": [
@@ -19648,7 +21272,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_PCA9685",
-   "order": 717,
+   "order": 760,
    "type": "bool",
    "prompt": "Mạch mở rộng 16 kênh PWM I2C (NXP PCA9685)",
    "menu": [
@@ -19671,7 +21295,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_PCA9685_I2C_SDA",
-   "order": 718,
+   "order": 761,
    "type": "int",
    "prompt": "Chân I2C SDA module PCA9685",
    "menu": [
@@ -19704,7 +21328,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_PCA9685_I2C_SCL",
-   "order": 719,
+   "order": 762,
    "type": "int",
    "prompt": "Chân I2C SCL module PCA9685",
    "menu": [
@@ -19737,7 +21361,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_PCA9685_OE_PIN",
-   "order": 720,
+   "order": 763,
    "type": "int",
    "prompt": "Chân cho phép đầu ra OE module PCA9685",
    "menu": [
@@ -19770,7 +21394,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_SDCARD_SPI",
-   "order": 721,
+   "order": 764,
    "type": "bool",
    "prompt": "Đầu đọc thẻ nhớ MicroSD qua giao tiếp SPI",
    "menu": [
@@ -19793,7 +21417,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_SDCARD_SPI_SCK",
-   "order": 722,
+   "order": 765,
    "type": "int",
    "prompt": "Chân xung nhịp SPI SCK thẻ nhớ",
    "menu": [
@@ -19826,7 +21450,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_SDCARD_SPI_MOSI",
-   "order": 723,
+   "order": 766,
    "type": "int",
    "prompt": "Chân dữ liệu SPI MOSI thẻ nhớ",
    "menu": [
@@ -19859,7 +21483,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_SDCARD_SPI_MISO",
-   "order": 724,
+   "order": 767,
    "type": "int",
    "prompt": "Chân dữ liệu SPI MISO thẻ nhớ",
    "menu": [
@@ -19892,7 +21516,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_SDCARD_SPI_CS",
-   "order": 725,
+   "order": 768,
    "type": "int",
    "prompt": "Chân chọn chip SPI CS thẻ nhớ",
    "menu": [
@@ -19925,7 +21549,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RC522_SPI_SCK",
-   "order": 726,
+   "order": 769,
    "type": "int",
    "prompt": "Chân xung nhịp SPI SCK module RFID RC522",
    "menu": [
@@ -19954,7 +21578,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RC522_SPI_MOSI",
-   "order": 727,
+   "order": 770,
    "type": "int",
    "prompt": "Chân dữ liệu SPI MOSI module RFID RC522",
    "menu": [
@@ -19983,7 +21607,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RC522_SPI_MISO",
-   "order": 728,
+   "order": 771,
    "type": "int",
    "prompt": "Chân dữ liệu SPI MISO module RFID RC522",
    "menu": [
@@ -20012,7 +21636,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RC522_SPI_CS",
-   "order": 729,
+   "order": 772,
    "type": "int",
    "prompt": "Chân chọn chip SPI CS module RFID RC522",
    "menu": [
@@ -20041,7 +21665,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_RC522_RST_PIN",
-   "order": 730,
+   "order": 773,
    "type": "int",
    "prompt": "Chân reset RST module RFID RC522",
    "menu": [
@@ -20070,7 +21694,7 @@
   },
   {
    "name": "CUSTOM_ETH_SPI_SCK_PIN",
-   "order": 731,
+   "order": 774,
    "type": "int",
    "prompt": "Chân SCK SPI module Ethernet (W5500)",
    "menu": [
@@ -20099,7 +21723,7 @@
   },
   {
    "name": "CUSTOM_ETH_SPI_MOSI_PIN",
-   "order": 732,
+   "order": 775,
    "type": "int",
    "prompt": "Chân MOSI SPI module Ethernet (W5500)",
    "menu": [
@@ -20128,7 +21752,7 @@
   },
   {
    "name": "CUSTOM_ETH_SPI_MISO_PIN",
-   "order": 733,
+   "order": 776,
    "type": "int",
    "prompt": "Chân MISO SPI module Ethernet (W5500)",
    "menu": [
@@ -20157,7 +21781,7 @@
   },
   {
    "name": "CUSTOM_ETH_SPI_CS_PIN",
-   "order": 734,
+   "order": 777,
    "type": "int",
    "prompt": "Chân chọn chip SPI CS module Ethernet (W5500)",
    "menu": [
@@ -20186,7 +21810,7 @@
   },
   {
    "name": "CUSTOM_ETH_SPI_INT_PIN",
-   "order": 735,
+   "order": 778,
    "type": "int",
    "prompt": "Chân ngắt INT module Ethernet",
    "menu": [
@@ -20215,7 +21839,7 @@
   },
   {
    "name": "CUSTOM_ETH_SPI_RST_PIN",
-   "order": 736,
+   "order": 779,
    "type": "int",
    "prompt": "Chân reset RST module Ethernet",
    "menu": [
@@ -20244,7 +21868,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_IR_REMOTE",
-   "order": 737,
+   "order": 780,
    "type": "bool",
    "prompt": "Module truyền nhận hồng ngoại điều khiển từ xa (IR Remote) - CHƯA HỖ TRỢ, chưa có driver",
    "menu": [
@@ -20267,7 +21891,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_IR_TX_PIN",
-   "order": 738,
+   "order": 781,
    "type": "int",
    "prompt": "Chân phát hồng ngoại IR TX (38kHz)",
    "menu": [
@@ -20300,7 +21924,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_IR_RX_PIN",
-   "order": 739,
+   "order": 782,
    "type": "int",
    "prompt": "Chân thu hồng ngoại IR RX (VS1838B)",
    "menu": [
@@ -20333,7 +21957,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_TWAI_TX_PIN",
-   "order": 740,
+   "order": 783,
    "type": "int",
    "prompt": "Chân phát mạng CAN / TWAI TX",
    "menu": [
@@ -20362,7 +21986,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_TWAI_RX_PIN",
-   "order": 741,
+   "order": 784,
    "type": "int",
    "prompt": "Chân nhận mạng CAN / TWAI RX",
    "menu": [
@@ -20391,7 +22015,7 @@
   },
   {
    "name": "CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE",
-   "order": 742,
+   "order": 785,
    "type": "bool",
    "prompt": "Module truyền thông dữ liệu mạng di động 4G LTE (A7670 / SIM7600) - CHƯA HỖ TRỢ, chưa có driver",
    "menu": [
@@ -20414,7 +22038,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_4G_PWRKEY_PIN",
-   "order": 743,
+   "order": 786,
    "type": "int",
    "prompt": "Chân bật nguồn PWRKEY module 4G",
    "menu": [
@@ -20447,7 +22071,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_4G_UART_TX_PIN",
-   "order": 744,
+   "order": 787,
    "type": "int",
    "prompt": "Chân truyền UART TX kết nối module 4G",
    "menu": [
@@ -20480,7 +22104,7 @@
   },
   {
    "name": "CUSTOM_PERIPH_4G_UART_RX_PIN",
-   "order": 745,
+   "order": 788,
    "type": "int",
    "prompt": "Chân nhận UART RX kết nối module 4G",
    "menu": [
@@ -20513,7 +22137,7 @@
   },
   {
    "name": "CUSTOM_BATTERY_MONITOR_NONE",
-   "order": 746,
+   "order": 789,
    "type": "bool",
    "prompt": "",
    "menu": [

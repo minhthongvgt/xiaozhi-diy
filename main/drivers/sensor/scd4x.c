@@ -1,5 +1,6 @@
 #include "scd4x.h"
 #include <esp_log.h>
+#include <esp_rom_sys.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <stdlib.h>
@@ -9,6 +10,7 @@
 #define SCD4X_CMD_READ_MEASUREMENT            0xEC05
 #define SCD4X_CMD_STOP_PERIODIC_MEASUREMENT   0x3F86
 #define SCD4X_CMD_GET_DATA_READY_STATUS       0xE4B8
+#define SCD4X_CMD_EXECUTION_TIME_US           1200
 typedef struct scd4x_dev_t {
     i2c_master_dev_handle_t i2c_dev;
     bool is_measuring;
@@ -88,14 +90,16 @@ esp_err_t scd4x_read_measurement(scd4x_handle_t handle, float *out_co2_ppm, floa
     *out_co2_ppm = 0.0f;
     *out_temp_c = 0.0f;
     *out_hum_pct = 0.0f;
-    uint8_t cmd_buf[2] = {
-        (uint8_t)((SCD4X_CMD_READ_MEASUREMENT >> 8) & 0xFF),
-        (uint8_t)(SCD4X_CMD_READ_MEASUREMENT & 0xFF)
-    };
-    uint8_t rx_data[9] = {0};
-    esp_err_t err = i2c_master_transmit_receive(handle->i2c_dev, cmd_buf, 2, rx_data, 9, 200);
+    esp_err_t err = scd4x_send_cmd(handle, SCD4X_CMD_READ_MEASUREMENT);
     if (err != ESP_OK) {
-        ESP_LOGD(TAG, "SCD4x read measurement transmit/receive failed: %s", esp_err_to_name(err));
+        ESP_LOGD(TAG, "SCD4x read measurement command failed: %s", esp_err_to_name(err));
+        return err;
+    }
+    esp_rom_delay_us(SCD4X_CMD_EXECUTION_TIME_US);
+    uint8_t rx_data[9] = {0};
+    err = i2c_master_receive(handle->i2c_dev, rx_data, sizeof(rx_data), 200);
+    if (err != ESP_OK) {
+        ESP_LOGD(TAG, "SCD4x measurement not ready or read failed: %s", esp_err_to_name(err));
         return err;
     }
     if (sensirion_crc8(&rx_data[0], 2) != rx_data[2]) {

@@ -29,6 +29,12 @@ void board_resolve_i2c_pins(gpio_num_t *sda_pin, gpio_num_t *scl_pin)
         scl = AUDIO_CODEC_I2C_SCL_PIN;
     }
 #endif
+#if defined(CONFIG_CUSTOM_ENABLE_SENSOR_I2C_TEMP_HUMID)
+    if (!GPIO_IS_VALID_GPIO(sda) && GPIO_IS_VALID_GPIO(SENSOR_TEMP_HUMID_I2C_SDA) && GPIO_IS_VALID_GPIO(SENSOR_TEMP_HUMID_I2C_SCL)) {
+        sda = SENSOR_TEMP_HUMID_I2C_SDA;
+        scl = SENSOR_TEMP_HUMID_I2C_SCL;
+    }
+#endif
 #if defined(CONFIG_CUSTOM_ENABLE_SENSOR_BMP280)
     if (!GPIO_IS_VALID_GPIO(sda) && GPIO_IS_VALID_GPIO(SENSOR_BMP280_I2C_SDA) && GPIO_IS_VALID_GPIO(SENSOR_BMP280_I2C_SCL)) {
         sda = SENSOR_BMP280_I2C_SDA;

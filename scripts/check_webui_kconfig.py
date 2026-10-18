@@ -46,8 +46,11 @@ def main():
             os.environ[k] = str(v)
     import esp_kconfiglib.core as kl
     kconf = kl.Kconfig(os.path.join(os.environ['IDF_PATH'], 'Kconfig'), warn=False)
+    with open(os.path.join(WEB, 'ui_map.json'), encoding='utf-8') as f:
+        excluded_choices = set(json.load(f).get('exclude', []))
     own = [s for s in kconf.unique_defined_syms
-           if any(os.path.normcase(os.path.abspath(n.filename)) == PROJBUILD and n.prompt for n in s.nodes)]
+           if any(os.path.normcase(os.path.abspath(n.filename)) == PROJBUILD and n.prompt for n in s.nodes)
+           and not (s.choice is not None and s.choice.name in excluded_choices)]
 
     mismatch, missing = collections.defaultdict(set), collections.defaultdict(set)
     files = sorted(glob.glob(os.path.join(args.out, '*.sdkconfig')))

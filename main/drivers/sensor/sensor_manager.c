@@ -21,6 +21,11 @@
 #if defined(CONFIG_CUSTOM_ENABLE_SENSOR_LDR) && defined(CONFIG_CUSTOM_SENSOR_LDR_ADC_CHANNEL) && (CONFIG_CUSTOM_SENSOR_LDR_ADC_CHANNEL >= 0)
 #define LDR_ADC_CHANNEL ((adc_channel_t)CONFIG_CUSTOM_SENSOR_LDR_ADC_CHANNEL)
 #endif
+#if defined(CONFIG_CUSTOM_SENSOR_MQ_TYPE_MQ135)
+#define SENSOR_MQ_TYPE MQ_TYPE_MQ135
+#else
+#define SENSOR_MQ_TYPE MQ_TYPE_MQ2
+#endif
 static adc_oneshot_unit_handle_t s_adc1_handle = NULL;
 static mq_sensor_handle_t s_mq_dev = NULL;
 static scd4x_handle_t __attribute__((unused)) s_scd4x_dev = NULL;
@@ -81,15 +86,15 @@ esp_err_t sensor_manager_init(void)
     if (GPIO_IS_VALID_GPIO(s_mq_pin) && s_adc1_handle != NULL) {
         mq_sensor_config_t mq_cfg = {
             .pin = s_mq_pin,
-            .type = MQ_TYPE_MQ2,
+            .type = SENSOR_MQ_TYPE,
             .rl_kohm = 10.0f,
             .r0_kohm = 10.0f,
         };
         esp_err_t mq_ret = mq_sensor_init(s_adc1_handle, &mq_cfg, &s_mq_dev);
         if (mq_ret == ESP_OK) {
-            ESP_LOGI(TAG, "MQ-2 Gas Sensor driver initialized on GPIO %d", (int)s_mq_pin);
+            ESP_LOGI(TAG, "MQ Gas Sensor driver initialized on GPIO %d", (int)s_mq_pin);
         } else {
-            ESP_LOGW(TAG, "MQ-2 Gas Sensor init failed on GPIO %d: %s", (int)s_mq_pin, esp_err_to_name(mq_ret));
+            ESP_LOGW(TAG, "MQ Gas Sensor init failed on GPIO %d: %s", (int)s_mq_pin, esp_err_to_name(mq_ret));
             s_mq_dev = NULL;
         }
     }
@@ -566,7 +571,7 @@ void sensor_set_mq_pin(gpio_num_t pin)
     if (GPIO_IS_VALID_GPIO(pin) && s_adc1_handle != NULL) {
         mq_sensor_config_t mq_cfg = {
             .pin = s_mq_pin,
-            .type = MQ_TYPE_MQ2,
+            .type = SENSOR_MQ_TYPE,
             .rl_kohm = 10.0f,
             .r0_kohm = 10.0f,
         };

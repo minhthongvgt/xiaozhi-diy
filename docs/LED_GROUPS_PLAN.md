@@ -104,5 +104,22 @@ PCA9685 và TCA9554 còn phục vụ servo và IO chung, nên chip vẫn ở 4.7
   - WS2812 1 mắt và LED đơn PWM: chạy vòng, quét, tô dần chuyển thành nháy chậm; cầu vồng xoay chuyển thành cầu vồng.
   - Thanh dâng và loang hai phía trên 1 LED thì sáng theo nhịp.
 
+### Cầu vồng là màu, không còn là hiệu ứng (2026-10-18)
+- Menu "Màu và hiệu ứng theo trạng thái" chia thành 9 menu con, mỗi menu một trạng thái. Hai ô chung (tốc độ chạy vòng/quét/tô dần, độ trễ theo âm thanh) nằm đầu menu.
+- Trong mỗi trạng thái:
+  - `choice CUSTOM_LED_STATE_<S>_EFFECT` "Hiệu ứng": bỏ hai mục cầu vồng (5) và cầu vồng xoay (9); các mã số còn lại giữ nguyên.
+  - `choice CUSTOM_LED_STATE_<S>_COLOR_SOURCE` "Màu" (chỉ WS2812 / vòng LED, ẩn khi hiệu ứng là Tắt): `_FIXED` (hiện ô `CUSTOM_LED_STATE_<S>_COLOR` nhập mã RRGGBB) hoặc `_RAINBOW`.
+  - Chỉ khi chọn cầu vồng: `choice CUSTOM_LED_STATE_<S>_RAINBOW_MODE` (`_WHOLE` đổi màu toàn bộ, `_CHASE` chạy đuổi) và `CUSTOM_LED_STATE_<S>_RAINBOW_SPEED_MS` (10–500, mặc định 50; 64 bước một vòng màu).
+- Cầu vồng ghép được với mọi hiệu ứng: nháy, thở, chạy vòng, quét, tô dần và ba hiệu ứng theo âm thanh. "Sáng đứng yên" + cầu vồng thay cho hai hiệu ứng cũ.
+- Firmware (`configurable_status_led.h`): `StatusLedTicker` vẽ khung hình theo thời gian (30 ms, hoặc `số LED × 3 / 40` ms với dải dài để không nghẽn RMT). `StatusLedEffectMask` tính độ sáng của từng hiệu ứng, `StatusLedBaseColor` tính màu từng LED. Màu cố định vẫn dùng hiệu ứng có sẵn của `CircularStrip`.
+- WS2812 một mắt: chạy vòng/quét/tô dần với cầu vồng thành nháy chậm, chạy đuổi giống đổi màu toàn bộ.
+- Xung đột đã kiểm tra và xử lý:
+  - Chatbot điều khiển LED (`self.led.*`, chế độ tùy chỉnh): bộ vẽ cầu vồng và bộ theo âm thanh bỏ qua khung hình khi `IsCustomMode()`, nên không ghi đè lệnh của chatbot (trước đây hiệu ứng theo âm thanh ghi đè).
+  - `self.led.set_effect off`: các lớp `Configurable*` ghi đè `TurnOff()` để dừng bộ vẽ và bộ theo âm thanh trước khi tắt.
+  - Không gọi `SetBrightness()` trong `OnStateChanged()` của vòng LED (`LOI_THUONG_GAP.md` D17); độ sáng nhân thẳng vào màu.
+  - Bộ vẽ chạy trong task `esp_timer` như các hiệu ứng cũ; chỉ một trong hai bộ (vẽ / theo âm thanh) chạy tại một thời điểm.
+  - LED đơn PWM không có ô màu nên không chọn được cầu vồng; nhóm LED đơn GPIO, PCA9685, IC LED, IC mở rộng có hiệu ứng riêng, không bị ảnh hưởng.
+- `sdkconfig` cũ có `..._EFFECT_RAINBOW=y` hoặc `..._EFFECT_RAINBOW_CHASE=y` sẽ về hiệu ứng mặc định của trạng thái đó; chọn lại "Sáng đứng yên" + màu "Cầu vồng" (`_WHOLE` hoặc `_CHASE`).
+
 ### Việc còn lại
 - Build thử LED trạng thái loại LED đơn PWM, nhóm IC mở rộng; thử trên thiết bị (kiểm tra độ trễ 200 ms có khớp tiếng không).
