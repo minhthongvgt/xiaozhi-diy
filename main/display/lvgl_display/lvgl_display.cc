@@ -1,9 +1,13 @@
 #include <esp_err.h>
 #include <esp_log.h>
 #include <material_symbols.h>
+#include <algorithm>
+#include <cmath>
 #include <cstdlib>
 #include <cstring>
+#include <ctime>
 #include <string>
+#include <vector>
 
 #include "application.h"
 #include "assets/lang_config.h"
@@ -15,8 +19,171 @@
 #include "lvgl_display.h"
 #include "lvgl_theme.h"
 #include "settings.h"
+#include "drivers/sensor/sensor_manager.h"
 
 #define TAG "Display"
+
+#if defined(CONFIG_CUSTOM_UI_LISTEN_ANIM_ID)
+#define STATUS_ACTIVITY_LISTEN_STYLE CONFIG_CUSTOM_UI_LISTEN_ANIM_ID
+#else
+#define STATUS_ACTIVITY_LISTEN_STYLE 0
+#endif
+#if defined(CONFIG_CUSTOM_UI_SPEAK_ANIM_ID)
+#define STATUS_ACTIVITY_SPEAK_STYLE CONFIG_CUSTOM_UI_SPEAK_ANIM_ID
+#else
+#define STATUS_ACTIVITY_SPEAK_STYLE 0
+#endif
+#if defined(CONFIG_CUSTOM_UI_ANIM_COLOR_RAINBOW)
+#define STATUS_ACTIVITY_COLOR_MODE StatusActivityColorMode::kRainbow
+#elif defined(CONFIG_CUSTOM_UI_ANIM_COLOR_CUSTOM)
+#define STATUS_ACTIVITY_COLOR_MODE StatusActivityColorMode::kCustom
+#else
+#define STATUS_ACTIVITY_COLOR_MODE StatusActivityColorMode::kTheme
+#endif
+#if defined(CONFIG_CUSTOM_UI_ANIM_COLOR)
+#define STATUS_ACTIVITY_CUSTOM_COLOR CONFIG_CUSTOM_UI_ANIM_COLOR
+#else
+#define STATUS_ACTIVITY_CUSTOM_COLOR "00E5FF"
+#endif
+
+#if defined(CONFIG_CUSTOM_UI_IDLE_STATUS_ID)
+#define IDLE_STATUS_MODE CONFIG_CUSTOM_UI_IDLE_STATUS_ID
+#else
+#define IDLE_STATUS_MODE 0
+#endif
+#if defined(CONFIG_CUSTOM_UI_IDLE_ROTATE_SEC)
+#define IDLE_STATUS_ROTATE_SEC CONFIG_CUSTOM_UI_IDLE_ROTATE_SEC
+#else
+#define IDLE_STATUS_ROTATE_SEC 5
+#endif
+#if defined(CONFIG_CUSTOM_UI_IDLE_SENSOR_REFRESH_SEC)
+#define IDLE_STATUS_SENSOR_REFRESH_SEC CONFIG_CUSTOM_UI_IDLE_SENSOR_REFRESH_SEC
+#else
+#define IDLE_STATUS_SENSOR_REFRESH_SEC 15
+#endif
+#if defined(CONFIG_CUSTOM_UI_IDLE_ROTATE_CLOCK)
+#define IDLE_ROTATE_CLOCK true
+#else
+#define IDLE_ROTATE_CLOCK false
+#endif
+#if defined(CONFIG_CUSTOM_UI_IDLE_ROTATE_DATE)
+#define IDLE_ROTATE_DATE true
+#else
+#define IDLE_ROTATE_DATE false
+#endif
+#if defined(CONFIG_CUSTOM_UI_IDLE_ROTATE_SENSORS)
+#define IDLE_ROTATE_SENSORS true
+#else
+#define IDLE_ROTATE_SENSORS false
+#endif
+#if defined(CONFIG_CUSTOM_UI_IDLE_ROTATE_STANDBY)
+#define IDLE_ROTATE_STANDBY true
+#else
+#define IDLE_ROTATE_STANDBY false
+#endif
+
+enum class IdleStatusMode : int {
+    kClock = 0,
+    kDate = 1,
+    kSensors = 2,
+    kRotate = 3,
+    kStandby = 4,
+    kNone = 5,
+};
+
+namespace {
+
+constexpr int32_t kActivityFullScalePeak = 24000;
+constexpr uint8_t kActivityVoiceLevel = 200;
+constexpr uint32_t kActivityDefaultColor = 0x00E5FF;
+
+uint32_t ParseActivityColor(const char* text) {
+    if (text == nullptr) {
+        return kActivityDefaultColor;
+    }
+    if (text[0] == '#') {
+        text++;
+    }
+    if (std::strlen(text) != 6) {
+        return kActivityDefaultColor;
+    }
+    char* end = nullptr;
+    const unsigned long value = std::strtoul(text, &end, 16);
+    return (end != nullptr && *end == '\0') ? static_cast<uint32_t>(value) : kActivityDefaultColor;
+}
+
+uint8_t ActivityLevel(StatusActivityKind kind) {
+    auto& app = Application::GetInstance();
+    if (kind == StatusActivityKind::kSpeaking) {
+        const int32_t peak = app.GetAudioService().GetOutputLevel();
+        return static_cast<uint8_t>(peak >= kActivityFullScalePeak ? 255 : peak * 255 / kActivityFullScalePeak);
+    }
+    return app.IsVoiceDetected() ? kActivityVoiceLevel : 0;
+}
+
+StatusActivityStyle ActivityStyleFromId(int id) {
+    return (id >= static_cast<int>(StatusActivityStyle::kText) && id <= static_cast<int>(StatusActivityStyle::kEyes))
+               ? static_cast<StatusActivityStyle>(id)
+               : StatusActivityStyle::kText;
+}
+
+bool ReadValidLocalTime(struct tm& out) {
+    const time_t now = time(nullptr);
+    localtime_r(&now, &out);
+    return out.tm_year >= 2025 - 1900;
+}
+
+std::string ClockStatusText() {
+    struct tm now;
+    if (!ReadValidLocalTime(now)) {
+        return {};
+    }
+    char text[16];
+    strftime(text, sizeof(text), "%H:%M", &now);
+    return text;
+}
+
+std::string DateStatusText() {
+    struct tm now;
+    if (!ReadValidLocalTime(now)) {
+        return {};
+    }
+    char text[48];
+#if defined(CONFIG_LANGUAGE_VI_VN)
+    static const char* const kWeekdays[] = {"Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"};
+    snprintf(text, sizeof(text), "%s, %02d/%02d/%04d", kWeekdays[now.tm_wday % 7], now.tm_mday, now.tm_mon + 1,
+             now.tm_year + 1900);
+#else
+    strftime(text, sizeof(text), "%a %d/%m/%Y", &now);
+#endif
+    return text;
+}
+
+std::string FormatTenths(float value, const char* unit) {
+    const long tenths = std::lround(value * 10.0f);
+    const long magnitude = tenths < 0 ? -tenths : tenths;
+    char text[32];
+    snprintf(text, sizeof(text), "%s%ld.%ld%s", tenths < 0 ? "-" : "", magnitude / 10, magnitude % 10, unit);
+    return text;
+}
+
+std::string FormatWhole(const char* prefix, float value, const char* unit) {
+    char text[40];
+    snprintf(text, sizeof(text), "%s%ld%s", prefix, std::lround(value), unit);
+    return text;
+}
+
+void AppendStatusPart(std::string& out, const std::string& part) {
+    if (part.empty()) {
+        return;
+    }
+    if (!out.empty()) {
+        out += "  ";
+    }
+    out += part;
+}
+
+}
 
 LvglDisplay::LvglDisplay() {
     dynamic_glyph_cache_ = std::make_unique<DynamicGlyphCache>();
@@ -31,6 +198,9 @@ LvglDisplay::LvglDisplay() {
                 if (display->status_label_ != nullptr) {
                     lv_obj_remove_flag(display->status_label_, LV_OBJ_FLAG_HIDDEN);
                 }
+                if (display->activity_ != nullptr) {
+                    display->activity_->SetVisible(true);
+                }
             },
         .arg = this,
         .dispatch_method = ESP_TIMER_TASK,
@@ -38,6 +208,14 @@ LvglDisplay::LvglDisplay() {
         .skip_unhandled_events = false,
     };
     ESP_ERROR_CHECK(esp_timer_create(&notification_timer_args, &notification_timer_));
+
+    const StatusActivityConfig activity_config = {
+        ActivityStyleFromId(STATUS_ACTIVITY_LISTEN_STYLE),
+        ActivityStyleFromId(STATUS_ACTIVITY_SPEAK_STYLE),
+        STATUS_ACTIVITY_COLOR_MODE,
+        ParseActivityColor(STATUS_ACTIVITY_CUSTOM_COLOR),
+    };
+    activity_ = std::make_unique<StatusActivityAnimator>(activity_config, ActivityLevel);
 
     auto ret = esp_pm_lock_create(ESP_PM_APB_FREQ_MAX, 0, "display_update", &pm_lock_);
     if (ret == ESP_ERR_NOT_SUPPORTED) {
@@ -163,8 +341,125 @@ void LvglDisplay::SetStatus(const char* status) {
     if (notification_label_ != nullptr) {
         lv_obj_add_flag(notification_label_, LV_OBJ_FLAG_HIDDEN);
     }
+    UpdateActivityForStatus(status);
 
     last_status_update_time_ = std::chrono::system_clock::now();
+}
+
+void LvglDisplay::UpdateActivityForStatus(const char* status) {
+    if (status_label_ == nullptr) {
+        return;
+    }
+    bool animated = false;
+    if (activity_ != nullptr) {
+        if (status != nullptr && strcmp(status, Lang::Strings::LISTENING) == 0) {
+            animated = activity_->Show(status_label_, StatusActivityKind::kListening);
+        } else if (status != nullptr && strcmp(status, Lang::Strings::SPEAKING) == 0) {
+            animated = activity_->Show(status_label_, StatusActivityKind::kSpeaking);
+        } else {
+            activity_->Hide();
+        }
+    }
+    lv_obj_set_style_opa(status_label_, animated ? LV_OPA_TRANSP : LV_OPA_COVER, 0);
+}
+
+std::string LvglDisplay::ReadSensorStatus() {
+    const int64_t now_us = esp_timer_get_time();
+    const int64_t refresh_us = static_cast<int64_t>(IDLE_STATUS_SENSOR_REFRESH_SEC) * 1000000;
+    if (sensor_status_read_us_ != 0 && now_us - sensor_status_read_us_ < refresh_us) {
+        return sensor_status_text_;
+    }
+    sensor_status_read_us_ = now_us;
+    std::string text;
+    if (sensor_environment_available()) {
+        sensor_environment_t env = {};
+        if (sensor_read_environment(&env) == ESP_OK && env.valid) {
+            if (env.has_temperature) {
+                AppendStatusPart(text, FormatTenths(env.temperature_c, "°C"));
+            }
+            if (env.has_humidity) {
+                AppendStatusPart(text, FormatWhole("", env.humidity_pct, "%"));
+            }
+            if (env.has_pressure) {
+                AppendStatusPart(text, FormatWhole("", env.pressure_hpa, "hPa"));
+            }
+            if (env.has_light) {
+                AppendStatusPart(text, FormatWhole("", env.light_lux, "lx"));
+            }
+            if (env.has_co2) {
+                AppendStatusPart(text, FormatWhole("CO2 ", env.co2_ppm, "ppm"));
+            }
+        }
+    }
+    if (sensor_security_available()) {
+        sensor_security_t security = {};
+        if (sensor_read_security(&security) == ESP_OK && security.valid) {
+            if (security.has_flame && security.flame_detected) {
+                AppendStatusPart(text, "Có lửa!");
+            }
+            if (security.has_gas) {
+                AppendStatusPart(text, FormatWhole(security.gas_leak_alert ? "Rò khí " : "Gas ",
+                                                   security.gas_level_ppm, "ppm"));
+            }
+        }
+    }
+    sensor_status_text_ = text;
+    return sensor_status_text_;
+}
+
+std::string LvglDisplay::ComposeIdleStatus() {
+    switch (static_cast<IdleStatusMode>(IDLE_STATUS_MODE)) {
+        case IdleStatusMode::kClock: {
+            std::string text = ClockStatusText();
+            return text.empty() ? std::string(Lang::Strings::STANDBY) : text;
+        }
+        case IdleStatusMode::kDate: {
+            std::string text = DateStatusText();
+            return text.empty() ? std::string(Lang::Strings::STANDBY) : text;
+        }
+        case IdleStatusMode::kSensors: {
+            std::string text = ReadSensorStatus();
+            if (text.empty()) {
+                text = DateStatusText();
+            }
+            return text.empty() ? std::string(Lang::Strings::STANDBY) : text;
+        }
+        case IdleStatusMode::kRotate: {
+            std::vector<std::string> items;
+            if (IDLE_ROTATE_CLOCK) {
+                items.push_back(ClockStatusText());
+            }
+            if (IDLE_ROTATE_DATE) {
+                items.push_back(DateStatusText());
+            }
+            if (IDLE_ROTATE_SENSORS) {
+                items.push_back(ReadSensorStatus());
+            }
+            if (IDLE_ROTATE_STANDBY) {
+                items.emplace_back(Lang::Strings::STANDBY);
+            }
+            items.erase(std::remove_if(items.begin(), items.end(), [](const std::string& item) { return item.empty(); }),
+                        items.end());
+            if (items.empty()) {
+                return Lang::Strings::STANDBY;
+            }
+            const int64_t slot = esp_timer_get_time() / 1000000 / std::max(1, IDLE_STATUS_ROTATE_SEC);
+            return items[static_cast<size_t>(slot % static_cast<int64_t>(items.size()))];
+        }
+        case IdleStatusMode::kStandby:
+            return Lang::Strings::STANDBY;
+        default:
+            return {};
+    }
+}
+
+void LvglDisplay::UpdateIdleStatus(bool force) {
+    std::string text = ComposeIdleStatus();
+    if (force || !idle_status_shown_ || text != idle_status_text_) {
+        idle_status_text_ = std::move(text);
+        idle_status_shown_ = true;
+        SetStatus(idle_status_text_.c_str());
+    }
 }
 
 void LvglDisplay::ShowNotification(const std::string& notification, int duration_ms) {
@@ -191,6 +486,9 @@ void LvglDisplay::ShowNotification(const char* notification, int duration_ms) {
     if (status_label_ != nullptr) {
         lv_obj_add_flag(status_label_, LV_OBJ_FLAG_HIDDEN);
     }
+    if (activity_ != nullptr) {
+        activity_->SetVisible(false);
+    }
 
     esp_timer_stop(notification_timer_);
     ESP_ERROR_CHECK(esp_timer_start_once(notification_timer_, duration_ms * 1000));
@@ -215,21 +513,9 @@ void LvglDisplay::UpdateStatusBar(bool update_all) {
     }
 
     if (app.GetDeviceState() == kDeviceStateIdle) {
-        time_t now = time(NULL);
-        struct tm* tm_now = localtime(&now);
-        if (tm_now->tm_year >= 2025 - 1900) {
-            int cur_min = tm_now->tm_hour * 60 + tm_now->tm_min;
-            if (update_all || cur_min != last_displayed_clock_min_) {
-                last_displayed_clock_min_ = cur_min;
-                char time_str[16];
-                strftime(time_str, sizeof(time_str), "%H:%M", tm_now);
-                SetStatus(time_str);
-            }
-        } else {
-            ESP_LOGW(TAG, "System time not set (tm_year=%d)", tm_now->tm_year);
-        }
+        UpdateIdleStatus(update_all);
     } else {
-        last_displayed_clock_min_ = -1;
+        idle_status_shown_ = false;
     }
 
     esp_pm_lock_acquire(pm_lock_);

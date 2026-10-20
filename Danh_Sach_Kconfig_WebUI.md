@@ -69,6 +69,37 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_UI_VOICE_WAVE_ENABLE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Hiển thị sóng âm thanh động khi đàm thoại (Voice Waveform) | n |
 | `CONFIG_CUSTOM_UI_WEATHER_ENABLE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Hiển thị thời tiết trên màn hình (Weather Widget) | n |
 | `CONFIG_CUSTOM_UI_WEATHER_CITY` | string | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Thành phố lấy dữ liệu thời tiết | "Hanoi" |
+| `CONFIG_CUSTOM_UI_IDLE_STATUS_CLOCK` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Đồng hồ giờ:phút |  |
+| `CONFIG_CUSTOM_UI_IDLE_STATUS_DATE` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Thứ và ngày tháng |  |
+| `CONFIG_CUSTOM_UI_IDLE_STATUS_SENSORS` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Thông số cảm biến (nhiệt độ, độ ẩm, khí gas...) |  |
+| `CONFIG_CUSTOM_UI_IDLE_STATUS_ROTATE` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Luân phiên nhiều nội dung | y (mặc định của choice) |
+| `CONFIG_CUSTOM_UI_IDLE_STATUS_STANDBY` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Chữ «Chờ» |  |
+| `CONFIG_CUSTOM_UI_IDLE_STATUS_NONE` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Để trống |  |
+| `CONFIG_CUSTOM_UI_IDLE_STATUS_ID` | int | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) |  | 0 if CUSTOM_UI_IDLE_STATUS_CLOCK |
+| `CONFIG_CUSTOM_UI_IDLE_ROTATE_CLOCK` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Luân phiên: đồng hồ | n |
+| `CONFIG_CUSTOM_UI_IDLE_ROTATE_DATE` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Luân phiên: thứ và ngày tháng | y |
+| `CONFIG_CUSTOM_UI_IDLE_ROTATE_SENSORS` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Luân phiên: thông số cảm biến | y |
+| `CONFIG_CUSTOM_UI_IDLE_ROTATE_STANDBY` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Luân phiên: chữ «Chờ» | n |
+| `CONFIG_CUSTOM_UI_IDLE_ROTATE_SEC` | int | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Thời gian hiện mỗi nội dung (giây) | 5 |
+| `CONFIG_CUSTOM_UI_IDLE_SENSOR_REFRESH_SEC` | int | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Chu kỳ đọc lại cảm biến (giây) | 15 |
+| `CONFIG_CUSTOM_UI_LISTEN_ANIM_TEXT` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Chỉ hiện chữ (như trước) |  |
+| `CONFIG_CUSTOM_UI_LISTEN_ANIM_BARS` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Sóng âm dạng cột |  |
+| `CONFIG_CUSTOM_UI_LISTEN_ANIM_WAVE` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Sóng âm uốn lượn |  |
+| `CONFIG_CUSTOM_UI_LISTEN_ANIM_RIPPLE` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Vòng sóng lan tỏa |  |
+| `CONFIG_CUSTOM_UI_LISTEN_ANIM_DOTS` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Chấm nhảy |  |
+| `CONFIG_CUSTOM_UI_LISTEN_ANIM_EYES` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Đôi mắt chớp, liếc qua lại | y (mặc định của choice) |
+| `CONFIG_CUSTOM_UI_LISTEN_ANIM_ID` | int | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) |  | 0 if CUSTOM_UI_LISTEN_ANIM_TEXT |
+| `CONFIG_CUSTOM_UI_SPEAK_ANIM_TEXT` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Chỉ hiện chữ (như trước) |  |
+| `CONFIG_CUSTOM_UI_SPEAK_ANIM_BARS` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Sóng âm dạng cột | y (mặc định của choice) |
+| `CONFIG_CUSTOM_UI_SPEAK_ANIM_WAVE` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Sóng âm uốn lượn |  |
+| `CONFIG_CUSTOM_UI_SPEAK_ANIM_RIPPLE` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Vòng sóng lan tỏa |  |
+| `CONFIG_CUSTOM_UI_SPEAK_ANIM_DOTS` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Chấm nhảy |  |
+| `CONFIG_CUSTOM_UI_SPEAK_ANIM_EYES` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Đôi mắt chớp và miệng mấp máy |  |
+| `CONFIG_CUSTOM_UI_SPEAK_ANIM_ID` | int | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) |  | 0 if CUSTOM_UI_SPEAK_ANIM_TEXT |
+| `CONFIG_CUSTOM_UI_ANIM_COLOR_THEME` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Theo màu chữ của giao diện | y (mặc định của choice) |
+| `CONFIG_CUSTOM_UI_ANIM_COLOR_RAINBOW` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Cầu vồng đổi màu liên tục |  |
+| `CONFIG_CUSTOM_UI_ANIM_COLOR_CUSTOM` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Tự chọn mã màu |  |
+| `CONFIG_CUSTOM_UI_ANIM_COLOR` | string | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Mã màu hiệu ứng (RRGGBB) | "00E5FF" |
 | `CONFIG_USE_MULTILINE_CHAT_MESSAGE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Use multiline chat message display (default mode only) | n |
 | `CONFIG_FLASH_DEFAULT_ASSETS` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Flash tài nguyên mặc định (Default Built-in Assets) | y (mặc định của choice) |
 | `CONFIG_FLASH_CUSTOM_ASSETS` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Flash tài nguyên tùy chỉnh từ URL hoặc tệp cục bộ (Custom Assets) |  |

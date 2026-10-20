@@ -205,6 +205,151 @@ menu "Giao diện hiển thị & Gói tài nguyên (Display Style & Assets)"
         depends on CUSTOM_UI_WEATHER_ENABLE
         default "Hanoi"
 
+    menu "Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity)"
+        depends on !USE_EMOTE_MESSAGE_STYLE
+
+        choice CUSTOM_UI_IDLE_STATUS
+            prompt "Nội dung dòng trạng thái khi chờ"
+            default CUSTOM_UI_IDLE_STATUS_ROTATE
+            help
+                Dòng trạng thái là chỗ hiện «Đang lắng nghe...», «Đang nói...».
+                Khi thiết bị chờ, dòng này hiện nội dung chọn ở đây.
+                Giao diện Adaptive đã có đồng hồ riêng nên không cần chọn đồng hồ.
+            config CUSTOM_UI_IDLE_STATUS_CLOCK
+                bool "Đồng hồ giờ:phút"
+            config CUSTOM_UI_IDLE_STATUS_DATE
+                bool "Thứ và ngày tháng"
+            config CUSTOM_UI_IDLE_STATUS_SENSORS
+                bool "Thông số cảm biến (nhiệt độ, độ ẩm, khí gas...)"
+            config CUSTOM_UI_IDLE_STATUS_ROTATE
+                bool "Luân phiên nhiều nội dung"
+            config CUSTOM_UI_IDLE_STATUS_STANDBY
+                bool "Chữ «Chờ»"
+            config CUSTOM_UI_IDLE_STATUS_NONE
+                bool "Để trống"
+        endchoice
+
+        config CUSTOM_UI_IDLE_STATUS_ID
+            int
+            default 0 if CUSTOM_UI_IDLE_STATUS_CLOCK
+            default 1 if CUSTOM_UI_IDLE_STATUS_DATE
+            default 2 if CUSTOM_UI_IDLE_STATUS_SENSORS
+            default 3 if CUSTOM_UI_IDLE_STATUS_ROTATE
+            default 4 if CUSTOM_UI_IDLE_STATUS_STANDBY
+            default 5 if CUSTOM_UI_IDLE_STATUS_NONE
+            default 0
+
+        config CUSTOM_UI_IDLE_ROTATE_CLOCK
+            bool "Luân phiên: đồng hồ"
+            depends on CUSTOM_UI_IDLE_STATUS_ROTATE
+            default n
+
+        config CUSTOM_UI_IDLE_ROTATE_DATE
+            bool "Luân phiên: thứ và ngày tháng"
+            depends on CUSTOM_UI_IDLE_STATUS_ROTATE
+            default y
+
+        config CUSTOM_UI_IDLE_ROTATE_SENSORS
+            bool "Luân phiên: thông số cảm biến"
+            depends on CUSTOM_UI_IDLE_STATUS_ROTATE
+            default y
+
+        config CUSTOM_UI_IDLE_ROTATE_STANDBY
+            bool "Luân phiên: chữ «Chờ»"
+            depends on CUSTOM_UI_IDLE_STATUS_ROTATE
+            default n
+
+        config CUSTOM_UI_IDLE_ROTATE_SEC
+            int "Thời gian hiện mỗi nội dung (giây)"
+            depends on CUSTOM_UI_IDLE_STATUS_ROTATE
+            range 1 60
+            default 5
+
+        config CUSTOM_UI_IDLE_SENSOR_REFRESH_SEC
+            int "Chu kỳ đọc lại cảm biến (giây)"
+            depends on CUSTOM_UI_IDLE_STATUS_SENSORS || CUSTOM_UI_IDLE_ROTATE_SENSORS
+            range 1 300
+            default 15
+            help
+                Chỉ hiện cảm biến đã bật ở mục 4.4 và 4.5 (nhiệt độ, độ ẩm, áp suất, ánh sáng, CO2, khí gas, lửa).
+                Không có cảm biến nào thì hiện ngày tháng.
+
+        choice CUSTOM_UI_LISTEN_ANIM
+            prompt "Hiệu ứng khi đang nghe"
+            default CUSTOM_UI_LISTEN_ANIM_EYES
+            help
+                Hiệu ứng thay cho chữ «Đang lắng nghe...» ở dòng trạng thái. Khi nghe thấy tiếng nói, hiệu ứng mạnh hơn.
+            config CUSTOM_UI_LISTEN_ANIM_TEXT
+                bool "Chỉ hiện chữ (như trước)"
+            config CUSTOM_UI_LISTEN_ANIM_BARS
+                bool "Sóng âm dạng cột"
+            config CUSTOM_UI_LISTEN_ANIM_WAVE
+                bool "Sóng âm uốn lượn"
+            config CUSTOM_UI_LISTEN_ANIM_RIPPLE
+                bool "Vòng sóng lan tỏa"
+            config CUSTOM_UI_LISTEN_ANIM_DOTS
+                bool "Chấm nhảy"
+            config CUSTOM_UI_LISTEN_ANIM_EYES
+                bool "Đôi mắt chớp, liếc qua lại"
+        endchoice
+
+        config CUSTOM_UI_LISTEN_ANIM_ID
+            int
+            default 0 if CUSTOM_UI_LISTEN_ANIM_TEXT
+            default 1 if CUSTOM_UI_LISTEN_ANIM_BARS
+            default 2 if CUSTOM_UI_LISTEN_ANIM_WAVE
+            default 3 if CUSTOM_UI_LISTEN_ANIM_RIPPLE
+            default 4 if CUSTOM_UI_LISTEN_ANIM_DOTS
+            default 5 if CUSTOM_UI_LISTEN_ANIM_EYES
+            default 0
+
+        choice CUSTOM_UI_SPEAK_ANIM
+            prompt "Hiệu ứng khi đang nói"
+            default CUSTOM_UI_SPEAK_ANIM_BARS
+            help
+                Hiệu ứng thay cho chữ «Đang nói...». Độ lớn của hiệu ứng theo âm lượng tiếng phát ra loa.
+            config CUSTOM_UI_SPEAK_ANIM_TEXT
+                bool "Chỉ hiện chữ (như trước)"
+            config CUSTOM_UI_SPEAK_ANIM_BARS
+                bool "Sóng âm dạng cột"
+            config CUSTOM_UI_SPEAK_ANIM_WAVE
+                bool "Sóng âm uốn lượn"
+            config CUSTOM_UI_SPEAK_ANIM_RIPPLE
+                bool "Vòng sóng lan tỏa"
+            config CUSTOM_UI_SPEAK_ANIM_DOTS
+                bool "Chấm nhảy"
+            config CUSTOM_UI_SPEAK_ANIM_EYES
+                bool "Đôi mắt chớp và miệng mấp máy"
+        endchoice
+
+        config CUSTOM_UI_SPEAK_ANIM_ID
+            int
+            default 0 if CUSTOM_UI_SPEAK_ANIM_TEXT
+            default 1 if CUSTOM_UI_SPEAK_ANIM_BARS
+            default 2 if CUSTOM_UI_SPEAK_ANIM_WAVE
+            default 3 if CUSTOM_UI_SPEAK_ANIM_RIPPLE
+            default 4 if CUSTOM_UI_SPEAK_ANIM_DOTS
+            default 5 if CUSTOM_UI_SPEAK_ANIM_EYES
+            default 0
+
+        choice CUSTOM_UI_ANIM_COLOR_SOURCE
+            prompt "Màu hiệu ứng"
+            depends on !CUSTOM_UI_LISTEN_ANIM_TEXT || !CUSTOM_UI_SPEAK_ANIM_TEXT
+            default CUSTOM_UI_ANIM_COLOR_THEME
+            config CUSTOM_UI_ANIM_COLOR_THEME
+                bool "Theo màu chữ của giao diện"
+            config CUSTOM_UI_ANIM_COLOR_RAINBOW
+                bool "Cầu vồng đổi màu liên tục"
+            config CUSTOM_UI_ANIM_COLOR_CUSTOM
+                bool "Tự chọn mã màu"
+        endchoice
+
+        config CUSTOM_UI_ANIM_COLOR
+            string "Mã màu hiệu ứng (RRGGBB)"
+            depends on CUSTOM_UI_ANIM_COLOR_CUSTOM
+            default "00E5FF"
+    endmenu
+
     config USE_MULTILINE_CHAT_MESSAGE
         bool "Use multiline chat message display (default mode only)"
         depends on USE_DEFAULT_MESSAGE_STYLE

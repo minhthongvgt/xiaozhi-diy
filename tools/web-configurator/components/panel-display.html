@@ -54,6 +54,73 @@
               <label class="form-label" for="ui_weather_city">Thành phố lấy dữ liệu thời tiết</label>
               <input type="text" class="form-control" id="ui_weather_city">
             </div>
+            <div class="span-2 form-subheading"><span>Thanh trạng thái và hiệu ứng nghe/nói (Status Bar &amp; Activity)</span></div>
+            <div class="form-item" data-show-if="general_display_style!=USE_EMOTE_MESSAGE_STYLE">
+              <label class="form-label" for="kc_CUSTOM_UI_IDLE_STATUS">Nội dung dòng trạng thái khi chờ</label>
+              <select class="form-control" id="kc_CUSTOM_UI_IDLE_STATUS">
+                <option value="CUSTOM_UI_IDLE_STATUS_CLOCK">Đồng hồ giờ:phút</option>
+                <option value="CUSTOM_UI_IDLE_STATUS_DATE">Thứ và ngày tháng</option>
+                <option value="CUSTOM_UI_IDLE_STATUS_SENSORS">Thông số cảm biến (nhiệt độ, độ ẩm, khí gas...)</option>
+                <option value="CUSTOM_UI_IDLE_STATUS_ROTATE">Luân phiên nhiều nội dung</option>
+                <option value="CUSTOM_UI_IDLE_STATUS_STANDBY">Chữ «Chờ»</option>
+                <option value="CUSTOM_UI_IDLE_STATUS_NONE">Để trống</option>
+              </select>
+            </div>
+            <div class="form-item span-2" data-show-if="general_display_style!=USE_EMOTE_MESSAGE_STYLE&amp;kc_CUSTOM_UI_IDLE_STATUS=CUSTOM_UI_IDLE_STATUS_ROTATE">
+              <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_UI_IDLE_ROTATE_CLOCK"><span>Luân phiên: đồng hồ</span></label>
+            </div>
+            <div class="form-item span-2" data-show-if="general_display_style!=USE_EMOTE_MESSAGE_STYLE&amp;kc_CUSTOM_UI_IDLE_STATUS=CUSTOM_UI_IDLE_STATUS_ROTATE">
+              <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_UI_IDLE_ROTATE_DATE"><span>Luân phiên: thứ và ngày tháng</span></label>
+            </div>
+            <div class="form-item span-2" data-show-if="general_display_style!=USE_EMOTE_MESSAGE_STYLE&amp;kc_CUSTOM_UI_IDLE_STATUS=CUSTOM_UI_IDLE_STATUS_ROTATE">
+              <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_UI_IDLE_ROTATE_SENSORS"><span>Luân phiên: thông số cảm biến</span></label>
+            </div>
+            <div class="form-item span-2" data-show-if="general_display_style!=USE_EMOTE_MESSAGE_STYLE&amp;kc_CUSTOM_UI_IDLE_STATUS=CUSTOM_UI_IDLE_STATUS_ROTATE">
+              <label class="form-checkbox"><input type="checkbox" id="kc_CUSTOM_UI_IDLE_ROTATE_STANDBY"><span>Luân phiên: chữ «Chờ»</span></label>
+            </div>
+            <div class="form-item" data-show-if="general_display_style!=USE_EMOTE_MESSAGE_STYLE&amp;kc_CUSTOM_UI_IDLE_STATUS=CUSTOM_UI_IDLE_STATUS_ROTATE">
+              <label class="form-label" for="kc_CUSTOM_UI_IDLE_ROTATE_SEC">Thời gian hiện mỗi nội dung (giây)</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_UI_IDLE_ROTATE_SEC" min="1" max="60">
+            </div>
+            <div class="form-item" data-show-if="general_display_style!=USE_EMOTE_MESSAGE_STYLE&amp;kc_CUSTOM_UI_IDLE_STATUS=CUSTOM_UI_IDLE_STATUS_SENSORS||kc_CUSTOM_UI_IDLE_ROTATE_SENSORS&amp;general_display_style!=USE_EMOTE_MESSAGE_STYLE">
+              <label class="form-label" for="kc_CUSTOM_UI_IDLE_SENSOR_REFRESH_SEC">Chu kỳ đọc lại cảm biến (giây)</label>
+              <input type="number" class="form-control" id="kc_CUSTOM_UI_IDLE_SENSOR_REFRESH_SEC" min="1" max="300">
+              <div class="form-hint">Chỉ hiện cảm biến đã bật ở mục 4.4 và 4.5 (nhiệt độ, độ ẩm, áp suất, ánh sáng, CO2, khí gas, lửa).</div>
+            </div>
+            <div class="form-item" data-show-if="general_display_style!=USE_EMOTE_MESSAGE_STYLE">
+              <label class="form-label" for="kc_CUSTOM_UI_LISTEN_ANIM">Hiệu ứng khi đang nghe</label>
+              <select class="form-control" id="kc_CUSTOM_UI_LISTEN_ANIM">
+                <option value="CUSTOM_UI_LISTEN_ANIM_TEXT">Chỉ hiện chữ (như trước)</option>
+                <option value="CUSTOM_UI_LISTEN_ANIM_BARS">Sóng âm dạng cột</option>
+                <option value="CUSTOM_UI_LISTEN_ANIM_WAVE">Sóng âm uốn lượn</option>
+                <option value="CUSTOM_UI_LISTEN_ANIM_RIPPLE">Vòng sóng lan tỏa</option>
+                <option value="CUSTOM_UI_LISTEN_ANIM_DOTS">Chấm nhảy</option>
+                <option value="CUSTOM_UI_LISTEN_ANIM_EYES">Đôi mắt chớp, liếc qua lại</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="general_display_style!=USE_EMOTE_MESSAGE_STYLE">
+              <label class="form-label" for="kc_CUSTOM_UI_SPEAK_ANIM">Hiệu ứng khi đang nói</label>
+              <select class="form-control" id="kc_CUSTOM_UI_SPEAK_ANIM">
+                <option value="CUSTOM_UI_SPEAK_ANIM_TEXT">Chỉ hiện chữ (như trước)</option>
+                <option value="CUSTOM_UI_SPEAK_ANIM_BARS">Sóng âm dạng cột</option>
+                <option value="CUSTOM_UI_SPEAK_ANIM_WAVE">Sóng âm uốn lượn</option>
+                <option value="CUSTOM_UI_SPEAK_ANIM_RIPPLE">Vòng sóng lan tỏa</option>
+                <option value="CUSTOM_UI_SPEAK_ANIM_DOTS">Chấm nhảy</option>
+                <option value="CUSTOM_UI_SPEAK_ANIM_EYES">Đôi mắt chớp và miệng mấp máy</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="kc_CUSTOM_UI_LISTEN_ANIM!=CUSTOM_UI_LISTEN_ANIM_TEXT&amp;general_display_style!=USE_EMOTE_MESSAGE_STYLE||kc_CUSTOM_UI_SPEAK_ANIM!=CUSTOM_UI_SPEAK_ANIM_TEXT&amp;general_display_style!=USE_EMOTE_MESSAGE_STYLE">
+              <label class="form-label" for="kc_CUSTOM_UI_ANIM_COLOR_SOURCE">Màu hiệu ứng</label>
+              <select class="form-control" id="kc_CUSTOM_UI_ANIM_COLOR_SOURCE">
+                <option value="CUSTOM_UI_ANIM_COLOR_THEME">Theo màu chữ của giao diện</option>
+                <option value="CUSTOM_UI_ANIM_COLOR_RAINBOW">Cầu vồng đổi màu liên tục</option>
+                <option value="CUSTOM_UI_ANIM_COLOR_CUSTOM">Tự chọn mã màu</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="general_display_style!=USE_EMOTE_MESSAGE_STYLE&amp;kc_CUSTOM_UI_ANIM_COLOR_SOURCE=CUSTOM_UI_ANIM_COLOR_CUSTOM">
+              <label class="form-label" for="kc_CUSTOM_UI_ANIM_COLOR">Mã màu hiệu ứng (RRGGBB)</label>
+              <input type="text" class="form-control" id="kc_CUSTOM_UI_ANIM_COLOR">
+            </div>
             <div class="form-item span-2" data-show-if="general_display_style=USE_DEFAULT_MESSAGE_STYLE">
               <label class="form-checkbox"><input type="checkbox" id="general_multiline"><span>Use multiline chat message display (default mode only)</span></label>
               <div class="form-hint">When enabled, the chat message area in the default display mode shows multiple wrapped lines that grow upward from the bottom of the screen, with auto-adaptive height.</div>

@@ -2,6 +2,7 @@
 #define LVGL_DISPLAY_H
 #include "display.h"
 #include "lvgl_image.h"
+#include "status_activity.h"
 #include <esp_log.h>
 #include <esp_pm.h>
 #include <esp_timer.h>
@@ -41,8 +42,16 @@ protected:
     bool muted_ = false;
     std::chrono::system_clock::time_point last_status_update_time_;
     esp_timer_handle_t notification_timer_ = nullptr;
-    int last_displayed_clock_min_ = -1;   
     std::unique_ptr<DynamicGlyphCache> dynamic_glyph_cache_;
+    std::unique_ptr<StatusActivityAnimator> activity_;
+    std::string idle_status_text_;
+    std::string sensor_status_text_;
+    int64_t sensor_status_read_us_ = 0;
+    bool idle_status_shown_ = false;
+    void UpdateActivityForStatus(const char* status);
+    void UpdateIdleStatus(bool force);
+    std::string ComposeIdleStatus();
+    std::string ReadSensorStatus();
     friend class DisplayLockGuard;
     virtual bool Lock(int timeout_ms = 0) = 0;
     virtual void Unlock() = 0;
