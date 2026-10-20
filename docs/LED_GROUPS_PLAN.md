@@ -121,5 +121,16 @@ PCA9685 và TCA9554 còn phục vụ servo và IO chung, nên chip vẫn ở 4.7
   - LED đơn PWM không có ô màu nên không chọn được cầu vồng; nhóm LED đơn GPIO, PCA9685, IC LED, IC mở rộng có hiệu ứng riêng, không bị ảnh hưởng.
 - `sdkconfig` cũ có `..._EFFECT_RAINBOW=y` hoặc `..._EFFECT_RAINBOW_CHASE=y` sẽ về hiệu ứng mặc định của trạng thái đó; chọn lại "Sáng đứng yên" + màu "Cầu vồng" (`_WHOLE` hoặc `_CHASE`).
 
+### Thêm hiệu ứng, bảng màu và tốc độ màu theo phần trăm (2026-10-20)
+- Hiệu ứng mới cho mỗi trạng thái (mã số trong `_EFFECT_ID`):
+  - Mọi loại LED: nhịp tim (5), chớp sáng (13), bập bùng như ngọn lửa (14).
+  - Chỉ WS2812 / vòng LED: đèn rạp hát (9), sao chổi có đuôi (15), sóng sáng (16), lấp lánh ngẫu nhiên (17), hai đầu xoay ngược chiều (18).
+  - Mã 5 và 9 trước đây là cầu vồng (đã bỏ ngày 2026-10-18), nay dùng lại.
+- Nguồn màu mới (`choice CUSTOM_LED_STATE_<S>_COLOR_SOURCE`, mã số trong ký hiệu ẩn `_COLOR_SOURCE_ID`): cầu vồng (1), chuyển sắc hai màu tự chọn (2, thêm ô `_COLOR2`), bảng màu Lửa (3), Đại dương (4), Rừng (5), Hoàng hôn (6), Băng giá (7), Kẹo ngọt (8), Lễ hội (9). Mọi nguồn màu khác "cố định" dùng chung `_RAINBOW_MODE` (đổi toàn bộ / chạy đuổi) và tốc độ.
+- `_RAINBOW_SPEED_MS` (10–500 ms mỗi bước) thay bằng `_RAINBOW_SPEED` (1–200 %, mặc định 20). 100 % bằng mức nhanh nhất cũ (10 ms mỗi bước, 0,64 giây một vòng màu), 200 % nhanh gấp đôi (0,32 giây). Quy đổi từ giá trị cũ: phần trăm = 1000 / số ms (50 ms → 20 %, 500 ms → 2 %).
+- Firmware: `StatusLedEffectMask` tính các hiệu ứng mới; `StatusLedSourceColor` lấy màu từ bảng màu (nội suy giữa các điểm màu); `StatusLedColorPhase` tính pha màu theo phần trăm. Vòng LED dùng bộ vẽ theo khung hình cho mọi hiệu ứng mới (cả màu cố định).
+- LED một mắt và LED đơn PWM: rạp hát, sao chổi, hai đầu xoay thành nháy chậm; sóng sáng thành thở; nhịp tim, chớp sáng, bập bùng, lấp lánh chạy đúng như vòng LED.
+- `sdkconfig` cũ có `_RAINBOW_SPEED_MS` sẽ mất giá trị đó và về 20 %; đặt lại theo công thức quy đổi.
+
 ### Việc còn lại
 - Build thử LED trạng thái loại LED đơn PWM, nhóm IC mở rộng; thử trên thiết bị (kiểm tra độ trễ 200 ms có khớp tiếng không).

@@ -409,163 +409,325 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_FAST` | bool | Khởi động | Nháy nhanh (100 ms) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_SLOW` | bool | Khởi động | Nháy chậm (500 ms) |  |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_BREATHE` | bool | Khởi động | Thở (sáng dần, tối dần) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_HEARTBEAT` | bool | Khởi động | Nhịp tim (đập đôi rồi nghỉ) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_STROBE` | bool | Khởi động | Chớp sáng (đèn flash ngắn) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_FLICKER` | bool | Khởi động | Bập bùng như ngọn lửa |  |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_SCROLL` | bool | Khởi động | Chạy vòng (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_SCANNER` | bool | Khởi động | Quét qua lại (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_WIPE` | bool | Khởi động | Tô dần quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_THEATER` | bool | Khởi động | Đèn rạp hát, cách 3 LED sáng 1 (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_COMET` | bool | Khởi động | Sao chổi có đuôi mờ dần (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_WAVE` | bool | Khởi động | Sóng sáng chạy quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_TWINKLE` | bool | Khởi động | Lấp lánh ngẫu nhiên (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_DUAL_SPIN` | bool | Khởi động | Hai đầu xoay ngược chiều (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_BAR` | bool | Khởi động | Theo âm thanh: thanh dâng (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_MIRROR` | bool | Khởi động | Theo âm thanh: loang hai phía (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_PULSE` | bool | Khởi động | Theo âm thanh: sáng theo nhịp |  |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_EFFECT_ID` | int | Khởi động |  | 0 if CUSTOM_LED_STATE_STARTING_EFFECT_OFF |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_FIXED` | bool | Khởi động | Màu cố định (nhập mã màu) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_RAINBOW` | bool | Khởi động | Cầu vồng |  |
-| `CONFIG_CUSTOM_LED_STATE_STARTING_COLOR` | string | Khởi động | Mã màu (RRGGBB) | "0000FF" |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_GRADIENT` | bool | Khởi động | Chuyển sắc giữa hai màu tự chọn |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_FIRE` | bool | Khởi động | Bảng màu Lửa (đỏ, cam, vàng) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_OCEAN` | bool | Khởi động | Bảng màu Đại dương (xanh lam, xanh ngọc) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_FOREST` | bool | Khởi động | Bảng màu Rừng (xanh lá, vàng chanh) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_SUNSET` | bool | Khởi động | Bảng màu Hoàng hôn (tím, hồng, cam) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_ICE` | bool | Khởi động | Bảng màu Băng giá (trắng, xanh nhạt) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_PASTEL` | bool | Khởi động | Bảng màu Kẹo ngọt (màu pastel) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_PARTY` | bool | Khởi động | Bảng màu Lễ hội (tím, hồng, vàng, xanh) |  |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_ID` | int | Khởi động |  | 1 if CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_RAINBOW |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_COLOR` | string | Khởi động | Mã màu (RRGGBB), màu thứ nhất khi chuyển sắc | "0000FF" |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_COLOR2` | string | Khởi động | Mã màu thứ hai (RRGGBB) | "FFFFFF" |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_RAINBOW_MODE_WHOLE` | bool | Khởi động | Đổi màu toàn bộ (mọi LED cùng một màu) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_STARTING_RAINBOW_MODE_CHASE` | bool | Khởi động | Chạy đuổi (mỗi LED một màu, xoay quanh vòng) |  |
-| `CONFIG_CUSTOM_LED_STATE_STARTING_RAINBOW_SPEED_MS` | int | Khởi động | Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn) | 50 |
+| `CONFIG_CUSTOM_LED_STATE_STARTING_RAINBOW_SPEED` | int | Khởi động | Tốc độ đổi màu (%, lớn hơn là nhanh hơn, tối đa 200) | 20 |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_OFF` | bool | Cấu hình WiFi | Tắt |  |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_STEADY` | bool | Cấu hình WiFi | Sáng đứng yên |  |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_FAST` | bool | Cấu hình WiFi | Nháy nhanh (100 ms) |  |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_SLOW` | bool | Cấu hình WiFi | Nháy chậm (500 ms) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BREATHE` | bool | Cấu hình WiFi | Thở (sáng dần, tối dần) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_HEARTBEAT` | bool | Cấu hình WiFi | Nhịp tim (đập đôi rồi nghỉ) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_STROBE` | bool | Cấu hình WiFi | Chớp sáng (đèn flash ngắn) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_FLICKER` | bool | Cấu hình WiFi | Bập bùng như ngọn lửa |  |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_SCROLL` | bool | Cấu hình WiFi | Chạy vòng (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_SCANNER` | bool | Cấu hình WiFi | Quét qua lại (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_WIPE` | bool | Cấu hình WiFi | Tô dần quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_THEATER` | bool | Cấu hình WiFi | Đèn rạp hát, cách 3 LED sáng 1 (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_COMET` | bool | Cấu hình WiFi | Sao chổi có đuôi mờ dần (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_WAVE` | bool | Cấu hình WiFi | Sóng sáng chạy quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_TWINKLE` | bool | Cấu hình WiFi | Lấp lánh ngẫu nhiên (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_DUAL_SPIN` | bool | Cấu hình WiFi | Hai đầu xoay ngược chiều (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_BAR` | bool | Cấu hình WiFi | Theo âm thanh: thanh dâng (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_MIRROR` | bool | Cấu hình WiFi | Theo âm thanh: loang hai phía (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_PULSE` | bool | Cấu hình WiFi | Theo âm thanh: sáng theo nhịp |  |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_ID` | int | Cấu hình WiFi |  | 0 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_OFF |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_FIXED` | bool | Cấu hình WiFi | Màu cố định (nhập mã màu) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_RAINBOW` | bool | Cấu hình WiFi | Cầu vồng |  |
-| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_COLOR` | string | Cấu hình WiFi | Mã màu (RRGGBB) | "0000FF" |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_GRADIENT` | bool | Cấu hình WiFi | Chuyển sắc giữa hai màu tự chọn |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_FIRE` | bool | Cấu hình WiFi | Bảng màu Lửa (đỏ, cam, vàng) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_OCEAN` | bool | Cấu hình WiFi | Bảng màu Đại dương (xanh lam, xanh ngọc) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_FOREST` | bool | Cấu hình WiFi | Bảng màu Rừng (xanh lá, vàng chanh) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_SUNSET` | bool | Cấu hình WiFi | Bảng màu Hoàng hôn (tím, hồng, cam) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_ICE` | bool | Cấu hình WiFi | Bảng màu Băng giá (trắng, xanh nhạt) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_PASTEL` | bool | Cấu hình WiFi | Bảng màu Kẹo ngọt (màu pastel) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_PARTY` | bool | Cấu hình WiFi | Bảng màu Lễ hội (tím, hồng, vàng, xanh) |  |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_ID` | int | Cấu hình WiFi |  | 1 if CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_RAINBOW |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_COLOR` | string | Cấu hình WiFi | Mã màu (RRGGBB), màu thứ nhất khi chuyển sắc | "0000FF" |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_COLOR2` | string | Cấu hình WiFi | Mã màu thứ hai (RRGGBB) | "FFFFFF" |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_RAINBOW_MODE_WHOLE` | bool | Cấu hình WiFi | Đổi màu toàn bộ (mọi LED cùng một màu) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_RAINBOW_MODE_CHASE` | bool | Cấu hình WiFi | Chạy đuổi (mỗi LED một màu, xoay quanh vòng) |  |
-| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_RAINBOW_SPEED_MS` | int | Cấu hình WiFi | Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn) | 50 |
+| `CONFIG_CUSTOM_LED_STATE_WIFI_CONFIG_RAINBOW_SPEED` | int | Cấu hình WiFi | Tốc độ đổi màu (%, lớn hơn là nhanh hơn, tối đa 200) | 20 |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_OFF` | bool | Chờ | Tắt | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_STEADY` | bool | Chờ | Sáng đứng yên |  |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_FAST` | bool | Chờ | Nháy nhanh (100 ms) |  |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_SLOW` | bool | Chờ | Nháy chậm (500 ms) |  |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_BREATHE` | bool | Chờ | Thở (sáng dần, tối dần) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_HEARTBEAT` | bool | Chờ | Nhịp tim (đập đôi rồi nghỉ) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_STROBE` | bool | Chờ | Chớp sáng (đèn flash ngắn) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_FLICKER` | bool | Chờ | Bập bùng như ngọn lửa |  |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_SCROLL` | bool | Chờ | Chạy vòng (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_SCANNER` | bool | Chờ | Quét qua lại (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_WIPE` | bool | Chờ | Tô dần quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_THEATER` | bool | Chờ | Đèn rạp hát, cách 3 LED sáng 1 (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_COMET` | bool | Chờ | Sao chổi có đuôi mờ dần (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_WAVE` | bool | Chờ | Sóng sáng chạy quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_TWINKLE` | bool | Chờ | Lấp lánh ngẫu nhiên (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_DUAL_SPIN` | bool | Chờ | Hai đầu xoay ngược chiều (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_BAR` | bool | Chờ | Theo âm thanh: thanh dâng (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_MIRROR` | bool | Chờ | Theo âm thanh: loang hai phía (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_PULSE` | bool | Chờ | Theo âm thanh: sáng theo nhịp |  |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_EFFECT_ID` | int | Chờ |  | 0 if CUSTOM_LED_STATE_IDLE_EFFECT_OFF |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_FIXED` | bool | Chờ | Màu cố định (nhập mã màu) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_RAINBOW` | bool | Chờ | Cầu vồng |  |
-| `CONFIG_CUSTOM_LED_STATE_IDLE_COLOR` | string | Chờ | Mã màu (RRGGBB) | "0000FF" |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_GRADIENT` | bool | Chờ | Chuyển sắc giữa hai màu tự chọn |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_FIRE` | bool | Chờ | Bảng màu Lửa (đỏ, cam, vàng) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_OCEAN` | bool | Chờ | Bảng màu Đại dương (xanh lam, xanh ngọc) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_FOREST` | bool | Chờ | Bảng màu Rừng (xanh lá, vàng chanh) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_SUNSET` | bool | Chờ | Bảng màu Hoàng hôn (tím, hồng, cam) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_ICE` | bool | Chờ | Bảng màu Băng giá (trắng, xanh nhạt) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_PASTEL` | bool | Chờ | Bảng màu Kẹo ngọt (màu pastel) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_PARTY` | bool | Chờ | Bảng màu Lễ hội (tím, hồng, vàng, xanh) |  |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_ID` | int | Chờ |  | 1 if CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_RAINBOW |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_COLOR` | string | Chờ | Mã màu (RRGGBB), màu thứ nhất khi chuyển sắc | "0000FF" |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_COLOR2` | string | Chờ | Mã màu thứ hai (RRGGBB) | "FFFFFF" |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_RAINBOW_MODE_WHOLE` | bool | Chờ | Đổi màu toàn bộ (mọi LED cùng một màu) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_IDLE_RAINBOW_MODE_CHASE` | bool | Chờ | Chạy đuổi (mỗi LED một màu, xoay quanh vòng) |  |
-| `CONFIG_CUSTOM_LED_STATE_IDLE_RAINBOW_SPEED_MS` | int | Chờ | Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn) | 50 |
+| `CONFIG_CUSTOM_LED_STATE_IDLE_RAINBOW_SPEED` | int | Chờ | Tốc độ đổi màu (%, lớn hơn là nhanh hơn, tối đa 200) | 20 |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_OFF` | bool | Đang kết nối | Tắt |  |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_STEADY` | bool | Đang kết nối | Sáng đứng yên | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_FAST` | bool | Đang kết nối | Nháy nhanh (100 ms) |  |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_SLOW` | bool | Đang kết nối | Nháy chậm (500 ms) |  |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_BREATHE` | bool | Đang kết nối | Thở (sáng dần, tối dần) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_HEARTBEAT` | bool | Đang kết nối | Nhịp tim (đập đôi rồi nghỉ) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_STROBE` | bool | Đang kết nối | Chớp sáng (đèn flash ngắn) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_FLICKER` | bool | Đang kết nối | Bập bùng như ngọn lửa |  |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_SCROLL` | bool | Đang kết nối | Chạy vòng (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_SCANNER` | bool | Đang kết nối | Quét qua lại (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_WIPE` | bool | Đang kết nối | Tô dần quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_THEATER` | bool | Đang kết nối | Đèn rạp hát, cách 3 LED sáng 1 (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_COMET` | bool | Đang kết nối | Sao chổi có đuôi mờ dần (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_WAVE` | bool | Đang kết nối | Sóng sáng chạy quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_TWINKLE` | bool | Đang kết nối | Lấp lánh ngẫu nhiên (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_DUAL_SPIN` | bool | Đang kết nối | Hai đầu xoay ngược chiều (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_BAR` | bool | Đang kết nối | Theo âm thanh: thanh dâng (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_MIRROR` | bool | Đang kết nối | Theo âm thanh: loang hai phía (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_PULSE` | bool | Đang kết nối | Theo âm thanh: sáng theo nhịp |  |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_EFFECT_ID` | int | Đang kết nối |  | 0 if CUSTOM_LED_STATE_CONNECTING_EFFECT_OFF |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_FIXED` | bool | Đang kết nối | Màu cố định (nhập mã màu) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_RAINBOW` | bool | Đang kết nối | Cầu vồng |  |
-| `CONFIG_CUSTOM_LED_STATE_CONNECTING_COLOR` | string | Đang kết nối | Mã màu (RRGGBB) | "0000FF" |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_GRADIENT` | bool | Đang kết nối | Chuyển sắc giữa hai màu tự chọn |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_FIRE` | bool | Đang kết nối | Bảng màu Lửa (đỏ, cam, vàng) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_OCEAN` | bool | Đang kết nối | Bảng màu Đại dương (xanh lam, xanh ngọc) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_FOREST` | bool | Đang kết nối | Bảng màu Rừng (xanh lá, vàng chanh) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_SUNSET` | bool | Đang kết nối | Bảng màu Hoàng hôn (tím, hồng, cam) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_ICE` | bool | Đang kết nối | Bảng màu Băng giá (trắng, xanh nhạt) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_PASTEL` | bool | Đang kết nối | Bảng màu Kẹo ngọt (màu pastel) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_PARTY` | bool | Đang kết nối | Bảng màu Lễ hội (tím, hồng, vàng, xanh) |  |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_ID` | int | Đang kết nối |  | 1 if CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_RAINBOW |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_COLOR` | string | Đang kết nối | Mã màu (RRGGBB), màu thứ nhất khi chuyển sắc | "0000FF" |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_COLOR2` | string | Đang kết nối | Mã màu thứ hai (RRGGBB) | "FFFFFF" |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_RAINBOW_MODE_WHOLE` | bool | Đang kết nối | Đổi màu toàn bộ (mọi LED cùng một màu) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_CONNECTING_RAINBOW_MODE_CHASE` | bool | Đang kết nối | Chạy đuổi (mỗi LED một màu, xoay quanh vòng) |  |
-| `CONFIG_CUSTOM_LED_STATE_CONNECTING_RAINBOW_SPEED_MS` | int | Đang kết nối | Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn) | 50 |
+| `CONFIG_CUSTOM_LED_STATE_CONNECTING_RAINBOW_SPEED` | int | Đang kết nối | Tốc độ đổi màu (%, lớn hơn là nhanh hơn, tối đa 200) | 20 |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_OFF` | bool | Đang nghe | Tắt |  |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_STEADY` | bool | Đang nghe | Sáng đứng yên | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_FAST` | bool | Đang nghe | Nháy nhanh (100 ms) |  |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_SLOW` | bool | Đang nghe | Nháy chậm (500 ms) |  |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_BREATHE` | bool | Đang nghe | Thở (sáng dần, tối dần) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_HEARTBEAT` | bool | Đang nghe | Nhịp tim (đập đôi rồi nghỉ) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_STROBE` | bool | Đang nghe | Chớp sáng (đèn flash ngắn) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_FLICKER` | bool | Đang nghe | Bập bùng như ngọn lửa |  |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_SCROLL` | bool | Đang nghe | Chạy vòng (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_SCANNER` | bool | Đang nghe | Quét qua lại (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_WIPE` | bool | Đang nghe | Tô dần quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_THEATER` | bool | Đang nghe | Đèn rạp hát, cách 3 LED sáng 1 (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_COMET` | bool | Đang nghe | Sao chổi có đuôi mờ dần (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_WAVE` | bool | Đang nghe | Sóng sáng chạy quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_TWINKLE` | bool | Đang nghe | Lấp lánh ngẫu nhiên (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_DUAL_SPIN` | bool | Đang nghe | Hai đầu xoay ngược chiều (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_BAR` | bool | Đang nghe | Theo âm thanh: thanh dâng (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_MIRROR` | bool | Đang nghe | Theo âm thanh: loang hai phía (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_PULSE` | bool | Đang nghe | Theo âm thanh: sáng theo nhịp |  |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_EFFECT_ID` | int | Đang nghe |  | 0 if CUSTOM_LED_STATE_LISTENING_EFFECT_OFF |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_FIXED` | bool | Đang nghe | Màu cố định (nhập mã màu) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_RAINBOW` | bool | Đang nghe | Cầu vồng |  |
-| `CONFIG_CUSTOM_LED_STATE_LISTENING_COLOR` | string | Đang nghe | Mã màu (RRGGBB) | "FF0000" |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_GRADIENT` | bool | Đang nghe | Chuyển sắc giữa hai màu tự chọn |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_FIRE` | bool | Đang nghe | Bảng màu Lửa (đỏ, cam, vàng) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_OCEAN` | bool | Đang nghe | Bảng màu Đại dương (xanh lam, xanh ngọc) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_FOREST` | bool | Đang nghe | Bảng màu Rừng (xanh lá, vàng chanh) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_SUNSET` | bool | Đang nghe | Bảng màu Hoàng hôn (tím, hồng, cam) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_ICE` | bool | Đang nghe | Bảng màu Băng giá (trắng, xanh nhạt) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_PASTEL` | bool | Đang nghe | Bảng màu Kẹo ngọt (màu pastel) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_PARTY` | bool | Đang nghe | Bảng màu Lễ hội (tím, hồng, vàng, xanh) |  |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_ID` | int | Đang nghe |  | 1 if CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_RAINBOW |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_COLOR` | string | Đang nghe | Mã màu (RRGGBB), màu thứ nhất khi chuyển sắc | "FF0000" |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_COLOR2` | string | Đang nghe | Mã màu thứ hai (RRGGBB) | "FFFFFF" |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_RAINBOW_MODE_WHOLE` | bool | Đang nghe | Đổi màu toàn bộ (mọi LED cùng một màu) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_LISTENING_RAINBOW_MODE_CHASE` | bool | Đang nghe | Chạy đuổi (mỗi LED một màu, xoay quanh vòng) |  |
-| `CONFIG_CUSTOM_LED_STATE_LISTENING_RAINBOW_SPEED_MS` | int | Đang nghe | Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn) | 50 |
+| `CONFIG_CUSTOM_LED_STATE_LISTENING_RAINBOW_SPEED` | int | Đang nghe | Tốc độ đổi màu (%, lớn hơn là nhanh hơn, tối đa 200) | 20 |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_OFF` | bool | Đang nói | Tắt |  |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_STEADY` | bool | Đang nói | Sáng đứng yên | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_FAST` | bool | Đang nói | Nháy nhanh (100 ms) |  |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_SLOW` | bool | Đang nói | Nháy chậm (500 ms) |  |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_BREATHE` | bool | Đang nói | Thở (sáng dần, tối dần) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_HEARTBEAT` | bool | Đang nói | Nhịp tim (đập đôi rồi nghỉ) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_STROBE` | bool | Đang nói | Chớp sáng (đèn flash ngắn) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_FLICKER` | bool | Đang nói | Bập bùng như ngọn lửa |  |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_SCROLL` | bool | Đang nói | Chạy vòng (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_SCANNER` | bool | Đang nói | Quét qua lại (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_WIPE` | bool | Đang nói | Tô dần quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_THEATER` | bool | Đang nói | Đèn rạp hát, cách 3 LED sáng 1 (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_COMET` | bool | Đang nói | Sao chổi có đuôi mờ dần (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_WAVE` | bool | Đang nói | Sóng sáng chạy quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_TWINKLE` | bool | Đang nói | Lấp lánh ngẫu nhiên (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_DUAL_SPIN` | bool | Đang nói | Hai đầu xoay ngược chiều (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_BAR` | bool | Đang nói | Theo âm thanh: thanh dâng (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_MIRROR` | bool | Đang nói | Theo âm thanh: loang hai phía (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_PULSE` | bool | Đang nói | Theo âm thanh: sáng theo nhịp |  |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_EFFECT_ID` | int | Đang nói |  | 0 if CUSTOM_LED_STATE_SPEAKING_EFFECT_OFF |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_FIXED` | bool | Đang nói | Màu cố định (nhập mã màu) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_RAINBOW` | bool | Đang nói | Cầu vồng |  |
-| `CONFIG_CUSTOM_LED_STATE_SPEAKING_COLOR` | string | Đang nói | Mã màu (RRGGBB) | "00FF00" |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_GRADIENT` | bool | Đang nói | Chuyển sắc giữa hai màu tự chọn |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_FIRE` | bool | Đang nói | Bảng màu Lửa (đỏ, cam, vàng) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_OCEAN` | bool | Đang nói | Bảng màu Đại dương (xanh lam, xanh ngọc) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_FOREST` | bool | Đang nói | Bảng màu Rừng (xanh lá, vàng chanh) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_SUNSET` | bool | Đang nói | Bảng màu Hoàng hôn (tím, hồng, cam) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_ICE` | bool | Đang nói | Bảng màu Băng giá (trắng, xanh nhạt) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_PASTEL` | bool | Đang nói | Bảng màu Kẹo ngọt (màu pastel) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_PARTY` | bool | Đang nói | Bảng màu Lễ hội (tím, hồng, vàng, xanh) |  |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_ID` | int | Đang nói |  | 1 if CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_RAINBOW |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_COLOR` | string | Đang nói | Mã màu (RRGGBB), màu thứ nhất khi chuyển sắc | "00FF00" |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_COLOR2` | string | Đang nói | Mã màu thứ hai (RRGGBB) | "FFFFFF" |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_RAINBOW_MODE_WHOLE` | bool | Đang nói | Đổi màu toàn bộ (mọi LED cùng một màu) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_SPEAKING_RAINBOW_MODE_CHASE` | bool | Đang nói | Chạy đuổi (mỗi LED một màu, xoay quanh vòng) |  |
-| `CONFIG_CUSTOM_LED_STATE_SPEAKING_RAINBOW_SPEED_MS` | int | Đang nói | Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn) | 50 |
+| `CONFIG_CUSTOM_LED_STATE_SPEAKING_RAINBOW_SPEED` | int | Đang nói | Tốc độ đổi màu (%, lớn hơn là nhanh hơn, tối đa 200) | 20 |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_OFF` | bool | Nâng cấp firmware | Tắt |  |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_STEADY` | bool | Nâng cấp firmware | Sáng đứng yên |  |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_FAST` | bool | Nâng cấp firmware | Nháy nhanh (100 ms) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_SLOW` | bool | Nâng cấp firmware | Nháy chậm (500 ms) |  |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_BREATHE` | bool | Nâng cấp firmware | Thở (sáng dần, tối dần) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_HEARTBEAT` | bool | Nâng cấp firmware | Nhịp tim (đập đôi rồi nghỉ) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_STROBE` | bool | Nâng cấp firmware | Chớp sáng (đèn flash ngắn) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_FLICKER` | bool | Nâng cấp firmware | Bập bùng như ngọn lửa |  |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_SCROLL` | bool | Nâng cấp firmware | Chạy vòng (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_SCANNER` | bool | Nâng cấp firmware | Quét qua lại (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_WIPE` | bool | Nâng cấp firmware | Tô dần quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_THEATER` | bool | Nâng cấp firmware | Đèn rạp hát, cách 3 LED sáng 1 (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_COMET` | bool | Nâng cấp firmware | Sao chổi có đuôi mờ dần (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_WAVE` | bool | Nâng cấp firmware | Sóng sáng chạy quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_TWINKLE` | bool | Nâng cấp firmware | Lấp lánh ngẫu nhiên (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_DUAL_SPIN` | bool | Nâng cấp firmware | Hai đầu xoay ngược chiều (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_BAR` | bool | Nâng cấp firmware | Theo âm thanh: thanh dâng (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_MIRROR` | bool | Nâng cấp firmware | Theo âm thanh: loang hai phía (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_PULSE` | bool | Nâng cấp firmware | Theo âm thanh: sáng theo nhịp |  |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_EFFECT_ID` | int | Nâng cấp firmware |  | 0 if CUSTOM_LED_STATE_UPGRADING_EFFECT_OFF |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_FIXED` | bool | Nâng cấp firmware | Màu cố định (nhập mã màu) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_RAINBOW` | bool | Nâng cấp firmware | Cầu vồng |  |
-| `CONFIG_CUSTOM_LED_STATE_UPGRADING_COLOR` | string | Nâng cấp firmware | Mã màu (RRGGBB) | "00FF00" |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_GRADIENT` | bool | Nâng cấp firmware | Chuyển sắc giữa hai màu tự chọn |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_FIRE` | bool | Nâng cấp firmware | Bảng màu Lửa (đỏ, cam, vàng) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_OCEAN` | bool | Nâng cấp firmware | Bảng màu Đại dương (xanh lam, xanh ngọc) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_FOREST` | bool | Nâng cấp firmware | Bảng màu Rừng (xanh lá, vàng chanh) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_SUNSET` | bool | Nâng cấp firmware | Bảng màu Hoàng hôn (tím, hồng, cam) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_ICE` | bool | Nâng cấp firmware | Bảng màu Băng giá (trắng, xanh nhạt) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_PASTEL` | bool | Nâng cấp firmware | Bảng màu Kẹo ngọt (màu pastel) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_PARTY` | bool | Nâng cấp firmware | Bảng màu Lễ hội (tím, hồng, vàng, xanh) |  |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_ID` | int | Nâng cấp firmware |  | 1 if CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_RAINBOW |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_COLOR` | string | Nâng cấp firmware | Mã màu (RRGGBB), màu thứ nhất khi chuyển sắc | "00FF00" |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_COLOR2` | string | Nâng cấp firmware | Mã màu thứ hai (RRGGBB) | "FFFFFF" |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_RAINBOW_MODE_WHOLE` | bool | Nâng cấp firmware | Đổi màu toàn bộ (mọi LED cùng một màu) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_UPGRADING_RAINBOW_MODE_CHASE` | bool | Nâng cấp firmware | Chạy đuổi (mỗi LED một màu, xoay quanh vòng) |  |
-| `CONFIG_CUSTOM_LED_STATE_UPGRADING_RAINBOW_SPEED_MS` | int | Nâng cấp firmware | Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn) | 50 |
+| `CONFIG_CUSTOM_LED_STATE_UPGRADING_RAINBOW_SPEED` | int | Nâng cấp firmware | Tốc độ đổi màu (%, lớn hơn là nhanh hơn, tối đa 200) | 20 |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_OFF` | bool | Kích hoạt thiết bị | Tắt |  |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_STEADY` | bool | Kích hoạt thiết bị | Sáng đứng yên |  |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_FAST` | bool | Kích hoạt thiết bị | Nháy nhanh (100 ms) |  |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_SLOW` | bool | Kích hoạt thiết bị | Nháy chậm (500 ms) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_BREATHE` | bool | Kích hoạt thiết bị | Thở (sáng dần, tối dần) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_HEARTBEAT` | bool | Kích hoạt thiết bị | Nhịp tim (đập đôi rồi nghỉ) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_STROBE` | bool | Kích hoạt thiết bị | Chớp sáng (đèn flash ngắn) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_FLICKER` | bool | Kích hoạt thiết bị | Bập bùng như ngọn lửa |  |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_SCROLL` | bool | Kích hoạt thiết bị | Chạy vòng (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_SCANNER` | bool | Kích hoạt thiết bị | Quét qua lại (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_WIPE` | bool | Kích hoạt thiết bị | Tô dần quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_THEATER` | bool | Kích hoạt thiết bị | Đèn rạp hát, cách 3 LED sáng 1 (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_COMET` | bool | Kích hoạt thiết bị | Sao chổi có đuôi mờ dần (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_WAVE` | bool | Kích hoạt thiết bị | Sóng sáng chạy quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_TWINKLE` | bool | Kích hoạt thiết bị | Lấp lánh ngẫu nhiên (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_DUAL_SPIN` | bool | Kích hoạt thiết bị | Hai đầu xoay ngược chiều (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_BAR` | bool | Kích hoạt thiết bị | Theo âm thanh: thanh dâng (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_MIRROR` | bool | Kích hoạt thiết bị | Theo âm thanh: loang hai phía (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_PULSE` | bool | Kích hoạt thiết bị | Theo âm thanh: sáng theo nhịp |  |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_EFFECT_ID` | int | Kích hoạt thiết bị |  | 0 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_OFF |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_FIXED` | bool | Kích hoạt thiết bị | Màu cố định (nhập mã màu) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_RAINBOW` | bool | Kích hoạt thiết bị | Cầu vồng |  |
-| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_COLOR` | string | Kích hoạt thiết bị | Mã màu (RRGGBB) | "00FF00" |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_GRADIENT` | bool | Kích hoạt thiết bị | Chuyển sắc giữa hai màu tự chọn |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_FIRE` | bool | Kích hoạt thiết bị | Bảng màu Lửa (đỏ, cam, vàng) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_OCEAN` | bool | Kích hoạt thiết bị | Bảng màu Đại dương (xanh lam, xanh ngọc) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_FOREST` | bool | Kích hoạt thiết bị | Bảng màu Rừng (xanh lá, vàng chanh) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_SUNSET` | bool | Kích hoạt thiết bị | Bảng màu Hoàng hôn (tím, hồng, cam) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_ICE` | bool | Kích hoạt thiết bị | Bảng màu Băng giá (trắng, xanh nhạt) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_PASTEL` | bool | Kích hoạt thiết bị | Bảng màu Kẹo ngọt (màu pastel) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_PARTY` | bool | Kích hoạt thiết bị | Bảng màu Lễ hội (tím, hồng, vàng, xanh) |  |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_ID` | int | Kích hoạt thiết bị |  | 1 if CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_RAINBOW |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_COLOR` | string | Kích hoạt thiết bị | Mã màu (RRGGBB), màu thứ nhất khi chuyển sắc | "00FF00" |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_COLOR2` | string | Kích hoạt thiết bị | Mã màu thứ hai (RRGGBB) | "FFFFFF" |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_RAINBOW_MODE_WHOLE` | bool | Kích hoạt thiết bị | Đổi màu toàn bộ (mọi LED cùng một màu) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_ACTIVATING_RAINBOW_MODE_CHASE` | bool | Kích hoạt thiết bị | Chạy đuổi (mỗi LED một màu, xoay quanh vòng) |  |
-| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_RAINBOW_SPEED_MS` | int | Kích hoạt thiết bị | Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn) | 50 |
+| `CONFIG_CUSTOM_LED_STATE_ACTIVATING_RAINBOW_SPEED` | int | Kích hoạt thiết bị | Tốc độ đổi màu (%, lớn hơn là nhanh hơn, tối đa 200) | 20 |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_OFF` | bool | Lỗi | Tắt |  |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_STEADY` | bool | Lỗi | Sáng đứng yên |  |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_FAST` | bool | Lỗi | Nháy nhanh (100 ms) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_SLOW` | bool | Lỗi | Nháy chậm (500 ms) |  |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_BREATHE` | bool | Lỗi | Thở (sáng dần, tối dần) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_HEARTBEAT` | bool | Lỗi | Nhịp tim (đập đôi rồi nghỉ) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_STROBE` | bool | Lỗi | Chớp sáng (đèn flash ngắn) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_FLICKER` | bool | Lỗi | Bập bùng như ngọn lửa |  |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_SCROLL` | bool | Lỗi | Chạy vòng (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_SCANNER` | bool | Lỗi | Quét qua lại (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_WIPE` | bool | Lỗi | Tô dần quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_THEATER` | bool | Lỗi | Đèn rạp hát, cách 3 LED sáng 1 (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_COMET` | bool | Lỗi | Sao chổi có đuôi mờ dần (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_WAVE` | bool | Lỗi | Sóng sáng chạy quanh vòng (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_TWINKLE` | bool | Lỗi | Lấp lánh ngẫu nhiên (vòng LED) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_DUAL_SPIN` | bool | Lỗi | Hai đầu xoay ngược chiều (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_BAR` | bool | Lỗi | Theo âm thanh: thanh dâng (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_MIRROR` | bool | Lỗi | Theo âm thanh: loang hai phía (vòng LED) |  |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_PULSE` | bool | Lỗi | Theo âm thanh: sáng theo nhịp |  |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_EFFECT_ID` | int | Lỗi |  | 0 if CUSTOM_LED_STATE_ERROR_EFFECT_OFF |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_FIXED` | bool | Lỗi | Màu cố định (nhập mã màu) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_RAINBOW` | bool | Lỗi | Cầu vồng |  |
-| `CONFIG_CUSTOM_LED_STATE_ERROR_COLOR` | string | Lỗi | Mã màu (RRGGBB) | "FF0000" |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_GRADIENT` | bool | Lỗi | Chuyển sắc giữa hai màu tự chọn |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_FIRE` | bool | Lỗi | Bảng màu Lửa (đỏ, cam, vàng) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_OCEAN` | bool | Lỗi | Bảng màu Đại dương (xanh lam, xanh ngọc) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_FOREST` | bool | Lỗi | Bảng màu Rừng (xanh lá, vàng chanh) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_SUNSET` | bool | Lỗi | Bảng màu Hoàng hôn (tím, hồng, cam) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_ICE` | bool | Lỗi | Bảng màu Băng giá (trắng, xanh nhạt) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_PASTEL` | bool | Lỗi | Bảng màu Kẹo ngọt (màu pastel) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_PARTY` | bool | Lỗi | Bảng màu Lễ hội (tím, hồng, vàng, xanh) |  |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_ID` | int | Lỗi |  | 1 if CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_RAINBOW |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_COLOR` | string | Lỗi | Mã màu (RRGGBB), màu thứ nhất khi chuyển sắc | "FF0000" |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_COLOR2` | string | Lỗi | Mã màu thứ hai (RRGGBB) | "FFFFFF" |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_RAINBOW_MODE_WHOLE` | bool | Lỗi | Đổi màu toàn bộ (mọi LED cùng một màu) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_STATE_ERROR_RAINBOW_MODE_CHASE` | bool | Lỗi | Chạy đuổi (mỗi LED một màu, xoay quanh vòng) |  |
-| `CONFIG_CUSTOM_LED_STATE_ERROR_RAINBOW_SPEED_MS` | int | Lỗi | Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn) | 50 |
+| `CONFIG_CUSTOM_LED_STATE_ERROR_RAINBOW_SPEED` | int | Lỗi | Tốc độ đổi màu (%, lớn hơn là nhanh hơn, tối đa 200) | 20 |
 | `CONFIG_CUSTOM_LED_EXTRA_GPIOS` | string | LED đơn GPIO (chatbot điều khiển) | Các chân LED đơn (cách nhau dấu phẩy, để trống là không dùng) | "" |
 | `CONFIG_CUSTOM_GPIO_LED_BRIGHTNESS` | int | LED đơn GPIO (chatbot điều khiển) | Độ sáng mặc định (%) | 100 |
 | `CONFIG_CUSTOM_GPIO_LED_BOOT_EFFECT_OFF` | bool | LED đơn GPIO (chatbot điều khiển) | Tắt | y (mặc định của choice) |

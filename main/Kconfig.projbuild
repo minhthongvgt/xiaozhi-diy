@@ -1954,6 +1954,12 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Nháy chậm (500 ms)"
                         config CUSTOM_LED_STATE_STARTING_EFFECT_BREATHE
                             bool "Thở (sáng dần, tối dần)"
+                        config CUSTOM_LED_STATE_STARTING_EFFECT_HEARTBEAT
+                            bool "Nhịp tim (đập đôi rồi nghỉ)"
+                        config CUSTOM_LED_STATE_STARTING_EFFECT_STROBE
+                            bool "Chớp sáng (đèn flash ngắn)"
+                        config CUSTOM_LED_STATE_STARTING_EFFECT_FLICKER
+                            bool "Bập bùng như ngọn lửa"
                         config CUSTOM_LED_STATE_STARTING_EFFECT_SCROLL
                             bool "Chạy vòng (vòng LED)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
@@ -1962,6 +1968,21 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
                         config CUSTOM_LED_STATE_STARTING_EFFECT_WIPE
                             bool "Tô dần quanh vòng (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_STARTING_EFFECT_THEATER
+                            bool "Đèn rạp hát, cách 3 LED sáng 1 (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_STARTING_EFFECT_COMET
+                            bool "Sao chổi có đuôi mờ dần (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_STARTING_EFFECT_WAVE
+                            bool "Sóng sáng chạy quanh vòng (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_STARTING_EFFECT_TWINKLE
+                            bool "Lấp lánh ngẫu nhiên (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_STARTING_EFFECT_DUAL_SPIN
+                            bool "Hai đầu xoay ngược chiều (vòng LED)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
                         config CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_BAR
                             bool "Theo âm thanh: thanh dâng (vòng LED)"
@@ -1980,9 +2001,17 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                         default 2 if CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_FAST
                         default 3 if CUSTOM_LED_STATE_STARTING_EFFECT_BLINK_SLOW
                         default 4 if CUSTOM_LED_STATE_STARTING_EFFECT_BREATHE
+                        default 5 if CUSTOM_LED_STATE_STARTING_EFFECT_HEARTBEAT
+                        default 13 if CUSTOM_LED_STATE_STARTING_EFFECT_STROBE
+                        default 14 if CUSTOM_LED_STATE_STARTING_EFFECT_FLICKER
                         default 6 if CUSTOM_LED_STATE_STARTING_EFFECT_SCROLL
                         default 7 if CUSTOM_LED_STATE_STARTING_EFFECT_SCANNER
                         default 8 if CUSTOM_LED_STATE_STARTING_EFFECT_WIPE
+                        default 9 if CUSTOM_LED_STATE_STARTING_EFFECT_THEATER
+                        default 15 if CUSTOM_LED_STATE_STARTING_EFFECT_COMET
+                        default 16 if CUSTOM_LED_STATE_STARTING_EFFECT_WAVE
+                        default 17 if CUSTOM_LED_STATE_STARTING_EFFECT_TWINKLE
+                        default 18 if CUSTOM_LED_STATE_STARTING_EFFECT_DUAL_SPIN
                         default 10 if CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_BAR
                         default 11 if CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_MIRROR
                         default 12 if CUSTOM_LED_STATE_STARTING_EFFECT_AUDIO_PULSE
@@ -1996,16 +2025,50 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Màu cố định (nhập mã màu)"
                         config CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_RAINBOW
                             bool "Cầu vồng"
+                        config CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_GRADIENT
+                            bool "Chuyển sắc giữa hai màu tự chọn"
+                        config CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_FIRE
+                            bool "Bảng màu Lửa (đỏ, cam, vàng)"
+                        config CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_OCEAN
+                            bool "Bảng màu Đại dương (xanh lam, xanh ngọc)"
+                        config CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_FOREST
+                            bool "Bảng màu Rừng (xanh lá, vàng chanh)"
+                        config CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_SUNSET
+                            bool "Bảng màu Hoàng hôn (tím, hồng, cam)"
+                        config CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_ICE
+                            bool "Bảng màu Băng giá (trắng, xanh nhạt)"
+                        config CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_PASTEL
+                            bool "Bảng màu Kẹo ngọt (màu pastel)"
+                        config CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_PARTY
+                            bool "Bảng màu Lễ hội (tím, hồng, vàng, xanh)"
                     endchoice
 
+                    config CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_ID
+                        int
+                        default 1 if CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_RAINBOW
+                        default 2 if CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_GRADIENT
+                        default 3 if CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_FIRE
+                        default 4 if CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_OCEAN
+                        default 5 if CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_FOREST
+                        default 6 if CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_SUNSET
+                        default 7 if CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_ICE
+                        default 8 if CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_PASTEL
+                        default 9 if CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_PARTY
+                        default 0
+
                     config CUSTOM_LED_STATE_STARTING_COLOR
-                        string "Mã màu (RRGGBB)"
-                        depends on CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_FIXED
+                        string "Mã màu (RRGGBB), màu thứ nhất khi chuyển sắc"
+                        depends on CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_FIXED || CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_GRADIENT
                         default "0000FF"
 
+                    config CUSTOM_LED_STATE_STARTING_COLOR2
+                        string "Mã màu thứ hai (RRGGBB)"
+                        depends on CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_GRADIENT
+                        default "FFFFFF"
+
                     choice CUSTOM_LED_STATE_STARTING_RAINBOW_MODE
-                        prompt "Cách chạy cầu vồng"
-                        depends on CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_RAINBOW
+                        prompt "Cách chạy màu"
+                        depends on (CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP) && !CUSTOM_LED_STATE_STARTING_EFFECT_OFF && !CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_FIXED
                         default CUSTOM_LED_STATE_STARTING_RAINBOW_MODE_WHOLE
                         config CUSTOM_LED_STATE_STARTING_RAINBOW_MODE_WHOLE
                             bool "Đổi màu toàn bộ (mọi LED cùng một màu)"
@@ -2013,14 +2076,15 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Chạy đuổi (mỗi LED một màu, xoay quanh vòng)"
                     endchoice
 
-                    config CUSTOM_LED_STATE_STARTING_RAINBOW_SPEED_MS
-                        int "Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn)"
-                        depends on CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_RAINBOW
-                        range 10 500
-                        default 50
+                    config CUSTOM_LED_STATE_STARTING_RAINBOW_SPEED
+                        int "Tốc độ đổi màu (%, lớn hơn là nhanh hơn, tối đa 200)"
+                        depends on (CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP) && !CUSTOM_LED_STATE_STARTING_EFFECT_OFF && !CUSTOM_LED_STATE_STARTING_COLOR_SOURCE_FIXED
+                        range 1 200
+                        default 20
                         help
-                            Một vòng đủ 7 màu gồm 64 bước: 50 ms mỗi bước là khoảng 3,2 giây một vòng.
-                            Hiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng.
+                            100% bằng mức nhanh nhất trước đây (10 ms mỗi bước, khoảng 0,64 giây một vòng màu).
+                            200% nhanh gấp đôi (khoảng 0,32 giây một vòng); 20% khoảng 3,2 giây một vòng (mặc định cũ 50 ms).
+                            Hiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng hoặc bảng màu.
                 endmenu
 
                 menu "Cấu hình WiFi"
@@ -2038,6 +2102,12 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Nháy chậm (500 ms)"
                         config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BREATHE
                             bool "Thở (sáng dần, tối dần)"
+                        config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_HEARTBEAT
+                            bool "Nhịp tim (đập đôi rồi nghỉ)"
+                        config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_STROBE
+                            bool "Chớp sáng (đèn flash ngắn)"
+                        config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_FLICKER
+                            bool "Bập bùng như ngọn lửa"
                         config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_SCROLL
                             bool "Chạy vòng (vòng LED)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
@@ -2046,6 +2116,21 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
                         config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_WIPE
                             bool "Tô dần quanh vòng (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_THEATER
+                            bool "Đèn rạp hát, cách 3 LED sáng 1 (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_COMET
+                            bool "Sao chổi có đuôi mờ dần (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_WAVE
+                            bool "Sóng sáng chạy quanh vòng (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_TWINKLE
+                            bool "Lấp lánh ngẫu nhiên (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_DUAL_SPIN
+                            bool "Hai đầu xoay ngược chiều (vòng LED)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
                         config CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_BAR
                             bool "Theo âm thanh: thanh dâng (vòng LED)"
@@ -2064,9 +2149,17 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                         default 2 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_FAST
                         default 3 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BLINK_SLOW
                         default 4 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_BREATHE
+                        default 5 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_HEARTBEAT
+                        default 13 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_STROBE
+                        default 14 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_FLICKER
                         default 6 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_SCROLL
                         default 7 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_SCANNER
                         default 8 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_WIPE
+                        default 9 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_THEATER
+                        default 15 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_COMET
+                        default 16 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_WAVE
+                        default 17 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_TWINKLE
+                        default 18 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_DUAL_SPIN
                         default 10 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_BAR
                         default 11 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_MIRROR
                         default 12 if CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_AUDIO_PULSE
@@ -2080,16 +2173,50 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Màu cố định (nhập mã màu)"
                         config CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_RAINBOW
                             bool "Cầu vồng"
+                        config CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_GRADIENT
+                            bool "Chuyển sắc giữa hai màu tự chọn"
+                        config CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_FIRE
+                            bool "Bảng màu Lửa (đỏ, cam, vàng)"
+                        config CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_OCEAN
+                            bool "Bảng màu Đại dương (xanh lam, xanh ngọc)"
+                        config CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_FOREST
+                            bool "Bảng màu Rừng (xanh lá, vàng chanh)"
+                        config CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_SUNSET
+                            bool "Bảng màu Hoàng hôn (tím, hồng, cam)"
+                        config CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_ICE
+                            bool "Bảng màu Băng giá (trắng, xanh nhạt)"
+                        config CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_PASTEL
+                            bool "Bảng màu Kẹo ngọt (màu pastel)"
+                        config CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_PARTY
+                            bool "Bảng màu Lễ hội (tím, hồng, vàng, xanh)"
                     endchoice
 
+                    config CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_ID
+                        int
+                        default 1 if CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_RAINBOW
+                        default 2 if CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_GRADIENT
+                        default 3 if CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_FIRE
+                        default 4 if CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_OCEAN
+                        default 5 if CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_FOREST
+                        default 6 if CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_SUNSET
+                        default 7 if CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_ICE
+                        default 8 if CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_PASTEL
+                        default 9 if CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_PARTY
+                        default 0
+
                     config CUSTOM_LED_STATE_WIFI_CONFIG_COLOR
-                        string "Mã màu (RRGGBB)"
-                        depends on CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_FIXED
+                        string "Mã màu (RRGGBB), màu thứ nhất khi chuyển sắc"
+                        depends on CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_FIXED || CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_GRADIENT
                         default "0000FF"
 
+                    config CUSTOM_LED_STATE_WIFI_CONFIG_COLOR2
+                        string "Mã màu thứ hai (RRGGBB)"
+                        depends on CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_GRADIENT
+                        default "FFFFFF"
+
                     choice CUSTOM_LED_STATE_WIFI_CONFIG_RAINBOW_MODE
-                        prompt "Cách chạy cầu vồng"
-                        depends on CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_RAINBOW
+                        prompt "Cách chạy màu"
+                        depends on (CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP) && !CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_OFF && !CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_FIXED
                         default CUSTOM_LED_STATE_WIFI_CONFIG_RAINBOW_MODE_WHOLE
                         config CUSTOM_LED_STATE_WIFI_CONFIG_RAINBOW_MODE_WHOLE
                             bool "Đổi màu toàn bộ (mọi LED cùng một màu)"
@@ -2097,14 +2224,15 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Chạy đuổi (mỗi LED một màu, xoay quanh vòng)"
                     endchoice
 
-                    config CUSTOM_LED_STATE_WIFI_CONFIG_RAINBOW_SPEED_MS
-                        int "Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn)"
-                        depends on CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_RAINBOW
-                        range 10 500
-                        default 50
+                    config CUSTOM_LED_STATE_WIFI_CONFIG_RAINBOW_SPEED
+                        int "Tốc độ đổi màu (%, lớn hơn là nhanh hơn, tối đa 200)"
+                        depends on (CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP) && !CUSTOM_LED_STATE_WIFI_CONFIG_EFFECT_OFF && !CUSTOM_LED_STATE_WIFI_CONFIG_COLOR_SOURCE_FIXED
+                        range 1 200
+                        default 20
                         help
-                            Một vòng đủ 7 màu gồm 64 bước: 50 ms mỗi bước là khoảng 3,2 giây một vòng.
-                            Hiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng.
+                            100% bằng mức nhanh nhất trước đây (10 ms mỗi bước, khoảng 0,64 giây một vòng màu).
+                            200% nhanh gấp đôi (khoảng 0,32 giây một vòng); 20% khoảng 3,2 giây một vòng (mặc định cũ 50 ms).
+                            Hiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng hoặc bảng màu.
                 endmenu
 
                 menu "Chờ"
@@ -2122,6 +2250,12 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Nháy chậm (500 ms)"
                         config CUSTOM_LED_STATE_IDLE_EFFECT_BREATHE
                             bool "Thở (sáng dần, tối dần)"
+                        config CUSTOM_LED_STATE_IDLE_EFFECT_HEARTBEAT
+                            bool "Nhịp tim (đập đôi rồi nghỉ)"
+                        config CUSTOM_LED_STATE_IDLE_EFFECT_STROBE
+                            bool "Chớp sáng (đèn flash ngắn)"
+                        config CUSTOM_LED_STATE_IDLE_EFFECT_FLICKER
+                            bool "Bập bùng như ngọn lửa"
                         config CUSTOM_LED_STATE_IDLE_EFFECT_SCROLL
                             bool "Chạy vòng (vòng LED)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
@@ -2130,6 +2264,21 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
                         config CUSTOM_LED_STATE_IDLE_EFFECT_WIPE
                             bool "Tô dần quanh vòng (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_IDLE_EFFECT_THEATER
+                            bool "Đèn rạp hát, cách 3 LED sáng 1 (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_IDLE_EFFECT_COMET
+                            bool "Sao chổi có đuôi mờ dần (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_IDLE_EFFECT_WAVE
+                            bool "Sóng sáng chạy quanh vòng (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_IDLE_EFFECT_TWINKLE
+                            bool "Lấp lánh ngẫu nhiên (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_IDLE_EFFECT_DUAL_SPIN
+                            bool "Hai đầu xoay ngược chiều (vòng LED)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
                         config CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_BAR
                             bool "Theo âm thanh: thanh dâng (vòng LED)"
@@ -2148,9 +2297,17 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                         default 2 if CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_FAST
                         default 3 if CUSTOM_LED_STATE_IDLE_EFFECT_BLINK_SLOW
                         default 4 if CUSTOM_LED_STATE_IDLE_EFFECT_BREATHE
+                        default 5 if CUSTOM_LED_STATE_IDLE_EFFECT_HEARTBEAT
+                        default 13 if CUSTOM_LED_STATE_IDLE_EFFECT_STROBE
+                        default 14 if CUSTOM_LED_STATE_IDLE_EFFECT_FLICKER
                         default 6 if CUSTOM_LED_STATE_IDLE_EFFECT_SCROLL
                         default 7 if CUSTOM_LED_STATE_IDLE_EFFECT_SCANNER
                         default 8 if CUSTOM_LED_STATE_IDLE_EFFECT_WIPE
+                        default 9 if CUSTOM_LED_STATE_IDLE_EFFECT_THEATER
+                        default 15 if CUSTOM_LED_STATE_IDLE_EFFECT_COMET
+                        default 16 if CUSTOM_LED_STATE_IDLE_EFFECT_WAVE
+                        default 17 if CUSTOM_LED_STATE_IDLE_EFFECT_TWINKLE
+                        default 18 if CUSTOM_LED_STATE_IDLE_EFFECT_DUAL_SPIN
                         default 10 if CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_BAR
                         default 11 if CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_MIRROR
                         default 12 if CUSTOM_LED_STATE_IDLE_EFFECT_AUDIO_PULSE
@@ -2164,16 +2321,50 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Màu cố định (nhập mã màu)"
                         config CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_RAINBOW
                             bool "Cầu vồng"
+                        config CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_GRADIENT
+                            bool "Chuyển sắc giữa hai màu tự chọn"
+                        config CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_FIRE
+                            bool "Bảng màu Lửa (đỏ, cam, vàng)"
+                        config CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_OCEAN
+                            bool "Bảng màu Đại dương (xanh lam, xanh ngọc)"
+                        config CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_FOREST
+                            bool "Bảng màu Rừng (xanh lá, vàng chanh)"
+                        config CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_SUNSET
+                            bool "Bảng màu Hoàng hôn (tím, hồng, cam)"
+                        config CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_ICE
+                            bool "Bảng màu Băng giá (trắng, xanh nhạt)"
+                        config CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_PASTEL
+                            bool "Bảng màu Kẹo ngọt (màu pastel)"
+                        config CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_PARTY
+                            bool "Bảng màu Lễ hội (tím, hồng, vàng, xanh)"
                     endchoice
 
+                    config CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_ID
+                        int
+                        default 1 if CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_RAINBOW
+                        default 2 if CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_GRADIENT
+                        default 3 if CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_FIRE
+                        default 4 if CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_OCEAN
+                        default 5 if CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_FOREST
+                        default 6 if CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_SUNSET
+                        default 7 if CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_ICE
+                        default 8 if CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_PASTEL
+                        default 9 if CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_PARTY
+                        default 0
+
                     config CUSTOM_LED_STATE_IDLE_COLOR
-                        string "Mã màu (RRGGBB)"
-                        depends on CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_FIXED
+                        string "Mã màu (RRGGBB), màu thứ nhất khi chuyển sắc"
+                        depends on CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_FIXED || CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_GRADIENT
                         default "0000FF"
 
+                    config CUSTOM_LED_STATE_IDLE_COLOR2
+                        string "Mã màu thứ hai (RRGGBB)"
+                        depends on CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_GRADIENT
+                        default "FFFFFF"
+
                     choice CUSTOM_LED_STATE_IDLE_RAINBOW_MODE
-                        prompt "Cách chạy cầu vồng"
-                        depends on CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_RAINBOW
+                        prompt "Cách chạy màu"
+                        depends on (CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP) && !CUSTOM_LED_STATE_IDLE_EFFECT_OFF && !CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_FIXED
                         default CUSTOM_LED_STATE_IDLE_RAINBOW_MODE_WHOLE
                         config CUSTOM_LED_STATE_IDLE_RAINBOW_MODE_WHOLE
                             bool "Đổi màu toàn bộ (mọi LED cùng một màu)"
@@ -2181,14 +2372,15 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Chạy đuổi (mỗi LED một màu, xoay quanh vòng)"
                     endchoice
 
-                    config CUSTOM_LED_STATE_IDLE_RAINBOW_SPEED_MS
-                        int "Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn)"
-                        depends on CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_RAINBOW
-                        range 10 500
-                        default 50
+                    config CUSTOM_LED_STATE_IDLE_RAINBOW_SPEED
+                        int "Tốc độ đổi màu (%, lớn hơn là nhanh hơn, tối đa 200)"
+                        depends on (CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP) && !CUSTOM_LED_STATE_IDLE_EFFECT_OFF && !CUSTOM_LED_STATE_IDLE_COLOR_SOURCE_FIXED
+                        range 1 200
+                        default 20
                         help
-                            Một vòng đủ 7 màu gồm 64 bước: 50 ms mỗi bước là khoảng 3,2 giây một vòng.
-                            Hiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng.
+                            100% bằng mức nhanh nhất trước đây (10 ms mỗi bước, khoảng 0,64 giây một vòng màu).
+                            200% nhanh gấp đôi (khoảng 0,32 giây một vòng); 20% khoảng 3,2 giây một vòng (mặc định cũ 50 ms).
+                            Hiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng hoặc bảng màu.
                 endmenu
 
                 menu "Đang kết nối"
@@ -2206,6 +2398,12 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Nháy chậm (500 ms)"
                         config CUSTOM_LED_STATE_CONNECTING_EFFECT_BREATHE
                             bool "Thở (sáng dần, tối dần)"
+                        config CUSTOM_LED_STATE_CONNECTING_EFFECT_HEARTBEAT
+                            bool "Nhịp tim (đập đôi rồi nghỉ)"
+                        config CUSTOM_LED_STATE_CONNECTING_EFFECT_STROBE
+                            bool "Chớp sáng (đèn flash ngắn)"
+                        config CUSTOM_LED_STATE_CONNECTING_EFFECT_FLICKER
+                            bool "Bập bùng như ngọn lửa"
                         config CUSTOM_LED_STATE_CONNECTING_EFFECT_SCROLL
                             bool "Chạy vòng (vòng LED)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
@@ -2214,6 +2412,21 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
                         config CUSTOM_LED_STATE_CONNECTING_EFFECT_WIPE
                             bool "Tô dần quanh vòng (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_CONNECTING_EFFECT_THEATER
+                            bool "Đèn rạp hát, cách 3 LED sáng 1 (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_CONNECTING_EFFECT_COMET
+                            bool "Sao chổi có đuôi mờ dần (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_CONNECTING_EFFECT_WAVE
+                            bool "Sóng sáng chạy quanh vòng (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_CONNECTING_EFFECT_TWINKLE
+                            bool "Lấp lánh ngẫu nhiên (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_CONNECTING_EFFECT_DUAL_SPIN
+                            bool "Hai đầu xoay ngược chiều (vòng LED)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
                         config CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_BAR
                             bool "Theo âm thanh: thanh dâng (vòng LED)"
@@ -2232,9 +2445,17 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                         default 2 if CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_FAST
                         default 3 if CUSTOM_LED_STATE_CONNECTING_EFFECT_BLINK_SLOW
                         default 4 if CUSTOM_LED_STATE_CONNECTING_EFFECT_BREATHE
+                        default 5 if CUSTOM_LED_STATE_CONNECTING_EFFECT_HEARTBEAT
+                        default 13 if CUSTOM_LED_STATE_CONNECTING_EFFECT_STROBE
+                        default 14 if CUSTOM_LED_STATE_CONNECTING_EFFECT_FLICKER
                         default 6 if CUSTOM_LED_STATE_CONNECTING_EFFECT_SCROLL
                         default 7 if CUSTOM_LED_STATE_CONNECTING_EFFECT_SCANNER
                         default 8 if CUSTOM_LED_STATE_CONNECTING_EFFECT_WIPE
+                        default 9 if CUSTOM_LED_STATE_CONNECTING_EFFECT_THEATER
+                        default 15 if CUSTOM_LED_STATE_CONNECTING_EFFECT_COMET
+                        default 16 if CUSTOM_LED_STATE_CONNECTING_EFFECT_WAVE
+                        default 17 if CUSTOM_LED_STATE_CONNECTING_EFFECT_TWINKLE
+                        default 18 if CUSTOM_LED_STATE_CONNECTING_EFFECT_DUAL_SPIN
                         default 10 if CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_BAR
                         default 11 if CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_MIRROR
                         default 12 if CUSTOM_LED_STATE_CONNECTING_EFFECT_AUDIO_PULSE
@@ -2248,16 +2469,50 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Màu cố định (nhập mã màu)"
                         config CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_RAINBOW
                             bool "Cầu vồng"
+                        config CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_GRADIENT
+                            bool "Chuyển sắc giữa hai màu tự chọn"
+                        config CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_FIRE
+                            bool "Bảng màu Lửa (đỏ, cam, vàng)"
+                        config CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_OCEAN
+                            bool "Bảng màu Đại dương (xanh lam, xanh ngọc)"
+                        config CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_FOREST
+                            bool "Bảng màu Rừng (xanh lá, vàng chanh)"
+                        config CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_SUNSET
+                            bool "Bảng màu Hoàng hôn (tím, hồng, cam)"
+                        config CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_ICE
+                            bool "Bảng màu Băng giá (trắng, xanh nhạt)"
+                        config CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_PASTEL
+                            bool "Bảng màu Kẹo ngọt (màu pastel)"
+                        config CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_PARTY
+                            bool "Bảng màu Lễ hội (tím, hồng, vàng, xanh)"
                     endchoice
 
+                    config CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_ID
+                        int
+                        default 1 if CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_RAINBOW
+                        default 2 if CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_GRADIENT
+                        default 3 if CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_FIRE
+                        default 4 if CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_OCEAN
+                        default 5 if CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_FOREST
+                        default 6 if CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_SUNSET
+                        default 7 if CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_ICE
+                        default 8 if CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_PASTEL
+                        default 9 if CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_PARTY
+                        default 0
+
                     config CUSTOM_LED_STATE_CONNECTING_COLOR
-                        string "Mã màu (RRGGBB)"
-                        depends on CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_FIXED
+                        string "Mã màu (RRGGBB), màu thứ nhất khi chuyển sắc"
+                        depends on CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_FIXED || CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_GRADIENT
                         default "0000FF"
 
+                    config CUSTOM_LED_STATE_CONNECTING_COLOR2
+                        string "Mã màu thứ hai (RRGGBB)"
+                        depends on CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_GRADIENT
+                        default "FFFFFF"
+
                     choice CUSTOM_LED_STATE_CONNECTING_RAINBOW_MODE
-                        prompt "Cách chạy cầu vồng"
-                        depends on CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_RAINBOW
+                        prompt "Cách chạy màu"
+                        depends on (CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP) && !CUSTOM_LED_STATE_CONNECTING_EFFECT_OFF && !CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_FIXED
                         default CUSTOM_LED_STATE_CONNECTING_RAINBOW_MODE_WHOLE
                         config CUSTOM_LED_STATE_CONNECTING_RAINBOW_MODE_WHOLE
                             bool "Đổi màu toàn bộ (mọi LED cùng một màu)"
@@ -2265,14 +2520,15 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Chạy đuổi (mỗi LED một màu, xoay quanh vòng)"
                     endchoice
 
-                    config CUSTOM_LED_STATE_CONNECTING_RAINBOW_SPEED_MS
-                        int "Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn)"
-                        depends on CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_RAINBOW
-                        range 10 500
-                        default 50
+                    config CUSTOM_LED_STATE_CONNECTING_RAINBOW_SPEED
+                        int "Tốc độ đổi màu (%, lớn hơn là nhanh hơn, tối đa 200)"
+                        depends on (CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP) && !CUSTOM_LED_STATE_CONNECTING_EFFECT_OFF && !CUSTOM_LED_STATE_CONNECTING_COLOR_SOURCE_FIXED
+                        range 1 200
+                        default 20
                         help
-                            Một vòng đủ 7 màu gồm 64 bước: 50 ms mỗi bước là khoảng 3,2 giây một vòng.
-                            Hiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng.
+                            100% bằng mức nhanh nhất trước đây (10 ms mỗi bước, khoảng 0,64 giây một vòng màu).
+                            200% nhanh gấp đôi (khoảng 0,32 giây một vòng); 20% khoảng 3,2 giây một vòng (mặc định cũ 50 ms).
+                            Hiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng hoặc bảng màu.
                 endmenu
 
                 menu "Đang nghe"
@@ -2290,6 +2546,12 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Nháy chậm (500 ms)"
                         config CUSTOM_LED_STATE_LISTENING_EFFECT_BREATHE
                             bool "Thở (sáng dần, tối dần)"
+                        config CUSTOM_LED_STATE_LISTENING_EFFECT_HEARTBEAT
+                            bool "Nhịp tim (đập đôi rồi nghỉ)"
+                        config CUSTOM_LED_STATE_LISTENING_EFFECT_STROBE
+                            bool "Chớp sáng (đèn flash ngắn)"
+                        config CUSTOM_LED_STATE_LISTENING_EFFECT_FLICKER
+                            bool "Bập bùng như ngọn lửa"
                         config CUSTOM_LED_STATE_LISTENING_EFFECT_SCROLL
                             bool "Chạy vòng (vòng LED)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
@@ -2298,6 +2560,21 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
                         config CUSTOM_LED_STATE_LISTENING_EFFECT_WIPE
                             bool "Tô dần quanh vòng (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_LISTENING_EFFECT_THEATER
+                            bool "Đèn rạp hát, cách 3 LED sáng 1 (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_LISTENING_EFFECT_COMET
+                            bool "Sao chổi có đuôi mờ dần (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_LISTENING_EFFECT_WAVE
+                            bool "Sóng sáng chạy quanh vòng (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_LISTENING_EFFECT_TWINKLE
+                            bool "Lấp lánh ngẫu nhiên (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_LISTENING_EFFECT_DUAL_SPIN
+                            bool "Hai đầu xoay ngược chiều (vòng LED)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
                         config CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_BAR
                             bool "Theo âm thanh: thanh dâng (vòng LED)"
@@ -2316,9 +2593,17 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                         default 2 if CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_FAST
                         default 3 if CUSTOM_LED_STATE_LISTENING_EFFECT_BLINK_SLOW
                         default 4 if CUSTOM_LED_STATE_LISTENING_EFFECT_BREATHE
+                        default 5 if CUSTOM_LED_STATE_LISTENING_EFFECT_HEARTBEAT
+                        default 13 if CUSTOM_LED_STATE_LISTENING_EFFECT_STROBE
+                        default 14 if CUSTOM_LED_STATE_LISTENING_EFFECT_FLICKER
                         default 6 if CUSTOM_LED_STATE_LISTENING_EFFECT_SCROLL
                         default 7 if CUSTOM_LED_STATE_LISTENING_EFFECT_SCANNER
                         default 8 if CUSTOM_LED_STATE_LISTENING_EFFECT_WIPE
+                        default 9 if CUSTOM_LED_STATE_LISTENING_EFFECT_THEATER
+                        default 15 if CUSTOM_LED_STATE_LISTENING_EFFECT_COMET
+                        default 16 if CUSTOM_LED_STATE_LISTENING_EFFECT_WAVE
+                        default 17 if CUSTOM_LED_STATE_LISTENING_EFFECT_TWINKLE
+                        default 18 if CUSTOM_LED_STATE_LISTENING_EFFECT_DUAL_SPIN
                         default 10 if CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_BAR
                         default 11 if CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_MIRROR
                         default 12 if CUSTOM_LED_STATE_LISTENING_EFFECT_AUDIO_PULSE
@@ -2332,16 +2617,50 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Màu cố định (nhập mã màu)"
                         config CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_RAINBOW
                             bool "Cầu vồng"
+                        config CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_GRADIENT
+                            bool "Chuyển sắc giữa hai màu tự chọn"
+                        config CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_FIRE
+                            bool "Bảng màu Lửa (đỏ, cam, vàng)"
+                        config CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_OCEAN
+                            bool "Bảng màu Đại dương (xanh lam, xanh ngọc)"
+                        config CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_FOREST
+                            bool "Bảng màu Rừng (xanh lá, vàng chanh)"
+                        config CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_SUNSET
+                            bool "Bảng màu Hoàng hôn (tím, hồng, cam)"
+                        config CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_ICE
+                            bool "Bảng màu Băng giá (trắng, xanh nhạt)"
+                        config CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_PASTEL
+                            bool "Bảng màu Kẹo ngọt (màu pastel)"
+                        config CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_PARTY
+                            bool "Bảng màu Lễ hội (tím, hồng, vàng, xanh)"
                     endchoice
 
+                    config CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_ID
+                        int
+                        default 1 if CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_RAINBOW
+                        default 2 if CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_GRADIENT
+                        default 3 if CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_FIRE
+                        default 4 if CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_OCEAN
+                        default 5 if CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_FOREST
+                        default 6 if CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_SUNSET
+                        default 7 if CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_ICE
+                        default 8 if CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_PASTEL
+                        default 9 if CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_PARTY
+                        default 0
+
                     config CUSTOM_LED_STATE_LISTENING_COLOR
-                        string "Mã màu (RRGGBB)"
-                        depends on CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_FIXED
+                        string "Mã màu (RRGGBB), màu thứ nhất khi chuyển sắc"
+                        depends on CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_FIXED || CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_GRADIENT
                         default "FF0000"
 
+                    config CUSTOM_LED_STATE_LISTENING_COLOR2
+                        string "Mã màu thứ hai (RRGGBB)"
+                        depends on CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_GRADIENT
+                        default "FFFFFF"
+
                     choice CUSTOM_LED_STATE_LISTENING_RAINBOW_MODE
-                        prompt "Cách chạy cầu vồng"
-                        depends on CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_RAINBOW
+                        prompt "Cách chạy màu"
+                        depends on (CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP) && !CUSTOM_LED_STATE_LISTENING_EFFECT_OFF && !CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_FIXED
                         default CUSTOM_LED_STATE_LISTENING_RAINBOW_MODE_WHOLE
                         config CUSTOM_LED_STATE_LISTENING_RAINBOW_MODE_WHOLE
                             bool "Đổi màu toàn bộ (mọi LED cùng một màu)"
@@ -2349,14 +2668,15 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Chạy đuổi (mỗi LED một màu, xoay quanh vòng)"
                     endchoice
 
-                    config CUSTOM_LED_STATE_LISTENING_RAINBOW_SPEED_MS
-                        int "Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn)"
-                        depends on CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_RAINBOW
-                        range 10 500
-                        default 50
+                    config CUSTOM_LED_STATE_LISTENING_RAINBOW_SPEED
+                        int "Tốc độ đổi màu (%, lớn hơn là nhanh hơn, tối đa 200)"
+                        depends on (CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP) && !CUSTOM_LED_STATE_LISTENING_EFFECT_OFF && !CUSTOM_LED_STATE_LISTENING_COLOR_SOURCE_FIXED
+                        range 1 200
+                        default 20
                         help
-                            Một vòng đủ 7 màu gồm 64 bước: 50 ms mỗi bước là khoảng 3,2 giây một vòng.
-                            Hiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng.
+                            100% bằng mức nhanh nhất trước đây (10 ms mỗi bước, khoảng 0,64 giây một vòng màu).
+                            200% nhanh gấp đôi (khoảng 0,32 giây một vòng); 20% khoảng 3,2 giây một vòng (mặc định cũ 50 ms).
+                            Hiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng hoặc bảng màu.
                 endmenu
 
                 menu "Đang nói"
@@ -2374,6 +2694,12 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Nháy chậm (500 ms)"
                         config CUSTOM_LED_STATE_SPEAKING_EFFECT_BREATHE
                             bool "Thở (sáng dần, tối dần)"
+                        config CUSTOM_LED_STATE_SPEAKING_EFFECT_HEARTBEAT
+                            bool "Nhịp tim (đập đôi rồi nghỉ)"
+                        config CUSTOM_LED_STATE_SPEAKING_EFFECT_STROBE
+                            bool "Chớp sáng (đèn flash ngắn)"
+                        config CUSTOM_LED_STATE_SPEAKING_EFFECT_FLICKER
+                            bool "Bập bùng như ngọn lửa"
                         config CUSTOM_LED_STATE_SPEAKING_EFFECT_SCROLL
                             bool "Chạy vòng (vòng LED)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
@@ -2382,6 +2708,21 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
                         config CUSTOM_LED_STATE_SPEAKING_EFFECT_WIPE
                             bool "Tô dần quanh vòng (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_SPEAKING_EFFECT_THEATER
+                            bool "Đèn rạp hát, cách 3 LED sáng 1 (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_SPEAKING_EFFECT_COMET
+                            bool "Sao chổi có đuôi mờ dần (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_SPEAKING_EFFECT_WAVE
+                            bool "Sóng sáng chạy quanh vòng (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_SPEAKING_EFFECT_TWINKLE
+                            bool "Lấp lánh ngẫu nhiên (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_SPEAKING_EFFECT_DUAL_SPIN
+                            bool "Hai đầu xoay ngược chiều (vòng LED)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
                         config CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_BAR
                             bool "Theo âm thanh: thanh dâng (vòng LED)"
@@ -2400,9 +2741,17 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                         default 2 if CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_FAST
                         default 3 if CUSTOM_LED_STATE_SPEAKING_EFFECT_BLINK_SLOW
                         default 4 if CUSTOM_LED_STATE_SPEAKING_EFFECT_BREATHE
+                        default 5 if CUSTOM_LED_STATE_SPEAKING_EFFECT_HEARTBEAT
+                        default 13 if CUSTOM_LED_STATE_SPEAKING_EFFECT_STROBE
+                        default 14 if CUSTOM_LED_STATE_SPEAKING_EFFECT_FLICKER
                         default 6 if CUSTOM_LED_STATE_SPEAKING_EFFECT_SCROLL
                         default 7 if CUSTOM_LED_STATE_SPEAKING_EFFECT_SCANNER
                         default 8 if CUSTOM_LED_STATE_SPEAKING_EFFECT_WIPE
+                        default 9 if CUSTOM_LED_STATE_SPEAKING_EFFECT_THEATER
+                        default 15 if CUSTOM_LED_STATE_SPEAKING_EFFECT_COMET
+                        default 16 if CUSTOM_LED_STATE_SPEAKING_EFFECT_WAVE
+                        default 17 if CUSTOM_LED_STATE_SPEAKING_EFFECT_TWINKLE
+                        default 18 if CUSTOM_LED_STATE_SPEAKING_EFFECT_DUAL_SPIN
                         default 10 if CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_BAR
                         default 11 if CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_MIRROR
                         default 12 if CUSTOM_LED_STATE_SPEAKING_EFFECT_AUDIO_PULSE
@@ -2416,16 +2765,50 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Màu cố định (nhập mã màu)"
                         config CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_RAINBOW
                             bool "Cầu vồng"
+                        config CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_GRADIENT
+                            bool "Chuyển sắc giữa hai màu tự chọn"
+                        config CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_FIRE
+                            bool "Bảng màu Lửa (đỏ, cam, vàng)"
+                        config CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_OCEAN
+                            bool "Bảng màu Đại dương (xanh lam, xanh ngọc)"
+                        config CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_FOREST
+                            bool "Bảng màu Rừng (xanh lá, vàng chanh)"
+                        config CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_SUNSET
+                            bool "Bảng màu Hoàng hôn (tím, hồng, cam)"
+                        config CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_ICE
+                            bool "Bảng màu Băng giá (trắng, xanh nhạt)"
+                        config CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_PASTEL
+                            bool "Bảng màu Kẹo ngọt (màu pastel)"
+                        config CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_PARTY
+                            bool "Bảng màu Lễ hội (tím, hồng, vàng, xanh)"
                     endchoice
 
+                    config CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_ID
+                        int
+                        default 1 if CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_RAINBOW
+                        default 2 if CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_GRADIENT
+                        default 3 if CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_FIRE
+                        default 4 if CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_OCEAN
+                        default 5 if CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_FOREST
+                        default 6 if CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_SUNSET
+                        default 7 if CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_ICE
+                        default 8 if CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_PASTEL
+                        default 9 if CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_PARTY
+                        default 0
+
                     config CUSTOM_LED_STATE_SPEAKING_COLOR
-                        string "Mã màu (RRGGBB)"
-                        depends on CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_FIXED
+                        string "Mã màu (RRGGBB), màu thứ nhất khi chuyển sắc"
+                        depends on CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_FIXED || CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_GRADIENT
                         default "00FF00"
 
+                    config CUSTOM_LED_STATE_SPEAKING_COLOR2
+                        string "Mã màu thứ hai (RRGGBB)"
+                        depends on CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_GRADIENT
+                        default "FFFFFF"
+
                     choice CUSTOM_LED_STATE_SPEAKING_RAINBOW_MODE
-                        prompt "Cách chạy cầu vồng"
-                        depends on CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_RAINBOW
+                        prompt "Cách chạy màu"
+                        depends on (CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP) && !CUSTOM_LED_STATE_SPEAKING_EFFECT_OFF && !CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_FIXED
                         default CUSTOM_LED_STATE_SPEAKING_RAINBOW_MODE_WHOLE
                         config CUSTOM_LED_STATE_SPEAKING_RAINBOW_MODE_WHOLE
                             bool "Đổi màu toàn bộ (mọi LED cùng một màu)"
@@ -2433,14 +2816,15 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Chạy đuổi (mỗi LED một màu, xoay quanh vòng)"
                     endchoice
 
-                    config CUSTOM_LED_STATE_SPEAKING_RAINBOW_SPEED_MS
-                        int "Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn)"
-                        depends on CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_RAINBOW
-                        range 10 500
-                        default 50
+                    config CUSTOM_LED_STATE_SPEAKING_RAINBOW_SPEED
+                        int "Tốc độ đổi màu (%, lớn hơn là nhanh hơn, tối đa 200)"
+                        depends on (CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP) && !CUSTOM_LED_STATE_SPEAKING_EFFECT_OFF && !CUSTOM_LED_STATE_SPEAKING_COLOR_SOURCE_FIXED
+                        range 1 200
+                        default 20
                         help
-                            Một vòng đủ 7 màu gồm 64 bước: 50 ms mỗi bước là khoảng 3,2 giây một vòng.
-                            Hiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng.
+                            100% bằng mức nhanh nhất trước đây (10 ms mỗi bước, khoảng 0,64 giây một vòng màu).
+                            200% nhanh gấp đôi (khoảng 0,32 giây một vòng); 20% khoảng 3,2 giây một vòng (mặc định cũ 50 ms).
+                            Hiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng hoặc bảng màu.
                 endmenu
 
                 menu "Nâng cấp firmware"
@@ -2458,6 +2842,12 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Nháy chậm (500 ms)"
                         config CUSTOM_LED_STATE_UPGRADING_EFFECT_BREATHE
                             bool "Thở (sáng dần, tối dần)"
+                        config CUSTOM_LED_STATE_UPGRADING_EFFECT_HEARTBEAT
+                            bool "Nhịp tim (đập đôi rồi nghỉ)"
+                        config CUSTOM_LED_STATE_UPGRADING_EFFECT_STROBE
+                            bool "Chớp sáng (đèn flash ngắn)"
+                        config CUSTOM_LED_STATE_UPGRADING_EFFECT_FLICKER
+                            bool "Bập bùng như ngọn lửa"
                         config CUSTOM_LED_STATE_UPGRADING_EFFECT_SCROLL
                             bool "Chạy vòng (vòng LED)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
@@ -2466,6 +2856,21 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
                         config CUSTOM_LED_STATE_UPGRADING_EFFECT_WIPE
                             bool "Tô dần quanh vòng (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_UPGRADING_EFFECT_THEATER
+                            bool "Đèn rạp hát, cách 3 LED sáng 1 (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_UPGRADING_EFFECT_COMET
+                            bool "Sao chổi có đuôi mờ dần (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_UPGRADING_EFFECT_WAVE
+                            bool "Sóng sáng chạy quanh vòng (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_UPGRADING_EFFECT_TWINKLE
+                            bool "Lấp lánh ngẫu nhiên (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_UPGRADING_EFFECT_DUAL_SPIN
+                            bool "Hai đầu xoay ngược chiều (vòng LED)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
                         config CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_BAR
                             bool "Theo âm thanh: thanh dâng (vòng LED)"
@@ -2484,9 +2889,17 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                         default 2 if CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_FAST
                         default 3 if CUSTOM_LED_STATE_UPGRADING_EFFECT_BLINK_SLOW
                         default 4 if CUSTOM_LED_STATE_UPGRADING_EFFECT_BREATHE
+                        default 5 if CUSTOM_LED_STATE_UPGRADING_EFFECT_HEARTBEAT
+                        default 13 if CUSTOM_LED_STATE_UPGRADING_EFFECT_STROBE
+                        default 14 if CUSTOM_LED_STATE_UPGRADING_EFFECT_FLICKER
                         default 6 if CUSTOM_LED_STATE_UPGRADING_EFFECT_SCROLL
                         default 7 if CUSTOM_LED_STATE_UPGRADING_EFFECT_SCANNER
                         default 8 if CUSTOM_LED_STATE_UPGRADING_EFFECT_WIPE
+                        default 9 if CUSTOM_LED_STATE_UPGRADING_EFFECT_THEATER
+                        default 15 if CUSTOM_LED_STATE_UPGRADING_EFFECT_COMET
+                        default 16 if CUSTOM_LED_STATE_UPGRADING_EFFECT_WAVE
+                        default 17 if CUSTOM_LED_STATE_UPGRADING_EFFECT_TWINKLE
+                        default 18 if CUSTOM_LED_STATE_UPGRADING_EFFECT_DUAL_SPIN
                         default 10 if CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_BAR
                         default 11 if CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_MIRROR
                         default 12 if CUSTOM_LED_STATE_UPGRADING_EFFECT_AUDIO_PULSE
@@ -2500,16 +2913,50 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Màu cố định (nhập mã màu)"
                         config CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_RAINBOW
                             bool "Cầu vồng"
+                        config CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_GRADIENT
+                            bool "Chuyển sắc giữa hai màu tự chọn"
+                        config CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_FIRE
+                            bool "Bảng màu Lửa (đỏ, cam, vàng)"
+                        config CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_OCEAN
+                            bool "Bảng màu Đại dương (xanh lam, xanh ngọc)"
+                        config CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_FOREST
+                            bool "Bảng màu Rừng (xanh lá, vàng chanh)"
+                        config CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_SUNSET
+                            bool "Bảng màu Hoàng hôn (tím, hồng, cam)"
+                        config CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_ICE
+                            bool "Bảng màu Băng giá (trắng, xanh nhạt)"
+                        config CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_PASTEL
+                            bool "Bảng màu Kẹo ngọt (màu pastel)"
+                        config CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_PARTY
+                            bool "Bảng màu Lễ hội (tím, hồng, vàng, xanh)"
                     endchoice
 
+                    config CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_ID
+                        int
+                        default 1 if CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_RAINBOW
+                        default 2 if CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_GRADIENT
+                        default 3 if CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_FIRE
+                        default 4 if CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_OCEAN
+                        default 5 if CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_FOREST
+                        default 6 if CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_SUNSET
+                        default 7 if CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_ICE
+                        default 8 if CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_PASTEL
+                        default 9 if CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_PARTY
+                        default 0
+
                     config CUSTOM_LED_STATE_UPGRADING_COLOR
-                        string "Mã màu (RRGGBB)"
-                        depends on CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_FIXED
+                        string "Mã màu (RRGGBB), màu thứ nhất khi chuyển sắc"
+                        depends on CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_FIXED || CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_GRADIENT
                         default "00FF00"
 
+                    config CUSTOM_LED_STATE_UPGRADING_COLOR2
+                        string "Mã màu thứ hai (RRGGBB)"
+                        depends on CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_GRADIENT
+                        default "FFFFFF"
+
                     choice CUSTOM_LED_STATE_UPGRADING_RAINBOW_MODE
-                        prompt "Cách chạy cầu vồng"
-                        depends on CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_RAINBOW
+                        prompt "Cách chạy màu"
+                        depends on (CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP) && !CUSTOM_LED_STATE_UPGRADING_EFFECT_OFF && !CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_FIXED
                         default CUSTOM_LED_STATE_UPGRADING_RAINBOW_MODE_WHOLE
                         config CUSTOM_LED_STATE_UPGRADING_RAINBOW_MODE_WHOLE
                             bool "Đổi màu toàn bộ (mọi LED cùng một màu)"
@@ -2517,14 +2964,15 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Chạy đuổi (mỗi LED một màu, xoay quanh vòng)"
                     endchoice
 
-                    config CUSTOM_LED_STATE_UPGRADING_RAINBOW_SPEED_MS
-                        int "Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn)"
-                        depends on CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_RAINBOW
-                        range 10 500
-                        default 50
+                    config CUSTOM_LED_STATE_UPGRADING_RAINBOW_SPEED
+                        int "Tốc độ đổi màu (%, lớn hơn là nhanh hơn, tối đa 200)"
+                        depends on (CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP) && !CUSTOM_LED_STATE_UPGRADING_EFFECT_OFF && !CUSTOM_LED_STATE_UPGRADING_COLOR_SOURCE_FIXED
+                        range 1 200
+                        default 20
                         help
-                            Một vòng đủ 7 màu gồm 64 bước: 50 ms mỗi bước là khoảng 3,2 giây một vòng.
-                            Hiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng.
+                            100% bằng mức nhanh nhất trước đây (10 ms mỗi bước, khoảng 0,64 giây một vòng màu).
+                            200% nhanh gấp đôi (khoảng 0,32 giây một vòng); 20% khoảng 3,2 giây một vòng (mặc định cũ 50 ms).
+                            Hiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng hoặc bảng màu.
                 endmenu
 
                 menu "Kích hoạt thiết bị"
@@ -2542,6 +2990,12 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Nháy chậm (500 ms)"
                         config CUSTOM_LED_STATE_ACTIVATING_EFFECT_BREATHE
                             bool "Thở (sáng dần, tối dần)"
+                        config CUSTOM_LED_STATE_ACTIVATING_EFFECT_HEARTBEAT
+                            bool "Nhịp tim (đập đôi rồi nghỉ)"
+                        config CUSTOM_LED_STATE_ACTIVATING_EFFECT_STROBE
+                            bool "Chớp sáng (đèn flash ngắn)"
+                        config CUSTOM_LED_STATE_ACTIVATING_EFFECT_FLICKER
+                            bool "Bập bùng như ngọn lửa"
                         config CUSTOM_LED_STATE_ACTIVATING_EFFECT_SCROLL
                             bool "Chạy vòng (vòng LED)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
@@ -2550,6 +3004,21 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
                         config CUSTOM_LED_STATE_ACTIVATING_EFFECT_WIPE
                             bool "Tô dần quanh vòng (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_ACTIVATING_EFFECT_THEATER
+                            bool "Đèn rạp hát, cách 3 LED sáng 1 (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_ACTIVATING_EFFECT_COMET
+                            bool "Sao chổi có đuôi mờ dần (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_ACTIVATING_EFFECT_WAVE
+                            bool "Sóng sáng chạy quanh vòng (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_ACTIVATING_EFFECT_TWINKLE
+                            bool "Lấp lánh ngẫu nhiên (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_ACTIVATING_EFFECT_DUAL_SPIN
+                            bool "Hai đầu xoay ngược chiều (vòng LED)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
                         config CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_BAR
                             bool "Theo âm thanh: thanh dâng (vòng LED)"
@@ -2568,9 +3037,17 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                         default 2 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_FAST
                         default 3 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_BLINK_SLOW
                         default 4 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_BREATHE
+                        default 5 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_HEARTBEAT
+                        default 13 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_STROBE
+                        default 14 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_FLICKER
                         default 6 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_SCROLL
                         default 7 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_SCANNER
                         default 8 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_WIPE
+                        default 9 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_THEATER
+                        default 15 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_COMET
+                        default 16 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_WAVE
+                        default 17 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_TWINKLE
+                        default 18 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_DUAL_SPIN
                         default 10 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_BAR
                         default 11 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_MIRROR
                         default 12 if CUSTOM_LED_STATE_ACTIVATING_EFFECT_AUDIO_PULSE
@@ -2584,16 +3061,50 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Màu cố định (nhập mã màu)"
                         config CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_RAINBOW
                             bool "Cầu vồng"
+                        config CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_GRADIENT
+                            bool "Chuyển sắc giữa hai màu tự chọn"
+                        config CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_FIRE
+                            bool "Bảng màu Lửa (đỏ, cam, vàng)"
+                        config CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_OCEAN
+                            bool "Bảng màu Đại dương (xanh lam, xanh ngọc)"
+                        config CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_FOREST
+                            bool "Bảng màu Rừng (xanh lá, vàng chanh)"
+                        config CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_SUNSET
+                            bool "Bảng màu Hoàng hôn (tím, hồng, cam)"
+                        config CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_ICE
+                            bool "Bảng màu Băng giá (trắng, xanh nhạt)"
+                        config CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_PASTEL
+                            bool "Bảng màu Kẹo ngọt (màu pastel)"
+                        config CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_PARTY
+                            bool "Bảng màu Lễ hội (tím, hồng, vàng, xanh)"
                     endchoice
 
+                    config CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_ID
+                        int
+                        default 1 if CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_RAINBOW
+                        default 2 if CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_GRADIENT
+                        default 3 if CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_FIRE
+                        default 4 if CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_OCEAN
+                        default 5 if CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_FOREST
+                        default 6 if CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_SUNSET
+                        default 7 if CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_ICE
+                        default 8 if CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_PASTEL
+                        default 9 if CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_PARTY
+                        default 0
+
                     config CUSTOM_LED_STATE_ACTIVATING_COLOR
-                        string "Mã màu (RRGGBB)"
-                        depends on CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_FIXED
+                        string "Mã màu (RRGGBB), màu thứ nhất khi chuyển sắc"
+                        depends on CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_FIXED || CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_GRADIENT
                         default "00FF00"
 
+                    config CUSTOM_LED_STATE_ACTIVATING_COLOR2
+                        string "Mã màu thứ hai (RRGGBB)"
+                        depends on CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_GRADIENT
+                        default "FFFFFF"
+
                     choice CUSTOM_LED_STATE_ACTIVATING_RAINBOW_MODE
-                        prompt "Cách chạy cầu vồng"
-                        depends on CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_RAINBOW
+                        prompt "Cách chạy màu"
+                        depends on (CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP) && !CUSTOM_LED_STATE_ACTIVATING_EFFECT_OFF && !CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_FIXED
                         default CUSTOM_LED_STATE_ACTIVATING_RAINBOW_MODE_WHOLE
                         config CUSTOM_LED_STATE_ACTIVATING_RAINBOW_MODE_WHOLE
                             bool "Đổi màu toàn bộ (mọi LED cùng một màu)"
@@ -2601,14 +3112,15 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Chạy đuổi (mỗi LED một màu, xoay quanh vòng)"
                     endchoice
 
-                    config CUSTOM_LED_STATE_ACTIVATING_RAINBOW_SPEED_MS
-                        int "Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn)"
-                        depends on CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_RAINBOW
-                        range 10 500
-                        default 50
+                    config CUSTOM_LED_STATE_ACTIVATING_RAINBOW_SPEED
+                        int "Tốc độ đổi màu (%, lớn hơn là nhanh hơn, tối đa 200)"
+                        depends on (CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP) && !CUSTOM_LED_STATE_ACTIVATING_EFFECT_OFF && !CUSTOM_LED_STATE_ACTIVATING_COLOR_SOURCE_FIXED
+                        range 1 200
+                        default 20
                         help
-                            Một vòng đủ 7 màu gồm 64 bước: 50 ms mỗi bước là khoảng 3,2 giây một vòng.
-                            Hiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng.
+                            100% bằng mức nhanh nhất trước đây (10 ms mỗi bước, khoảng 0,64 giây một vòng màu).
+                            200% nhanh gấp đôi (khoảng 0,32 giây một vòng); 20% khoảng 3,2 giây một vòng (mặc định cũ 50 ms).
+                            Hiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng hoặc bảng màu.
                 endmenu
 
                 menu "Lỗi"
@@ -2626,6 +3138,12 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Nháy chậm (500 ms)"
                         config CUSTOM_LED_STATE_ERROR_EFFECT_BREATHE
                             bool "Thở (sáng dần, tối dần)"
+                        config CUSTOM_LED_STATE_ERROR_EFFECT_HEARTBEAT
+                            bool "Nhịp tim (đập đôi rồi nghỉ)"
+                        config CUSTOM_LED_STATE_ERROR_EFFECT_STROBE
+                            bool "Chớp sáng (đèn flash ngắn)"
+                        config CUSTOM_LED_STATE_ERROR_EFFECT_FLICKER
+                            bool "Bập bùng như ngọn lửa"
                         config CUSTOM_LED_STATE_ERROR_EFFECT_SCROLL
                             bool "Chạy vòng (vòng LED)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
@@ -2634,6 +3152,21 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
                         config CUSTOM_LED_STATE_ERROR_EFFECT_WIPE
                             bool "Tô dần quanh vòng (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_ERROR_EFFECT_THEATER
+                            bool "Đèn rạp hát, cách 3 LED sáng 1 (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_ERROR_EFFECT_COMET
+                            bool "Sao chổi có đuôi mờ dần (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_ERROR_EFFECT_WAVE
+                            bool "Sóng sáng chạy quanh vòng (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_ERROR_EFFECT_TWINKLE
+                            bool "Lấp lánh ngẫu nhiên (vòng LED)"
+                            depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
+                        config CUSTOM_LED_STATE_ERROR_EFFECT_DUAL_SPIN
+                            bool "Hai đầu xoay ngược chiều (vòng LED)"
                             depends on CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP
                         config CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_BAR
                             bool "Theo âm thanh: thanh dâng (vòng LED)"
@@ -2652,9 +3185,17 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                         default 2 if CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_FAST
                         default 3 if CUSTOM_LED_STATE_ERROR_EFFECT_BLINK_SLOW
                         default 4 if CUSTOM_LED_STATE_ERROR_EFFECT_BREATHE
+                        default 5 if CUSTOM_LED_STATE_ERROR_EFFECT_HEARTBEAT
+                        default 13 if CUSTOM_LED_STATE_ERROR_EFFECT_STROBE
+                        default 14 if CUSTOM_LED_STATE_ERROR_EFFECT_FLICKER
                         default 6 if CUSTOM_LED_STATE_ERROR_EFFECT_SCROLL
                         default 7 if CUSTOM_LED_STATE_ERROR_EFFECT_SCANNER
                         default 8 if CUSTOM_LED_STATE_ERROR_EFFECT_WIPE
+                        default 9 if CUSTOM_LED_STATE_ERROR_EFFECT_THEATER
+                        default 15 if CUSTOM_LED_STATE_ERROR_EFFECT_COMET
+                        default 16 if CUSTOM_LED_STATE_ERROR_EFFECT_WAVE
+                        default 17 if CUSTOM_LED_STATE_ERROR_EFFECT_TWINKLE
+                        default 18 if CUSTOM_LED_STATE_ERROR_EFFECT_DUAL_SPIN
                         default 10 if CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_BAR
                         default 11 if CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_MIRROR
                         default 12 if CUSTOM_LED_STATE_ERROR_EFFECT_AUDIO_PULSE
@@ -2668,16 +3209,50 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Màu cố định (nhập mã màu)"
                         config CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_RAINBOW
                             bool "Cầu vồng"
+                        config CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_GRADIENT
+                            bool "Chuyển sắc giữa hai màu tự chọn"
+                        config CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_FIRE
+                            bool "Bảng màu Lửa (đỏ, cam, vàng)"
+                        config CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_OCEAN
+                            bool "Bảng màu Đại dương (xanh lam, xanh ngọc)"
+                        config CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_FOREST
+                            bool "Bảng màu Rừng (xanh lá, vàng chanh)"
+                        config CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_SUNSET
+                            bool "Bảng màu Hoàng hôn (tím, hồng, cam)"
+                        config CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_ICE
+                            bool "Bảng màu Băng giá (trắng, xanh nhạt)"
+                        config CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_PASTEL
+                            bool "Bảng màu Kẹo ngọt (màu pastel)"
+                        config CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_PARTY
+                            bool "Bảng màu Lễ hội (tím, hồng, vàng, xanh)"
                     endchoice
 
+                    config CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_ID
+                        int
+                        default 1 if CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_RAINBOW
+                        default 2 if CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_GRADIENT
+                        default 3 if CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_FIRE
+                        default 4 if CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_OCEAN
+                        default 5 if CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_FOREST
+                        default 6 if CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_SUNSET
+                        default 7 if CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_ICE
+                        default 8 if CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_PASTEL
+                        default 9 if CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_PARTY
+                        default 0
+
                     config CUSTOM_LED_STATE_ERROR_COLOR
-                        string "Mã màu (RRGGBB)"
-                        depends on CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_FIXED
+                        string "Mã màu (RRGGBB), màu thứ nhất khi chuyển sắc"
+                        depends on CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_FIXED || CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_GRADIENT
                         default "FF0000"
 
+                    config CUSTOM_LED_STATE_ERROR_COLOR2
+                        string "Mã màu thứ hai (RRGGBB)"
+                        depends on CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_GRADIENT
+                        default "FFFFFF"
+
                     choice CUSTOM_LED_STATE_ERROR_RAINBOW_MODE
-                        prompt "Cách chạy cầu vồng"
-                        depends on CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_RAINBOW
+                        prompt "Cách chạy màu"
+                        depends on (CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP) && !CUSTOM_LED_STATE_ERROR_EFFECT_OFF && !CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_FIXED
                         default CUSTOM_LED_STATE_ERROR_RAINBOW_MODE_WHOLE
                         config CUSTOM_LED_STATE_ERROR_RAINBOW_MODE_WHOLE
                             bool "Đổi màu toàn bộ (mọi LED cùng một màu)"
@@ -2685,14 +3260,15 @@ menu "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)"
                             bool "Chạy đuổi (mỗi LED một màu, xoay quanh vòng)"
                     endchoice
 
-                    config CUSTOM_LED_STATE_ERROR_RAINBOW_SPEED_MS
-                        int "Tốc độ đổi màu (ms mỗi bước, nhỏ hơn là nhanh hơn)"
-                        depends on CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_RAINBOW
-                        range 10 500
-                        default 50
+                    config CUSTOM_LED_STATE_ERROR_RAINBOW_SPEED
+                        int "Tốc độ đổi màu (%, lớn hơn là nhanh hơn, tối đa 200)"
+                        depends on (CUSTOM_LED_WS2812 || CUSTOM_LED_CIRCULAR_STRIP) && !CUSTOM_LED_STATE_ERROR_EFFECT_OFF && !CUSTOM_LED_STATE_ERROR_COLOR_SOURCE_FIXED
+                        range 1 200
+                        default 20
                         help
-                            Một vòng đủ 7 màu gồm 64 bước: 50 ms mỗi bước là khoảng 3,2 giây một vòng.
-                            Hiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng.
+                            100% bằng mức nhanh nhất trước đây (10 ms mỗi bước, khoảng 0,64 giây một vòng màu).
+                            200% nhanh gấp đôi (khoảng 0,32 giây một vòng); 20% khoảng 3,2 giây một vòng (mặc định cũ 50 ms).
+                            Hiệu ứng (nháy, thở, chạy vòng, theo âm thanh) vẫn chạy, màu của nó đổi theo cầu vồng hoặc bảng màu.
                 endmenu
             endmenu
         endif
