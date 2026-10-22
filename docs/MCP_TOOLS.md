@@ -32,9 +32,9 @@ Người dùng nói  →  Server Xiaozhi (LLM)  →  gọi công cụ MCP  →  
 | Robot (`self.robot.*`) | Motor DC hoặc Servo |
 | LED (`self.led.*`) | LED trạng thái khác "Không có LED" |
 | LED đơn GPIO (`self.gpio_led.*`) | Mục 4.2 → "LED đơn GPIO": danh sách chân không để trống |
-| LED qua PCA9685 (`self.pwm_led.*`) | Bật PCA9685 (4.7) và nhập kênh LED ở mục 4.2 → "LED qua PCA9685" |
+| LED qua PCA9685 (`self.pwm_led.*`) | Bật PCA9685 (6.8) và nhập kênh LED ở mục 6.2 → "LED qua PCA9685" |
 | LED qua IC LED (`self.led_ic.*`) | Mục 4.2 → "LED qua IC điều khiển LED I2C", chip được tìm thấy |
-| LED qua IC mở rộng (`self.expander_led.*`) | Đặt chân I2C cho IO Expander (4.7) và nhập chân LED ở mục 4.2 → "LED qua IC mở rộng GPIO" |
+| LED qua IC mở rộng (`self.expander_led.*`) | Đặt chân I2C cho IO Expander (6.8) và nhập chân LED ở mục 6.2 → "LED qua IC mở rộng GPIO" |
 | Ngoại vi (`self.rtc/nfc/pwm/rc522/imu/expander/pmic/ethernet.*`) | RTC, PN532, PCA9685, IC LED, hoặc đặt chân cho RC522, IMU, PMIC, IO Expander, Ethernet |
 | Nhấn để nói (`self.set_press_to_talk`) | Nút BOOT hoặc nút chạm |
 | Đèn (`self.lamp.*`) | Mục 3: "Đèn điều khiển bằng AI qua GPIO" và có chân đèn |
@@ -180,7 +180,7 @@ Bốn nhóm dùng chung 5 công cụ, chỉ khác tiền tố: `self.gpio_led`, 
 
 ### 6.2 LED trạng thái theo từng trạng thái
 
-LED trạng thái (`self.led.*`) tự đổi màu và hiệu ứng theo trạng thái của chatbot: khởi động, cấu hình WiFi, chờ, kết nối, nghe, nói, nâng cấp, kích hoạt, lỗi. Mỗi trạng thái chọn được hiệu ứng và màu trong menuconfig (mục 4.2 → LED trạng thái → "Màu và hiệu ứng theo trạng thái"):
+LED trạng thái (`self.led.*`) tự đổi màu và hiệu ứng theo trạng thái của chatbot: khởi động, cấu hình WiFi, chờ, kết nối, nghe, nói, nâng cấp, kích hoạt, lỗi. Mỗi trạng thái chọn được hiệu ứng và màu trong menuconfig (mục 6.2 → LED trạng thái → "Màu và hiệu ứng theo trạng thái"):
 - Mọi loại LED: tắt, đứng yên, nháy nhanh/chậm, thở, sáng theo nhịp tiếng nói.
 - LED có màu (WS2812 / vòng LED): thêm cầu vồng, chạy vòng, quét, tô dần, cầu vồng xoay, thanh dâng theo tiếng nói, loang hai phía theo tiếng nói.
 - Ba mức độ sáng: thấp cho trạng thái Chờ; cao cho Lỗi và khi đang nghe thấy tiếng nói; thường cho các trạng thái còn lại.

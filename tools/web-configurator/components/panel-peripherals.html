@@ -2,8 +2,8 @@
         <div class="config-group" data-s3-only>
           <div class="group-header">
             <div class="group-title">
-              <h2>🕹️ 4.1. Tương Tác &amp; Điều Khiển Đầu Vào (User Inputs)</h2>
-              <span class="group-desc">menuconfig: Xiaozhi Assistant → Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8) → 4. Thiết bị ngoại vi &amp; 7 Nhóm Phần Cứng (Hardware Builder) → 4.1. Tương Tác &amp; Điều Khiển Đầu Vào (User Inputs)</span>
+              <h2>🕹️ 6.1. Nút bấm &amp; Đầu vào (User Inputs)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → 6. Thiết bị ngoại vi (Peripherals) [ESP32-S3] → 6.1. Nút bấm &amp; Đầu vào (User Inputs)</span>
             </div>
           <div class="tab-header-actions">
             <span class="tab-status-pill saved" data-tab-status="panel-peripherals">Đã lưu</span>
@@ -87,8 +87,8 @@
         <div class="config-group" data-s3-only>
           <div class="group-header">
             <div class="group-title">
-              <h2>📷 4.2. Hệ thống chính (Main System)</h2>
-              <span class="group-desc">menuconfig: Xiaozhi Assistant → Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8) → 4. Thiết bị ngoại vi &amp; 7 Nhóm Phần Cứng (Hardware Builder) → 4.2. Hệ thống chính (Main System)</span>
+              <h2>📷 6.2. Camera &amp; Đèn LED (Camera &amp; LEDs)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → 6. Thiết bị ngoại vi (Peripherals) [ESP32-S3] → 6.2. Camera &amp; Đèn LED (Camera &amp; LEDs)</span>
             </div>
           </div>
           <div class="form-grid">
@@ -877,8 +877,8 @@
         <div class="config-group">
           <div class="group-header">
             <div class="group-title">
-              <h2>🎞️ Camera Configuration</h2>
-              <span class="group-desc">menuconfig: Xiaozhi Assistant → Camera Configuration</span>
+              <h2>🎞️ 4. Camera (Camera Configuration)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → 4. Camera (Camera Configuration)</span>
             </div>
           </div>
           <div class="form-grid">
@@ -922,19 +922,11 @@
         <div class="config-group" data-s3-only>
           <div class="group-header">
             <div class="group-title">
-              <h2>🔔 4.3. Âm Thanh Cảnh Báo &amp; Xúc Giác (Audio &amp; Haptics)</h2>
-              <span class="group-desc">menuconfig: Xiaozhi Assistant → Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8) → 4. Thiết bị ngoại vi &amp; 7 Nhóm Phần Cứng (Hardware Builder) → 4.3. Âm Thanh Cảnh Báo &amp; Xúc Giác (Audio &amp; Haptics)</span>
+              <h2>🔔 6.3. Còi &amp; Rung (Buzzer &amp; Haptics)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → 6. Thiết bị ngoại vi (Peripherals) [ESP32-S3] → 6.3. Còi &amp; Rung (Buzzer &amp; Haptics)</span>
             </div>
           </div>
           <div class="form-grid">
-            <div class="form-item span-2">
-              <label class="form-checkbox"><input type="checkbox" id="servo_enable"><span>Động cơ Servo tương tác qua PWM (Servo Dog Controller)</span></label>
-              <div class="form-hint">Kích hoạt điều khiển Động cơ Servo nhiều khớp tương tác qua xung PWM.</div>
-            </div>
-            <div class="form-item" data-show-if="servo_enable">
-              <label class="form-label" for="servo_gpio">Chân GPIO cấp xung PWM cho Động cơ Servo</label>
-              <input type="number" class="form-control" id="servo_gpio" min="-1" max="48">
-            </div>
             <div class="form-item span-2">
               <label class="form-checkbox"><input type="checkbox" id="buzzer_enable"><span>Còi báo động Buzzer (GPIO 41)</span></label>
               <div class="form-hint">Kích hoạt âm báo Buzzer trên chân GPIO 41.</div>
@@ -971,8 +963,8 @@
         <div class="config-group" data-s3-only>
           <div class="group-header">
             <div class="group-title">
-              <h2>🌡️ 4.4. Cảm Biến Môi Trường, Khí &amp; Lưu Lượng (Environment, Gas &amp; Flow)</h2>
-              <span class="group-desc">menuconfig: Xiaozhi Assistant → Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8) → 4. Thiết bị ngoại vi &amp; 7 Nhóm Phần Cứng (Hardware Builder) → 4.4. Cảm Biến Môi Trường, Khí &amp; Lưu Lượng (Environment, Gas &amp; Flow)</span>
+              <h2>🌡️ 6.4. Cảm biến môi trường, Khí &amp; Lưu lượng (Environment, Gas &amp; Flow)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → 6. Thiết bị ngoại vi (Peripherals) [ESP32-S3] → 6.4. Cảm biến môi trường, Khí &amp; Lưu lượng (Environment, Gas &amp; Flow)</span>
             </div>
           </div>
           <div class="form-grid">
@@ -1078,8 +1070,8 @@
         <div class="config-group" data-s3-only>
           <div class="group-header">
             <div class="group-title">
-              <h2>📡 4.5. Không Gian, Khoảng Cách &amp; An Ninh (Space, Distance &amp; Security)</h2>
-              <span class="group-desc">menuconfig: Xiaozhi Assistant → Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8) → 4. Thiết bị ngoại vi &amp; 7 Nhóm Phần Cứng (Hardware Builder) → 4.5. Không Gian, Khoảng Cách &amp; An Ninh (Space, Distance &amp; Security)</span>
+              <h2>📡 6.5. Khoảng cách &amp; An ninh (Distance &amp; Security)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → 6. Thiết bị ngoại vi (Peripherals) [ESP32-S3] → 6.5. Khoảng cách &amp; An ninh (Distance &amp; Security)</span>
             </div>
           </div>
           <div class="form-grid">
@@ -1154,11 +1146,19 @@
         <div class="config-group" data-s3-only>
           <div class="group-header">
             <div class="group-title">
-              <h2>⚙️ 4.6. Động Cơ, Robot &amp; Cơ Cấu Chấp Hành (Motors, Robotics &amp; Actuators)</h2>
-              <span class="group-desc">menuconfig: Xiaozhi Assistant → Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8) → 4. Thiết bị ngoại vi &amp; 7 Nhóm Phần Cứng (Hardware Builder) → 4.6. Động Cơ, Robot &amp; Cơ Cấu Chấp Hành (Motors, Robotics &amp; Actuators)</span>
+              <h2>⚙️ 6.6. Động cơ, Robot &amp; Rơ-le (Motors, Robotics &amp; Relay)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → 6. Thiết bị ngoại vi (Peripherals) [ESP32-S3] → 6.6. Động cơ, Robot &amp; Rơ-le (Motors, Robotics &amp; Relay)</span>
             </div>
           </div>
           <div class="form-grid">
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="servo_enable"><span>Động cơ Servo tương tác qua PWM (Servo Dog Controller)</span></label>
+              <div class="form-hint">Kích hoạt điều khiển Động cơ Servo nhiều khớp tương tác qua xung PWM.</div>
+            </div>
+            <div class="form-item" data-show-if="servo_enable">
+              <label class="form-label" for="servo_gpio">Chân GPIO cấp xung PWM cho Động cơ Servo</label>
+              <input type="number" class="form-control" id="servo_gpio" min="-1" max="48">
+            </div>
             <div class="form-item span-2">
               <label class="form-checkbox"><input type="checkbox" id="relay_enable"><span>Rơ-le đóng cắt thiết bị độc lập (Relay Switch)</span></label>
               <div class="form-hint">Điều khiển đóng cắt relay hoặc công tắc thiết bị điện ngoài.</div>

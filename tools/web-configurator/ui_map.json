@@ -14,16 +14,26 @@
     {
      "menu": [
       "Xiaozhi Assistant",
-      "Từ khóa đánh thức (Wake Word)"
+      "2. Âm thanh trợ lý (Assistant Audio)",
+      "2.1. Từ khóa đánh thức (Wake Word)"
      ],
      "icon": "🎙️"
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC)"
+      "2. Âm thanh trợ lý (Assistant Audio)",
+      "2.2. Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC)"
      ],
      "icon": "🎛️"
+    },
+    {
+     "menu": [
+      "Xiaozhi Assistant",
+      "2. Âm thanh trợ lý (Assistant Audio)",
+      "2.4. Gỡ lỗi âm thanh (Audio Debugger)"
+     ],
+     "icon": "🐞"
     }
    ]
   },
@@ -33,15 +43,24 @@
     {
      "menu": [
       "Xiaozhi Assistant",
-      "Giao diện hiển thị & Gói tài nguyên (Display Style & Assets)"
+      "1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets)"
      ],
-     "icon": "🎨"
+     "icon": "🎨",
+     "exact": true
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-      "1. Màn hình & Cảm ứng (Display & Touch)"
+      "1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets)",
+      "Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity)"
+     ],
+     "icon": "📊"
+    },
+    {
+     "menu": [
+      "Xiaozhi Assistant",
+      "1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets)",
+      "1.1. Màn hình & Cảm ứng (Display & Touch) [ESP32-S3]"
      ],
      "icon": "🖥️"
     }
@@ -53,15 +72,16 @@
     {
      "menu": [
       "Xiaozhi Assistant",
-      "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-      "2. Âm thanh: Loa & Micro (Audio: Speaker & Microphone)"
+      "2. Âm thanh trợ lý (Assistant Audio)",
+      "2.5. Âm thanh: Loa & Micro (Audio: Speaker & Microphone) [ESP32-S3]"
      ],
      "icon": "🔊"
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "Âm thanh thông báo (Notification Sounds)"
+      "2. Âm thanh trợ lý (Assistant Audio)",
+      "2.3. Âm thanh thông báo (Notification Sounds)"
      ],
      "icon": "🔔"
     }
@@ -73,15 +93,14 @@
     {
      "menu": [
       "Xiaozhi Assistant",
-      "WiFi Configuration Method"
+      "3. Mạng & Kết nối (Network & Connectivity)"
      ],
      "icon": "📶"
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-      "3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP)"
+      "5. Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3]"
      ],
      "icon": "🔌"
     }
@@ -93,61 +112,55 @@
     {
      "menu": [
       "Xiaozhi Assistant",
-      "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-      "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-      "4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs)"
+      "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
+      "6.1. Nút bấm & Đầu vào (User Inputs)"
      ],
      "icon": "🕹️"
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-      "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-      "4.2. Hệ thống chính (Main System)"
+      "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
+      "6.2. Camera & Đèn LED (Camera & LEDs)"
      ],
      "icon": "📷"
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "Camera Configuration"
+      "4. Camera (Camera Configuration)"
      ],
      "icon": "🎞️"
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-      "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-      "4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics)"
+      "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
+      "6.3. Còi & Rung (Buzzer & Haptics)"
      ],
      "icon": "🔔"
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-      "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-      "4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow)"
+      "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
+      "6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow)"
      ],
      "icon": "🌡️"
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-      "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-      "4.5. Không Gian, Khoảng Cách & An Ninh (Space, Distance & Security)"
+      "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
+      "6.5. Khoảng cách & An ninh (Distance & Security)"
      ],
      "icon": "📡"
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-      "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-      "4.6. Động Cơ, Robot & Cơ Cấu Chấp Hành (Motors, Robotics & Actuators)"
+      "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
+      "6.6. Động cơ, Robot & Rơ-le (Motors, Robotics & Relay)"
      ],
      "icon": "⚙️"
     }
@@ -159,11 +172,18 @@
     {
      "menu": [
       "Xiaozhi Assistant",
-      "Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8)",
-      "4. Thiết bị ngoại vi & 7 Nhóm Phần Cứng (Hardware Builder)",
-      "4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom)"
+      "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
+      "6.7. Nguồn điện & Pin (Power & Battery)"
      ],
      "icon": "🔋"
+    },
+    {
+     "menu": [
+      "Xiaozhi Assistant",
+      "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
+      "6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G)"
+     ],
+     "icon": "🧩"
     }
    ]
   }

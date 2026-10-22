@@ -51,24 +51,24 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_BOARD_TYPE_ESP32_P4_FUNCTION_EV_BOARD` | bool | Xiaozhi Assistant | Espressif ESP32-P4-Function-EV-Board |  |
 | `CONFIG_BOARD_TYPE_GUITION_ESP32_P4_M3_DEV` | bool | Xiaozhi Assistant | Guition JC-ESP32P4-M3-Dev |  |
 | `CONFIG_BOARD_TYPE_WAVESHARE_ESP32_P4_DEV_KIT` | bool | Xiaozhi Assistant | Waveshare ESP32-P4-Module-DEV-KIT |  |
-| `CONFIG_USE_DEFAULT_MESSAGE_STYLE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Mặc định (Chữ chạy ngang) | y (mặc định của choice) |
-| `CONFIG_USE_WECHAT_MESSAGE_STYLE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | WeChat (Bong bóng chat) |  |
-| `CONFIG_USE_EMOTE_MESSAGE_STYLE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Emote (Biểu cảm khuôn mặt emoji) |  |
-| `CONFIG_CUSTOM_UI_STYLE_CHAT_BUBBLE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Adaptive: Chat Bubble (Bong bóng hội thoại) |  |
-| `CONFIG_CUSTOM_UI_STYLE_CLASSIC_AVATAR` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Adaptive: Classic Avatar (Hình đại diện AI cổ điển) |  |
-| `CONFIG_CUSTOM_UI_STYLE_CYBER_TERMINAL` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Adaptive: Cyber Terminal (Giao diện dòng lệnh hacker) |  |
-| `CONFIG_CUSTOM_UI_STYLE_MINIMAL_ZEN` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Adaptive: Minimal Zen (Tối giản thanh lịch) |  |
-| `CONFIG_CUSTOM_UI_STYLE_SMART_DASHBOARD` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Adaptive: Smart Dashboard (Bảng điều khiển thông minh) |  |
-| `CONFIG_CUSTOM_UI_ACCENT_CYBER_BLUE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Cyber Blue (Xanh dương đậm) | y (mặc định của choice) |
-| `CONFIG_CUSTOM_UI_ACCENT_EMERALD` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Emerald Green (Xanh lục bảo) |  |
-| `CONFIG_CUSTOM_UI_ACCENT_PURPLE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Cyber Purple (Tím neon) |  |
-| `CONFIG_CUSTOM_UI_ACCENT_AMBER` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Warm Amber (Vàng hổ phách) |  |
-| `CONFIG_CUSTOM_UI_ACCENT_MONO` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Monochrome (Đơn sắc trắng đen) |  |
-| `CONFIG_CUSTOM_UI_AUTO_SCALE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Tự động căn chỉnh kích thước UI theo độ phân giải màn hình | n |
-| `CONFIG_CUSTOM_UI_ROUND_SCREEN_SAFE_AREA` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Vùng hiển thị an toàn cho màn hình tròn (Round Screen Safe Area) | y if CUSTOM_DISPLAY_GC9A01 \|\| CUSTOM_DISPLAY_AMOLED_CO5300 \|\| CUSTOM_DISPLAY_AMOLED_SPD2010 |
-| `CONFIG_CUSTOM_UI_VOICE_WAVE_ENABLE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Hiển thị sóng âm thanh động khi đàm thoại (Voice Waveform) | n |
-| `CONFIG_CUSTOM_UI_WEATHER_ENABLE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Hiển thị thời tiết trên màn hình (Weather Widget) | n |
-| `CONFIG_CUSTOM_UI_WEATHER_CITY` | string | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Thành phố lấy dữ liệu thời tiết | "Hanoi" |
+| `CONFIG_USE_DEFAULT_MESSAGE_STYLE` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Mặc định (Chữ chạy ngang) | y (mặc định của choice) |
+| `CONFIG_USE_WECHAT_MESSAGE_STYLE` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | WeChat (Bong bóng chat) |  |
+| `CONFIG_USE_EMOTE_MESSAGE_STYLE` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Emote (Biểu cảm khuôn mặt emoji) |  |
+| `CONFIG_CUSTOM_UI_STYLE_CHAT_BUBBLE` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Adaptive: Chat Bubble (Bong bóng hội thoại) |  |
+| `CONFIG_CUSTOM_UI_STYLE_CLASSIC_AVATAR` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Adaptive: Classic Avatar (Hình đại diện AI cổ điển) |  |
+| `CONFIG_CUSTOM_UI_STYLE_CYBER_TERMINAL` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Adaptive: Cyber Terminal (Giao diện dòng lệnh hacker) |  |
+| `CONFIG_CUSTOM_UI_STYLE_MINIMAL_ZEN` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Adaptive: Minimal Zen (Tối giản thanh lịch) |  |
+| `CONFIG_CUSTOM_UI_STYLE_SMART_DASHBOARD` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Adaptive: Smart Dashboard (Bảng điều khiển thông minh) |  |
+| `CONFIG_CUSTOM_UI_ACCENT_CYBER_BLUE` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Cyber Blue (Xanh dương đậm) | y (mặc định của choice) |
+| `CONFIG_CUSTOM_UI_ACCENT_EMERALD` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Emerald Green (Xanh lục bảo) |  |
+| `CONFIG_CUSTOM_UI_ACCENT_PURPLE` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Cyber Purple (Tím neon) |  |
+| `CONFIG_CUSTOM_UI_ACCENT_AMBER` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Warm Amber (Vàng hổ phách) |  |
+| `CONFIG_CUSTOM_UI_ACCENT_MONO` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Monochrome (Đơn sắc trắng đen) |  |
+| `CONFIG_CUSTOM_UI_AUTO_SCALE` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Tự động căn chỉnh kích thước UI theo độ phân giải màn hình | n |
+| `CONFIG_CUSTOM_UI_ROUND_SCREEN_SAFE_AREA` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Vùng hiển thị an toàn cho màn hình tròn (Round Screen Safe Area) | y if CUSTOM_DISPLAY_GC9A01 \|\| CUSTOM_DISPLAY_AMOLED_CO5300 \|\| CUSTOM_DISPLAY_AMOLED_SPD2010 |
+| `CONFIG_CUSTOM_UI_VOICE_WAVE_ENABLE` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Hiển thị sóng âm thanh động khi đàm thoại (Voice Waveform) | n |
+| `CONFIG_CUSTOM_UI_WEATHER_ENABLE` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Hiển thị thời tiết trên màn hình (Weather Widget) | n |
+| `CONFIG_CUSTOM_UI_WEATHER_CITY` | string | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Thành phố lấy dữ liệu thời tiết | "Hanoi" |
 | `CONFIG_CUSTOM_UI_IDLE_STATUS_CLOCK` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Đồng hồ giờ:phút |  |
 | `CONFIG_CUSTOM_UI_IDLE_STATUS_DATE` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Thứ và ngày tháng |  |
 | `CONFIG_CUSTOM_UI_IDLE_STATUS_SENSORS` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Thông số cảm biến (nhiệt độ, độ ẩm, khí gas...) |  |
@@ -100,107 +100,13 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_UI_ANIM_COLOR_RAINBOW` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Cầu vồng đổi màu liên tục |  |
 | `CONFIG_CUSTOM_UI_ANIM_COLOR_CUSTOM` | bool | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Tự chọn mã màu |  |
 | `CONFIG_CUSTOM_UI_ANIM_COLOR` | string | Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity) | Mã màu hiệu ứng (RRGGBB) | "00E5FF" |
-| `CONFIG_USE_MULTILINE_CHAT_MESSAGE` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Use multiline chat message display (default mode only) | n |
-| `CONFIG_FLASH_DEFAULT_ASSETS` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Flash tài nguyên mặc định (Default Built-in Assets) | y (mặc định của choice) |
-| `CONFIG_FLASH_CUSTOM_ASSETS` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Flash tài nguyên tùy chỉnh từ URL hoặc tệp cục bộ (Custom Assets) |  |
-| `CONFIG_FLASH_EXPRESSION_ASSETS` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Flash tài nguyên biểu cảm AI Voice (Emote Expression Assets) |  |
-| `CONFIG_FLASH_NONE_ASSETS` | bool | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Không nạp phân vùng tài nguyên (No Assets Flashing) |  |
-| `CONFIG_CUSTOM_ASSETS_FILE` | string | Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Đường dẫn tệp hoặc URL tài nguyên tùy chỉnh (Custom Assets File / URL) | "https://github.com/78/xiaozhi-esp32/releases/download/v0.9/assets.bin" |
-| `CONFIG_WAKE_WORD_DISABLED` | bool | Từ khóa đánh thức (Wake Word) | Disabled |  |
-| `CONFIG_USE_AFE_WAKE_WORD` | bool | Từ khóa đánh thức (Wake Word) | Wakenet model with AFE | y (mặc định của choice) |
-| `CONFIG_USE_CUSTOM_WAKE_WORD` | bool | Từ khóa đánh thức (Wake Word) | Multinet model (Custom Wake Word) |  |
-| `CONFIG_CUSTOM_WAKE_WORD` | string | Từ khóa đánh thức (Wake Word) | Custom Wake Word | "xiao tu dou" |
-| `CONFIG_CUSTOM_WAKE_WORD_DISPLAY` | string | Từ khóa đánh thức (Wake Word) | Custom Wake Word Display | "小土豆" |
-| `CONFIG_CUSTOM_WAKE_WORD_THRESHOLD` | int | Từ khóa đánh thức (Wake Word) | Custom Wake Word Threshold (%) | 20 |
-| `CONFIG_SEND_WAKE_WORD_DATA` | bool | Từ khóa đánh thức (Wake Word) | Send Wake Word Data | y |
-| `CONFIG_WAKE_WORD_DETECTION_IN_LISTENING` | bool | Từ khóa đánh thức (Wake Word) | Enable Wake Word Detection in Listening Mode | n |
-| `CONFIG_USE_AUDIO_PROCESSOR` | bool | Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC) | Enable AFE Audio Processing | y |
-| `CONFIG_USE_DEVICE_AEC` | bool | Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC) | Enable Device-Side AEC | y (mặc định của choice) |
-| `CONFIG_USE_SERVER_AEC` | bool | Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC) | Enable Server-Side AEC (Unstable) |  |
-| `CONFIG_USE_NO_AEC` | bool | Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC) | Disable AEC |  |
-| `CONFIG_USE_SOFTWARE_AEC_REFERENCE` | bool | Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC) | Software AEC Reference (codecs without hardware loopback) | y |
-| `CONFIG_SOUND_STARTUP_POPUP` | bool | Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
-| `CONFIG_SOUND_STARTUP_SUCCESS` | bool | Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) (mặc định) | y (mặc định của choice) |
-| `CONFIG_SOUND_STARTUP_EXCLAMATION` | bool | Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
-| `CONFIG_SOUND_STARTUP_VIBRATION` | bool | Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
-| `CONFIG_SOUND_STARTUP_LOW_BATTERY` | bool | Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
-| `CONFIG_SOUND_STARTUP_NONE` | bool | Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
-| `CONFIG_SOUND_STARTUP_CUSTOM` | bool | Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
-| `CONFIG_SOUND_STARTUP_CUSTOM_FILE` | string | Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Khởi động xong (sẵn sàng trò chuyện) | "" |
-| `CONFIG_SOUND_LISTENING_POPUP` | bool | Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) (mặc định) | y (mặc định của choice) |
-| `CONFIG_SOUND_LISTENING_SUCCESS` | bool | Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
-| `CONFIG_SOUND_LISTENING_EXCLAMATION` | bool | Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
-| `CONFIG_SOUND_LISTENING_VIBRATION` | bool | Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
-| `CONFIG_SOUND_LISTENING_LOW_BATTERY` | bool | Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
-| `CONFIG_SOUND_LISTENING_NONE` | bool | Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
-| `CONFIG_SOUND_LISTENING_CUSTOM` | bool | Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
-| `CONFIG_SOUND_LISTENING_CUSTOM_FILE` | string | Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Bắt đầu lắng nghe / có thông báo | "" |
-| `CONFIG_SOUND_ERROR_POPUP` | bool | Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
-| `CONFIG_SOUND_ERROR_SUCCESS` | bool | Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
-| `CONFIG_SOUND_ERROR_EXCLAMATION` | bool | Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) (mặc định) | y (mặc định của choice) |
-| `CONFIG_SOUND_ERROR_VIBRATION` | bool | Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
-| `CONFIG_SOUND_ERROR_LOW_BATTERY` | bool | Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
-| `CONFIG_SOUND_ERROR_NONE` | bool | Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
-| `CONFIG_SOUND_ERROR_CUSTOM` | bool | Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
-| `CONFIG_SOUND_ERROR_CUSTOM_FILE` | string | Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Báo lỗi | "" |
-| `CONFIG_SOUND_ALERT_POPUP` | bool | Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
-| `CONFIG_SOUND_ALERT_SUCCESS` | bool | Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
-| `CONFIG_SOUND_ALERT_EXCLAMATION` | bool | Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
-| `CONFIG_SOUND_ALERT_VIBRATION` | bool | Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) (mặc định) | y (mặc định của choice) |
-| `CONFIG_SOUND_ALERT_LOW_BATTERY` | bool | Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
-| `CONFIG_SOUND_ALERT_NONE` | bool | Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
-| `CONFIG_SOUND_ALERT_CUSTOM` | bool | Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
-| `CONFIG_SOUND_ALERT_CUSTOM_FILE` | string | Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Cảnh báo từ máy chủ | "" |
-| `CONFIG_SOUND_LOW_BATTERY_POPUP` | bool | Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
-| `CONFIG_SOUND_LOW_BATTERY_SUCCESS` | bool | Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
-| `CONFIG_SOUND_LOW_BATTERY_EXCLAMATION` | bool | Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
-| `CONFIG_SOUND_LOW_BATTERY_VIBRATION` | bool | Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
-| `CONFIG_SOUND_LOW_BATTERY_LOW_BATTERY` | bool | Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) (mặc định) | y (mặc định của choice) |
-| `CONFIG_SOUND_LOW_BATTERY_NONE` | bool | Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
-| `CONFIG_SOUND_LOW_BATTERY_CUSTOM` | bool | Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
-| `CONFIG_SOUND_LOW_BATTERY_CUSTOM_FILE` | string | Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Pin yếu | "" |
-| `CONFIG_SOUND_WIFI_CONFIG_VOICE` | bool | Âm thanh thông báo (Notification Sounds) | Giọng nói «cấu hình Wi-Fi» theo ngôn ngữ (mặc định) | y (mặc định của choice) |
-| `CONFIG_SOUND_WIFI_CONFIG_POPUP` | bool | Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
-| `CONFIG_SOUND_WIFI_CONFIG_SUCCESS` | bool | Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
-| `CONFIG_SOUND_WIFI_CONFIG_EXCLAMATION` | bool | Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
-| `CONFIG_SOUND_WIFI_CONFIG_VIBRATION` | bool | Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
-| `CONFIG_SOUND_WIFI_CONFIG_LOW_BATTERY` | bool | Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
-| `CONFIG_SOUND_WIFI_CONFIG_NONE` | bool | Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
-| `CONFIG_SOUND_WIFI_CONFIG_CUSTOM` | bool | Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
-| `CONFIG_SOUND_WIFI_CONFIG_CUSTOM_FILE` | string | Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Vào chế độ cấu hình Wi-Fi | "" |
-| `CONFIG_SOUND_ACTIVATION_VOICE` | bool | Âm thanh thông báo (Notification Sounds) | Giọng nói «kích hoạt» theo ngôn ngữ (mặc định) | y (mặc định của choice) |
-| `CONFIG_SOUND_ACTIVATION_POPUP` | bool | Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
-| `CONFIG_SOUND_ACTIVATION_SUCCESS` | bool | Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
-| `CONFIG_SOUND_ACTIVATION_EXCLAMATION` | bool | Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
-| `CONFIG_SOUND_ACTIVATION_VIBRATION` | bool | Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
-| `CONFIG_SOUND_ACTIVATION_LOW_BATTERY` | bool | Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
-| `CONFIG_SOUND_ACTIVATION_NONE` | bool | Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
-| `CONFIG_SOUND_ACTIVATION_CUSTOM` | bool | Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
-| `CONFIG_SOUND_ACTIVATION_CUSTOM_FILE` | string | Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Đọc mã kích hoạt | "" |
-| `CONFIG_SOUND_UPGRADE_VOICE` | bool | Âm thanh thông báo (Notification Sounds) | Giọng nói «nâng cấp» theo ngôn ngữ (mặc định) | y (mặc định của choice) |
-| `CONFIG_SOUND_UPGRADE_POPUP` | bool | Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
-| `CONFIG_SOUND_UPGRADE_SUCCESS` | bool | Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
-| `CONFIG_SOUND_UPGRADE_EXCLAMATION` | bool | Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
-| `CONFIG_SOUND_UPGRADE_VIBRATION` | bool | Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
-| `CONFIG_SOUND_UPGRADE_LOW_BATTERY` | bool | Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
-| `CONFIG_SOUND_UPGRADE_NONE` | bool | Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
-| `CONFIG_SOUND_UPGRADE_CUSTOM` | bool | Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
-| `CONFIG_SOUND_UPGRADE_CUSTOM_FILE` | string | Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Nâng cấp / tải tài nguyên | "" |
-| `CONFIG_USE_AUDIO_DEBUGGER` | bool | Xiaozhi Assistant | Enable Audio Debugger | n |
-| `CONFIG_USE_HOTSPOT_WIFI_PROVISIONING` | bool | WiFi Configuration Method | Hotspot | y |
-| `CONFIG_USE_ESP_BLUFI_WIFI_PROVISIONING` | bool | WiFi Configuration Method | ESP-BluFi |  |
-| `CONFIG_AUDIO_DEBUG_UDP_SERVER` | string | Xiaozhi Assistant | Audio Debug UDP Server Address | "192.168.2.100:8000" |
-| `CONFIG_RECEIVE_CUSTOM_MESSAGE` | bool | Xiaozhi Assistant | Enable Custom Message Reception | n |
-| `CONFIG_XIAOZHI_CAMERA_MIRROR_CONFIGURED` | bool | Camera Configuration | Override camera mirror settings | n |
-| `CONFIG_XIAOZHI_CAMERA_HMIRROR` | bool | Camera Configuration | Mirror Camera Horizontally | n |
-| `CONFIG_XIAOZHI_CAMERA_VFLIP` | bool | Camera Configuration | Mirror Camera Vertically | n |
-| `CONFIG_XIAOZHI_CAMERA_ALLOW_JPEG_INPUT` | bool | Camera Configuration | Allow JPEG Input | n |
-| `CONFIG_XIAOZHI_ENABLE_CAMERA_DEBUG_MODE` | bool | Camera Configuration | Enable Camera Debug Mode | n |
-| `CONFIG_XIAOZHI_ENABLE_CAMERA_ENDIANNESS_SWAP` | bool | Camera Configuration | Enable software camera buffer endianness swapping | n |
-| `CONFIG_XIAOZHI_ENABLE_ROTATE_CAMERA_IMAGE` | bool | Camera Configuration | Enable Camera Image Rotation | n |
-| `CONFIG_XIAOZHI_CAMERA_IMAGE_ROTATION_ANGLE_90` | bool | Enable Camera Image Rotation | 90° | y (mặc định của choice) |
-| `CONFIG_XIAOZHI_CAMERA_IMAGE_ROTATION_ANGLE_270` | bool | Enable Camera Image Rotation | 270° |  |
-| `CONFIG_ENABLE_CUSTOM_DISPLAY` | bool | 1. Màn hình & Cảm ứng (Display & Touch) | Màn hình hiển thị (Display Panel) | n |
+| `CONFIG_USE_MULTILINE_CHAT_MESSAGE` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Use multiline chat message display (default mode only) | n |
+| `CONFIG_FLASH_DEFAULT_ASSETS` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Flash tài nguyên mặc định (Default Built-in Assets) | y (mặc định của choice) |
+| `CONFIG_FLASH_CUSTOM_ASSETS` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Flash tài nguyên tùy chỉnh từ URL hoặc tệp cục bộ (Custom Assets) |  |
+| `CONFIG_FLASH_EXPRESSION_ASSETS` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Flash tài nguyên biểu cảm AI Voice (Emote Expression Assets) |  |
+| `CONFIG_FLASH_NONE_ASSETS` | bool | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Không nạp phân vùng tài nguyên (No Assets Flashing) |  |
+| `CONFIG_CUSTOM_ASSETS_FILE` | string | 1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets) | Đường dẫn tệp hoặc URL tài nguyên tùy chỉnh (Custom Assets File / URL) | "https://github.com/78/xiaozhi-esp32/releases/download/v0.9/assets.bin" |
+| `CONFIG_ENABLE_CUSTOM_DISPLAY` | bool | 1.1. Màn hình & Cảm ứng (Display & Touch) [ESP32-S3] | Màn hình hiển thị (Display Panel) | n |
 | `CONFIG_CUSTOM_DISPLAY_ST7789` | bool | Màn hình hiển thị (Display Panel) | Sitronix ST7789 (240x320, 240x240, 170x320 SPI) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_DISPLAY_ST7796` | bool | Màn hình hiển thị (Display Panel) | Sitronix ST7796 (320x480 SPI) |  |
 | `CONFIG_CUSTOM_DISPLAY_ST7735` | bool | Màn hình hiển thị (Display Panel) | Sitronix ST7735 / ST7735S (128x128, 128x160 SPI mini) |  |
@@ -286,7 +192,7 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_DISPLAY_MIRROR_Y` | bool | Màn hình hiển thị (Display Panel) | Đảo chiều gương trục Y (Mirror Y) | n |
 | `CONFIG_CUSTOM_DISPLAY_SWAP_XY` | bool | Màn hình hiển thị (Display Panel) | Hoán đổi tọa độ X-Y (X/Y Axes Swapped) | n |
 | `CONFIG_CUSTOM_DISPLAY_INVERT_COLOR` | bool | Màn hình hiển thị (Display Panel) | Đảo ngược màu sắc hiển thị (Invert Color) | n |
-| `CONFIG_ENABLE_CUSTOM_TOUCH` | bool | 1. Màn hình & Cảm ứng (Display & Touch) | Màn hình cảm ứng (Touch Screen Panel) | n |
+| `CONFIG_ENABLE_CUSTOM_TOUCH` | bool | 1.1. Màn hình & Cảm ứng (Display & Touch) [ESP32-S3] | Màn hình cảm ứng (Touch Screen Panel) | n |
 | `CONFIG_CUSTOM_TOUCH_CST816S` | bool | Màn hình cảm ứng (Touch Screen Panel) | Hynitron CST816S / CST9217 (I2C) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_TOUCH_GT911` | bool | Màn hình cảm ứng (Touch Screen Panel) | Goodix GT911 / GT1151 (I2C) |  |
 | `CONFIG_CUSTOM_TOUCH_FT5X06` | bool | Màn hình cảm ứng (Touch Screen Panel) | FocalTech FT5x06 / FT6336 (I2C) |  |
@@ -296,14 +202,96 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_TOUCH_PIN_SCL` | int | Màn hình cảm ứng (Touch Screen Panel) | Chân cảm ứng I2C SCL | -1 |
 | `CONFIG_CUSTOM_TOUCH_PIN_INT` | int | Màn hình cảm ứng (Touch Screen Panel) | Chân ngắt cảm ứng INT GPIO | -1 |
 | `CONFIG_CUSTOM_TOUCH_PIN_RST` | int | Màn hình cảm ứng (Touch Screen Panel) | Chân reset cảm ứng RST GPIO (-1 nếu không nối) | -1 |
-| `CONFIG_CUSTOM_ENABLE_PERIPH_TOUCH_SCREEN` | bool | 1. Màn hình & Cảm ứng (Display & Touch) | Mở rộng giao tiếp màn cảm ứng ngoại vi (Peripheral Touch Screen Controller) | n |
-| `CONFIG_CUSTOM_PERIPH_TOUCH_I2C_SDA` | int | 1. Màn hình & Cảm ứng (Display & Touch) | Chân ngoại vi cảm ứng I2C SDA | -1 |
-| `CONFIG_CUSTOM_PERIPH_TOUCH_I2C_SCL` | int | 1. Màn hình & Cảm ứng (Display & Touch) | Chân ngoại vi cảm ứng I2C SCL | -1 |
-| `CONFIG_CUSTOM_PERIPH_TOUCH_INT_PIN` | int | 1. Màn hình & Cảm ứng (Display & Touch) | Chân ngoại vi cảm ứng ngắt INT | -1 |
-| `CONFIG_CUSTOM_PERIPH_TOUCH_RST_PIN` | int | 1. Màn hình & Cảm ứng (Display & Touch) | Chân ngoại vi cảm ứng reset RST | -1 |
-| `CONFIG_ENABLE_CUSTOM_AUDIO` | bool | 2. Âm thanh: Loa & Micro (Audio: Speaker & Microphone) |  | y if ENABLE_CUSTOM_SPEAKER \|\| ENABLE_CUSTOM_MIC |
-| `CONFIG_CUSTOM_AUDIO_CODEC_USER_CUSTOM` | bool | 2. Âm thanh: Loa & Micro (Audio: Speaker & Microphone) |  | y if CUSTOM_AUDIO_SPK_CODEC_USER_CUSTOM \|\| CUSTOM_AUDIO_MIC_CODEC_USER_CUSTOM |
-| `CONFIG_ENABLE_CUSTOM_SPEAKER` | bool | 2. Âm thanh: Loa & Micro (Audio: Speaker & Microphone) | Loa phát thanh & Mạch DAC (Speaker & Audio Out) | n |
+| `CONFIG_CUSTOM_ENABLE_PERIPH_TOUCH_SCREEN` | bool | 1.1. Màn hình & Cảm ứng (Display & Touch) [ESP32-S3] | Mở rộng giao tiếp màn cảm ứng ngoại vi (Peripheral Touch Screen Controller) | n |
+| `CONFIG_CUSTOM_PERIPH_TOUCH_I2C_SDA` | int | 1.1. Màn hình & Cảm ứng (Display & Touch) [ESP32-S3] | Chân ngoại vi cảm ứng I2C SDA | -1 |
+| `CONFIG_CUSTOM_PERIPH_TOUCH_I2C_SCL` | int | 1.1. Màn hình & Cảm ứng (Display & Touch) [ESP32-S3] | Chân ngoại vi cảm ứng I2C SCL | -1 |
+| `CONFIG_CUSTOM_PERIPH_TOUCH_INT_PIN` | int | 1.1. Màn hình & Cảm ứng (Display & Touch) [ESP32-S3] | Chân ngoại vi cảm ứng ngắt INT | -1 |
+| `CONFIG_CUSTOM_PERIPH_TOUCH_RST_PIN` | int | 1.1. Màn hình & Cảm ứng (Display & Touch) [ESP32-S3] | Chân ngoại vi cảm ứng reset RST | -1 |
+| `CONFIG_WAKE_WORD_DISABLED` | bool | 2.1. Từ khóa đánh thức (Wake Word) | Disabled |  |
+| `CONFIG_USE_AFE_WAKE_WORD` | bool | 2.1. Từ khóa đánh thức (Wake Word) | Wakenet model with AFE | y (mặc định của choice) |
+| `CONFIG_USE_CUSTOM_WAKE_WORD` | bool | 2.1. Từ khóa đánh thức (Wake Word) | Multinet model (Custom Wake Word) |  |
+| `CONFIG_CUSTOM_WAKE_WORD` | string | 2.1. Từ khóa đánh thức (Wake Word) | Custom Wake Word | "xiao tu dou" |
+| `CONFIG_CUSTOM_WAKE_WORD_DISPLAY` | string | 2.1. Từ khóa đánh thức (Wake Word) | Custom Wake Word Display | "小土豆" |
+| `CONFIG_CUSTOM_WAKE_WORD_THRESHOLD` | int | 2.1. Từ khóa đánh thức (Wake Word) | Custom Wake Word Threshold (%) | 20 |
+| `CONFIG_SEND_WAKE_WORD_DATA` | bool | 2.1. Từ khóa đánh thức (Wake Word) | Send Wake Word Data | y |
+| `CONFIG_WAKE_WORD_DETECTION_IN_LISTENING` | bool | 2.1. Từ khóa đánh thức (Wake Word) | Enable Wake Word Detection in Listening Mode | n |
+| `CONFIG_USE_AUDIO_PROCESSOR` | bool | 2.2. Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC) | Enable AFE Audio Processing | y |
+| `CONFIG_USE_DEVICE_AEC` | bool | 2.2. Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC) | Enable Device-Side AEC | y (mặc định của choice) |
+| `CONFIG_USE_SERVER_AEC` | bool | 2.2. Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC) | Enable Server-Side AEC (Unstable) |  |
+| `CONFIG_USE_NO_AEC` | bool | 2.2. Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC) | Disable AEC |  |
+| `CONFIG_USE_SOFTWARE_AEC_REFERENCE` | bool | 2.2. Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC) | Software AEC Reference (codecs without hardware loopback) | y |
+| `CONFIG_SOUND_STARTUP_POPUP` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
+| `CONFIG_SOUND_STARTUP_SUCCESS` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) (mặc định) | y (mặc định của choice) |
+| `CONFIG_SOUND_STARTUP_EXCLAMATION` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
+| `CONFIG_SOUND_STARTUP_VIBRATION` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
+| `CONFIG_SOUND_STARTUP_LOW_BATTERY` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
+| `CONFIG_SOUND_STARTUP_NONE` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
+| `CONFIG_SOUND_STARTUP_CUSTOM` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
+| `CONFIG_SOUND_STARTUP_CUSTOM_FILE` | string | 2.3. Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Khởi động xong (sẵn sàng trò chuyện) | "" |
+| `CONFIG_SOUND_LISTENING_POPUP` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) (mặc định) | y (mặc định của choice) |
+| `CONFIG_SOUND_LISTENING_SUCCESS` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
+| `CONFIG_SOUND_LISTENING_EXCLAMATION` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
+| `CONFIG_SOUND_LISTENING_VIBRATION` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
+| `CONFIG_SOUND_LISTENING_LOW_BATTERY` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
+| `CONFIG_SOUND_LISTENING_NONE` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
+| `CONFIG_SOUND_LISTENING_CUSTOM` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
+| `CONFIG_SOUND_LISTENING_CUSTOM_FILE` | string | 2.3. Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Bắt đầu lắng nghe / có thông báo | "" |
+| `CONFIG_SOUND_ERROR_POPUP` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
+| `CONFIG_SOUND_ERROR_SUCCESS` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
+| `CONFIG_SOUND_ERROR_EXCLAMATION` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) (mặc định) | y (mặc định của choice) |
+| `CONFIG_SOUND_ERROR_VIBRATION` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
+| `CONFIG_SOUND_ERROR_LOW_BATTERY` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
+| `CONFIG_SOUND_ERROR_NONE` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
+| `CONFIG_SOUND_ERROR_CUSTOM` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
+| `CONFIG_SOUND_ERROR_CUSTOM_FILE` | string | 2.3. Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Báo lỗi | "" |
+| `CONFIG_SOUND_ALERT_POPUP` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
+| `CONFIG_SOUND_ALERT_SUCCESS` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
+| `CONFIG_SOUND_ALERT_EXCLAMATION` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
+| `CONFIG_SOUND_ALERT_VIBRATION` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) (mặc định) | y (mặc định của choice) |
+| `CONFIG_SOUND_ALERT_LOW_BATTERY` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
+| `CONFIG_SOUND_ALERT_NONE` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
+| `CONFIG_SOUND_ALERT_CUSTOM` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
+| `CONFIG_SOUND_ALERT_CUSTOM_FILE` | string | 2.3. Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Cảnh báo từ máy chủ | "" |
+| `CONFIG_SOUND_LOW_BATTERY_POPUP` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
+| `CONFIG_SOUND_LOW_BATTERY_SUCCESS` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
+| `CONFIG_SOUND_LOW_BATTERY_EXCLAMATION` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
+| `CONFIG_SOUND_LOW_BATTERY_VIBRATION` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
+| `CONFIG_SOUND_LOW_BATTERY_LOW_BATTERY` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) (mặc định) | y (mặc định của choice) |
+| `CONFIG_SOUND_LOW_BATTERY_NONE` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
+| `CONFIG_SOUND_LOW_BATTERY_CUSTOM` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
+| `CONFIG_SOUND_LOW_BATTERY_CUSTOM_FILE` | string | 2.3. Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Pin yếu | "" |
+| `CONFIG_SOUND_WIFI_CONFIG_VOICE` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Giọng nói «cấu hình Wi-Fi» theo ngôn ngữ (mặc định) | y (mặc định của choice) |
+| `CONFIG_SOUND_WIFI_CONFIG_POPUP` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
+| `CONFIG_SOUND_WIFI_CONFIG_SUCCESS` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
+| `CONFIG_SOUND_WIFI_CONFIG_EXCLAMATION` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
+| `CONFIG_SOUND_WIFI_CONFIG_VIBRATION` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
+| `CONFIG_SOUND_WIFI_CONFIG_LOW_BATTERY` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
+| `CONFIG_SOUND_WIFI_CONFIG_NONE` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
+| `CONFIG_SOUND_WIFI_CONFIG_CUSTOM` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
+| `CONFIG_SOUND_WIFI_CONFIG_CUSTOM_FILE` | string | 2.3. Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Vào chế độ cấu hình Wi-Fi | "" |
+| `CONFIG_SOUND_ACTIVATION_VOICE` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Giọng nói «kích hoạt» theo ngôn ngữ (mặc định) | y (mặc định của choice) |
+| `CONFIG_SOUND_ACTIVATION_POPUP` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
+| `CONFIG_SOUND_ACTIVATION_SUCCESS` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
+| `CONFIG_SOUND_ACTIVATION_EXCLAMATION` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
+| `CONFIG_SOUND_ACTIVATION_VIBRATION` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
+| `CONFIG_SOUND_ACTIVATION_LOW_BATTERY` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
+| `CONFIG_SOUND_ACTIVATION_NONE` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
+| `CONFIG_SOUND_ACTIVATION_CUSTOM` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
+| `CONFIG_SOUND_ACTIVATION_CUSTOM_FILE` | string | 2.3. Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Đọc mã kích hoạt | "" |
+| `CONFIG_SOUND_UPGRADE_VOICE` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Giọng nói «nâng cấp» theo ngôn ngữ (mặc định) | y (mặc định của choice) |
+| `CONFIG_SOUND_UPGRADE_POPUP` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Popup (tiếng bật ngắn) |  |
+| `CONFIG_SOUND_UPGRADE_SUCCESS` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Success (chuông thành công) |  |
+| `CONFIG_SOUND_UPGRADE_EXCLAMATION` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Exclamation (tiếng cảnh báo) |  |
+| `CONFIG_SOUND_UPGRADE_VIBRATION` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Vibration (tiếng rung) |  |
+| `CONFIG_SOUND_UPGRADE_LOW_BATTERY` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Low battery (tiếng pin yếu) |  |
+| `CONFIG_SOUND_UPGRADE_NONE` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Tắt tiếng |  |
+| `CONFIG_SOUND_UPGRADE_CUSTOM` | bool | 2.3. Âm thanh thông báo (Notification Sounds) | Tệp .ogg tùy chỉnh |  |
+| `CONFIG_SOUND_UPGRADE_CUSTOM_FILE` | string | 2.3. Âm thanh thông báo (Notification Sounds) | Tệp .ogg cho: Nâng cấp / tải tài nguyên | "" |
+| `CONFIG_USE_AUDIO_DEBUGGER` | bool | 2.4. Gỡ lỗi âm thanh (Audio Debugger) | Enable Audio Debugger | n |
+| `CONFIG_AUDIO_DEBUG_UDP_SERVER` | string | 2.4. Gỡ lỗi âm thanh (Audio Debugger) | Audio Debug UDP Server Address | "192.168.2.100:8000" |
+| `CONFIG_ENABLE_CUSTOM_AUDIO` | bool | 2.5. Âm thanh: Loa & Micro (Audio: Speaker & Microphone) [ESP32-S3] |  | y if ENABLE_CUSTOM_SPEAKER \|\| ENABLE_CUSTOM_MIC |
+| `CONFIG_CUSTOM_AUDIO_CODEC_USER_CUSTOM` | bool | 2.5. Âm thanh: Loa & Micro (Audio: Speaker & Microphone) [ESP32-S3] |  | y if CUSTOM_AUDIO_SPK_CODEC_USER_CUSTOM \|\| CUSTOM_AUDIO_MIC_CODEC_USER_CUSTOM |
+| `CONFIG_ENABLE_CUSTOM_SPEAKER` | bool | 2.5. Âm thanh: Loa & Micro (Audio: Speaker & Microphone) [ESP32-S3] | Loa phát thanh & Mạch DAC (Speaker & Audio Out) | n |
 | `CONFIG_CUSTOM_AUDIO_DAC_MAX98357A` | bool | Loa phát thanh & Mạch DAC (Speaker & Audio Out) | MAX98357A (Mạch công suất I2S Class-D Mono 3W) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_AUDIO_DAC_MAX98360A` | bool | Loa phát thanh & Mạch DAC (Speaker & Audio Out) | MAX98360A / MAX98360B (I2S/PDM Class-D Mono 3W thế hệ mới) |  |
 | `CONFIG_CUSTOM_AUDIO_DAC_PCM5102A` | bool | Loa phát thanh & Mạch DAC (Speaker & Audio Out) | PCM5102A (Mạch giải mã Hi-Fi I2S Stereo DAC 32-bit/384kHz) |  |
@@ -318,7 +306,7 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_AUDIO_SPK_GPIO_LRCK` | int | Loa phát thanh & Mạch DAC (Speaker & Audio Out) | Chân xung nhịp Loa I2S LRCK / WS (LCK) | -1 |
 | `CONFIG_CUSTOM_AUDIO_SPK_CODEC_I2C_SDA` | int | Loa phát thanh & Mạch DAC (Speaker & Audio Out) | Chân Codec DAC I2C SDA | -1 |
 | `CONFIG_CUSTOM_AUDIO_SPK_CODEC_I2C_SCL` | int | Loa phát thanh & Mạch DAC (Speaker & Audio Out) | Chân Codec DAC I2C SCL | -1 |
-| `CONFIG_ENABLE_CUSTOM_MIC` | bool | 2. Âm thanh: Loa & Micro (Audio: Speaker & Microphone) | Microphone thu âm (Microphone & Audio In) | n |
+| `CONFIG_ENABLE_CUSTOM_MIC` | bool | 2.5. Âm thanh: Loa & Micro (Audio: Speaker & Microphone) [ESP32-S3] | Microphone thu âm (Microphone & Audio In) | n |
 | `CONFIG_CUSTOM_AUDIO_MIC_INMP441` | bool | Microphone thu âm (Microphone & Audio In) | INMP441 / MSM261S (Microphone số I2S MEMS Omnidirectional) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_AUDIO_MIC_PDM` | bool | Microphone thu âm (Microphone & Audio In) | PDM Microphone (Micro số giao thức PDM) |  |
 | `CONFIG_CUSTOM_AUDIO_MIC_CODEC_ES8311` | bool | Microphone thu âm (Microphone & Audio In) | Everest Semi ES8311 ADC (I2C) |  |
@@ -332,10 +320,22 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_AUDIO_MIC_GPIO_WS` | int | Microphone thu âm (Microphone & Audio In) | Chân chọn kênh Micro I2S WS (WS/LRCK) | -1 |
 | `CONFIG_CUSTOM_AUDIO_MIC_CODEC_I2C_SDA` | int | Microphone thu âm (Microphone & Audio In) | Chân Codec ADC I2C SDA | -1 |
 | `CONFIG_CUSTOM_AUDIO_MIC_CODEC_I2C_SCL` | int | Microphone thu âm (Microphone & Audio In) | Chân Codec ADC I2C SCL | -1 |
-| `CONFIG_CUSTOM_AUDIO_I2S_SIMPLEX` | bool | 2. Âm thanh: Loa & Micro (Audio: Speaker & Microphone) | Simplex (Độc lập: Loa và Micro có chân Clock BCLK/WS riêng) | y (mặc định của choice) |
-| `CONFIG_CUSTOM_AUDIO_I2S_DUPLEX` | bool | 2. Âm thanh: Loa & Micro (Audio: Speaker & Microphone) | Duplex (Dùng chung: Loa và Micro chia sẻ chung chân BCLK và WS) |  |
-| `CONFIG_CUSTOM_AUDIO_CODEC_AEC_REFERENCE` | bool | 2. Âm thanh: Loa & Micro (Audio: Speaker & Microphone) | Kênh tham chiếu khử tiếng vọng từ Codec (AEC Hardware Reference) | n |
-| `CONFIG_ENABLE_CUSTOM_UART` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) | Cổng UART mở rộng (Serial Communication Port) | n |
+| `CONFIG_CUSTOM_AUDIO_I2S_SIMPLEX` | bool | 2.5. Âm thanh: Loa & Micro (Audio: Speaker & Microphone) [ESP32-S3] | Simplex (Độc lập: Loa và Micro có chân Clock BCLK/WS riêng) | y (mặc định của choice) |
+| `CONFIG_CUSTOM_AUDIO_I2S_DUPLEX` | bool | 2.5. Âm thanh: Loa & Micro (Audio: Speaker & Microphone) [ESP32-S3] | Duplex (Dùng chung: Loa và Micro chia sẻ chung chân BCLK và WS) |  |
+| `CONFIG_CUSTOM_AUDIO_CODEC_AEC_REFERENCE` | bool | 2.5. Âm thanh: Loa & Micro (Audio: Speaker & Microphone) [ESP32-S3] | Kênh tham chiếu khử tiếng vọng từ Codec (AEC Hardware Reference) | n |
+| `CONFIG_USE_HOTSPOT_WIFI_PROVISIONING` | bool | 3.1. Phương thức cấu hình WiFi (WiFi Configuration Method) | Hotspot | y |
+| `CONFIG_USE_ESP_BLUFI_WIFI_PROVISIONING` | bool | 3.1. Phương thức cấu hình WiFi (WiFi Configuration Method) | ESP-BluFi |  |
+| `CONFIG_RECEIVE_CUSTOM_MESSAGE` | bool | 3. Mạng & Kết nối (Network & Connectivity) | Enable Custom Message Reception | n |
+| `CONFIG_XIAOZHI_CAMERA_MIRROR_CONFIGURED` | bool | 4. Camera (Camera Configuration) | Override camera mirror settings | n |
+| `CONFIG_XIAOZHI_CAMERA_HMIRROR` | bool | 4. Camera (Camera Configuration) | Mirror Camera Horizontally | n |
+| `CONFIG_XIAOZHI_CAMERA_VFLIP` | bool | 4. Camera (Camera Configuration) | Mirror Camera Vertically | n |
+| `CONFIG_XIAOZHI_CAMERA_ALLOW_JPEG_INPUT` | bool | 4. Camera (Camera Configuration) | Allow JPEG Input | n |
+| `CONFIG_XIAOZHI_ENABLE_CAMERA_DEBUG_MODE` | bool | 4. Camera (Camera Configuration) | Enable Camera Debug Mode | n |
+| `CONFIG_XIAOZHI_ENABLE_CAMERA_ENDIANNESS_SWAP` | bool | 4. Camera (Camera Configuration) | Enable software camera buffer endianness swapping | n |
+| `CONFIG_XIAOZHI_ENABLE_ROTATE_CAMERA_IMAGE` | bool | 4. Camera (Camera Configuration) | Enable Camera Image Rotation | n |
+| `CONFIG_XIAOZHI_CAMERA_IMAGE_ROTATION_ANGLE_90` | bool | Enable Camera Image Rotation | 90° | y (mặc định của choice) |
+| `CONFIG_XIAOZHI_CAMERA_IMAGE_ROTATION_ANGLE_270` | bool | Enable Camera Image Rotation | 270° |  |
+| `CONFIG_ENABLE_CUSTOM_UART` | bool | 5. Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3] | Cổng UART mở rộng (Serial Communication Port) | n |
 | `CONFIG_CUSTOM_UART_PORT_1` | bool | Cổng UART mở rộng (Serial Communication Port) | UART1 (Cổng serial phần cứng 1) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_UART_PORT_2` | bool | Cổng UART mở rộng (Serial Communication Port) | UART2 (Cổng serial phần cứng 2) |  |
 | `CONFIG_CUSTOM_UART_PIN_TX` | int | Cổng UART mở rộng (Serial Communication Port) | Chân phát UART TX GPIO | -1 |
@@ -344,7 +344,7 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_UART_USE_FLOW_CONTROL` | bool | Cổng UART mở rộng (Serial Communication Port) | Kích hoạt điều khiển luồng phần cứng (RTS/CTS Hardware Flow Control) | n |
 | `CONFIG_CUSTOM_UART_PIN_RTS` | int | Cổng UART mở rộng (Serial Communication Port) | Chân RTS GPIO (Request to Send) | -1 |
 | `CONFIG_CUSTOM_UART_PIN_CTS` | int | Cổng UART mở rộng (Serial Communication Port) | Chân CTS GPIO (Clear to Send) | -1 |
-| `CONFIG_ENABLE_BT_UART_MODULE` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | n |
+| `CONFIG_ENABLE_BT_UART_MODULE` | bool | 5. Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3] | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | n |
 | `CONFIG_BT_UART_MODULE_HC05` | bool | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | HC-05 (Bluetooth Classic SPP, chủ/tớ, cần chân KEY để vào AT) | y (mặc định của choice) |
 | `CONFIG_BT_UART_MODULE_HC06` | bool | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | HC-06 / linvor (Bluetooth Classic SPP, chỉ làm tớ) |  |
 | `CONFIG_BT_UART_MODULE_HM10` | bool | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | HM-10 / CC2541 (BLE, chủ/tớ) |  |
@@ -365,37 +365,37 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_BT_UART_MODULE_FRAME_RAW` | bool | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | Thô (gửi nguyên văn, nhận theo khoảng nghỉ) |  |
 | `CONFIG_BT_UART_MODULE_FRAME_LINE` | bool | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | Dòng văn bản (kết thúc bằng ký tự xuống dòng LF) | y (mặc định của choice) |
 | `CONFIG_BT_UART_MODULE_FRAME_BINARY4` | bool | Module Bluetooth UART không dây (HC-05 / HC-06 / HM-10) | Khung nhị phân 4 byte (0xAA, chục, đơn vị, XOR) |  |
-| `CONFIG_CUSTOM_MCP_TOOL_LAMP` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) | Đèn điều khiển bằng AI qua GPIO (MCP) | n |
-| `CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO` | int | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) | Chân GPIO điều khiển Đèn | -1 |
-| `CONFIG_CUSTOM_MCP_TOOL_LAMP_EXTRA_GPIOS` | string | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) | Các chân GPIO Đèn thêm (cách nhau dấu phẩy) | "" |
-| `CONFIG_CUSTOM_MCP_TOOL_SENSOR` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_ENABLE_SENSOR_DHT11_22 \|\| CUSTOM_ENABLE_SENSOR_AHT20 \|\| CUSTOM_ENABLE_SENSOR_BMP280 \|\| CUSTOM_ENABLE_SENSOR_BH1750 \|\| CUSTOM_ENABLE_SENSOR_LDR \|\| CUSTOM_SENSOR_GAS_SCD4X \|\| CUSTOM_ENABLE_SENSOR_GAS_ANALOG_MQ \|\| CUSTOM_ENABLE_SENSOR_APDS9960 \|\| CUSTOM_ENABLE_SENSOR_VL53LX \|\| CUSTOM_ENABLE_SENSOR_HCSR04 \|\| CUSTOM_ENABLE_SENSOR_PIR \|\| CUSTOM_ENABLE_SENSOR_VIBRATION_SW420 \|\| CUSTOM_ENABLE_SENSOR_FLAME \|\| CUSTOM_ENABLE_SENSOR_INA2XX \|\| CUSTOM_ENABLE_PERIPH_BATTERY_CHARGING_DETECT \|\| CUSTOM_BATTERY_MONITOR_BQ27220 |
-| `CONFIG_CUSTOM_MCP_TOOL_ACTUATOR` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_PERIPH_RELAY_ENABLE \|\| CUSTOM_ENABLE_SERVO_DOG \|\| CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE \|\| ENABLE_BUZZER \|\| ENABLE_HAPTIC_MOTOR |
-| `CONFIG_CUSTOM_MCP_TOOL_ROBOT` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE \|\| CUSTOM_ENABLE_SERVO_DOG |
-| `CONFIG_CUSTOM_MCP_TOOL_LED` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if ENABLE_CUSTOM_LEDS && !CUSTOM_LED_NONE |
-| `CONFIG_CUSTOM_MCP_TOOL_GPIO_LED` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_LED_EXTRA_GPIOS != "" |
-| `CONFIG_CUSTOM_MCP_TOOL_PERIPH` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_ENABLE_PERIPH_RTC \|\| CUSTOM_ENABLE_PERIPH_NFC_PN532 \|\| CUSTOM_ENABLE_PERIPH_PCA9685 \|\| CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC \|\| CUSTOM_PERIPH_RC522_SPI_CS >= 0 \|\| CUSTOM_IMU_I2C_SDA >= 0 \|\| CUSTOM_PMIC_I2C_SDA >= 0 \|\| CUSTOM_EXPANDER_I2C_SDA >= 0 \|\| CUSTOM_ETH_SPI_CS_PIN >= 0 |
-| `CONFIG_CUSTOM_MCP_TOOL_PRESS_TO_TALK` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_ENABLE_BUTTON_BOOT \|\| CUSTOM_ENABLE_BUTTON_TOUCH |
-| `CONFIG_CUSTOM_MCP_TOOL_UART` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if ENABLE_CUSTOM_UART && CUSTOM_UART_PIN_TX >= 0 |
-| `CONFIG_CUSTOM_MCP_TOOL_BT_UART` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if ENABLE_BT_UART_MODULE && !CUSTOM_DISPLAY_UART_LINK_BLUETOOTH |
-| `CONFIG_ENABLE_CUSTOM_MCP_SERVER` | bool | 3. Giao thức truyền thông & Mạng (Communication, 4G, Ethernet & MCP) |  | y if CUSTOM_MCP_TOOL_LAMP \|\| CUSTOM_MCP_TOOL_SENSOR \|\| CUSTOM_MCP_TOOL_ACTUATOR \|\| CUSTOM_MCP_TOOL_ROBOT \|\| CUSTOM_MCP_TOOL_LED \|\| CUSTOM_MCP_TOOL_GPIO_LED \|\| CUSTOM_MCP_TOOL_PERIPH \|\| CUSTOM_MCP_TOOL_PRESS_TO_TALK \|\| CUSTOM_MCP_TOOL_UART \|\| CUSTOM_MCP_TOOL_BT_UART |
-| `CONFIG_CUSTOM_ENABLE_BUTTON_BOOT` | bool | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Nút bấm BOOT Onboard (BOOT Button) | y |
-| `CONFIG_CUSTOM_BUTTON_BOOT_GPIO` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân GPIO nút Boot | 0 |
-| `CONFIG_CUSTOM_BUTTON_BOOT_EXTRA_GPIOS` | string | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Các chân GPIO nút Boot thêm (cách nhau dấu phẩy) | "" |
-| `CONFIG_CUSTOM_ENABLE_BUTTON_TOUCH` | bool | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Nút bấm chức năng Action / Chạm (PTT / Touch Key) | n |
-| `CONFIG_CUSTOM_BUTTON_TOUCH_GPIO` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân GPIO nút Action | -1 |
-| `CONFIG_CUSTOM_ENABLE_BUTTON_VOLUME` | bool | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Cụm phím vật lý Tăng / Giảm âm lượng (Volume Buttons) | n |
-| `CONFIG_CUSTOM_BUTTON_VOL_UP_GPIO` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân GPIO nút tăng âm lượng (Vol Up) | -1 |
-| `CONFIG_CUSTOM_BUTTON_VOL_DOWN_GPIO` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân GPIO nút giảm âm lượng (Vol Down) | -1 |
-| `CONFIG_CUSTOM_ENABLE_TOUCH_SLIDER` | bool | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Thanh trượt cảm ứng điện dung nội bộ ESP32-S3 (Touch Slider) | n |
-| `CONFIG_CUSTOM_TOUCH_SLIDER_PAD1_GPIO` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân Touch Pad 1 của thanh trượt (GPIO 1-14) | -1 |
-| `CONFIG_CUSTOM_TOUCH_SLIDER_PAD2_GPIO` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân Touch Pad 2 của thanh trượt (GPIO 1-14) | -1 |
-| `CONFIG_CUSTOM_TOUCH_SLIDER_PAD3_GPIO` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân Touch Pad 3 của thanh trượt (GPIO 1-14) | -1 |
-| `CONFIG_CUSTOM_ENABLE_PERIPH_ROTARY_ENCODER` | bool | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Núm vặn xoay vô cấp cơ học (Rotary Encoder EC11 qua PCNT) | n |
-| `CONFIG_CUSTOM_PERIPH_ENCODER_PHASE_A` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân xung pha A (CLK) Encoder | -1 |
-| `CONFIG_CUSTOM_PERIPH_ENCODER_PHASE_B` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân xung pha B (DT) Encoder | -1 |
-| `CONFIG_CUSTOM_PERIPH_ENCODER_KEY_PIN` | int | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Chân phím nhấn SW Encoder (-1 nếu không dùng) | -1 |
-| `CONFIG_CUSTOM_ENABLE_USER_CUSTOM_SENSORS` | bool | 4.1. Tương Tác & Điều Khiển Đầu Vào (User Inputs) | Driver Cảm biến ngoại vi tùy chỉnh (Custom User Sensor Hook) | n |
-| `CONFIG_ENABLE_CUSTOM_CAMERA` | bool | 4.2. Hệ thống chính (Main System) | Camera & Thị giác AI (Camera DVP / USB UVC) | n |
+| `CONFIG_CUSTOM_MCP_TOOL_LAMP` | bool | 5. Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3] | Đèn điều khiển bằng AI qua GPIO (MCP) | n |
+| `CONFIG_CUSTOM_MCP_TOOL_LAMP_GPIO` | int | 5. Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3] | Chân GPIO điều khiển Đèn | -1 |
+| `CONFIG_CUSTOM_MCP_TOOL_LAMP_EXTRA_GPIOS` | string | 5. Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3] | Các chân GPIO Đèn thêm (cách nhau dấu phẩy) | "" |
+| `CONFIG_CUSTOM_MCP_TOOL_SENSOR` | bool | 5. Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3] |  | y if CUSTOM_ENABLE_SENSOR_DHT11_22 \|\| CUSTOM_ENABLE_SENSOR_AHT20 \|\| CUSTOM_ENABLE_SENSOR_BMP280 \|\| CUSTOM_ENABLE_SENSOR_BH1750 \|\| CUSTOM_ENABLE_SENSOR_LDR \|\| CUSTOM_SENSOR_GAS_SCD4X \|\| CUSTOM_ENABLE_SENSOR_GAS_ANALOG_MQ \|\| CUSTOM_ENABLE_SENSOR_APDS9960 \|\| CUSTOM_ENABLE_SENSOR_VL53LX \|\| CUSTOM_ENABLE_SENSOR_HCSR04 \|\| CUSTOM_ENABLE_SENSOR_PIR \|\| CUSTOM_ENABLE_SENSOR_VIBRATION_SW420 \|\| CUSTOM_ENABLE_SENSOR_FLAME \|\| CUSTOM_ENABLE_SENSOR_INA2XX \|\| CUSTOM_ENABLE_PERIPH_BATTERY_CHARGING_DETECT \|\| CUSTOM_BATTERY_MONITOR_BQ27220 |
+| `CONFIG_CUSTOM_MCP_TOOL_ACTUATOR` | bool | 5. Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3] |  | y if CUSTOM_PERIPH_RELAY_ENABLE \|\| CUSTOM_ENABLE_SERVO_DOG \|\| CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE \|\| ENABLE_BUZZER \|\| ENABLE_HAPTIC_MOTOR |
+| `CONFIG_CUSTOM_MCP_TOOL_ROBOT` | bool | 5. Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3] |  | y if CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE \|\| CUSTOM_ENABLE_SERVO_DOG |
+| `CONFIG_CUSTOM_MCP_TOOL_LED` | bool | 5. Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3] |  | y if ENABLE_CUSTOM_LEDS && !CUSTOM_LED_NONE |
+| `CONFIG_CUSTOM_MCP_TOOL_GPIO_LED` | bool | 5. Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3] |  | y if CUSTOM_LED_EXTRA_GPIOS != "" |
+| `CONFIG_CUSTOM_MCP_TOOL_PERIPH` | bool | 5. Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3] |  | y if CUSTOM_ENABLE_PERIPH_RTC \|\| CUSTOM_ENABLE_PERIPH_NFC_PN532 \|\| CUSTOM_ENABLE_PERIPH_PCA9685 \|\| CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC \|\| CUSTOM_PERIPH_RC522_SPI_CS >= 0 \|\| CUSTOM_IMU_I2C_SDA >= 0 \|\| CUSTOM_PMIC_I2C_SDA >= 0 \|\| CUSTOM_EXPANDER_I2C_SDA >= 0 \|\| CUSTOM_ETH_SPI_CS_PIN >= 0 |
+| `CONFIG_CUSTOM_MCP_TOOL_PRESS_TO_TALK` | bool | 5. Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3] |  | y if CUSTOM_ENABLE_BUTTON_BOOT \|\| CUSTOM_ENABLE_BUTTON_TOUCH |
+| `CONFIG_CUSTOM_MCP_TOOL_UART` | bool | 5. Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3] |  | y if ENABLE_CUSTOM_UART && CUSTOM_UART_PIN_TX >= 0 |
+| `CONFIG_CUSTOM_MCP_TOOL_BT_UART` | bool | 5. Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3] |  | y if ENABLE_BT_UART_MODULE && !CUSTOM_DISPLAY_UART_LINK_BLUETOOTH |
+| `CONFIG_ENABLE_CUSTOM_MCP_SERVER` | bool | 5. Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3] |  | y if CUSTOM_MCP_TOOL_LAMP \|\| CUSTOM_MCP_TOOL_SENSOR \|\| CUSTOM_MCP_TOOL_ACTUATOR \|\| CUSTOM_MCP_TOOL_ROBOT \|\| CUSTOM_MCP_TOOL_LED \|\| CUSTOM_MCP_TOOL_GPIO_LED \|\| CUSTOM_MCP_TOOL_PERIPH \|\| CUSTOM_MCP_TOOL_PRESS_TO_TALK \|\| CUSTOM_MCP_TOOL_UART \|\| CUSTOM_MCP_TOOL_BT_UART |
+| `CONFIG_CUSTOM_ENABLE_BUTTON_BOOT` | bool | 6.1. Nút bấm & Đầu vào (User Inputs) | Nút bấm BOOT Onboard (BOOT Button) | y |
+| `CONFIG_CUSTOM_BUTTON_BOOT_GPIO` | int | 6.1. Nút bấm & Đầu vào (User Inputs) | Chân GPIO nút Boot | 0 |
+| `CONFIG_CUSTOM_BUTTON_BOOT_EXTRA_GPIOS` | string | 6.1. Nút bấm & Đầu vào (User Inputs) | Các chân GPIO nút Boot thêm (cách nhau dấu phẩy) | "" |
+| `CONFIG_CUSTOM_ENABLE_BUTTON_TOUCH` | bool | 6.1. Nút bấm & Đầu vào (User Inputs) | Nút bấm chức năng Action / Chạm (PTT / Touch Key) | n |
+| `CONFIG_CUSTOM_BUTTON_TOUCH_GPIO` | int | 6.1. Nút bấm & Đầu vào (User Inputs) | Chân GPIO nút Action | -1 |
+| `CONFIG_CUSTOM_ENABLE_BUTTON_VOLUME` | bool | 6.1. Nút bấm & Đầu vào (User Inputs) | Cụm phím vật lý Tăng / Giảm âm lượng (Volume Buttons) | n |
+| `CONFIG_CUSTOM_BUTTON_VOL_UP_GPIO` | int | 6.1. Nút bấm & Đầu vào (User Inputs) | Chân GPIO nút tăng âm lượng (Vol Up) | -1 |
+| `CONFIG_CUSTOM_BUTTON_VOL_DOWN_GPIO` | int | 6.1. Nút bấm & Đầu vào (User Inputs) | Chân GPIO nút giảm âm lượng (Vol Down) | -1 |
+| `CONFIG_CUSTOM_ENABLE_TOUCH_SLIDER` | bool | 6.1. Nút bấm & Đầu vào (User Inputs) | Thanh trượt cảm ứng điện dung nội bộ ESP32-S3 (Touch Slider) | n |
+| `CONFIG_CUSTOM_TOUCH_SLIDER_PAD1_GPIO` | int | 6.1. Nút bấm & Đầu vào (User Inputs) | Chân Touch Pad 1 của thanh trượt (GPIO 1-14) | -1 |
+| `CONFIG_CUSTOM_TOUCH_SLIDER_PAD2_GPIO` | int | 6.1. Nút bấm & Đầu vào (User Inputs) | Chân Touch Pad 2 của thanh trượt (GPIO 1-14) | -1 |
+| `CONFIG_CUSTOM_TOUCH_SLIDER_PAD3_GPIO` | int | 6.1. Nút bấm & Đầu vào (User Inputs) | Chân Touch Pad 3 của thanh trượt (GPIO 1-14) | -1 |
+| `CONFIG_CUSTOM_ENABLE_PERIPH_ROTARY_ENCODER` | bool | 6.1. Nút bấm & Đầu vào (User Inputs) | Núm vặn xoay vô cấp cơ học (Rotary Encoder EC11 qua PCNT) | n |
+| `CONFIG_CUSTOM_PERIPH_ENCODER_PHASE_A` | int | 6.1. Nút bấm & Đầu vào (User Inputs) | Chân xung pha A (CLK) Encoder | -1 |
+| `CONFIG_CUSTOM_PERIPH_ENCODER_PHASE_B` | int | 6.1. Nút bấm & Đầu vào (User Inputs) | Chân xung pha B (DT) Encoder | -1 |
+| `CONFIG_CUSTOM_PERIPH_ENCODER_KEY_PIN` | int | 6.1. Nút bấm & Đầu vào (User Inputs) | Chân phím nhấn SW Encoder (-1 nếu không dùng) | -1 |
+| `CONFIG_CUSTOM_ENABLE_USER_CUSTOM_SENSORS` | bool | 6.1. Nút bấm & Đầu vào (User Inputs) | Driver Cảm biến ngoại vi tùy chỉnh (Custom User Sensor Hook) | n |
+| `CONFIG_ENABLE_CUSTOM_CAMERA` | bool | 6.2. Camera & Đèn LED (Camera & LEDs) | Camera & Thị giác AI (Camera DVP / USB UVC) | n |
 | `CONFIG_CUSTOM_CAMERA_OV2640` | bool | Camera & Thị giác AI (Camera DVP / USB UVC) | OmniVision OV2640 (2 Megapixel) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_CAMERA_OV3660` | bool | Camera & Thị giác AI (Camera DVP / USB UVC) | OmniVision OV3660 (3 Megapixel) |  |
 | `CONFIG_CUSTOM_CAMERA_OV5640` | bool | Camera & Thị giác AI (Camera DVP / USB UVC) | OmniVision OV5640 (5 Megapixel) |  |
@@ -422,7 +422,7 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_CAM_PIN_D7` | int | Camera & Thị giác AI (Camera DVP / USB UVC) | Camera Data D7 Pin | -1 |
 | `CONFIG_CUSTOM_CAM_HMIRROR` | bool | Camera & Thị giác AI (Camera DVP / USB UVC) | Lật ảnh theo chiều ngang (Horizontal Mirror) | n |
 | `CONFIG_CUSTOM_CAM_VFLIP` | bool | Camera & Thị giác AI (Camera DVP / USB UVC) | Lật ảnh theo chiều dọc (Vertical Flip) | n |
-| `CONFIG_ENABLE_CUSTOM_LEDS` | bool | 4.2. Hệ thống chính (Main System) | Đèn LED trạng thái (Status LED WS2812 / Single LED) | y |
+| `CONFIG_ENABLE_CUSTOM_LEDS` | bool | 6.2. Camera & Đèn LED (Camera & LEDs) | Đèn LED trạng thái (Status LED WS2812 / Single LED) | y |
 | `CONFIG_CUSTOM_LED_WS2812` | bool | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Đèn LED RGB kỹ thuật số WS2812 / SK6812 (Giao thức RMT) | y (mặc định của choice) |
 | `CONFIG_CUSTOM_LED_SINGLE_PWM` | bool | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Đèn LED đơn điều chỉnh độ sáng (LEDC PWM) |  |
 | `CONFIG_CUSTOM_LED_CIRCULAR_STRIP` | bool | Đèn LED trạng thái (Status LED WS2812 / Single LED) | Vòng tròn LED xoay trạng thái (Circular LED Strip) |  |
@@ -767,7 +767,7 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_GPIO_LED_BOOT_EFFECT_BREATHE` | bool | LED đơn GPIO (chatbot điều khiển) | Thở (LED không chỉnh độ sáng được sẽ nháy) |  |
 | `CONFIG_CUSTOM_GPIO_LED_BOOT_EFFECT_ID` | int | LED đơn GPIO (chatbot điều khiển) |  | 0 if CUSTOM_GPIO_LED_BOOT_EFFECT_OFF |
 | `CONFIG_CUSTOM_GPIO_LED_PERIOD_MS` | int | LED đơn GPIO (chatbot điều khiển) | Chu kỳ nháy/thở mặc định (ms) | 1000 |
-| `CONFIG_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC` | bool | 4.2. Hệ thống chính (Main System) | LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh) | n |
+| `CONFIG_CUSTOM_ENABLE_PERIPH_LED_DRIVER_IC` | bool | 6.2. Camera & Đèn LED (Camera & LEDs) | LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh) | n |
 | `CONFIG_CUSTOM_PERIPH_LED_IC_I2C_SDA` | int | LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh) | Chân I2C SDA chip điều khiển LED | -1 |
 | `CONFIG_CUSTOM_PERIPH_LED_IC_I2C_SCL` | int | LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh) | Chân I2C SCL chip điều khiển LED | -1 |
 | `CONFIG_CUSTOM_LED_IC_LED_CHANNELS` | string | LED qua IC điều khiển LED I2C (AW9523B 16 kênh / IS31FL3236 36 kênh) | Kênh dùng làm LED (cách nhau dấu phẩy, để trống là tất cả kênh) | "" |
@@ -794,133 +794,133 @@ Danh sách này chứa tất cả các cấu hình Kconfig sẽ được ánh x�
 | `CONFIG_CUSTOM_EXPANDER_LED_BOOT_EFFECT_BREATHE` | bool | LED qua IC mở rộng GPIO (TCA9554 / TCA9555 / TCA9539) | Thở (LED không chỉnh độ sáng được sẽ nháy) |  |
 | `CONFIG_CUSTOM_EXPANDER_LED_BOOT_EFFECT_ID` | int | LED qua IC mở rộng GPIO (TCA9554 / TCA9555 / TCA9539) |  | 0 if CUSTOM_EXPANDER_LED_BOOT_EFFECT_OFF |
 | `CONFIG_CUSTOM_EXPANDER_LED_PERIOD_MS` | int | LED qua IC mở rộng GPIO (TCA9554 / TCA9555 / TCA9539) | Chu kỳ nháy/thở mặc định (ms) | 1000 |
-| `CONFIG_CUSTOM_ENABLE_SERVO_DOG` | bool | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Động cơ Servo tương tác qua PWM (Servo Dog Controller) | n |
-| `CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO` | int | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Chân GPIO cấp xung PWM cho Động cơ Servo | -1 |
-| `CONFIG_ENABLE_BUZZER` | bool | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Còi báo động Buzzer (GPIO 41) | n |
-| `CONFIG_BUZZER_TYPE_ACTIVE` | bool | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Còi chủ động (Active, cấp điện là kêu) | y (mặc định của choice) |
-| `CONFIG_BUZZER_TYPE_PASSIVE` | bool | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Còi thụ động (Passive, phát xung theo tần số qua RMT) |  |
-| `CONFIG_BUZZER_ACTIVE_LOW` | bool | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Module kích mức thấp (LOW = kêu) | n |
-| `CONFIG_BUZZER_EXTRA_PINS` | string | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Các chân GPIO Còi thêm (cách nhau dấu phẩy) | "" |
-| `CONFIG_BUZZER_PIN` | int | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Chân GPIO Buzzer | -1 |
-| `CONFIG_ENABLE_HAPTIC_MOTOR` | bool | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Động cơ rung phản hồi xúc giác (GPIO 42) | n |
-| `CONFIG_HAPTIC_PIN` | int | 4.3. Âm Thanh Cảnh Báo & Xúc Giác (Audio & Haptics) | Chân GPIO Động cơ rung | -1 |
-| `CONFIG_CUSTOM_ENABLE_SENSOR_DHT11_22` | bool | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Cảm biến Nhiệt độ & Độ ẩm 1 dây (DHT11 / DHT22) | n |
-| `CONFIG_CUSTOM_SENSOR_DHT_GPIO` | int | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Chân dữ liệu 1-Wire cảm biến DHT GPIO | -1 |
-| `CONFIG_CUSTOM_ENABLE_SENSOR_I2C_TEMP_HUMID` | bool | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Cảm biến Nhiệt độ & Độ ẩm kỹ thuật số I2C (AHT20 / SHT3x) | n |
-| `CONFIG_CUSTOM_ENABLE_SENSOR_AHT20` | bool | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Aosong AHT10 / AHT20 / AHT21 (I2C) | y |
-| `CONFIG_CUSTOM_SENSOR_I2C_SDA` | int | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Chân I2C SDA cảm biến nhiệt ẩm | -1 |
-| `CONFIG_CUSTOM_SENSOR_I2C_SCL` | int | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Chân I2C SCL cảm biến nhiệt ẩm | -1 |
-| `CONFIG_CUSTOM_ENABLE_SENSOR_BMP280` | bool | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Cảm biến Áp suất khí quyển & Độ cao (Bosch BMP280 / BME280 I2C) | n |
-| `CONFIG_CUSTOM_SENSOR_BMP280_I2C_SDA` | int | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Chân I2C SDA cảm biến khí áp BMP280 | -1 |
-| `CONFIG_CUSTOM_SENSOR_BMP280_I2C_SCL` | int | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Chân I2C SCL cảm biến khí áp BMP280 | -1 |
-| `CONFIG_CUSTOM_ENABLE_SENSOR_BH1750` | bool | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Cảm biến cường độ ánh sáng kỹ thuật số BH1750 (I2C) | n |
-| `CONFIG_CUSTOM_SENSOR_BH1750_I2C_SDA` | int | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Chân I2C SDA cảm biến ánh sáng BH1750 | -1 |
-| `CONFIG_CUSTOM_SENSOR_BH1750_I2C_SCL` | int | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Chân I2C SCL cảm biến ánh sáng BH1750 | -1 |
-| `CONFIG_CUSTOM_ENABLE_SENSOR_LDR` | bool | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Cảm biến ánh sáng quang trở (LDR qua cầu phân áp ADC) | n |
-| `CONFIG_CUSTOM_SENSOR_LDR_EXTRA_CHS` | string | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Các kênh ADC quang trở LDR thêm (cách nhau dấu phẩy) | "" |
-| `CONFIG_CUSTOM_SENSOR_LDR_ADC_CHANNEL` | int | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Kênh ADC1 đo quang trở LDR (Kênh N ứng với GPIO N+1, -1 chưa chọn) | -1 |
-| `CONFIG_CUSTOM_ENABLE_SENSOR_GAS_CO2` | bool | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Cảm biến nồng độ Khí độc TVOC & CO2 NDIR (SCD40/41, SGP30/40 I2C) | n |
-| `CONFIG_CUSTOM_SENSOR_GAS_SCD4X` | bool | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Sensirion SCD40 / SCD41 (Cảm biến CO2 NDIR I2C) | y |
-| `CONFIG_CUSTOM_SENSOR_GAS_I2C_SDA` | int | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Chân I2C SDA cảm biến khí/CO2 | -1 |
-| `CONFIG_CUSTOM_SENSOR_GAS_I2C_SCL` | int | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Chân I2C SCL cảm biến khí/CO2 | -1 |
-| `CONFIG_CUSTOM_ENABLE_SENSOR_GAS_ANALOG_MQ` | bool | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Cảm biến khói & khí gas dễ cháy (MQ-2 / MQ-135 Analog ADC) | n |
-| `CONFIG_CUSTOM_SENSOR_MQ_ANALOG_PIN` | int | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Chân analog đọc điện áp cảm biến MQ (kênh ADC1) | -1 |
-| `CONFIG_CUSTOM_SENSOR_MQ_TYPE_MQ2` | bool | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | MQ-2 (khói, LPG, khí dễ cháy) | y (mặc định của choice) |
-| `CONFIG_CUSTOM_SENSOR_MQ_TYPE_MQ135` | bool | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | MQ-135 (chất lượng không khí, NH3, CO2, benzen) |  |
-| `CONFIG_CUSTOM_SENSOR_DS18B20_PIN` | int | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Chân dữ liệu 1-Wire cảm biến nhiệt độ DS18B20 | -1 |
-| `CONFIG_CUSTOM_SENSOR_FLOW_PULSE_PIN` | int | 4.4. Cảm Biến Môi Trường, Khí & Lưu Lượng (Environment, Gas & Flow) | Chân đọc xung lưu lượng chất lỏng (Flow Pulse) | -1 |
-| `CONFIG_CUSTOM_ENABLE_SENSOR_APDS9960` | bool | 4.5. Không Gian, Khoảng Cách & An Ninh (Space, Distance & Security) | Cảm biến màu sắc, cử chỉ & tiệm cận (Broadcom APDS-9960 I2C) | n |
-| `CONFIG_CUSTOM_SENSOR_APDS9960_I2C_SDA` | int | 4.5. Không Gian, Khoảng Cách & An Ninh (Space, Distance & Security) | Chân I2C SDA cảm biến APDS9960 | -1 |
-| `CONFIG_CUSTOM_SENSOR_APDS9960_I2C_SCL` | int | 4.5. Không Gian, Khoảng Cách & An Ninh (Space, Distance & Security) | Chân I2C SCL cảm biến APDS9960 | -1 |
-| `CONFIG_CUSTOM_SENSOR_APDS9960_INT_PIN` | int | 4.5. Không Gian, Khoảng Cách & An Ninh (Space, Distance & Security) | Chân ngắt INT cảm biến APDS9960 | -1 |
-| `CONFIG_CUSTOM_ENABLE_SENSOR_VL53LX` | bool | 4.5. Không Gian, Khoảng Cách & An Ninh (Space, Distance & Security) | Cảm biến khoảng cách laser ToF (STMicroelectronics VL53L0X / VL53L1X I2C) | n |
-| `CONFIG_CUSTOM_SENSOR_VL53LX_I2C_SDA` | int | 4.5. Không Gian, Khoảng Cách & An Ninh (Space, Distance & Security) | Chân I2C SDA cảm biến laser VL53L | -1 |
-| `CONFIG_CUSTOM_SENSOR_VL53LX_I2C_SCL` | int | 4.5. Không Gian, Khoảng Cách & An Ninh (Space, Distance & Security) | Chân I2C SCL cảm biến laser VL53L | -1 |
-| `CONFIG_CUSTOM_SENSOR_VL53LX_XSHUT_PIN` | int | 4.5. Không Gian, Khoảng Cách & An Ninh (Space, Distance & Security) | Chân tắt nguồn XSHUT cảm biến laser VL53L | -1 |
-| `CONFIG_CUSTOM_ENABLE_SENSOR_HCSR04` | bool | 4.5. Không Gian, Khoảng Cách & An Ninh (Space, Distance & Security) | Cảm biến khoảng cách siêu âm (HC-SR04 / US-100) | n |
-| `CONFIG_CUSTOM_SENSOR_HCSR04_TRIG_GPIO` | int | 4.5. Không Gian, Khoảng Cách & An Ninh (Space, Distance & Security) | Chân phát xung siêu âm Trig GPIO | -1 |
-| `CONFIG_CUSTOM_SENSOR_HCSR04_ECHO_GPIO` | int | 4.5. Không Gian, Khoảng Cách & An Ninh (Space, Distance & Security) | Chân nhận tín hiệu siêu âm Echo GPIO | -1 |
-| `CONFIG_CUSTOM_ENABLE_SENSOR_PIR` | bool | 4.5. Không Gian, Khoảng Cách & An Ninh (Space, Distance & Security) | Cảm biến phát hiện người chuyển động PIR (HC-SR501 / RCWL-0516) | n |
-| `CONFIG_CUSTOM_SENSOR_PIR_GPIO` | int | 4.5. Không Gian, Khoảng Cách & An Ninh (Space, Distance & Security) | Chân tín hiệu cảm biến PIR GPIO | -1 |
-| `CONFIG_CUSTOM_ENABLE_SENSOR_VIBRATION_SW420` | bool | 4.5. Không Gian, Khoảng Cách & An Ninh (Space, Distance & Security) | Cảm biến cảnh báo chấn động / Rung tiếp điểm (SW-420 GPIO Interrupt) | n |
-| `CONFIG_CUSTOM_SENSOR_VIBRATION_PIN` | int | 4.5. Không Gian, Khoảng Cách & An Ninh (Space, Distance & Security) | Chân tín hiệu Digital Out cảm biến rung | -1 |
-| `CONFIG_CUSTOM_ENABLE_SENSOR_FLAME` | bool | 4.5. Không Gian, Khoảng Cách & An Ninh (Space, Distance & Security) | Cảm biến cảnh báo hỏa hoạn / Ngọn lửa (Flame Sensor IR) | n |
-| `CONFIG_CUSTOM_SENSOR_FLAME_PIN` | int | 4.5. Không Gian, Khoảng Cách & An Ninh (Space, Distance & Security) | Chân tín hiệu Digital báo lửa | -1 |
-| `CONFIG_CUSTOM_PERIPH_RELAY_ENABLE` | bool | 4.6. Động Cơ, Robot & Cơ Cấu Chấp Hành (Motors, Robotics & Actuators) | Rơ-le đóng cắt thiết bị độc lập (Relay Switch) | n |
-| `CONFIG_CUSTOM_PERIPH_RELAY_GPIO` | int | 4.6. Động Cơ, Robot & Cơ Cấu Chấp Hành (Motors, Robotics & Actuators) | Chân GPIO kích hoạt Relay đóng cắt | -1 |
-| `CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE` | bool | 4.6. Động Cơ, Robot & Cơ Cấu Chấp Hành (Motors, Robotics & Actuators) | Mạch cầu H Động cơ DC 2 chiều cho xe robot (TB6612FNG / L9110S / DRV8833) | n |
-| `CONFIG_CUSTOM_MOTOR_DRIVER_TB6612` | bool | 4.6. Động Cơ, Robot & Cơ Cấu Chấp Hành (Motors, Robotics & Actuators) | Toshiba TB6612FNG (Hiệu suất cao MOSFET H-Bridge) | y (mặc định của choice) |
-| `CONFIG_CUSTOM_MOTOR_DRIVER_L9110S` | bool | 4.6. Động Cơ, Robot & Cơ Cấu Chấp Hành (Motors, Robotics & Actuators) | L9110S / HG7881 (Mạch 2 kênh DC mini giá rẻ) |  |
-| `CONFIG_CUSTOM_MOTOR_DRIVER_DRV8833` | bool | 4.6. Động Cơ, Robot & Cơ Cấu Chấp Hành (Motors, Robotics & Actuators) | TI DRV8833 (Cầu H kép bảo vệ quá dòng) |  |
-| `CONFIG_CUSTOM_PERIPH_MOTOR_PWMA_PIN` | int | 4.6. Động Cơ, Robot & Cơ Cấu Chấp Hành (Motors, Robotics & Actuators) | Chân điều tốc PWM Động cơ A (PWMA) | -1 |
-| `CONFIG_CUSTOM_PERIPH_MOTOR_DIRA_PIN` | int | 4.6. Động Cơ, Robot & Cơ Cấu Chấp Hành (Motors, Robotics & Actuators) | Chân hướng quay Động cơ A (DIRA / IN1) | -1 |
-| `CONFIG_CUSTOM_PERIPH_MOTOR_PWMB_PIN` | int | 4.6. Động Cơ, Robot & Cơ Cấu Chấp Hành (Motors, Robotics & Actuators) | Chân điều tốc PWM Động cơ B (PWMB) | -1 |
-| `CONFIG_CUSTOM_PERIPH_MOTOR_DIRB_PIN` | int | 4.6. Động Cơ, Robot & Cơ Cấu Chấp Hành (Motors, Robotics & Actuators) | Chân hướng quay Động cơ B (DIRB / IN3) | -1 |
-| `CONFIG_CUSTOM_ENABLE_BATTERY_MONITOR` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Mạch đo dung lượng Pin (Battery Level Monitor) | n |
-| `CONFIG_CUSTOM_BATTERY_MONITOR_ADC` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Đo qua ADC nội bộ (Bộ chia điện trở Voltage Divider) | y |
-| `CONFIG_CUSTOM_BATTERY_ADC_CHANNEL` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Kênh ADC1 đo pin (Kênh N ứng với GPIO N+1, -1 chưa chọn) | -1 |
-| `CONFIG_CUSTOM_BATTERY_DIVIDER_R1` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Điện trở nhánh trên R1 cầu phân áp (kOhm) | 100 |
-| `CONFIG_CUSTOM_BATTERY_DIVIDER_R2` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Điện trở nhánh dưới R2 cầu phân áp (kOhm) | 100 |
-| `CONFIG_CUSTOM_ENABLE_SENSOR_INA2XX` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Module đo điện áp, dòng điện & công suất tiêu thụ (TI INA219 / INA226 I2C) | n |
-| `CONFIG_CUSTOM_SENSOR_INA219` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Texas Instruments INA219 (Điện áp tối đa 26V, độ phân giải 12-bit) | y |
-| `CONFIG_CUSTOM_SENSOR_INA2XX_I2C_SDA` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SDA module đo dòng INA | -1 |
-| `CONFIG_CUSTOM_SENSOR_INA2XX_I2C_SCL` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SCL module đo dòng INA | -1 |
-| `CONFIG_CUSTOM_ENABLE_PERIPH_BATTERY_CHARGING_DETECT` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Giám sát trạng thái sạc pin (TP4056 CHRG / STDBY Pin) | n |
-| `CONFIG_CUSTOM_PERIPH_BATTERY_CHRG_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân đọc tín hiệu sạc (kéo trở Pull-up) | -1 |
-| `CONFIG_CUSTOM_BATTERY_MONITOR_BQ27220` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Mạch giám sát pin chuyên dụng I2C (TI BQ27220) | n |
-| `CONFIG_CUSTOM_BATTERY_BQ27220_I2C_SDA` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SDA IC đo pin BQ27220 | -1 |
-| `CONFIG_CUSTOM_BATTERY_BQ27220_I2C_SCL` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SCL IC đo pin BQ27220 | -1 |
-| `CONFIG_CUSTOM_PMIC_I2C_SDA` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SDA chip quản lý nguồn PMIC | -1 |
-| `CONFIG_CUSTOM_PMIC_I2C_SCL` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SCL chip quản lý nguồn PMIC | -1 |
-| `CONFIG_CUSTOM_PMIC_INT_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân ngắt INT chip quản lý nguồn PMIC | -1 |
-| `CONFIG_CUSTOM_IMU_I2C_SDA` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SDA cảm biến chuyển động IMU | -1 |
-| `CONFIG_CUSTOM_IMU_I2C_SCL` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SCL cảm biến chuyển động IMU | -1 |
-| `CONFIG_CUSTOM_EXPANDER_I2C_SDA` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SDA chip mở rộng GPIO (IO Expander) | -1 |
-| `CONFIG_CUSTOM_EXPANDER_I2C_SCL` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SCL chip mở rộng GPIO (IO Expander) | -1 |
-| `CONFIG_CUSTOM_EXPANDER_INT_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân ngắt INT chip mở rộng GPIO | -1 |
-| `CONFIG_CUSTOM_EXPANDER_RST_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân reset RST chip mở rộng GPIO | -1 |
-| `CONFIG_CUSTOM_EXPANDER_CHIP_TCA9554` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | TCA9554 / PCA9554 / TCA9554A (8 chân) | y (mặc định của choice) |
-| `CONFIG_CUSTOM_EXPANDER_CHIP_TCA95XX_16BIT` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | TCA9555 / PCA9555 / TCA9535 / TCA9539 (16 chân) |  |
-| `CONFIG_CUSTOM_EXPANDER_I2C_ADDR` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Địa chỉ I2C chip mở rộng GPIO (thập phân) | 32 |
-| `CONFIG_CUSTOM_ENABLE_PERIPH_RTC` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Đồng hồ thời gian thực ngoại vi (RTC I2C DS3231 / PCF8563) | n |
-| `CONFIG_CUSTOM_PERIPH_RTC_I2C_SDA` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SDA module RTC | -1 |
-| `CONFIG_CUSTOM_PERIPH_RTC_I2C_SCL` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SCL module RTC | -1 |
-| `CONFIG_CUSTOM_PERIPH_RTC_INT_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân ngắt báo thức INT module RTC | -1 |
-| `CONFIG_CUSTOM_ENABLE_PERIPH_NFC_PN532` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Đầu đọc thẻ từ giao tiếp gần NFC (NXP PN532 I2C) | n |
-| `CONFIG_CUSTOM_PERIPH_NFC_I2C_SDA` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SDA module NFC | -1 |
-| `CONFIG_CUSTOM_PERIPH_NFC_I2C_SCL` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SCL module NFC | -1 |
-| `CONFIG_CUSTOM_PERIPH_NFC_IRQ_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân ngắt IRQ module NFC | -1 |
-| `CONFIG_CUSTOM_PERIPH_NFC_RST_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân reset RST module NFC | -1 |
-| `CONFIG_CUSTOM_ENABLE_PERIPH_PCA9685` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Mạch mở rộng 16 kênh PWM I2C (NXP PCA9685) | n |
-| `CONFIG_CUSTOM_PERIPH_PCA9685_I2C_SDA` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SDA module PCA9685 | -1 |
-| `CONFIG_CUSTOM_PERIPH_PCA9685_I2C_SCL` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân I2C SCL module PCA9685 | -1 |
-| `CONFIG_CUSTOM_PERIPH_PCA9685_OE_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân cho phép đầu ra OE module PCA9685 | -1 |
-| `CONFIG_CUSTOM_ENABLE_PERIPH_SDCARD_SPI` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Đầu đọc thẻ nhớ MicroSD qua giao tiếp SPI | n |
-| `CONFIG_CUSTOM_PERIPH_SDCARD_SPI_SCK` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân xung nhịp SPI SCK thẻ nhớ | -1 |
-| `CONFIG_CUSTOM_PERIPH_SDCARD_SPI_MOSI` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân dữ liệu SPI MOSI thẻ nhớ | -1 |
-| `CONFIG_CUSTOM_PERIPH_SDCARD_SPI_MISO` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân dữ liệu SPI MISO thẻ nhớ | -1 |
-| `CONFIG_CUSTOM_PERIPH_SDCARD_SPI_CS` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân chọn chip SPI CS thẻ nhớ | -1 |
-| `CONFIG_CUSTOM_PERIPH_RC522_SPI_SCK` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân xung nhịp SPI SCK module RFID RC522 | -1 |
-| `CONFIG_CUSTOM_PERIPH_RC522_SPI_MOSI` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân dữ liệu SPI MOSI module RFID RC522 | -1 |
-| `CONFIG_CUSTOM_PERIPH_RC522_SPI_MISO` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân dữ liệu SPI MISO module RFID RC522 | -1 |
-| `CONFIG_CUSTOM_PERIPH_RC522_SPI_CS` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân chọn chip SPI CS module RFID RC522 | -1 |
-| `CONFIG_CUSTOM_PERIPH_RC522_RST_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân reset RST module RFID RC522 | -1 |
-| `CONFIG_CUSTOM_ETH_SPI_SCK_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân SCK SPI module Ethernet (W5500) | -1 |
-| `CONFIG_CUSTOM_ETH_SPI_MOSI_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân MOSI SPI module Ethernet (W5500) | -1 |
-| `CONFIG_CUSTOM_ETH_SPI_MISO_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân MISO SPI module Ethernet (W5500) | -1 |
-| `CONFIG_CUSTOM_ETH_SPI_CS_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân chọn chip SPI CS module Ethernet (W5500) | -1 |
-| `CONFIG_CUSTOM_ETH_SPI_INT_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân ngắt INT module Ethernet | -1 |
-| `CONFIG_CUSTOM_ETH_SPI_RST_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân reset RST module Ethernet | -1 |
-| `CONFIG_CUSTOM_ENABLE_PERIPH_IR_REMOTE` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Module truyền nhận hồng ngoại điều khiển từ xa (IR Remote) - CHƯA HỖ TRỢ, chưa có driver | n |
-| `CONFIG_CUSTOM_PERIPH_IR_TX_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân phát hồng ngoại IR TX (38kHz) | -1 |
-| `CONFIG_CUSTOM_PERIPH_IR_RX_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân thu hồng ngoại IR RX (VS1838B) | -1 |
-| `CONFIG_CUSTOM_PERIPH_TWAI_TX_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân phát mạng CAN / TWAI TX | -1 |
-| `CONFIG_CUSTOM_PERIPH_TWAI_RX_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân nhận mạng CAN / TWAI RX | -1 |
-| `CONFIG_CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Module truyền thông dữ liệu mạng di động 4G LTE (A7670 / SIM7600) - CHƯA HỖ TRỢ, chưa có driver | n |
-| `CONFIG_CUSTOM_PERIPH_4G_PWRKEY_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân bật nguồn PWRKEY module 4G | -1 |
-| `CONFIG_CUSTOM_PERIPH_4G_UART_TX_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân truyền UART TX kết nối module 4G | -1 |
-| `CONFIG_CUSTOM_PERIPH_4G_UART_RX_PIN` | int | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) | Chân nhận UART RX kết nối module 4G | -1 |
-| `CONFIG_CUSTOM_BATTERY_MONITOR_NONE` | bool | 4.7. Nguồn Điện, Bộ Nhớ & Viễn Thông (Power, Storage & Telecom) |  | !CUSTOM_ENABLE_BATTERY_MONITOR |
+| `CONFIG_ENABLE_BUZZER` | bool | 6.3. Còi & Rung (Buzzer & Haptics) | Còi báo động Buzzer (GPIO 41) | n |
+| `CONFIG_BUZZER_TYPE_ACTIVE` | bool | 6.3. Còi & Rung (Buzzer & Haptics) | Còi chủ động (Active, cấp điện là kêu) | y (mặc định của choice) |
+| `CONFIG_BUZZER_TYPE_PASSIVE` | bool | 6.3. Còi & Rung (Buzzer & Haptics) | Còi thụ động (Passive, phát xung theo tần số qua RMT) |  |
+| `CONFIG_BUZZER_ACTIVE_LOW` | bool | 6.3. Còi & Rung (Buzzer & Haptics) | Module kích mức thấp (LOW = kêu) | n |
+| `CONFIG_BUZZER_EXTRA_PINS` | string | 6.3. Còi & Rung (Buzzer & Haptics) | Các chân GPIO Còi thêm (cách nhau dấu phẩy) | "" |
+| `CONFIG_BUZZER_PIN` | int | 6.3. Còi & Rung (Buzzer & Haptics) | Chân GPIO Buzzer | -1 |
+| `CONFIG_ENABLE_HAPTIC_MOTOR` | bool | 6.3. Còi & Rung (Buzzer & Haptics) | Động cơ rung phản hồi xúc giác (GPIO 42) | n |
+| `CONFIG_HAPTIC_PIN` | int | 6.3. Còi & Rung (Buzzer & Haptics) | Chân GPIO Động cơ rung | -1 |
+| `CONFIG_CUSTOM_ENABLE_SENSOR_DHT11_22` | bool | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Cảm biến Nhiệt độ & Độ ẩm 1 dây (DHT11 / DHT22) | n |
+| `CONFIG_CUSTOM_SENSOR_DHT_GPIO` | int | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Chân dữ liệu 1-Wire cảm biến DHT GPIO | -1 |
+| `CONFIG_CUSTOM_ENABLE_SENSOR_I2C_TEMP_HUMID` | bool | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Cảm biến Nhiệt độ & Độ ẩm kỹ thuật số I2C (AHT20 / SHT3x) | n |
+| `CONFIG_CUSTOM_ENABLE_SENSOR_AHT20` | bool | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Aosong AHT10 / AHT20 / AHT21 (I2C) | y |
+| `CONFIG_CUSTOM_SENSOR_I2C_SDA` | int | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Chân I2C SDA cảm biến nhiệt ẩm | -1 |
+| `CONFIG_CUSTOM_SENSOR_I2C_SCL` | int | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Chân I2C SCL cảm biến nhiệt ẩm | -1 |
+| `CONFIG_CUSTOM_ENABLE_SENSOR_BMP280` | bool | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Cảm biến Áp suất khí quyển & Độ cao (Bosch BMP280 / BME280 I2C) | n |
+| `CONFIG_CUSTOM_SENSOR_BMP280_I2C_SDA` | int | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Chân I2C SDA cảm biến khí áp BMP280 | -1 |
+| `CONFIG_CUSTOM_SENSOR_BMP280_I2C_SCL` | int | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Chân I2C SCL cảm biến khí áp BMP280 | -1 |
+| `CONFIG_CUSTOM_ENABLE_SENSOR_BH1750` | bool | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Cảm biến cường độ ánh sáng kỹ thuật số BH1750 (I2C) | n |
+| `CONFIG_CUSTOM_SENSOR_BH1750_I2C_SDA` | int | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Chân I2C SDA cảm biến ánh sáng BH1750 | -1 |
+| `CONFIG_CUSTOM_SENSOR_BH1750_I2C_SCL` | int | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Chân I2C SCL cảm biến ánh sáng BH1750 | -1 |
+| `CONFIG_CUSTOM_ENABLE_SENSOR_LDR` | bool | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Cảm biến ánh sáng quang trở (LDR qua cầu phân áp ADC) | n |
+| `CONFIG_CUSTOM_SENSOR_LDR_EXTRA_CHS` | string | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Các kênh ADC quang trở LDR thêm (cách nhau dấu phẩy) | "" |
+| `CONFIG_CUSTOM_SENSOR_LDR_ADC_CHANNEL` | int | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Kênh ADC1 đo quang trở LDR (Kênh N ứng với GPIO N+1, -1 chưa chọn) | -1 |
+| `CONFIG_CUSTOM_ENABLE_SENSOR_GAS_CO2` | bool | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Cảm biến nồng độ Khí độc TVOC & CO2 NDIR (SCD40/41, SGP30/40 I2C) | n |
+| `CONFIG_CUSTOM_SENSOR_GAS_SCD4X` | bool | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Sensirion SCD40 / SCD41 (Cảm biến CO2 NDIR I2C) | y |
+| `CONFIG_CUSTOM_SENSOR_GAS_I2C_SDA` | int | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Chân I2C SDA cảm biến khí/CO2 | -1 |
+| `CONFIG_CUSTOM_SENSOR_GAS_I2C_SCL` | int | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Chân I2C SCL cảm biến khí/CO2 | -1 |
+| `CONFIG_CUSTOM_ENABLE_SENSOR_GAS_ANALOG_MQ` | bool | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Cảm biến khói & khí gas dễ cháy (MQ-2 / MQ-135 Analog ADC) | n |
+| `CONFIG_CUSTOM_SENSOR_MQ_ANALOG_PIN` | int | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Chân analog đọc điện áp cảm biến MQ (kênh ADC1) | -1 |
+| `CONFIG_CUSTOM_SENSOR_MQ_TYPE_MQ2` | bool | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | MQ-2 (khói, LPG, khí dễ cháy) | y (mặc định của choice) |
+| `CONFIG_CUSTOM_SENSOR_MQ_TYPE_MQ135` | bool | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | MQ-135 (chất lượng không khí, NH3, CO2, benzen) |  |
+| `CONFIG_CUSTOM_SENSOR_DS18B20_PIN` | int | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Chân dữ liệu 1-Wire cảm biến nhiệt độ DS18B20 | -1 |
+| `CONFIG_CUSTOM_SENSOR_FLOW_PULSE_PIN` | int | 6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow) | Chân đọc xung lưu lượng chất lỏng (Flow Pulse) | -1 |
+| `CONFIG_CUSTOM_ENABLE_SENSOR_APDS9960` | bool | 6.5. Khoảng cách & An ninh (Distance & Security) | Cảm biến màu sắc, cử chỉ & tiệm cận (Broadcom APDS-9960 I2C) | n |
+| `CONFIG_CUSTOM_SENSOR_APDS9960_I2C_SDA` | int | 6.5. Khoảng cách & An ninh (Distance & Security) | Chân I2C SDA cảm biến APDS9960 | -1 |
+| `CONFIG_CUSTOM_SENSOR_APDS9960_I2C_SCL` | int | 6.5. Khoảng cách & An ninh (Distance & Security) | Chân I2C SCL cảm biến APDS9960 | -1 |
+| `CONFIG_CUSTOM_SENSOR_APDS9960_INT_PIN` | int | 6.5. Khoảng cách & An ninh (Distance & Security) | Chân ngắt INT cảm biến APDS9960 | -1 |
+| `CONFIG_CUSTOM_ENABLE_SENSOR_VL53LX` | bool | 6.5. Khoảng cách & An ninh (Distance & Security) | Cảm biến khoảng cách laser ToF (STMicroelectronics VL53L0X / VL53L1X I2C) | n |
+| `CONFIG_CUSTOM_SENSOR_VL53LX_I2C_SDA` | int | 6.5. Khoảng cách & An ninh (Distance & Security) | Chân I2C SDA cảm biến laser VL53L | -1 |
+| `CONFIG_CUSTOM_SENSOR_VL53LX_I2C_SCL` | int | 6.5. Khoảng cách & An ninh (Distance & Security) | Chân I2C SCL cảm biến laser VL53L | -1 |
+| `CONFIG_CUSTOM_SENSOR_VL53LX_XSHUT_PIN` | int | 6.5. Khoảng cách & An ninh (Distance & Security) | Chân tắt nguồn XSHUT cảm biến laser VL53L | -1 |
+| `CONFIG_CUSTOM_ENABLE_SENSOR_HCSR04` | bool | 6.5. Khoảng cách & An ninh (Distance & Security) | Cảm biến khoảng cách siêu âm (HC-SR04 / US-100) | n |
+| `CONFIG_CUSTOM_SENSOR_HCSR04_TRIG_GPIO` | int | 6.5. Khoảng cách & An ninh (Distance & Security) | Chân phát xung siêu âm Trig GPIO | -1 |
+| `CONFIG_CUSTOM_SENSOR_HCSR04_ECHO_GPIO` | int | 6.5. Khoảng cách & An ninh (Distance & Security) | Chân nhận tín hiệu siêu âm Echo GPIO | -1 |
+| `CONFIG_CUSTOM_ENABLE_SENSOR_PIR` | bool | 6.5. Khoảng cách & An ninh (Distance & Security) | Cảm biến phát hiện người chuyển động PIR (HC-SR501 / RCWL-0516) | n |
+| `CONFIG_CUSTOM_SENSOR_PIR_GPIO` | int | 6.5. Khoảng cách & An ninh (Distance & Security) | Chân tín hiệu cảm biến PIR GPIO | -1 |
+| `CONFIG_CUSTOM_ENABLE_SENSOR_VIBRATION_SW420` | bool | 6.5. Khoảng cách & An ninh (Distance & Security) | Cảm biến cảnh báo chấn động / Rung tiếp điểm (SW-420 GPIO Interrupt) | n |
+| `CONFIG_CUSTOM_SENSOR_VIBRATION_PIN` | int | 6.5. Khoảng cách & An ninh (Distance & Security) | Chân tín hiệu Digital Out cảm biến rung | -1 |
+| `CONFIG_CUSTOM_ENABLE_SENSOR_FLAME` | bool | 6.5. Khoảng cách & An ninh (Distance & Security) | Cảm biến cảnh báo hỏa hoạn / Ngọn lửa (Flame Sensor IR) | n |
+| `CONFIG_CUSTOM_SENSOR_FLAME_PIN` | int | 6.5. Khoảng cách & An ninh (Distance & Security) | Chân tín hiệu Digital báo lửa | -1 |
+| `CONFIG_CUSTOM_ENABLE_SERVO_DOG` | bool | 6.6. Động cơ, Robot & Rơ-le (Motors, Robotics & Relay) | Động cơ Servo tương tác qua PWM (Servo Dog Controller) | n |
+| `CONFIG_CUSTOM_SERVO_DOG_PWM_GPIO` | int | 6.6. Động cơ, Robot & Rơ-le (Motors, Robotics & Relay) | Chân GPIO cấp xung PWM cho Động cơ Servo | -1 |
+| `CONFIG_CUSTOM_PERIPH_RELAY_ENABLE` | bool | 6.6. Động cơ, Robot & Rơ-le (Motors, Robotics & Relay) | Rơ-le đóng cắt thiết bị độc lập (Relay Switch) | n |
+| `CONFIG_CUSTOM_PERIPH_RELAY_GPIO` | int | 6.6. Động cơ, Robot & Rơ-le (Motors, Robotics & Relay) | Chân GPIO kích hoạt Relay đóng cắt | -1 |
+| `CONFIG_CUSTOM_ENABLE_PERIPH_MOTOR_DC_HBRIDGE` | bool | 6.6. Động cơ, Robot & Rơ-le (Motors, Robotics & Relay) | Mạch cầu H Động cơ DC 2 chiều cho xe robot (TB6612FNG / L9110S / DRV8833) | n |
+| `CONFIG_CUSTOM_MOTOR_DRIVER_TB6612` | bool | 6.6. Động cơ, Robot & Rơ-le (Motors, Robotics & Relay) | Toshiba TB6612FNG (Hiệu suất cao MOSFET H-Bridge) | y (mặc định của choice) |
+| `CONFIG_CUSTOM_MOTOR_DRIVER_L9110S` | bool | 6.6. Động cơ, Robot & Rơ-le (Motors, Robotics & Relay) | L9110S / HG7881 (Mạch 2 kênh DC mini giá rẻ) |  |
+| `CONFIG_CUSTOM_MOTOR_DRIVER_DRV8833` | bool | 6.6. Động cơ, Robot & Rơ-le (Motors, Robotics & Relay) | TI DRV8833 (Cầu H kép bảo vệ quá dòng) |  |
+| `CONFIG_CUSTOM_PERIPH_MOTOR_PWMA_PIN` | int | 6.6. Động cơ, Robot & Rơ-le (Motors, Robotics & Relay) | Chân điều tốc PWM Động cơ A (PWMA) | -1 |
+| `CONFIG_CUSTOM_PERIPH_MOTOR_DIRA_PIN` | int | 6.6. Động cơ, Robot & Rơ-le (Motors, Robotics & Relay) | Chân hướng quay Động cơ A (DIRA / IN1) | -1 |
+| `CONFIG_CUSTOM_PERIPH_MOTOR_PWMB_PIN` | int | 6.6. Động cơ, Robot & Rơ-le (Motors, Robotics & Relay) | Chân điều tốc PWM Động cơ B (PWMB) | -1 |
+| `CONFIG_CUSTOM_PERIPH_MOTOR_DIRB_PIN` | int | 6.6. Động cơ, Robot & Rơ-le (Motors, Robotics & Relay) | Chân hướng quay Động cơ B (DIRB / IN3) | -1 |
+| `CONFIG_CUSTOM_ENABLE_BATTERY_MONITOR` | bool | 6.7. Nguồn điện & Pin (Power & Battery) | Mạch đo dung lượng Pin (Battery Level Monitor) | n |
+| `CONFIG_CUSTOM_BATTERY_MONITOR_ADC` | bool | 6.7. Nguồn điện & Pin (Power & Battery) | Đo qua ADC nội bộ (Bộ chia điện trở Voltage Divider) | y |
+| `CONFIG_CUSTOM_BATTERY_ADC_CHANNEL` | int | 6.7. Nguồn điện & Pin (Power & Battery) | Kênh ADC1 đo pin (Kênh N ứng với GPIO N+1, -1 chưa chọn) | -1 |
+| `CONFIG_CUSTOM_BATTERY_DIVIDER_R1` | int | 6.7. Nguồn điện & Pin (Power & Battery) | Điện trở nhánh trên R1 cầu phân áp (kOhm) | 100 |
+| `CONFIG_CUSTOM_BATTERY_DIVIDER_R2` | int | 6.7. Nguồn điện & Pin (Power & Battery) | Điện trở nhánh dưới R2 cầu phân áp (kOhm) | 100 |
+| `CONFIG_CUSTOM_ENABLE_SENSOR_INA2XX` | bool | 6.7. Nguồn điện & Pin (Power & Battery) | Module đo điện áp, dòng điện & công suất tiêu thụ (TI INA219 / INA226 I2C) | n |
+| `CONFIG_CUSTOM_SENSOR_INA219` | bool | 6.7. Nguồn điện & Pin (Power & Battery) | Texas Instruments INA219 (Điện áp tối đa 26V, độ phân giải 12-bit) | y |
+| `CONFIG_CUSTOM_SENSOR_INA2XX_I2C_SDA` | int | 6.7. Nguồn điện & Pin (Power & Battery) | Chân I2C SDA module đo dòng INA | -1 |
+| `CONFIG_CUSTOM_SENSOR_INA2XX_I2C_SCL` | int | 6.7. Nguồn điện & Pin (Power & Battery) | Chân I2C SCL module đo dòng INA | -1 |
+| `CONFIG_CUSTOM_ENABLE_PERIPH_BATTERY_CHARGING_DETECT` | bool | 6.7. Nguồn điện & Pin (Power & Battery) | Giám sát trạng thái sạc pin (TP4056 CHRG / STDBY Pin) | n |
+| `CONFIG_CUSTOM_PERIPH_BATTERY_CHRG_PIN` | int | 6.7. Nguồn điện & Pin (Power & Battery) | Chân đọc tín hiệu sạc (kéo trở Pull-up) | -1 |
+| `CONFIG_CUSTOM_BATTERY_MONITOR_BQ27220` | bool | 6.7. Nguồn điện & Pin (Power & Battery) | Mạch giám sát pin chuyên dụng I2C (TI BQ27220) | n |
+| `CONFIG_CUSTOM_BATTERY_BQ27220_I2C_SDA` | int | 6.7. Nguồn điện & Pin (Power & Battery) | Chân I2C SDA IC đo pin BQ27220 | -1 |
+| `CONFIG_CUSTOM_BATTERY_BQ27220_I2C_SCL` | int | 6.7. Nguồn điện & Pin (Power & Battery) | Chân I2C SCL IC đo pin BQ27220 | -1 |
+| `CONFIG_CUSTOM_PMIC_I2C_SDA` | int | 6.7. Nguồn điện & Pin (Power & Battery) | Chân I2C SDA chip quản lý nguồn PMIC | -1 |
+| `CONFIG_CUSTOM_PMIC_I2C_SCL` | int | 6.7. Nguồn điện & Pin (Power & Battery) | Chân I2C SCL chip quản lý nguồn PMIC | -1 |
+| `CONFIG_CUSTOM_PMIC_INT_PIN` | int | 6.7. Nguồn điện & Pin (Power & Battery) | Chân ngắt INT chip quản lý nguồn PMIC | -1 |
+| `CONFIG_CUSTOM_BATTERY_MONITOR_NONE` | bool | 6.7. Nguồn điện & Pin (Power & Battery) |  | !CUSTOM_ENABLE_BATTERY_MONITOR |
+| `CONFIG_CUSTOM_IMU_I2C_SDA` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân I2C SDA cảm biến chuyển động IMU | -1 |
+| `CONFIG_CUSTOM_IMU_I2C_SCL` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân I2C SCL cảm biến chuyển động IMU | -1 |
+| `CONFIG_CUSTOM_EXPANDER_I2C_SDA` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân I2C SDA chip mở rộng GPIO (IO Expander) | -1 |
+| `CONFIG_CUSTOM_EXPANDER_I2C_SCL` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân I2C SCL chip mở rộng GPIO (IO Expander) | -1 |
+| `CONFIG_CUSTOM_EXPANDER_INT_PIN` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân ngắt INT chip mở rộng GPIO | -1 |
+| `CONFIG_CUSTOM_EXPANDER_RST_PIN` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân reset RST chip mở rộng GPIO | -1 |
+| `CONFIG_CUSTOM_EXPANDER_CHIP_TCA9554` | bool | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | TCA9554 / PCA9554 / TCA9554A (8 chân) | y (mặc định của choice) |
+| `CONFIG_CUSTOM_EXPANDER_CHIP_TCA95XX_16BIT` | bool | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | TCA9555 / PCA9555 / TCA9535 / TCA9539 (16 chân) |  |
+| `CONFIG_CUSTOM_EXPANDER_I2C_ADDR` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Địa chỉ I2C chip mở rộng GPIO (thập phân) | 32 |
+| `CONFIG_CUSTOM_ENABLE_PERIPH_RTC` | bool | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Đồng hồ thời gian thực ngoại vi (RTC I2C DS3231 / PCF8563) | n |
+| `CONFIG_CUSTOM_PERIPH_RTC_I2C_SDA` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân I2C SDA module RTC | -1 |
+| `CONFIG_CUSTOM_PERIPH_RTC_I2C_SCL` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân I2C SCL module RTC | -1 |
+| `CONFIG_CUSTOM_PERIPH_RTC_INT_PIN` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân ngắt báo thức INT module RTC | -1 |
+| `CONFIG_CUSTOM_ENABLE_PERIPH_NFC_PN532` | bool | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Đầu đọc thẻ từ giao tiếp gần NFC (NXP PN532 I2C) | n |
+| `CONFIG_CUSTOM_PERIPH_NFC_I2C_SDA` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân I2C SDA module NFC | -1 |
+| `CONFIG_CUSTOM_PERIPH_NFC_I2C_SCL` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân I2C SCL module NFC | -1 |
+| `CONFIG_CUSTOM_PERIPH_NFC_IRQ_PIN` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân ngắt IRQ module NFC | -1 |
+| `CONFIG_CUSTOM_PERIPH_NFC_RST_PIN` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân reset RST module NFC | -1 |
+| `CONFIG_CUSTOM_ENABLE_PERIPH_PCA9685` | bool | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Mạch mở rộng 16 kênh PWM I2C (NXP PCA9685) | n |
+| `CONFIG_CUSTOM_PERIPH_PCA9685_I2C_SDA` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân I2C SDA module PCA9685 | -1 |
+| `CONFIG_CUSTOM_PERIPH_PCA9685_I2C_SCL` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân I2C SCL module PCA9685 | -1 |
+| `CONFIG_CUSTOM_PERIPH_PCA9685_OE_PIN` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân cho phép đầu ra OE module PCA9685 | -1 |
+| `CONFIG_CUSTOM_ENABLE_PERIPH_SDCARD_SPI` | bool | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Đầu đọc thẻ nhớ MicroSD qua giao tiếp SPI | n |
+| `CONFIG_CUSTOM_PERIPH_SDCARD_SPI_SCK` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân xung nhịp SPI SCK thẻ nhớ | -1 |
+| `CONFIG_CUSTOM_PERIPH_SDCARD_SPI_MOSI` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân dữ liệu SPI MOSI thẻ nhớ | -1 |
+| `CONFIG_CUSTOM_PERIPH_SDCARD_SPI_MISO` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân dữ liệu SPI MISO thẻ nhớ | -1 |
+| `CONFIG_CUSTOM_PERIPH_SDCARD_SPI_CS` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân chọn chip SPI CS thẻ nhớ | -1 |
+| `CONFIG_CUSTOM_PERIPH_RC522_SPI_SCK` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân xung nhịp SPI SCK module RFID RC522 | -1 |
+| `CONFIG_CUSTOM_PERIPH_RC522_SPI_MOSI` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân dữ liệu SPI MOSI module RFID RC522 | -1 |
+| `CONFIG_CUSTOM_PERIPH_RC522_SPI_MISO` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân dữ liệu SPI MISO module RFID RC522 | -1 |
+| `CONFIG_CUSTOM_PERIPH_RC522_SPI_CS` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân chọn chip SPI CS module RFID RC522 | -1 |
+| `CONFIG_CUSTOM_PERIPH_RC522_RST_PIN` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân reset RST module RFID RC522 | -1 |
+| `CONFIG_CUSTOM_ETH_SPI_SCK_PIN` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân SCK SPI module Ethernet (W5500) | -1 |
+| `CONFIG_CUSTOM_ETH_SPI_MOSI_PIN` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân MOSI SPI module Ethernet (W5500) | -1 |
+| `CONFIG_CUSTOM_ETH_SPI_MISO_PIN` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân MISO SPI module Ethernet (W5500) | -1 |
+| `CONFIG_CUSTOM_ETH_SPI_CS_PIN` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân chọn chip SPI CS module Ethernet (W5500) | -1 |
+| `CONFIG_CUSTOM_ETH_SPI_INT_PIN` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân ngắt INT module Ethernet | -1 |
+| `CONFIG_CUSTOM_ETH_SPI_RST_PIN` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân reset RST module Ethernet | -1 |
+| `CONFIG_CUSTOM_ENABLE_PERIPH_IR_REMOTE` | bool | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Module truyền nhận hồng ngoại điều khiển từ xa (IR Remote) - CHƯA HỖ TRỢ, chưa có driver | n |
+| `CONFIG_CUSTOM_PERIPH_IR_TX_PIN` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân phát hồng ngoại IR TX (38kHz) | -1 |
+| `CONFIG_CUSTOM_PERIPH_IR_RX_PIN` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân thu hồng ngoại IR RX (VS1838B) | -1 |
+| `CONFIG_CUSTOM_PERIPH_TWAI_TX_PIN` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân phát mạng CAN / TWAI TX | -1 |
+| `CONFIG_CUSTOM_PERIPH_TWAI_RX_PIN` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân nhận mạng CAN / TWAI RX | -1 |
+| `CONFIG_CUSTOM_ENABLE_PERIPH_CELLULAR_4G_LTE` | bool | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Module truyền thông dữ liệu mạng di động 4G LTE (A7670 / SIM7600) - CHƯA HỖ TRỢ, chưa có driver | n |
+| `CONFIG_CUSTOM_PERIPH_4G_PWRKEY_PIN` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân bật nguồn PWRKEY module 4G | -1 |
+| `CONFIG_CUSTOM_PERIPH_4G_UART_TX_PIN` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân truyền UART TX kết nối module 4G | -1 |
+| `CONFIG_CUSTOM_PERIPH_4G_UART_RX_PIN` | int | 6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G) | Chân nhận UART RX kết nối module 4G | -1 |
 | `CONFIG_ESP_MAIN_TASK_STACK_SIZE` | int | ESP-IDF System | Main Task Stack Size | 6584 |
 | `CONFIG_ESP_SYSTEM_EVENT_TASK_STACK_SIZE` | int | ESP-IDF System | Event Task Stack Size | 10096 |
 | `CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240` | bool | ESP-IDF System | CPU Freq 240MHz | y |

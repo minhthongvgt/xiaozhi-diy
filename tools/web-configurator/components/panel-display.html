@@ -2,8 +2,8 @@
         <div class="config-group">
           <div class="group-header">
             <div class="group-title">
-              <h2>🎨 Giao diện hiển thị &amp; Gói tài nguyên (Display Style &amp; Assets)</h2>
-              <span class="group-desc">menuconfig: Xiaozhi Assistant → Giao diện hiển thị &amp; Gói tài nguyên (Display Style &amp; Assets)</span>
+              <h2>🎨 1. Giao diện hiển thị &amp; Gói tài nguyên (Display Style &amp; Assets)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → 1. Giao diện hiển thị &amp; Gói tài nguyên (Display Style &amp; Assets)</span>
             </div>
           <div class="tab-header-actions">
             <span class="tab-status-pill saved" data-tab-status="panel-display">Đã lưu</span>
@@ -54,7 +54,34 @@
               <label class="form-label" for="ui_weather_city">Thành phố lấy dữ liệu thời tiết</label>
               <input type="text" class="form-control" id="ui_weather_city">
             </div>
-            <div class="span-2 form-subheading"><span>Thanh trạng thái và hiệu ứng nghe/nói (Status Bar &amp; Activity)</span></div>
+            <div class="form-item span-2" data-show-if="general_display_style=USE_DEFAULT_MESSAGE_STYLE">
+              <label class="form-checkbox"><input type="checkbox" id="general_multiline"><span>Use multiline chat message display (default mode only)</span></label>
+              <div class="form-hint">When enabled, the chat message area in the default display mode shows multiple wrapped lines that grow upward from the bottom of the screen, with auto-adaptive height.</div>
+            </div>
+            <div class="form-item">
+              <label class="form-label" for="general_flash_assets">Tùy Chọn Flash Tệp Tài Nguyên (Flash Assets Option)</label>
+              <select class="form-control" id="general_flash_assets">
+                <option value="FLASH_DEFAULT_ASSETS">Flash tài nguyên mặc định (Default Built-in Assets)</option>
+                <option value="FLASH_CUSTOM_ASSETS">Flash tài nguyên tùy chỉnh từ URL hoặc tệp cục bộ (Custom Assets)</option>
+                <option value="FLASH_EXPRESSION_ASSETS">Flash tài nguyên biểu cảm AI Voice (Emote Expression Assets)</option>
+                <option value="FLASH_NONE_ASSETS">Không nạp phân vùng tài nguyên (No Assets Flashing)</option>
+              </select>
+            </div>
+            <div class="form-item" data-show-if="general_flash_assets=FLASH_CUSTOM_ASSETS">
+              <label class="form-label" for="general_custom_assets">Đường dẫn tệp hoặc URL tài nguyên tùy chỉnh (Custom Assets File / URL)</label>
+              <input type="text" class="form-control" id="general_custom_assets">
+              <div class="form-hint">Nhập đường dẫn tệp assets.bin trên máy tính hoặc URL để nạp trực tiếp vào phân vùng assets.</div>
+            </div>
+          </div>
+        </div>
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>📊 Thanh trạng thái và hiệu ứng nghe/nói (Status Bar &amp; Activity)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → 1. Giao diện hiển thị &amp; Gói tài nguyên (Display Style &amp; Assets) → Thanh trạng thái và hiệu ứng nghe/nói (Status Bar &amp; Activity)</span>
+            </div>
+          </div>
+          <div class="form-grid">
             <div class="form-item" data-show-if="general_display_style!=USE_EMOTE_MESSAGE_STYLE">
               <label class="form-label" for="kc_CUSTOM_UI_IDLE_STATUS">Nội dung dòng trạng thái khi chờ</label>
               <select class="form-control" id="kc_CUSTOM_UI_IDLE_STATUS">
@@ -121,31 +148,13 @@
               <label class="form-label" for="kc_CUSTOM_UI_ANIM_COLOR">Mã màu hiệu ứng (RRGGBB)</label>
               <input type="text" class="form-control" id="kc_CUSTOM_UI_ANIM_COLOR">
             </div>
-            <div class="form-item span-2" data-show-if="general_display_style=USE_DEFAULT_MESSAGE_STYLE">
-              <label class="form-checkbox"><input type="checkbox" id="general_multiline"><span>Use multiline chat message display (default mode only)</span></label>
-              <div class="form-hint">When enabled, the chat message area in the default display mode shows multiple wrapped lines that grow upward from the bottom of the screen, with auto-adaptive height.</div>
-            </div>
-            <div class="form-item">
-              <label class="form-label" for="general_flash_assets">Tùy Chọn Flash Tệp Tài Nguyên (Flash Assets Option)</label>
-              <select class="form-control" id="general_flash_assets">
-                <option value="FLASH_DEFAULT_ASSETS">Flash tài nguyên mặc định (Default Built-in Assets)</option>
-                <option value="FLASH_CUSTOM_ASSETS">Flash tài nguyên tùy chỉnh từ URL hoặc tệp cục bộ (Custom Assets)</option>
-                <option value="FLASH_EXPRESSION_ASSETS">Flash tài nguyên biểu cảm AI Voice (Emote Expression Assets)</option>
-                <option value="FLASH_NONE_ASSETS">Không nạp phân vùng tài nguyên (No Assets Flashing)</option>
-              </select>
-            </div>
-            <div class="form-item" data-show-if="general_flash_assets=FLASH_CUSTOM_ASSETS">
-              <label class="form-label" for="general_custom_assets">Đường dẫn tệp hoặc URL tài nguyên tùy chỉnh (Custom Assets File / URL)</label>
-              <input type="text" class="form-control" id="general_custom_assets">
-              <div class="form-hint">Nhập đường dẫn tệp assets.bin trên máy tính hoặc URL để nạp trực tiếp vào phân vùng assets.</div>
-            </div>
           </div>
         </div>
         <div class="config-group" data-s3-only>
           <div class="group-header">
             <div class="group-title">
-              <h2>🖥️ 1. Màn hình &amp; Cảm ứng (Display &amp; Touch)</h2>
-              <span class="group-desc">menuconfig: Xiaozhi Assistant → Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8) → 1. Màn hình &amp; Cảm ứng (Display &amp; Touch)</span>
+              <h2>🖥️ 1.1. Màn hình &amp; Cảm ứng (Display &amp; Touch) [ESP32-S3]</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → 1. Giao diện hiển thị &amp; Gói tài nguyên (Display Style &amp; Assets) → 1.1. Màn hình &amp; Cảm ứng (Display &amp; Touch) [ESP32-S3]</span>
             </div>
           </div>
           <div class="form-grid">

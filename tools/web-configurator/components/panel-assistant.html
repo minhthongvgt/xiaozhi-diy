@@ -64,26 +64,13 @@
                 <option value="LANGUAGE_SR_RS">Serbian</option>
               </select>
             </div>
-            <div class="form-item span-2">
-              <label class="form-checkbox"><input type="checkbox" id="kc_USE_AUDIO_DEBUGGER"><span>Enable Audio Debugger</span></label>
-              <div class="form-hint">Enable audio debugger, send audio data through UDP to the host machine</div>
-            </div>
-            <div class="form-item" data-show-if="kc_USE_AUDIO_DEBUGGER">
-              <label class="form-label" for="kc_AUDIO_DEBUG_UDP_SERVER">Audio Debug UDP Server Address</label>
-              <input type="text" class="form-control" id="kc_AUDIO_DEBUG_UDP_SERVER">
-              <div class="form-hint">UDP server address, format: IP:PORT, used to receive audio debugging data</div>
-            </div>
-            <div class="form-item span-2">
-              <label class="form-checkbox"><input type="checkbox" id="kc_RECEIVE_CUSTOM_MESSAGE"><span>Enable Custom Message Reception</span></label>
-              <div class="form-hint">Enable custom message reception, allow the device to receive custom messages from the server (preferably through the MQTT protocol)</div>
-            </div>
           </div>
         </div>
         <div class="config-group">
           <div class="group-header">
             <div class="group-title">
-              <h2>🎙️ Từ khóa đánh thức (Wake Word)</h2>
-              <span class="group-desc">menuconfig: Xiaozhi Assistant → Từ khóa đánh thức (Wake Word)</span>
+              <h2>🎙️ 2.1. Từ khóa đánh thức (Wake Word)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → 2. Âm thanh trợ lý (Assistant Audio) → 2.1. Từ khóa đánh thức (Wake Word)</span>
             </div>
           </div>
           <div class="form-grid">
@@ -123,8 +110,8 @@
         <div class="config-group">
           <div class="group-header">
             <div class="group-title">
-              <h2>🎛️ Bộ xử lý âm thanh &amp; Khử tiếng vọng (AFE Audio Processing &amp; AEC)</h2>
-              <span class="group-desc">menuconfig: Xiaozhi Assistant → Bộ xử lý âm thanh &amp; Khử tiếng vọng (AFE Audio Processing &amp; AEC)</span>
+              <h2>🎛️ 2.2. Bộ xử lý âm thanh &amp; Khử tiếng vọng (AFE Audio Processing &amp; AEC)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → 2. Âm thanh trợ lý (Assistant Audio) → 2.2. Bộ xử lý âm thanh &amp; Khử tiếng vọng (AFE Audio Processing &amp; AEC)</span>
             </div>
           </div>
           <div class="form-grid">
@@ -143,6 +130,25 @@
             <div class="form-item span-2" data-show-if="wakeword_aec_mode=USE_DEVICE_AEC">
               <label class="form-checkbox"><input type="checkbox" id="kc_USE_SOFTWARE_AEC_REFERENCE"><span>Software AEC Reference (codecs without hardware loopback)</span></label>
               <div class="form-hint">Dùng chính tín hiệu đang phát ra loa làm kênh tham chiếu AEC cho các mạch không có đường loopback phần cứng (I2S rời như INMP441 + MAX98357, micro PDM, ES8311, ES8374, ES8389, ES8388/Box khi chưa b...</div>
+            </div>
+          </div>
+        </div>
+        <div class="config-group">
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🐞 2.4. Gỡ lỗi âm thanh (Audio Debugger)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → 2. Âm thanh trợ lý (Assistant Audio) → 2.4. Gỡ lỗi âm thanh (Audio Debugger)</span>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-item span-2">
+              <label class="form-checkbox"><input type="checkbox" id="kc_USE_AUDIO_DEBUGGER"><span>Enable Audio Debugger</span></label>
+              <div class="form-hint">Enable audio debugger, send audio data through UDP to the host machine</div>
+            </div>
+            <div class="form-item" data-show-if="kc_USE_AUDIO_DEBUGGER">
+              <label class="form-label" for="kc_AUDIO_DEBUG_UDP_SERVER">Audio Debug UDP Server Address</label>
+              <input type="text" class="form-control" id="kc_AUDIO_DEBUG_UDP_SERVER">
+              <div class="form-hint">UDP server address, format: IP:PORT, used to receive audio debugging data</div>
             </div>
           </div>
         </div>

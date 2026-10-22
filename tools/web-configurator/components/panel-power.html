@@ -2,8 +2,8 @@
         <div class="config-group" data-s3-only>
           <div class="group-header">
             <div class="group-title">
-              <h2>🔋 4.7. Nguồn Điện, Bộ Nhớ &amp; Viễn Thông (Power, Storage &amp; Telecom)</h2>
-              <span class="group-desc">menuconfig: Xiaozhi Assistant → Tùy chỉnh (Custom Settings - Dành riêng cho ESP32-S3 N16R8) → 4. Thiết bị ngoại vi &amp; 7 Nhóm Phần Cứng (Hardware Builder) → 4.7. Nguồn Điện, Bộ Nhớ &amp; Viễn Thông (Power, Storage &amp; Telecom)</span>
+              <h2>🔋 6.7. Nguồn điện &amp; Pin (Power &amp; Battery)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → 6. Thiết bị ngoại vi (Peripherals) [ESP32-S3] → 6.7. Nguồn điện &amp; Pin (Power &amp; Battery)</span>
             </div>
           <div class="tab-header-actions">
             <span class="tab-status-pill saved" data-tab-status="panel-power">Đã lưu</span>
@@ -79,6 +79,16 @@
               <label class="form-label" for="kc_CUSTOM_PMIC_INT_PIN">Chân ngắt INT chip quản lý nguồn PMIC</label>
               <input type="number" class="form-control" id="kc_CUSTOM_PMIC_INT_PIN" min="-1" max="48">
             </div>
+          </div>
+        </div>
+        <div class="config-group" data-s3-only>
+          <div class="group-header">
+            <div class="group-title">
+              <h2>🧩 6.8. Mở rộng I/O &amp; Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G)</h2>
+              <span class="group-desc">menuconfig: Xiaozhi Assistant → 6. Thiết bị ngoại vi (Peripherals) [ESP32-S3] → 6.8. Mở rộng I/O &amp; Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G)</span>
+            </div>
+          </div>
+          <div class="form-grid">
             <div class="form-item">
               <label class="form-label" for="kc_CUSTOM_IMU_I2C_SDA">Chân I2C SDA cảm biến chuyển động IMU</label>
               <input type="number" class="form-control" id="kc_CUSTOM_IMU_I2C_SDA" min="-1" max="48">
