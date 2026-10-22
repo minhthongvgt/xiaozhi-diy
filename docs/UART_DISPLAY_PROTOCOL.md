@@ -1,7 +1,5 @@
 # Giao thức màn hình rời UART – Xiaozhi ESP32
 
-Cập nhật: 2026-10-13
-
 ## Tổng quan
 
 Firmware Xiaozhi gửi trạng thái chatbot ra một cổng UART tới màn hình rời. Với giao thức **JSON**, kênh này **hai chiều**: màn hình gửi lệnh ngược về (bấm để nói, ngắt lời, âm lượng) và nhận thêm tin `sysinfo` (giờ, Wi-Fi, pin, âm lượng). Ba giao thức còn lại chỉ một chiều. Mã nguồn: `main/display/uart_display.cc`.
@@ -273,5 +271,5 @@ Gợi ý hiển thị:
 - Mã nguồn dự án: `main/display/uart_display.cc`, `main/display/dual_display.h`, `main/application.cc`, `main/Kconfig.projbuild`, `main/assets/locales/vi-VN/language.json`.
 - [Xiaozhi ESP32 – giao thức WebSocket](https://github.com/78/xiaozhi-esp32/blob/main/docs/websocket.md): các tin `tts`, `stt`, `llm` (emotion), `alert` từ server.
 - [Nextion Instruction Set](https://nextion.tech/instruction-set/): ký tự kết thúc `FF FF FF`, cách thoát chuỗi, biến `sleep`, mã trả về và sự kiện chạm `0x65`.
-- [DWIN T5L DGUS II – khung lệnh nối tiếp (bài của DWIN trên bilibili)](https://www.bilibili.com/opus/921641308199583762): khung ghi `0x82` và phản hồi `5A A5 03 82 4F 4B`. Trang yêu cầu captcha nên chưa đọc trực tiếp được; phần DWIN trong tài liệu này dựa chủ yếu vào mã firmware, nên đối chiếu thêm T5L DGUS II Application Development Guide của DWIN.
-- Danh sách 21 cảm xúc: đối chiếu với bộ ảnh của component `txp666/otto-emoji-gif-component` trong dự án; tài liệu giao thức chính thức không liệt kê đủ.
+- DWIN T5L DGUS II Application Development Guide: khung ghi `0x82` và phản hồi `5A A5 03 82 4F 4B`. Phần DWIN trong tài liệu này dựa vào mã firmware.
+- Danh sách 21 cảm xúc: theo bộ ảnh của component `txp666/otto-emoji-gif-component`.

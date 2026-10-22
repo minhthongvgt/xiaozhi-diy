@@ -16,31 +16,31 @@ Người dùng nói  →  Server Xiaozhi (LLM)  →  gọi công cụ MCP  →  
 2. Khi người dùng hỏi (ví dụ "nhiệt độ phòng bao nhiêu?"), LLM chọn công cụ phù hợp (`self.sensor.get_environment`) và gọi nó.
 3. Firmware đọc cảm biến, trả về JSON. LLM đọc JSON rồi trả lời bằng lời.
 
-**Không cần chép tên hàm vào Prompt trên xiaozhi.me.** Firmware đã gửi sẵn danh sách và mô tả. Prompt chỉ cần mô tả vai trò và quy tắc trả lời, xem [PROMPT_XIAOZHI.md](PROMPT_XIAOZHI.md).
+Prompt trên xiaozhi.me không cần liệt kê tên hàm, xem [PROMPT_XIAOZHI.md](PROMPT_XIAOZHI.md).
 
 **MCP tự bật/tắt theo phần cứng đã chọn, không có công tắc tay.**
 
-- Chọn một phần cứng bất kỳ ở mục 4 (cảm biến, relay, servo, động cơ, còi, rung, LED, nút bấm, RTC, NFC...) hoặc chọn **Đèn** ở mục 3 → MCP Server và nhóm công cụ tương ứng tự bật.
+- Chọn một phần cứng bất kỳ ở «Thiết bị ngoại vi» (cảm biến, relay, servo, động cơ, còi, rung, LED, nút bấm, RTC, NFC...) hoặc «Đèn điều khiển bằng AI qua GPIO» ở «Giao tiếp UART, Bluetooth & MCP» → MCP Server và nhóm công cụ tương ứng tự bật.
 - Không chọn gì → MCP tắt, không có công cụ phần cứng nào.
 - Bỏ chọn phần cứng → nhóm công cụ của nó tự tắt theo (các ký hiệu `CUSTOM_MCP_TOOL_*` và `ENABLE_CUSTOM_MCP_SERVER` là ký hiệu Kconfig ẩn, luôn được tính lại; giá trị cũ trong `sdkconfig` bị bỏ qua).
 - Trong nhóm, chỉ thiết bị có chân GPIO hợp lệ (khác `-1`) và (với chip I2C/SPI) được tìm thấy lúc khởi động mới có công cụ. Không thấy thì chỉ ghi cảnh báo vào log.
 
 | Nhóm công cụ | Tự bật khi chọn |
 | :--- | :--- |
-| Cảm biến (`self.sensor.*`) | Bất kỳ cảm biến nào ở 4.4/4.5, INA2xx, TP4056 CHRG, BQ27220 |
+| Cảm biến (`self.sensor.*`) | Bất kỳ cảm biến nào ở «Cảm biến môi trường» / «Khoảng cách & An ninh», INA2xx, TP4056 CHRG, BQ27220 |
 | Cơ cấu chấp hành (`self.actuator.*`) | Relay, Servo, Motor DC, Còi, Motor rung |
 | Robot (`self.robot.*`) | Motor DC hoặc Servo |
 | LED (`self.led.*`) | LED trạng thái khác "Không có LED" |
-| LED đơn GPIO (`self.gpio_led.*`) | Mục 4.2 → "LED đơn GPIO": danh sách chân không để trống |
-| LED qua PCA9685 (`self.pwm_led.*`) | Bật PCA9685 (mục "Mở rộng I/O & Ngoại vi khác") và nhập kênh LED ở mục "Camera & Đèn LED" → "LED qua PCA9685" |
-| LED qua IC LED (`self.led_ic.*`) | Mục 4.2 → "LED qua IC điều khiển LED I2C", chip được tìm thấy |
-| LED qua IC mở rộng (`self.expander_led.*`) | Đặt chân I2C cho IO Expander (mục "Mở rộng I/O & Ngoại vi khác") và nhập chân LED ở mục "Camera & Đèn LED" → "LED qua IC mở rộng GPIO" |
+| LED đơn GPIO (`self.gpio_led.*`) | «Camera & Đèn LED» → «LED đơn GPIO»: danh sách chân không để trống |
+| LED qua PCA9685 (`self.pwm_led.*`) | Bật PCA9685 («Mở rộng I/O & Ngoại vi khác») và nhập kênh LED ở «Camera & Đèn LED» → «LED qua PCA9685» |
+| LED qua IC LED (`self.led_ic.*`) | «Camera & Đèn LED» → «LED qua IC điều khiển LED I2C», chip được tìm thấy |
+| LED qua IC mở rộng (`self.expander_led.*`) | Đặt chân I2C cho IO Expander («Mở rộng I/O & Ngoại vi khác») và nhập chân LED ở «Camera & Đèn LED» → «LED qua IC mở rộng GPIO» |
 | Ngoại vi (`self.rtc/nfc/pwm/rc522/imu/expander/pmic/ethernet.*`) | RTC, PN532, PCA9685, IC LED, hoặc đặt chân cho RC522, IMU, PMIC, IO Expander, Ethernet |
 | Nhấn để nói (`self.set_press_to_talk`) | Nút BOOT hoặc nút chạm |
-| Đèn (`self.lamp.*`) | Mục 3: "Đèn điều khiển bằng AI qua GPIO" và có chân đèn |
-| Bluetooth UART (`self.bluetooth.*`) | Mục 3: module Bluetooth UART, khi màn hình rời không dùng module này |
+| Đèn (`self.lamp.*`) | «Giao tiếp UART, Bluetooth & MCP» → «Đèn điều khiển bằng AI qua GPIO», có chân đèn |
+| Bluetooth UART (`self.bluetooth.*`) | «Giao tiếp UART, Bluetooth & MCP» → module Bluetooth UART, khi màn hình rời không dùng module này |
 
-Firmware không còn tự dò cảm biến chưa được chọn (trước đây AHT20, BMP280, BH1750, SCD4x, INA219, VL6180X bị dò dù không bật, dễ nhận nhầm chip khác cùng địa chỉ thành cảm biến).
+Firmware chỉ dò cảm biến đã được chọn, để không nhận nhầm chip khác cùng địa chỉ.
 
 ---
 
@@ -70,14 +70,14 @@ Firmware không còn tự dò cảm biến chưa được chọn (trước đây
 
 ## 4. Cảm biến
 
-| Công cụ | Bật khi (Web Configurator → mục) | Tham số |
+| Công cụ | Bật khi (menu) | Tham số |
 | :--- | :--- | :--- |
-| `self.sensor.get_environment` | Ngoại vi → 4.4: DHT11/22, AHT20/SHT3x, BMP280, BH1750, LDR, CO2 · 4.5: APDS-9960 | — |
-| `self.sensor.get_distance` | Ngoại vi → 4.5: HC-SR04 hoặc VL53L0X/VL53L1X | — |
-| `self.sensor.get_security` | Ngoại vi → 4.5: PIR, SW-420, cảm biến lửa · 4.4: MQ khí gas | — |
-| `self.sensor.get_power` | Nguồn → 4.7: TP4056 (chân CHRG), INA2xx, BQ27220 | — |
-| `self.sensor.get_proximity_color` | Ngoại vi → 4.5: APDS-9960 | — |
-| `self.sensor.read_gesture` | Ngoại vi → 4.5: APDS-9960 | `timeout_ms` 500–10000 (mặc định 5000) |
+| `self.sensor.get_environment` | Cảm biến môi trường: DHT11/22, AHT20/SHT3x, BMP280, BH1750, LDR, CO2 · Khoảng cách & An ninh: APDS-9960 | — |
+| `self.sensor.get_distance` | Khoảng cách & An ninh: HC-SR04 hoặc VL53L0X/VL53L1X | — |
+| `self.sensor.get_security` | Khoảng cách & An ninh: PIR, SW-420, cảm biến lửa · Cảm biến môi trường: MQ khí gas | — |
+| `self.sensor.get_power` | Nguồn điện & Pin: TP4056 (chân CHRG), INA2xx, BQ27220 | — |
+| `self.sensor.get_proximity_color` | Khoảng cách & An ninh: APDS-9960 | — |
+| `self.sensor.read_gesture` | Khoảng cách & An ninh: APDS-9960 | `timeout_ms` 500–10000 (mặc định 5000) |
 
 ### Dữ liệu trả về
 
@@ -97,7 +97,7 @@ Ví dụ trên: có AHT20 và BH1750, không có BMP280 và SCD4x nên không c�
 ```json
 {"valid": true, "motion_detected": false, "gas_ppm": 120.5, "gas_leak_alert": false}
 ```
-Ví dụ trên chỉ có PIR và MQ: không gắn cảm biến lửa thì không có `flame_detected` (trước đây trả `false`, tức là khẳng định sai "không có lửa").
+Ví dụ trên chỉ có PIR và MQ: không gắn cảm biến lửa thì không có `flame_detected`.
 
 **`self.sensor.get_power`**
 ```json
@@ -121,7 +121,7 @@ Giá trị: `up`, `down`, `left`, `right`, `none`. Công cụ chờ người dù
 
 ## 5. Ngoại vi I2C
 
-| Công cụ | Bật khi (Nguồn → 4.7) | Tham số | Kết quả |
+| Công cụ | Bật khi («Mở rộng I/O & Ngoại vi khác») | Tham số | Kết quả |
 | :--- | :--- | :--- | :--- |
 | `self.rtc.get_time` | RTC DS3231 / PCF8563 | — | `{"rtc_type": "DS3231", "time": "2026-10-10 19:30:00", "valid": true, "temperature_c": 29.25}` |
 | `self.rtc.sync_from_system` | RTC DS3231 / PCF8563 | — | `{"success": true}` hoặc lỗi nếu chưa có giờ mạng |
@@ -131,32 +131,32 @@ Giá trị: `up`, `down`, `left`, `right`, `none`. Công cụ chờ người dù
 | `self.pwm.all_off` | PCA9685 | — | `true`; chỉ tắt các kênh không phải LED |
 | `self.expander.set_pin` / `get_pin` | IO Expander TCA9554 (8 chân) hoặc TCA9555/PCA9555/TCA9535/TCA9539 (16 chân) | `pin` theo số chân của chip, `level` 0/1 | `true` / `{"pin": 3, "level": 1}` |
 
-Các công cụ LED của PCA9685, IC LED và IC mở rộng ở mục 6.1.
+Công cụ LED của PCA9685, IC LED và IC mở rộng: mục 6.1.
 
 **RTC tự đồng bộ:** khi khởi động mà chưa có mạng, thiết bị lấy giờ từ RTC. Khi đã nhận giờ từ server, thiết bị ghi lại vào RTC (mỗi 6 giờ một lần). `valid: false` nghĩa là RTC mất pin nuôi và chưa được đặt lại giờ.
 
-**Màn cảm ứng ngoại vi** (Màn hình → "Mở rộng giao tiếp màn cảm ứng ngoại vi") không có công cụ MCP. Có màn hình thì cảm ứng điều khiển giao diện; không có màn hình thì chạm vào để bắt đầu/dừng hội thoại.
+**Màn cảm ứng ngoại vi** («Driver Display» → «Mở rộng giao tiếp màn cảm ứng ngoại vi») không có công cụ MCP. Có màn hình thì cảm ứng điều khiển giao diện; không có màn hình thì chạm vào để bắt đầu/dừng hội thoại.
 
 ---
 
 ## 6. Cơ cấu chấp hành, LED, robot
 
-| Công cụ | Bật khi (Web Configurator → mục) | Tham số |
+| Công cụ | Bật khi (menu) | Tham số |
 | :--- | :--- | :--- |
-| `self.actuator.set_servo` | Ngoại vi → 4.3: Servo | `angle` 0–180 |
-| `self.actuator.get_servo` | Ngoại vi → 4.3: Servo | — |
-| `self.actuator.detach_servo` | Ngoại vi → 4.3: Servo | — |
-| `self.actuator.set_motor` | Ngoại vi → 4.6: Motor DC (TB6612 / L9110S / DRV8833) | `motor_id` chỉ gồm động cơ đã đặt chân PWM và DIR, `speed` −100…100 (âm = quay ngược) |
-| `self.actuator.beep` | Ngoại vi → 4.3: Còi | `duration_ms` 10–5000, `frequency_hz` 100–10000 |
-| `self.actuator.vibrate` | Ngoại vi → 4.3: Motor rung | `duration_ms` |
-| `self.actuator.set_relay` | Ngoại vi → 4.6: Relay | `state` true/false |
-| `self.actuator.get_relay` | Ngoại vi → 4.6: Relay | — |
-| `self.lamp.turn_on` / `turn_off` / `get_state` | Mạng → 3: "Đèn điều khiển bằng AI qua GPIO", có chân GPIO đèn. Nhiều đèn thì thành `self.lamp_1.*`, `self.lamp_2.*`... Relay không còn tạo công cụ đèn. | — |
-| `self.led.set_color` | Ngoại vi → 4.2: LED WS2812 | `red`, `green`, `blue` 0–255 |
-| `self.led.set_pixel` | Ngoại vi → 4.2: LED WS2812 (dải nhiều LED) | `index`, `red`, `green`, `blue` |
-| `self.led.set_effect` | Ngoại vi → 4.2: LED WS2812 | `effect`: `rainbow`, `chase`, `breathe`, `blink`, `scanner`, `wipe`, `off`, `auto`; `speed_ms` 10–1000 |
-| `self.led.set_brightness` | Ngoại vi → 4.2: LED WS2812 | `brightness` 0–100 |
-| `self.led.get_state` | Ngoại vi → 4.2: LED WS2812 | — |
+| `self.actuator.set_servo` | Servo | `angle` 0–180 |
+| `self.actuator.get_servo` | Servo | — |
+| `self.actuator.detach_servo` | Servo | — |
+| `self.actuator.set_motor` | Motor DC (TB6612 / L9110S / DRV8833) | `motor_id` chỉ gồm động cơ đã đặt chân PWM và DIR, `speed` −100…100 (âm = quay ngược) |
+| `self.actuator.beep` | Còi | `duration_ms` 10–5000, `frequency_hz` 100–10000 |
+| `self.actuator.vibrate` | Motor rung | `duration_ms` |
+| `self.actuator.set_relay` | Relay | `state` true/false |
+| `self.actuator.get_relay` | Relay | — |
+| `self.lamp.turn_on` / `turn_off` / `get_state` | «Đèn điều khiển bằng AI qua GPIO», có chân GPIO đèn. Nhiều đèn thì thành `self.lamp_1.*`, `self.lamp_2.*`... | — |
+| `self.led.set_color` | LED WS2812 | `red`, `green`, `blue` 0–255 |
+| `self.led.set_pixel` | LED WS2812 (dải nhiều LED) | `index`, `red`, `green`, `blue` |
+| `self.led.set_effect` | LED WS2812 | `effect`: `rainbow`, `chase`, `breathe`, `blink`, `scanner`, `wipe`, `off`, `auto`; `speed_ms` 10–1000 |
+| `self.led.set_brightness` | LED WS2812 | `brightness` 0–100 |
+| `self.led.get_state` | LED WS2812 | — |
 | `self.robot.move` | Motor DC, đủ cả hai động cơ | `direction`: `forward`, `backward`, `left`, `right`, `stop`; `speed` 0–100; `duration_ms` 100–5000 |
 | `self.robot.gesture` | Servo có chân PWM | `action`: `nod`, `shake`, `center`, `relax` |
 
@@ -180,13 +180,7 @@ Bốn nhóm dùng chung 5 công cụ, chỉ khác tiền tố: `self.gpio_led`, 
 
 ### 6.2 LED trạng thái theo từng trạng thái
 
-LED trạng thái (`self.led.*`) tự đổi màu và hiệu ứng theo trạng thái của chatbot: khởi động, cấu hình WiFi, chờ, kết nối, nghe, nói, nâng cấp, kích hoạt, lỗi. Mỗi trạng thái chọn được hiệu ứng và màu trong menuconfig (mục "Camera & Đèn LED" → LED trạng thái → "Màu và hiệu ứng theo trạng thái"):
-- Mọi loại LED: tắt, đứng yên, nháy nhanh/chậm, thở, sáng theo nhịp tiếng nói.
-- LED có màu (WS2812 / vòng LED): thêm cầu vồng, chạy vòng, quét, tô dần, cầu vồng xoay, thanh dâng theo tiếng nói, loang hai phía theo tiếng nói.
-- Ba mức độ sáng: thấp cho trạng thái Chờ; cao cho Lỗi và khi đang nghe thấy tiếng nói; thường cho các trạng thái còn lại.
-- "Độ trễ hiệu ứng theo âm thanh" (mặc định 200 ms) để LED khớp với tiếng ra loa.
-
-`self.led.set_effect` với `effect: auto` trả LED về chế độ tự đổi theo trạng thái.
+LED trạng thái tự đổi màu và hiệu ứng theo trạng thái chatbot; bảng hiệu ứng và nguồn màu ở [LED.md](LED.md). `self.led.set_effect` với `effect: auto` trả LED về chế độ tự đổi theo trạng thái.
 
 **Bluetooth UART** (`self.bluetooth.get_status`, `send_text` hoặc `send_code`, `read_messages`): gửi và nhận dữ liệu với vi điều khiển ở đầu kia qua module HC-05/HC-06/HM-10. Chi tiết ở [BLUETOOTH_UART.md](BLUETOOTH_UART.md).
 
@@ -201,9 +195,9 @@ Hai mục sau có trong Kconfig nhưng **chưa có driver**, nên firmware khôn
 | Mục Kconfig | Tình trạng |
 | :--- | :--- |
 | IR Remote (hồng ngoại) | Chưa có driver phát/thu tín hiệu. Không có công cụ `self.ir.*`. |
-| 4G LTE (A7670 / SIM7600) | Chưa có driver AT cho module. Không có công cụ `self.cellular.*`. Các board mạng 4G/Ethernet/RNDIS (`ml307_board`, `nt26_board`, `dual_network_board`, `rndis_board`, `ethernet_board`) đã xoá ngày 2026-10-13 vì không board nào dùng. |
+| 4G LTE (A7670 / SIM7600) | Chưa có driver AT cho module. Không có công cụ `self.cellular.*`. |
 
-Hai mục này đã được ghi chú "CHƯA HỖ TRỢ" trong Web Configurator, để không bật nhầm.
+Hai mục này ghi «CHƯA HỖ TRỢ» trong menuconfig và Web Configurator.
 
 ## 8. Công cụ chỉ dành cho người dùng
 

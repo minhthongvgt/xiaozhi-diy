@@ -5,16 +5,14 @@ and network queues independent from the chip-specific speech pipeline.
 
 ## Input engines
 
-The old `AudioProcessor + WakeWord` combinations have been replaced by a single
-`AudioEngine` interface. `AudioInputTask` reads PCM once and feeds exactly one
-engine.
+`AudioInputTask` reads PCM once and feeds exactly one `AudioEngine`.
 
 | Target | Engine | Wake word | Uplink processing |
 | --- | --- | --- | --- |
 | ESP32-S3 / ESP32-P4 | `AfeAudioEngine` | WakeNet inside AFE, or MultiNet fed from AFE output | FD AEC + VAD when audio processing is enabled |
 
 `AfeAudioEngine` owns a single FD AFE instance. WakeNet and voice uplink share
-that instance, so enabling both no longer creates two AFE pipelines. For custom
+that instance, so enabling both creates only one AFE pipeline. For custom
 MultiNet wake words, AFE fetch output is passed to `CustomWakeWord`.
 
 The AFE configuration currently uses `FD_LOW_COST` AEC with
@@ -43,9 +41,7 @@ channel, so the AFE input format becomes `MR` without engine changes.
 
 When wake-word audio upload is enabled, the most recent two seconds of PCM are
 stored in a single 64 KB PSRAM ring buffer. WakeNet and MultiNet share the same
-cache implementation, and the encoder reads it one Opus frame at a time. This
-avoids the previous per-chunk internal-SRAM allocations and temporary PCM
-concatenation buffer.
+cache implementation, and the encoder reads it one Opus frame at a time.
 
 ## Input data flow
 
@@ -86,14 +82,11 @@ flowchart LR
 - `OpusCodecTask` encodes uplink PCM and decodes downlink packets.
 - `AfeAudioEngine` has its own AFE fetch task on S3/P4.
 
-The audio power timer still enables and disables codec ADC/DAC channels based on
-activity; the engine refactor does not change that policy.
+The audio power timer enables and disables codec ADC/DAC channels based on
+activity.
 
 ## Queue and allocation policy
 
-The service queues use compile-time fixed-capacity storage. Their existing drop,
-wait, and playback-drain policies remain unchanged, but queue growth no longer
-allocates deque nodes. `AudioTask` values are stored directly, and Opus encoding
-writes into the packet payload instead of allocating a second temporary output
-buffer. Packet and PCM buffer pools should only be added after target-side heap
-and latency measurements justify their additional ownership complexity.
+The service queues use compile-time fixed-capacity storage and never allocate on
+growth. `AudioTask` values are stored directly, and Opus encoding writes into the
+packet payload without a temporary output buffer.

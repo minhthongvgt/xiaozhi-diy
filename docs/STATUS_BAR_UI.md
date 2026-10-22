@@ -1,11 +1,11 @@
 # Dòng trạng thái và hiệu ứng nghe/nói
 
-Menu: "Giao diện hiển thị & Gói tài nguyên" → "Thanh trạng thái và hiệu ứng nghe/nói". Trên Web Configurator nằm ở tab Màn hình. Áp dụng cho mọi kiểu giao diện LVGL (Mặc định, WeChat, các kiểu Adaptive), không áp dụng cho kiểu Emote.
+Menu: «Màn hình» → «Thanh trạng thái và hiệu ứng nghe/nói». Trên Web Configurator nằm ở tab Màn hình. Áp dụng cho mọi kiểu giao diện LVGL (Mặc định, WeChat, các kiểu Adaptive), không áp dụng cho kiểu Emote.
 
 ## Nội dung khi chờ (`CUSTOM_UI_IDLE_STATUS`)
 | Lựa chọn | Hiện gì | Khi thiếu dữ liệu |
 |---|---|---|
-| Đồng hồ | `HH:MM` (cách cũ) | chữ «Chờ» khi chưa có giờ mạng |
+| Đồng hồ | `HH:MM` | chữ «Chờ» khi chưa có giờ mạng |
 | Thứ và ngày tháng | `Thứ hai, 20/10/2026` (tiếng Việt), ngôn ngữ khác dùng `%a %d/%m/%Y` | chữ «Chờ» |
 | Thông số cảm biến | nhiệt độ, độ ẩm, áp suất, ánh sáng, CO2, khí gas, báo lửa của cảm biến đã bật | ngày tháng, rồi «Chờ» |
 | Luân phiên (mặc định) | lần lượt các mục bật bằng `CUSTOM_UI_IDLE_ROTATE_{CLOCK,DATE,SENSORS,STANDBY}`, mỗi mục `CUSTOM_UI_IDLE_ROTATE_SEC` giây | bỏ mục rỗng |
@@ -14,14 +14,14 @@ Menu: "Giao diện hiển thị & Gói tài nguyên" → "Thanh trạng thái v�
 
 - Cảm biến được đọc lại mỗi `CUSTOM_UI_IDLE_SENSOR_REFRESH_SEC` giây (mặc định 15) trong task `Application::Run`, cùng task với công cụ MCP nên không đọc chồng nhau. Việc đọc nằm ngoài khoá LVGL.
 - Dòng trạng thái chỉ được ghi lại khi nội dung đổi, nên chữ cảnh báo (`Alert`) hiện trong lúc chờ vẫn giữ đến lần đổi nội dung kế tiếp.
-- Giao diện Adaptive đã có đồng hồ riêng, vì vậy mặc định không còn hiện đồng hồ lần hai ở dòng trạng thái.
+- Giao diện Adaptive có đồng hồ riêng nên mặc định không hiện đồng hồ ở dòng trạng thái.
 
 ## Hiệu ứng nghe/nói (`CUSTOM_UI_LISTEN_ANIM`, `CUSTOM_UI_SPEAK_ANIM`)
 Hiệu ứng thay cho chữ «Đang lắng nghe...» / «Đang nói...», cùng vị trí và kích thước với dòng trạng thái.
 
 | Mã | Lựa chọn | Đang nghe | Đang nói |
 |---|---|---|---|
-| 0 | Chỉ hiện chữ | như cũ | như cũ |
+| 0 | Chỉ hiện chữ | chữ | chữ |
 | 1 | Sóng âm dạng cột | cột nhấp nhô, cao hơn khi có tiếng nói (VAD) | cột theo âm lượng loa |
 | 2 | Sóng âm uốn lượn | hai đường sóng chạy ngược nhau | biên độ theo âm lượng |
 | 3 | Vòng sóng lan tỏa | ba vòng elip lan ra, chấm giữa phập phồng | chấm giữa theo âm lượng |

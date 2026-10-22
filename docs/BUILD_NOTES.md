@@ -1,6 +1,6 @@
 # Ghi chú hệ thống build
 
-Dự án không để comment trong mã nguồn (kể cả CMake, Kconfig, `idf_component.yml`). Những lý do thiết kế trước đây nằm trong comment được gom về đây.
+Mã nguồn không có comment (kể cả CMake, Kconfig, `idf_component.yml`); lý do thiết kế của hệ thống build ghi ở đây.
 
 ## CMakeLists.txt (gốc dự án)
 
@@ -21,15 +21,13 @@ Dự án không để comment trong mã nguồn (kể cả CMake, Kconfig, `idf_
 
 Kiểm tra: khi cấu hình, log có dòng `[Xiaozhi] Suppressed esp-sr model partition query`; `build/flash_args` chỉ có `generated_assets.bin` ở `0x920000`.
 
-Trước 2026-10-13, `CMakeLists.txt` gốc có một bản sao y hệt của hai hàm này nhưng không bao giờ có tác dụng (bản trong `project_include.cmake` được nạp sau và đè lên), nên đã bị xoá.
-
 ## main/CMakeLists.txt
 
 | Thiết lập | Lý do |
 | --- | --- |
 | Nhánh `BOARD_TYPE_*` → `BOARD_DIR` | Gắn symbol Kconfig của board với thư mục mã nguồn; `scripts/build.py` đọc nhánh này để kiểm tra và chuẩn hoá cấu hình board. |
 | `BOARD_TYPE`, `BOARD_MANUFACTURER` | Firmware báo lên server. Lấy từ `config.json` của board; thiếu thì suy ra từ tên thư mục board. `BOARD_NAME` rỗng thì dùng `BOARD_TYPE`; chỉ cho phép chữ thường, số, `.` và `-`. |
-| Một audio engine duy nhất | Dự án chỉ hỗ trợ ESP32-S3 và ESP32-P4: `AfeAudioEngine` + `CustomWakeWord`. Engine cho chip khác (`LiteAudioEngine`, `EspWakeWord`) đã xoá ngày 2026-10-13. |
+| Một audio engine duy nhất | Dự án chỉ hỗ trợ ESP32-S3 và ESP32-P4: `AfeAudioEngine` + `CustomWakeWord`. |
 | Âm thanh ngôn ngữ dự phòng | Nếu ngôn ngữ đang chọn thiếu file `.ogg` nào thì lấy bản `en-US` cùng tên. |
 | `-std=gnu++23` cho C++ của `main` | ESP-IDF 6 có thể đổi chuẩn C++ mặc định; cố định để code của dự án không phụ thuộc vào đó. |
 | `LV_MEM_POOL_INCLUDE` cho LVGL trên ESP32-S3 | Board có PSRAM cấp bộ nhớ LVGL từ PSRAM (`lvgl_psram_pool.h`). Board `CONFIG_SPIRAM=n` không được giữ pool 1 MB mặc định trong `.dram0.bss` (`lvgl_no_psram_pool.h`); `scripts/build.py` chuyển các biến thể đó về `CLIB malloc`. |
@@ -43,11 +41,11 @@ Trước 2026-10-13, `CMakeLists.txt` gốc có một bản sao y hệt của ha
 | `espressif/esp_audio_effects: ~1.3.0` | Giữ dưới mốc yêu cầu P4 rev ≥ 3.0 của bản mới hơn, cho tới khi bỏ hỗ trợ board P4 rev 1.x. |
 | `rules: - if: ...` | Các điều kiện trong cùng một `rules` được kết hợp theo AND. |
 
-Đã xoá ngày 2026-10-13 vì không bao giờ được dùng: `cube32esp/xpowerslib` (chỉ phục vụ `xpower.h` không ai include); `espressif/touch_slider_sensor` và `espressif/touch_button_sensor` (chỉ được tải khi `idf_version < 6.0.0`, mà dự án yêu cầu ≥ 6.0.1). File `idf_component.yml` ở gốc dự án cũng đã xoá: ESP-IDF chỉ đọc manifest của component (`main/idf_component.yml`); xoá file gốc không làm đổi `dependencies.lock`.
+ESP-IDF chỉ đọc manifest của component (`main/idf_component.yml`); dự án không có `idf_component.yml` ở thư mục gốc.
 
 ## scripts/build_default_assets.py (sinh `generated_assets.bin`)
 
-- **Font chữ:** firmware tự nhúng bản `font_noto_sans_*_basic_*`; bản `*_common_*` tương ứng (nhiều ký tự hơn) được đóng vào assets và nạp lúc chạy. Bản `common` dùng mô tả ký tự loại lớn, nên firmware phải bật `CONFIG_LV_FONT_FMT_TXT_LARGE=y` (xem `.agents/rules/LOI_THUONG_GAP.md` mục C1).
+- **Font chữ:** firmware tự nhúng bản `font_noto_sans_*_basic_*`; bản `*_common_*` tương ứng (nhiều ký tự hơn) được đóng vào assets và nạp lúc chạy. Bản `common` dùng mô tả ký tự loại lớn, nên firmware phải bật `CONFIG_LV_FONT_FMT_TXT_LARGE=y`.
 - **Emoji:** ưu tiên bộ PNG, sau đó tới bộ GIF (ví dụ `noto-emoji_64`); `otto-gif` được xử lý riêng. Emoji PNG cần `CONFIG_LV_USE_LODEPNG=y`.
 - **Chọn model giọng nói để đóng gói (theo `sdkconfig`):**
   1. Model WakeNet chỉ đóng gói khi `USE_ESP_WAKE_WORD=y` hoặc `USE_AFE_WAKE_WORD=y`.
