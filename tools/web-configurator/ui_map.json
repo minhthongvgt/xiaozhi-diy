@@ -14,24 +14,24 @@
     {
      "menu": [
       "Xiaozhi Assistant",
-      "2. Âm thanh trợ lý (Assistant Audio)",
-      "2.1. Từ khóa đánh thức (Wake Word)"
+      "Âm thanh trợ lý (Assistant Audio)",
+      "Từ khóa đánh thức (Wake Word)"
      ],
      "icon": "🎙️"
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "2. Âm thanh trợ lý (Assistant Audio)",
-      "2.2. Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC)"
+      "Âm thanh trợ lý (Assistant Audio)",
+      "Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC)"
      ],
      "icon": "🎛️"
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "2. Âm thanh trợ lý (Assistant Audio)",
-      "2.4. Gỡ lỗi âm thanh (Audio Debugger)"
+      "Âm thanh trợ lý (Assistant Audio)",
+      "Gỡ lỗi âm thanh (Audio Debugger)"
      ],
      "icon": "🐞"
     }
@@ -43,7 +43,7 @@
     {
      "menu": [
       "Xiaozhi Assistant",
-      "1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets)"
+      "Màn hình"
      ],
      "icon": "🎨",
      "exact": true
@@ -51,7 +51,7 @@
     {
      "menu": [
       "Xiaozhi Assistant",
-      "1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets)",
+      "Màn hình",
       "Thanh trạng thái và hiệu ứng nghe/nói (Status Bar & Activity)"
      ],
      "icon": "📊"
@@ -59,8 +59,8 @@
     {
      "menu": [
       "Xiaozhi Assistant",
-      "1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets)",
-      "1.1. Màn hình & Cảm ứng (Display & Touch) [ESP32-S3]"
+      "Màn hình",
+      "Driver Display [ESP32-S3]"
      ],
      "icon": "🖥️"
     }
@@ -72,16 +72,16 @@
     {
      "menu": [
       "Xiaozhi Assistant",
-      "2. Âm thanh trợ lý (Assistant Audio)",
-      "2.5. Âm thanh: Loa & Micro (Audio: Speaker & Microphone) [ESP32-S3]"
+      "Âm thanh trợ lý (Assistant Audio)",
+      "Driver - Loa và Micro [ESP32-S3]"
      ],
      "icon": "🔊"
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "2. Âm thanh trợ lý (Assistant Audio)",
-      "2.3. Âm thanh thông báo (Notification Sounds)"
+      "Âm thanh trợ lý (Assistant Audio)",
+      "Âm thanh thông báo (Notification Sounds)"
      ],
      "icon": "🔔"
     }
@@ -93,14 +93,14 @@
     {
      "menu": [
       "Xiaozhi Assistant",
-      "3. Mạng & Kết nối (Network & Connectivity)"
+      "Mạng & Kết nối (Network & Connectivity)"
      ],
      "icon": "📶"
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "5. Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3]"
+      "Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3]"
      ],
      "icon": "🔌"
     }
@@ -112,55 +112,55 @@
     {
      "menu": [
       "Xiaozhi Assistant",
-      "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
-      "6.1. Nút bấm & Đầu vào (User Inputs)"
+      "Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
+      "Nút bấm & Đầu vào (User Inputs)"
      ],
      "icon": "🕹️"
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
-      "6.2. Camera & Đèn LED (Camera & LEDs)"
+      "Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
+      "Camera & Đèn LED (Camera & LEDs)"
      ],
      "icon": "📷"
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "4. Camera (Camera Configuration)"
+      "Camera (Camera Configuration)"
      ],
      "icon": "🎞️"
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
-      "6.3. Còi & Rung (Buzzer & Haptics)"
+      "Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
+      "Còi & Rung (Buzzer & Haptics)"
      ],
      "icon": "🔔"
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
-      "6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow)"
+      "Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
+      "Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow)"
      ],
      "icon": "🌡️"
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
-      "6.5. Khoảng cách & An ninh (Distance & Security)"
+      "Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
+      "Khoảng cách & An ninh (Distance & Security)"
      ],
      "icon": "📡"
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
-      "6.6. Động cơ, Robot & Rơ-le (Motors, Robotics & Relay)"
+      "Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
+      "Động cơ, Robot & Rơ-le (Motors, Robotics & Relay)"
      ],
      "icon": "⚙️"
     }
@@ -172,16 +172,16 @@
     {
      "menu": [
       "Xiaozhi Assistant",
-      "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
-      "6.7. Nguồn điện & Pin (Power & Battery)"
+      "Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
+      "Nguồn điện & Pin (Power & Battery)"
      ],
      "icon": "🔋"
     },
     {
      "menu": [
       "Xiaozhi Assistant",
-      "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
-      "6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G)"
+      "Thiết bị ngoại vi (Peripherals) [ESP32-S3]",
+      "Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G)"
      ],
      "icon": "🧩"
     }

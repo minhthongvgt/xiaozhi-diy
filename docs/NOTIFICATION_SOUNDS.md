@@ -1,6 +1,6 @@
 # Âm thanh thông báo (chọn hoặc thay âm)
 
-Menuconfig: `Xiaozhi Assistant → 2. Âm thanh trợ lý → 2.3. Âm thanh thông báo (Notification Sounds)`.
+Menuconfig: `Xiaozhi Assistant → Âm thanh trợ lý → Âm thanh thông báo (Notification Sounds)`.
 Web Configurator: tab **Âm thanh**, nhóm 🔔 "Âm thanh thông báo".
 
 Âm được chọn lúc build và nhúng vào firmware. Đổi âm thì build và nạp lại.

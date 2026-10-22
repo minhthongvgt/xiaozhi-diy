@@ -1,6 +1,6 @@
 # Kế hoạch nhóm LED (bắt đầu 2026-10-13)
 
-Mục tiêu: trong menuconfig mục 6.2 "Camera & Đèn LED" (trước đây 4.2 "Hệ thống chính"), mỗi nhóm LED có menu con riêng. Mỗi nhóm có tùy chọn độ sáng, màu và hiệu ứng ở mức phần cứng hỗ trợ. Chatbot điều khiển được qua MCP.
+Mục tiêu: trong menuconfig mục "Thiết bị ngoại vi → Camera & Đèn LED" (trước đây 4.2 "Hệ thống chính"), mỗi nhóm LED có menu con riêng. Mỗi nhóm có tùy chọn độ sáng, màu và hiệu ứng ở mức phần cứng hỗ trợ. Chatbot điều khiển được qua MCP.
 
 Mỗi bước làm theo cùng một quy trình:
 1. Sửa Kconfig.
@@ -81,7 +81,7 @@ PCA9685 và TCA9554 còn phục vụ servo và IO chung, nên chip vẫn ở 4.7
 | IC mở rộng | `CUSTOM_EXPANDER_LED_PINS` | `CUSTOM_EXPANDER_LED` | `self.expander_led.*` (giữ `self.expander.*`) |
 
 - IC mở rộng: thêm `choice CUSTOM_EXPANDER_CHIP` (TCA9554/PCA9554/TCA9554A 8 chân; TCA9555/PCA9555/TCA9535/TCA9539 16 chân, driver `esp_io_expander_tca95xx_16bit` đã có sẵn) và `CUSTOM_EXPANDER_I2C_ADDR` (thập phân, mặc định 32 = 0x20). `self.expander.set_pin/get_pin` nhận chân theo số chân của chip.
-- Menu LED PCA9685 và IC mở rộng không có `depends on`, vì chip được khai báo sau, ở mục 6.8 (trước đây 4.7). Firmware chỉ tạo LED khi chip đã bật và được tìm thấy.
+- Menu LED PCA9685 và IC mở rộng không có `depends on`, vì chip được khai báo sau, ở mục "Mở rộng I/O & Ngoại vi khác" (trước đây 4.7). Firmware chỉ tạo LED khi chip đã bật và được tìm thấy.
 
 ### Trùng kênh PCA9685 giữa LED và servo (2026-10-14)
 - Kênh servo trên PCA9685 không khai báo trong Kconfig mà do chatbot chọn lúc chạy, nên việc kiểm tra nằm trong firmware (`InitPwm` trong `periph_controller.cc`):

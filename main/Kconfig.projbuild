@@ -122,7 +122,7 @@ choice BOARD_TYPE
         imply CAMERA_OV5647
 endchoice
 
-menu "1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets)"
+menu "Màn hình"
     help
         Chọn giao diện hệ thống và gói tài nguyên (font, emoji, assets.bin tùy chỉnh) nạp vào Flash.
 
@@ -395,7 +395,7 @@ menu "1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets)"
         help
             Nhập đường dẫn tệp assets.bin trên máy tính hoặc URL để nạp trực tiếp vào phân vùng assets.
 
-    menu "1.1. Màn hình & Cảm ứng (Display & Touch) [ESP32-S3]"
+    menu "Driver Display [ESP32-S3]"
         depends on IDF_TARGET_ESP32S3
         menuconfig ENABLE_CUSTOM_DISPLAY
             bool "Màn hình hiển thị (Display Panel)"
@@ -894,9 +894,9 @@ menu "1. Giao diện hiển thị & Gói tài nguyên (Display Style & Assets)"
 
 endmenu
 
-menu "2. Âm thanh trợ lý (Assistant Audio)"
+menu "Âm thanh trợ lý (Assistant Audio)"
 
-    menu "2.1. Từ khóa đánh thức (Wake Word)"
+    menu "Từ khóa đánh thức (Wake Word)"
         help
             Chọn kiểu nhận diện từ khóa đánh thức (WakeNet AFE / MultiNet tùy chỉnh) và hành vi gửi dữ liệu.
 
@@ -966,7 +966,7 @@ menu "2. Âm thanh trợ lý (Assistant Audio)"
                 When disabled (default), wake word detection is turned off during listening.
     endmenu
 
-    menu "2.2. Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC)"
+    menu "Bộ xử lý âm thanh & Khử tiếng vọng (AFE Audio Processing & AEC)"
         help
             Bật bộ xử lý AFE (AEC + VAD) và chọn chế độ khử tiếng vọng. Yêu cầu ESP32-S3 có PSRAM.
 
@@ -1013,7 +1013,7 @@ menu "2. Âm thanh trợ lý (Assistant Audio)"
                 khối, không cần chỉnh tay. Micro trễ thêm khoảng một khối DMA (20-40 ms).
     endmenu
 
-    menu "2.3. Âm thanh thông báo (Notification Sounds)"
+    menu "Âm thanh thông báo (Notification Sounds)"
         help
             Chọn âm phát ra cho từng sự kiện: âm có sẵn, tắt tiếng, hoặc tệp .ogg của bạn.
             Tệp tùy chỉnh phải là Ogg Opus (khuyên dùng mono, 16 kHz, khung 60 ms), tối đa 1 MB.
@@ -1251,7 +1251,7 @@ menu "2. Âm thanh trợ lý (Assistant Audio)"
 
     endmenu
 
-    menu "2.4. Gỡ lỗi âm thanh (Audio Debugger)"
+    menu "Gỡ lỗi âm thanh (Audio Debugger)"
 
     config USE_AUDIO_DEBUGGER
         bool "Enable Audio Debugger"
@@ -1267,7 +1267,7 @@ menu "2. Âm thanh trợ lý (Assistant Audio)"
             UDP server address, format: IP:PORT, used to receive audio debugging data
     endmenu
 
-    menu "2.5. Âm thanh: Loa & Micro (Audio: Speaker & Microphone) [ESP32-S3]"
+    menu "Driver - Loa và Micro [ESP32-S3]"
         depends on IDF_TARGET_ESP32S3
         config ENABLE_CUSTOM_AUDIO
             bool
@@ -1427,9 +1427,9 @@ menu "2. Âm thanh trợ lý (Assistant Audio)"
 
 endmenu
 
-menu "3. Mạng & Kết nối (Network & Connectivity)"
+menu "Mạng & Kết nối (Network & Connectivity)"
 
-    menu "3.1. Phương thức cấu hình WiFi (WiFi Configuration Method)"
+    menu "Phương thức cấu hình WiFi (WiFi Configuration Method)"
         help
             WiFi Configuration Method Selection
         config USE_HOTSPOT_WIFI_PROVISIONING
@@ -1454,7 +1454,7 @@ menu "3. Mạng & Kết nối (Network & Connectivity)"
             Enable custom message reception, allow the device to receive custom messages from the server (preferably through the MQTT protocol)
 endmenu
 
-menu "4. Camera (Camera Configuration)"
+menu "Camera (Camera Configuration)"
     depends on !IDF_TARGET_ESP32
 
     comment "Warning: Please read the help text before modifying these settings."
@@ -1539,7 +1539,7 @@ menu "4. Camera (Camera Configuration)"
     endif
 endmenu
 
-menu "5. Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3]"
+menu "Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3]"
     depends on IDF_TARGET_ESP32S3
     menuconfig ENABLE_CUSTOM_UART
         bool "Cổng UART mở rộng (Serial Communication Port)"
@@ -1772,9 +1772,9 @@ menu "5. Giao tiếp UART, Bluetooth & MCP (UART, Bluetooth & MCP) [ESP32-S3]"
         default y if CUSTOM_MCP_TOOL_LAMP || CUSTOM_MCP_TOOL_SENSOR || CUSTOM_MCP_TOOL_ACTUATOR || CUSTOM_MCP_TOOL_ROBOT || CUSTOM_MCP_TOOL_LED || CUSTOM_MCP_TOOL_GPIO_LED || CUSTOM_MCP_TOOL_PERIPH || CUSTOM_MCP_TOOL_PRESS_TO_TALK || CUSTOM_MCP_TOOL_UART || CUSTOM_MCP_TOOL_BT_UART
 endmenu
 
-menu "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]"
+menu "Thiết bị ngoại vi (Peripherals) [ESP32-S3]"
     depends on IDF_TARGET_ESP32S3
-    menu "6.1. Nút bấm & Đầu vào (User Inputs)"
+    menu "Nút bấm & Đầu vào (User Inputs)"
     config CUSTOM_ENABLE_BUTTON_BOOT
         bool "Nút bấm BOOT Onboard (BOOT Button)"
         default y
@@ -1877,7 +1877,7 @@ menu "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]"
 
     endmenu
 
-    menu "6.2. Camera & Đèn LED (Camera & LEDs)"
+    menu "Camera & Đèn LED (Camera & LEDs)"
     menuconfig ENABLE_CUSTOM_CAMERA
         bool "Camera & Thị giác AI (Camera DVP / USB UVC)"
         default n
@@ -3602,7 +3602,7 @@ menu "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]"
     endmenu
     endmenu
 
-    menu "6.3. Còi & Rung (Buzzer & Haptics)"
+    menu "Còi & Rung (Buzzer & Haptics)"
     config ENABLE_BUZZER
         bool "Còi báo động Buzzer (GPIO 41)"
         default n
@@ -3656,7 +3656,7 @@ menu "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]"
     endif
     endmenu
 
-    menu "6.4. Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow)"
+    menu "Cảm biến môi trường, Khí & Lưu lượng (Environment, Gas & Flow)"
     config CUSTOM_ENABLE_SENSOR_DHT11_22
         bool "Cảm biến Nhiệt độ & Độ ẩm 1 dây (DHT11 / DHT22)"
         default n
@@ -3807,7 +3807,7 @@ menu "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]"
 
     endmenu
 
-    menu "6.5. Khoảng cách & An ninh (Distance & Security)"
+    menu "Khoảng cách & An ninh (Distance & Security)"
     config CUSTOM_ENABLE_SENSOR_APDS9960
         bool "Cảm biến màu sắc, cử chỉ & tiệm cận (Broadcom APDS-9960 I2C)"
         default n
@@ -3907,7 +3907,7 @@ menu "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]"
 
     endmenu
 
-    menu "6.6. Động cơ, Robot & Rơ-le (Motors, Robotics & Relay)"
+    menu "Động cơ, Robot & Rơ-le (Motors, Robotics & Relay)"
     config CUSTOM_ENABLE_SERVO_DOG
         bool "Động cơ Servo tương tác qua PWM (Servo Dog Controller)"
         default n
@@ -3975,7 +3975,7 @@ menu "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]"
 
     endmenu
 
-    menu "6.7. Nguồn điện & Pin (Power & Battery)"
+    menu "Nguồn điện & Pin (Power & Battery)"
     config CUSTOM_ENABLE_BATTERY_MONITOR
         bool "Mạch đo dung lượng Pin (Battery Level Monitor)"
         default n
@@ -4079,7 +4079,7 @@ menu "6. Thiết bị ngoại vi (Peripherals) [ESP32-S3]"
 
     endmenu
 
-    menu "6.8. Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G)"
+    menu "Mở rộng I/O & Ngoại vi khác (IO Expander, RTC, NFC, SD Card, IR, CAN, 4G)"
     config CUSTOM_IMU_I2C_SDA
         int "Chân I2C SDA cảm biến chuyển động IMU"
         range -1 48
